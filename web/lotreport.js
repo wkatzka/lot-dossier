@@ -853,6 +853,7 @@
     var from = function (k) { return src[k] ? ' (plan: ' + src[k] + ')' : ''; };
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
     var wt = fx.water_table_in;
+    if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) wt = Math.round(fx.boreholes.gwMin * 12);
 
     // Foundation vs. seasonal groundwater
     if (p.foundation === 'basement' && wt != null && wt < 60) out.push(P('Foundation vs. groundwater', 'flag',
@@ -1140,6 +1141,38 @@
   /* Utah Geological Survey GeoData Archive: site-specific consultant reports (geologic hazards, fault, geotechnical).
    * Since HB 384 (May 2024) agencies must submit every such report they receive during permitting. The archive is
    * browser-only (no open API), so the dossier links to a pre-filled search the user opens in their own browser. */
+  /* UGS Subsurface Geotechnical Database (the borehole map's open WFS): geolocated test borings and pits from
+   * consultant reports, with measured groundwater depth, bedrock depth and a link to the source report. */
+  var BOREHOLES = 'https://ugs-geoserver-prod-flbcoqv7oa-uc.a.run.app/geoserver/wfs';
+  C.check_boreholes = async function (ctx) {
+    var lat = ctx.parcel.cy, lon = ctx.parcel.cx, dLat = 0.0145, dLon = 0.0145 / Math.cos(lat * Math.PI / 180); // ~1 mile box
+    var d = await fetchJSON(BOREHOLES, { params: { service: 'WFS', version: '1.1.0', request: 'GetFeature', typeName: 'hazards:boreholes_locations_current',
+      outputFormat: 'application/json', maxFeatures: 300,
+      propertyName: 'boreid,project_name,consultant,date_completed,latitude,longitude,gw_depth,bedrock_refusal,geologic_unit,exploration_type,report_url',
+      cql_filter: 'latitude BETWEEN ' + (lat - dLat).toFixed(5) + ' AND ' + (lat + dLat).toFixed(5) + ' AND longitude BETWEEN ' + (lon - dLon).toFixed(5) + ' AND ' + (lon + dLon).toFixed(5) } });
+    var holes = (d.features || []).map(function (f) { var p = f.properties; p.km = distPts(lon, lat, p.longitude, p.latitude) / 1000; return p; })
+      .filter(function (p) { return p.km <= 1.61; }).sort(function (a, b) { return a.km - b.km; });
+    if (!holes.length) return [F('geo', 'Nearby test borings', 'ok', 'No archived geotechnical borings within 1 mile',
+      "Checked the Utah Geological Survey's Subsurface Geotechnical Database (16,000+ borings and test pits from consultant reports). Coverage is densest along the Wasatch Front; without nearby borings, the site geotechnical report will be the first subsurface data for this lot.",
+      'UGS Subsurface Geotechnical Database', 'https://borehole.geology.utah.gov/')];
+    var reports = {};
+    holes.forEach(function (h) { (reports[h.report_url] = reports[h.report_url] || []).push(h); });
+    var list = Object.keys(reports).map(function (u) { var hs = reports[u]; return { url: u, holes: hs, km: hs[0].km, p: hs[0] }; }).sort(function (a, b) { return a.km - b.km; });
+    var gw = holes.filter(function (h) { return h.gw_depth != null; }), rock = holes.filter(function (h) { return h.bedrock_refusal != null; });
+    var shallow = gw.length ? Math.min.apply(0, gw.map(function (h) { return h.gw_depth; })) : null;
+    ctx.facts.boreholes = { n: holes.length, gwMin: shallow, nearestKm: holes[0].km };
+    var mi = function (km) { return (km / 1.609).toFixed(km < 0.8 ? 2 : 1) + ' mi'; };
+    return [F('geo', 'Nearby test borings', shallow != null && shallow < 10 ? 'watch' : 'ok',
+      holes.length + ' archived boring' + (holes.length > 1 ? 's' : '') + ' within 1 mile (nearest ' + mi(holes[0].km) + ')' + (shallow != null ? '; groundwater measured as shallow as ' + shallow + ' ft' : ''),
+      list.slice(0, 3).map(function (r) {
+        var g = r.holes.filter(function (h) { return h.gw_depth != null; }).map(function (h) { return h.gw_depth; });
+        return '"' + r.p.project_name + '" (' + (r.p.consultant || 'consultant') + ', ' + (r.p.date_completed || '').slice(0, 4) + ', ' + mi(r.km) + ' away, ' + r.holes.length + ' ' +
+          (r.p.exploration_type || 'boring').toLowerCase() + (r.holes.length > 1 ? 's' : '') + (g.length ? ', groundwater at ' + g.slice(0, 4).join(', ') + ' ft' : '') + ')';
+      }).join('; ') + '. Measured depths from real borings are better evidence than the soil-survey estimate; share the nearest report with your geotechnical engineer.' +
+      (rock.length ? ' Refusal on bedrock at ' + rock.slice(0, 3).map(function (h) { return h.bedrock_refusal + ' ft'; }).join(', ') + '.' : ''),
+      'UGS Subsurface Geotechnical Database', list[0].url)];
+  };
+
   C.check_ugs_archive = async function (ctx) {
     var a = ctx.parcel.attrs, ugs = 'https://geodata.geology.utah.gov/pages/search.php?search=';
     var sub = (a.SUBDIV_NAME || '').replace(/\b(phase|ph\.?|plat|unit|amended|subdivision|subd\.?|pud|no\.?)\b.*$/i, '').trim();
@@ -1159,7 +1192,7 @@
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'],
     ['check_zoning', 'Zoning district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
-    ['check_seismic', 'Seismic design category'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
+    ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
     ['check_plan_fit', 'Plan vs. lot conflicts']
   ];
