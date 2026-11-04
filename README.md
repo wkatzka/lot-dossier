@@ -1,5 +1,7 @@
 # Lot Dossier
 
+Live: **https://lot-dossier-assistant.vercel.app**
+
 Due-diligence dossiers for Utah spec-home lots, generated from public records. You enter an address or parcel ID, and the dossier covers water rights, geologic hazards, septic vs. sewer, utilities, zoning and setbacks, CC&Rs, fees and permits. If you upload a building plan, it also checks the plan against the lot.
 
 ## How it works
@@ -35,7 +37,7 @@ python3 build.py --api https://YOUR-PROJECT.vercel.app   # -> dist/Lot Dossier.h
 
 ## Deploy
 
-Import this repository in Vercel (Framework preset: Other). No environment variables are needed. `vercel.json` serves `public/` and gives the API functions 60 s each.
+Vercel deploys `main` automatically (project `lot-dossier-assistant`, framework preset Other, no environment variables). `vercel.json` serves `public/` and gives the API functions up to 300 s. Run `python3 build.py` and commit `public/index.html` before pushing.
 
 ## Limits
 
