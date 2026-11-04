@@ -2,10 +2,24 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "public",
   "functions": {
-    "api/parcel-docs.js": { "maxDuration": 300 },
-    "api/notices.js": { "maxDuration": 300 }
+    "api/parcel-docs.js": {
+      "maxDuration": 300,
+      "includeFiles": "node_modules/{tesseract.js,tesseract.js-core}/**"
+    },
+    "api/notices.js": {
+      "maxDuration": 300,
+      "includeFiles": "node_modules/pdfjs-dist/legacy/build/**"
+    }
   },
   "headers": [
-    { "source": "/api/(.*)", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
   ]
 }

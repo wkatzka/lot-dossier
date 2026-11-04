@@ -33,7 +33,7 @@ def build(api_base, inline_assets=False):
     if inline_assets:  # one self-contained file: embed the background photo
         import base64
         with open(os.path.join(ROOT, "public", "assets", "site-bg.jpg"), "rb") as fh:
-            css = css.replace('"assets/site-bg.jpg"', '"data:image/jpeg;base64,' + base64.b64encode(fh.read()).decode() + '"')
+            css = css.replace("assets/site-bg.jpg", "data:image/jpeg;base64," + base64.b64encode(fh.read()).decode())
     html = html.replace("/*STYLES*/", css, 1)
     if "leaflet.min.css" not in html:
         html = html.replace("</head>", '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">\n</head>', 1)

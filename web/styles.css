@@ -200,7 +200,7 @@ body.saved #rv .only-live{display:none}
 
 
 /* Desert architecture visual system — November 2026. */
-:root{--bg:#f3f2ee;--bg-2:#e9e7e1;--panel:#fffefa;--ink:#242521;--muted:#62635e;--line:#d9d8d0;--brand:#262922;--brand-ink:#fffefa;--accent:#786046;--focus:#69583f;--desert-image:url(""assets/site-bg.jpg"")}
+:root{--bg:#f3f2ee;--bg-2:#e9e7e1;--panel:#fffefa;--ink:#242521;--muted:#62635e;--line:#d9d8d0;--brand:#262922;--brand-ink:#fffefa;--accent:#786046;--focus:#69583f;--desert-image:url("assets/site-bg.jpg")}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171817;--bg-2:#20211f;--panel:#232420;--ink:#f1f0e9;--muted:#b9b9af;--line:#41433b;--brand:#edece3;--brand-ink:#1c1e19;--accent:#cfb48b;--focus:#dac49d}}
 :root[data-theme="dark"]{--bg:#171817;--bg-2:#20211f;--panel:#232420;--ink:#f1f0e9;--muted:#b9b9af;--line:#41433b;--brand:#edece3;--brand-ink:#1c1e19;--accent:#cfb48b;--focus:#dac49d}
 body{line-height:1.65}
