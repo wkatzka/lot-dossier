@@ -68,9 +68,11 @@ module.exports = async (req, res) => {
         standards: ex.standards(windowText), standardsPage: (pages.slice(from, to).findIndex(p => /Site Development Standards|Front Yard Setback/i.test(p)) + from + 1) || null,
         uses: ex.uses(windowText), ccrs: ex.ccrs(windowText),
         utilities: ex.utilities(near, kw.search).filter(u => new RegExp(kw.search, 'i').test(u.text) || u.provider).slice(0, 8) };
-    })).filter(d => d && !d.error);
+    }));
+    const skipped = chosen.map((f, i) => documents[i] && documents[i].error ? { name: f.name, url: f.url, error: documents[i].error } : (documents[i] ? null : { name: f.name, url: f.url, error: 'no mention of ' + kw.search + ' in the text (or out of time)' })).filter(Boolean);
+    const docsOk = documents.filter(d => d && !d.error);
 
-    send(res, 200, { query: name, keyword: kw, searched: all.length, relevant: ranked.length, notices, documents, ms: Date.now() - t0 }, 7 * 86400);
+    send(res, 200, { query: name, keyword: kw, searched: all.length, relevant: ranked.length, notices, documents: docsOk, skipped, ms: Date.now() - t0 }, docsOk.length ? 7 * 86400 : 0);
   } catch (e) {
     send(res, 502, { error: String(e.message || e), ms: Date.now() - t0 });
   }

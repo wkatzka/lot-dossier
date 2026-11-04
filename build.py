@@ -4,7 +4,7 @@
   python3 build.py                                  -> public/index.html (hosted: calls /api on the same domain)
   python3 build.py --api https://your-app.vercel.app -> also dist/Lot Dossier.html (one file to email; calls that API)
 
-Inlines web/home.html, web/report.css, the in-browser engine (web/lotreport.js), the plan-PDF reader
+Inlines web/home.html, web/styles.css, the in-browser engine (web/lotreport.js), the plan-PDF reader
 (web/planreader.js), the UI (web/app.js) and the generic cost assumptions. Refuses to write output that contains
 project-specific strings or embedded images.
 """
@@ -16,7 +16,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 WEB = os.path.join(ROOT, "web")
 # Generic guards, plus optional project-specific strings (company names, addresses, parcel IDs) kept in a local,
 # git-ignored .banned file (one per line) so the list itself never gets published.
-BANNED = ["data:image/png", "data:image/jpeg", "/static/"]
+BANNED = ["data:image/png", "/static/"]
 _local = os.path.join(ROOT, ".banned")
 if os.path.exists(_local):
     BANNED += [l.strip().lower() for l in open(_local) if l.strip() and not l.startswith("#")]
@@ -27,10 +27,16 @@ def read(*p):
         return fh.read()
 
 
-def build(api_base):
+def build(api_base, inline_assets=False):
     html = read(WEB, "home.html")
-    html = html.replace("</style>", read(WEB, "report.css") + "\n</style>", 1)
-    html = html.replace("</head>", '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">\n</head>', 1)
+    css = read(WEB, "styles.css")
+    if inline_assets:  # one self-contained file: embed the background photo
+        import base64
+        with open(os.path.join(ROOT, "public", "assets", "site-bg.jpg"), "rb") as fh:
+            css = css.replace('"assets/site-bg.jpg"', '"data:image/jpeg;base64,' + base64.b64encode(fh.read()).decode() + '"')
+    html = html.replace("/*STYLES*/", css, 1)
+    if "leaflet.min.css" not in html:
+        html = html.replace("</head>", '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">\n</head>', 1)
     html = html.replace("<body>\n", '<body>\n<div id="home">\n', 1)
     costs = {k: v for k, v in json.loads(read(ROOT, "config", "cost_assumptions.json")).items() if not k.startswith("_")}
     report_view = """</div>
@@ -74,4 +80,4 @@ if __name__ == "__main__":
     a = ap.parse_args()
     write(os.path.join(ROOT, "public", "index.html"), build(""))
     if a.api:
-        write(os.path.join(ROOT, "dist", "Lot Dossier.html"), build(a.api.rstrip("/")))
+        write(os.path.join(ROOT, "dist", "Lot Dossier.html"), build(a.api.rstrip("/"), inline_assets=True))

@@ -15,11 +15,13 @@ module.exports = async (req, res) => {
     const rec = await parcelRecord(parcel);
     const sheets = rec.plats.slice(0, maxSheets), plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [], wastewater: [] };
     const ocr = [];
+    const deadline = t0 + (+q.budget || 280) * 1000;
     for (const s of sheets) {
+      if (Date.now() > deadline - 30000) { ocr.push({ sheet: s.sheet, url: s.url, error: 'skipped: out of time' }); continue; }
       try {
-        const raw = await ocrSheet(s.url);
+        const raw = await ocrSheet(s.url, deadline - Date.now() - 5000);
         const p = parsePlat(raw);
-        ocr.push({ sheet: s.sheet, url: s.url, chars: raw.length });
+        ocr.push({ sheet: s.sheet, url: s.url, chars: raw.length, timing: ocrSheet.last });
         if (!plat.setbacks && p.setbacks) plat.setbacks = { ...p.setbacks, sheet: s.sheet, url: s.url };
         ['entries', 'approvals', 'associations', 'hazardReports', 'notes', 'wastewater'].forEach(k => p[k].forEach(v => {
           const key = JSON.stringify(v.entry || v);
