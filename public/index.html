@@ -821,7 +821,11 @@ body::before{background-image:var(--desert-image);filter:none}
     if (countyHint) pick = pick.filter(function (f) { return FIPS[f.attributes.CountyID] && FIPS[f.attributes.CountyID].toUpperCase() === countyHint.toUpperCase(); });
     // Same address can have several points (units); collapse to distinct places.
     var places = [], seen = {};
-    pick.forEach(function (f) { var k = f.attributes.CountyID + '|' + f.attributes.ZipCode + '|' + f.attributes.FullAdd; if (!seen[k]) { seen[k] = 1; places.push(f); } });
+    pick.forEach(function (f) {
+      var base = String(f.attributes.FullAdd || '').replace(/\s+(APT|UNIT|STE|SUITE|#|BLDG|LOT|SP|TRLR)\b.*$/i, '');
+      var k = f.attributes.CountyID + '|' + f.attributes.ZipCode + '|' + base;
+      if (!seen[k]) { seen[k] = 1; f.attributes.FullAdd = base; places.push(f); }
+    });
     if (places.length === 1 || (places.length > 1 && places.every(function (f) { return f.attributes.CountyID === places[0].attributes.CountyID && f.attributes.ZipCode === places[0].attributes.ZipCode; }))) {
       var g = places[0];
       return parcelAtPoint(FIPS[g.attributes.CountyID], g.geometry.x, g.geometry.y);
@@ -1195,8 +1199,9 @@ body::before{background-image:var(--desert-image);filter:none}
         'Weber County taxing districts + USDA soil survey', ctx.parcel.county === 'Weber' ? 'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=' + encodeURIComponent(ctx.parcel.id) : null, null,
         'Confirm sewer on the recorded plat; only order perc tests if the lot is not sewered.'));
     } else {
-      var r = (sw || 'unrated').toLowerCase();
-      out.push(F('septic', 'Sewer vs. septic', sw === 'Very limited' ? 'flag' : 'watch', 'Septic likely required; soils rated ' + r + ' for absorption fields',
+      var r = (sw || 'unrated').toLowerCase(), unknown = sewer === null;
+      out.push(F('septic', 'Sewer vs. septic', unknown ? 'verify' : (sw === 'Very limited' ? 'flag' : 'watch'),
+        unknown ? 'Sewer service not mapped for this county; soils rated ' + r + ' if septic' : 'Septic likely required; soils rated ' + r + ' for absorption fields',
         (sewer === false ? 'No mapped sewer service.' : 'Sewer availability not mapped here.') + ' The soil survey rates septic absorption fields as ' + r + '.' + reasonTxt +
         " A \"very limited\" rating doesn't rule out septic, but expect a larger or engineered/alternative system. " + hd + ' issues the permit after a soil profile and percolation test.' +
         (hk ? ' ' + hk.rules + ' ' + hk.feeText : ''),
@@ -1559,6 +1564,9 @@ body::before{background-image:var(--desert-image);filter:none}
     var d = await (ctx.docs || fetchDocs(ctx.parcel, ctx.facts.jurisdiction)), out = [], rec = d.record || {}, no = d.notices || {};
     if (d.unavailable) return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
     var plat = rec.plat || {}, docs = (no.documents || []).filter(Boolean), sub = ctx.parcel.attrs.SUBDIV_NAME || 'the subdivision';
+    if (rec.supported === false) out.push(F('ccr', 'Recorded plat', 'verify', 'Recorded plat not read for ' + ctx.parcel.county + ' County yet',
+      'Automatic plat reading (setback notes, recorded agreements, utility approvals) covers Weber County so far. Public meeting records were still searched for the subdivision.' +
+      (docs.length ? '' : ' None mentioning it were found.'), 'County recorder', ctx.parcel.attrs.BOUNDARY_SRC || null));
     var platUrl = (rec.plats && rec.plats[0] && rec.plats[0].url) || rec.parcelPage;
 
     // Setbacks: plat note first (it governs the lot), then the development standards table.
