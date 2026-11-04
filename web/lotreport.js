@@ -982,8 +982,8 @@
   function fetchDocs(parcel, juris) {
     var base = apiBase();
     if (base == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
-    var get = function (path) {
-      var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, 290000);
+    var get = function (path, ms) {
+      var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
       return fetch(base + path, { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
         .finally(function () { t && clearTimeout(t); });
     };
@@ -993,7 +993,9 @@
       if (!rec || rec.error || !rec.plats || !rec.plats.length) return rec;
       var sheets = rec.plats.slice(0, 6);
       return Promise.all(sheets.map(function (sh) {
-        return get('/api/plat-sheet?url=' + encodeURIComponent(sh.url) + (rec.lot ? '&lot=' + encodeURIComponent(rec.lot) : ''));
+        // Cap each sheet at 90 s: dense certificate sheets can take two minutes and rarely hold lot detail. A capped
+        // sheet keeps running server-side and is cached, so the next dossier for this lot includes it.
+        return get('/api/plat-sheet?url=' + encodeURIComponent(sh.url) + (rec.lot ? '&lot=' + encodeURIComponent(rec.lot) : ''), 90000);
       })).then(function (rs) {
         var plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [] }, lot = null, lotNotes = [];
         rs.forEach(function (r, i) {
