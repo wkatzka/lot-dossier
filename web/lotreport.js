@@ -1124,8 +1124,9 @@
     (plat.hazardReports || []).slice(0, 1).forEach(function (h) {
       out.push(F('geo', 'Subdivision geologic report', 'ok', 'Geologic hazards report on file' + (h.date ? ' (' + title(h.date) + ')' : ''),
         (h.title ? '"' + title(h.title) + '"' : 'A geologic hazards evaluation') + (h.firm ? ' by ' + title(h.firm) : '') + ' covers the subdivision, per the recorded plat.' +
-        (h.publicReview ? ' The plat says it is available for public review at the county planning office; ask for it before ordering a new study.' : ''),
-        'Recorded plat', platUrl));
+        (h.publicReview ? ' The plat says it is available for public review at the county planning office; ask for it before ordering a new study.' : '') +
+        ' The link searches the state geologic report archive for this title.',
+        'Recorded plat + UGS GeoData Archive', 'https://geodata.geology.utah.gov/pages/search.php?search=' + encodeURIComponent((h.title || '').replace(/,.*$/, '') + (h.firm ? ' ' + h.firm.split(' ')[0] : ''))));
     });
 
     // Approval history from public meetings.
@@ -1136,12 +1137,30 @@
     return out;
   };
 
+  /* Utah Geological Survey GeoData Archive: site-specific consultant reports (geologic hazards, fault, geotechnical).
+   * Since HB 384 (May 2024) agencies must submit every such report they receive during permitting. The archive is
+   * browser-only (no open API), so the dossier links to a pre-filled search the user opens in their own browser. */
+  C.check_ugs_archive = async function (ctx) {
+    var a = ctx.parcel.attrs, ugs = 'https://geodata.geology.utah.gov/pages/search.php?search=';
+    var sub = (a.SUBDIV_NAME || '').replace(/\b(phase|ph\.?|plat|unit|amended|subdivision|subd\.?|pud|no\.?)\b.*$/i, '').trim();
+    var street = String(a.PARCEL_ADD || '').replace(/^\d+\s+/, '').trim();
+    var city = String(a.PARCEL_CITY || '').replace(/ City$/i, '').trim();
+    var term = sub || (street && city ? street + ' ' + city : street) || ctx.parcel.county + ' County';
+    var hz = ctx.facts.landslide_cov || (ctx.facts.fault && ctx.facts.fault.ft < 5280);
+    return [F('geo', 'State geologic report archive', 'verify', 'Search the UGS archive for site reports on ' + (sub || street || 'this area'),
+      "The Utah Geological Survey's GeoData Archive holds thousands of consultant geologic-hazard, fault and geotechnical reports, and since May 2024 every such report filed for a permit must be submitted to it. " +
+      'A report for this subdivision or a neighbor can stand in for, or narrow, a new study' + (hz ? ', which matters here given the mapped hazards nearby' : '') + '. ' +
+      'The link opens a search for "' + term + '"' + (sub && street ? '; also try "' + street + '" or the consultant named on the plat' : '') + '.',
+      'UGS GeoData Archive', ugs + encodeURIComponent(term), null,
+      'Open the archive search; if a report covers this lot, share it with your geotechnical engineer before ordering a new study.')];
+  };
+
   var STEPS = [
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'],
     ['check_zoning', 'Zoning district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
-    ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_documents', 'Recorded plat & public records'],
+    ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
     ['check_plan_fit', 'Plan vs. lot conflicts']
   ];
 
