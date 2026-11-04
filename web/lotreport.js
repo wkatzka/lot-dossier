@@ -984,7 +984,8 @@
     if (base == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
     var get = function (path, ms) {
       var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
-      return fetch(base + path, { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
+      var ver = (root.LR_DATA || {}).apiVersion;
+      return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
         .finally(function () { t && clearTimeout(t); });
     };
     var sub = parcel.attrs.SUBDIV_NAME;

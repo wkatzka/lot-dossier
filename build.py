@@ -52,7 +52,14 @@ def build(api_base, inline_assets=False):
   <div id="rv-body"></div>
 </div>
 """
-    data = {"costs": costs, "apiBase": api_base}
+    # Version the API calls by the server code, so a deploy never serves results cached by an older version.
+    import hashlib
+    h = hashlib.sha1()
+    for d in ("api", "lib"):
+        for f in sorted(os.listdir(os.path.join(ROOT, d))):
+            with open(os.path.join(ROOT, d, f), "rb") as fh:
+                h.update(fh.read())
+    data = {"costs": costs, "apiBase": api_base, "apiVersion": h.hexdigest()[:10]}
     scripts = "\n".join([
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
