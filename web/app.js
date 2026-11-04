@@ -1,0 +1,252 @@
+/* Standalone app: home form -> live progress -> report, all in the browser. Needs window.LotReport and window.LR_DATA. */
+(function () {
+  'use strict';
+  var LR = window.LotReport, DATA = window.LR_DATA;
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('form'), prog = $('progress'), err = $('err'), go = $('go');
+  var mode = 'none', last = null, map = null;
+
+  var STATUS = { flag: 'Flag', watch: 'Watch', verify: 'Verify', ok: 'Clear' };
+  var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+  function fmt(n) { return Number(n || 0).toLocaleString('en-US'); }
+
+  /* ---------------- form */
+  var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'cladding'];
+  var extracted = null;
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
+    $('mode-none').hidden = m !== 'none';
+    $('mode-upload').hidden = m !== 'upload';
+    $('plan-fields').hidden = !(m === 'custom' || (m === 'upload' && extracted));
+    $('fields-title').textContent = m === 'upload' ? 'Read from your plan' : 'Plan details';
+    $('fields-note').textContent = m === 'upload' ? 'Check and correct anything we misread.' : 'Fill in what you know; leave the rest blank.';
+  }
+  document.querySelectorAll('.seg button').forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.mode); }); });
+
+  function fillFields(x) {
+    FIELDS.forEach(function (k) {
+      var el = $(k), v = x ? x.fields[k] : null;
+      el.value = v == null ? '' : v;
+      var note = document.querySelector('.src[data-for="' + k + '"]');
+      note.textContent = x && x.src[k] ? 'Found: ' + x.src[k] : (x ? 'Not found in plan' : '');
+    });
+  }
+
+  async function handleFile(file) {
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { err.textContent = 'Choose a PDF plan set.'; return; }
+    err.textContent = '';
+    extracted = null; setMode('upload');
+    $('parse').hidden = false;
+    var st = $('parse-status'); st.className = 'status';
+    $('parse-msg').textContent = 'Reading ' + file.name + '…';
+    $('parse-chips').innerHTML = '';
+    try {
+      var x = await window.PlanReader.read(file, function (i, n) { $('parse-msg').textContent = 'Reading ' + file.name + ': page ' + i + ' of ' + n; });
+      extracted = x;
+      if (x.textChars < 200) {
+        st.className = 'status warn';
+        $('parse-msg').textContent = 'This PDF has no readable text (it may be scanned). Enter the plan details by hand below.';
+      } else {
+        st.className = 'status done';
+        $('parse-msg').textContent = 'Read ' + x.pages + ' pages of ' + file.name + ': found ' + x.found + ' of ' + FIELDS.length + ' details.';
+      }
+      var chips = (x.codes || []).slice(0, 4).map(function (c) { return c; })
+        .concat(x.features.map(function (f) { return f.label; }))
+        .concat(x.plan_sds ? ['SDS ' + x.plan_sds + 'g in structural notes'] : [])
+        .concat(x.climate_zone ? ['Climate zone ' + x.climate_zone] : []);
+      $('parse-chips').innerHTML = chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('');
+      fillFields(x);
+      setMode('upload');
+    } catch (ex) {
+      st.className = 'status warn';
+      $('parse-msg').textContent = 'Could not read that PDF (' + ex.message + '). Enter the plan details by hand below.';
+      extracted = { fields: {}, src: {}, features: [], codes: [], filename: file.name };
+      fillFields(extracted); setMode('upload');
+    }
+  }
+  $('planfile').addEventListener('change', function () { handleFile(this.files[0]); });
+  var drop = $('drop');
+  ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+  drop.addEventListener('drop', function (e) { handleFile(e.dataTransfer.files[0]); });
+
+  function planFromForm() {
+    if (mode === 'none' || (mode === 'upload' && !extracted)) return null;
+    var n = function (k) { var v = parseFloat($(k).value); return isNaN(v) ? null : v; };
+    var v = function (k) { return $(k).value || null; };
+    var x = mode === 'upload' ? extracted : null;
+    var plan = { name: x ? x.filename : 'Plan details', filename: x ? x.filename : null,
+      footprint: { residence_sf: n('residence_sf'), garage_sf: n('garage_sf'), width_ft: n('width_ft'), depth_ft: n('depth_ft') },
+      bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), cladding: v('cladding'),
+      structural: { ground_snow_load_psf: n('ground_snow_load_psf'), bearing_psf: n('bearing_psf') },
+      codes: x ? x.codes : [], features: x ? x.features : [], plan_sds: x ? x.plan_sds : null, plan_sdc: x ? x.plan_sdc : null, src: {} };
+    // Keep provenance only for values the user left as read.
+    if (x) FIELDS.forEach(function (k) { if (x.src[k] && String(x.fields[k]) === String($(k).value)) plan.src[k] = x.src[k]; });
+    if (x && x.src.plan_sds) plan.src.plan_sds = x.src.plan_sds;
+    var any = FIELDS.some(function (k) { return $(k).value; });
+    if (!any && !x) return null;
+    if (!plan.footprint.residence_sf && !plan.footprint.width_ft) delete plan.footprint.residence_sf;
+    return plan;
+  }
+
+  /* ---------------- progress */
+  var steps = LR.STEPS.map(function (s) { return { id: s[0], label: s[1], state: 'pending' }; });
+  function renderSteps() {
+    $('steps').innerHTML = steps.map(function (s) { return '<li class="' + s.state + '"><span class="ic" aria-hidden="true"></span>' + esc(s.label) + '</li>'; }).join('');
+    var done = steps.filter(function (s) { return s.state === 'done' || s.state === 'failed'; }).length;
+    $('bar').style.width = Math.max(4, Math.round(done / steps.length * 100)) + '%';
+  }
+  function fail(msg) {
+    prog.classList.remove('on'); form.classList.remove('off');
+    go.disabled = false; go.textContent = 'Generate dossier';
+    err.textContent = msg; $('address').focus();
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    err.textContent = '';
+    var q = $('address').value.trim();
+    if (!/^\d+\s+\S+/.test(q) && !LR.looksLikeParcel(q)) { err.textContent = 'Enter a street address starting with the house number, or a county parcel ID.'; $('address').focus(); return; }
+    var plan = planFromForm();
+    go.disabled = true;
+    steps.forEach(function (s) { s.state = 'pending'; });
+    form.classList.add('off'); prog.classList.add('on');
+    $('phase').textContent = 'Finding the parcel';
+    $('found-title').textContent = 'Looking up ' + q + '…';
+    $('found-sub').textContent = 'Searching Utah county parcel records';
+    renderSteps();
+    var parcel;
+    try { parcel = await LR.locate(q); }
+    catch (ex) {
+      return fail(ex.notFound ? ex.message + '. Check the house number and street, or enter the county parcel ID instead.'
+        : 'Could not reach the county parcel service (' + ex.message + '). Check your internet connection and try again.');
+    }
+    var a = parcel.attrs;
+    $('found-title').textContent = a.PARCEL_ADD || 'Parcel ' + parcel.id;
+    $('found-sub').textContent = 'Parcel ' + parcel.id + ' · ' + parcel.county + ' County · ' + a.PARCEL_ACRES + ' acres' + (a.SUBDIV_NAME ? ' · ' + a.SUBDIV_NAME : '');
+    $('phase').textContent = 'Checking public records';
+    var res = await LR.run(parcel, plan, DATA.costs, function (id, state) {
+      steps.forEach(function (s) { if (s.id === id) s.state = state; }); renderSteps();
+    });
+    $('phase').textContent = 'Report ready';
+    last = { parcel: parcel, plan: plan, findings: res.findings, date: new Date() };
+    showReport();
+    prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
+  });
+
+  /* ---------------- report */
+  function rollup(findings) {
+    var seen = {}, rows = [];
+    findings.slice().sort(function (a, b) { return ORDER[a.status] - ORDER[b.status]; }).forEach(function (f) {
+      if (f.cost && f.status !== 'ok' && !seen[f.cost.key]) { seen[f.cost.key] = 1; rows.push(f); }
+    });
+    return rows;
+  }
+
+  function reportHTML(r) {
+    var a = r.parcel.attrs, f = r.findings, plan = r.plan;
+    var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
+    var costs = rollup(f), lo = costs.reduce(function (s, x) { return s + x.cost.low; }, 0), hi = costs.reduce(function (s, x) { return s + x.cost.high; }, 0);
+    var row = function (x) {
+      var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
+      return '<article class="frow s-' + x.status + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
+        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
+        (x.cost && x.status !== 'ok' ? '<div class="cost">' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
+        '<div class="src">' + src + '</div></div></article>';
+    };
+    var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
+    var groups = order.map(function (c) {
+      var fs = f.filter(function (x) { return x.section === c[0]; }).sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; });
+      if (!fs.length) return '';
+      return '<section class="group"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
+    }).join('');
+    var flags = f.filter(function (x) { return x.status === 'flag'; });
+    var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
+    var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
+      .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
+    var costRows = costs.map(function (x) { return '<tr><td><span class="dot s-' + x.status + '"></span>' + esc(x.cost.label) + '</td><td>' + money(x.cost.low) + '</td><td>' + money(x.cost.high) + '</td></tr>'; }).join('');
+    var planHtml = '';
+    if (plan) {
+      var fp = plan.footprint || {}, cells = [['Plan', plan.name]];
+      if (fp.residence_sf) cells.push(['Footprint', fmt(fp.residence_sf) + (fp.garage_sf ? ' + ' + fmt(fp.garage_sf) : '') + ' sq ft']);
+      if (fp.width_ft && fp.depth_ft) cells.push(['Envelope', Math.round(fp.width_ft) + '′ × ' + Math.round(fp.depth_ft) + '′']);
+      if (plan.bedrooms) cells.push(['Bedrooms', plan.bedrooms]);
+      if (plan.foundation) cells.push(['Foundation', { basement: 'Basement', crawlspace: 'Crawlspace', slab: 'Slab on grade' }[plan.foundation]]);
+      if ((plan.structural || {}).ground_snow_load_psf) cells.push(['Snow load', plan.structural.ground_snow_load_psf + ' psf']);
+      planHtml = '<div class="planfacts">' + cells.slice(0, 4).map(function (c) { return '<div><span>' + esc(c[0]) + '</span><b>' + esc(c[1]) + '</b></div>'; }).join('') + '</div>';
+    }
+    var legal = a.SUBDIV_NAME || '';
+    var pc = f.filter(function (x) { return x.section === 'plan' && (x.status === 'flag' || x.status === 'watch'); });
+    var planSum = plan ? '<h2 style="margin-top:18px">Plan conflicts</h2><ul class="top">' + (pc.length ? pc.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No conflicts between the plan and the lot found.</li>') + '</ul>' : '';
+    var date = r.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return '<div class="wrap"><div class="eyebrow">Due diligence dossier · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
+      '<div class="meta"><span>' + esc((a.PARCEL_CITY || '') + ', UT') + '</span><span>' + esc(legal) + '</span><span>Parcel ' + esc(r.parcel.id) + ' · ' + esc(r.parcel.county) +
+      ' County</span><span>' + esc(a.PARCEL_ACRES) + ' acres</span></div>' +
+      '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
+      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Flags</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Watch</span></div>' +
+      '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
+      '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
+      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + '</div></div>' + planHtml + groups +
+      '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
+      '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
+      '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
+      'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
+  }
+
+  function drawMap(rings) {
+    var el = document.getElementById('map');
+    if (!window.L) { el.textContent = 'Map needs an internet connection.'; return; }
+    try {
+      if (map) { map.remove(); map = null; }
+      map = L.map(el, { scrollWheelZoom: false });
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 20, attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }).addTo(map);
+      var poly = L.polygon(rings.map(function (r) { return r.map(function (p) { return [p[1], p[0]]; }); }), { color: '#ffd54a', weight: 3, fillOpacity: 0.08 }).addTo(map);
+      map.fitBounds(poly.getBounds(), { padding: [30, 30] });
+    } catch (e) { el.textContent = 'Map unavailable.'; }
+  }
+
+  function showReport(fromHistory) {
+    $('rv-body').innerHTML = reportHTML(last);
+    document.body.classList.add('show-report');
+    document.title = 'Lot Dossier · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
+    window.scrollTo(0, 0);
+    drawMap(last.parcel.rings);
+    if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
+  }
+  function showHome(fromHistory) {
+    document.body.classList.remove('show-report');
+    document.title = 'Lot Dossier';
+    if (!fromHistory) try { history.pushState({}, '', location.pathname); } catch (e) {}
+    $('address').focus();
+  }
+  $('rv-new').addEventListener('click', function () { showHome(); });
+  $('rv-print').addEventListener('click', function () { window.print(); });
+  window.addEventListener('popstate', function (e) { if (e.state && e.state.report && last) showReport(true); else showHome(true); });
+
+  /* Save the current report as its own small HTML file (to email or archive). */
+  $('rv-save').addEventListener('click', function () {
+    if (!last) return;
+    var css = Array.prototype.map.call(document.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n');
+    var rings = JSON.stringify(last.parcel.rings.map(function (r) { return r.map(function (p) { return [p[1], p[0]]; }); }));
+    var nav = document.querySelector('#rv .topnav').outerHTML;
+    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>' + esc(document.title) + '</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">' +
+      '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><style>' + css + '</style></head>' +
+      '<body class="show-report saved"><div id="rv">' + nav + '<div id="rv-body">' + reportHTML(last) + '</div></div>' +
+      '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"><\/script><script>try{var m=L.map("map",{scrollWheelZoom:false});' +
+      'L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20,attribution:"Imagery &copy; Esri, Maxar, Earthstar Geographics"}).addTo(m);' +
+      'var p=L.polygon(' + rings + ',{color:"#ffd54a",weight:3,fillOpacity:.08}).addTo(m);m.fitBounds(p.getBounds(),{padding:[30,30]});}catch(e){document.getElementById("map").textContent="Map needs an internet connection."}' +
+      'document.querySelectorAll("[data-print]").forEach(function(b){b.onclick=function(){print()}});<\/script></body></html>';
+    var slug = (last.parcel.attrs.PARCEL_ADD || last.parcel.id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var url = URL.createObjectURL(new Blob([doc], { type: 'text/html' }));
+    var link = document.createElement('a'); link.href = url; link.download = 'lot-dossier-' + slug + '.html';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  });
+})();

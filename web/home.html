@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lot Dossier</title>
+<meta name="description" content="Due diligence dossiers for spec home lots in Utah: water, hazards, septic, utilities, zoning and permits from one address, checked against your building plan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eeede6; --bg-2:#e4e3d9; --panel:#fbfaf6; --ink:#1c211d; --muted:#5d645c; --line:#d9d7cc;
+  --brand:#1f2b23; --brand-ink:#f5f4ee; --accent:#8a6a3b; --focus:#3d6b4f;
+  --flag:#b3261e; --watch:#a15c00; --verify:#2f5d8a; --ok:#2e6b3f;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121513; --bg-2:#181c19; --panel:#1b201c; --ink:#e9ebe6; --muted:#a2a99f; --line:#2d332e;
+  --brand:#d7e5da; --brand-ink:#121513; --accent:#d6b27a; --focus:#8fc7a1;
+  --flag:#ff8a80; --watch:#ffc266; --verify:#8fbbe8; --ok:#86d19b;
+}}
+:root[data-theme="dark"]{
+  --bg:#121513; --bg-2:#181c19; --panel:#1b201c; --ink:#e9ebe6; --muted:#a2a99f; --line:#2d332e;
+  --brand:#d7e5da; --brand-ink:#121513; --accent:#d6b27a; --focus:#8fc7a1;
+  --flag:#ff8a80; --watch:#ffc266; --verify:#8fbbe8; --ok:#86d19b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "DM Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:Manrope,Arial,sans-serif;letter-spacing:-.02em;margin:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.wordmark{font:800 18px Manrope,sans-serif;letter-spacing:-.02em;color:var(--brand);text-decoration:none}
+
+nav.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+nav.top .links{display:flex;gap:22px;align-items:center;font-size:14px;font-weight:500}
+nav.top .links a{text-decoration:none;color:var(--muted)}
+nav.top .links a:hover{color:var(--ink)}
+@media (max-width:640px){nav.top .links a:not(.cta){display:none}}
+
+.btn{appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--brand);color:var(--brand-ink);font:600 15px "DM Sans",sans-serif;padding:13px 22px;border-radius:999px;text-decoration:none}
+.btn:hover{filter:brightness(1.12)}
+.btn:disabled{opacity:.55;cursor:progress}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line);padding:9px 16px;font-size:14px}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start;padding:20px 0 56px}
+@media (max-width:920px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero .eyebrow{margin:0 0 14px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 1px 0 rgba(0,0,0,.02),0 12px 32px -18px rgba(31,43,35,.25)}
+label.lbl,.lbl{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
+input[type=text],input[type=number],select{width:100%;font:16px "DM Sans",sans-serif;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-width:0}
+input:focus,select:focus,button:focus-visible,.drop:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 13px "DM Sans",sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.planbox{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.planbox .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:420px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.grid2 label{font-size:12px;color:var(--muted);font-weight:600}
+.grid2 input,.grid2 select{margin-top:4px;padding:10px 12px;font-size:15px}
+.grid2 .src{display:block;font-weight:500;font-size:11px;color:var(--accent);margin-top:3px;min-height:14px}
+.err{color:var(--flag);font-size:14px;margin-top:10px;min-height:1px}
+.submit{margin-top:18px;width:100%}
+
+.drop{display:block;border:1.5px dashed var(--line);border-radius:14px;padding:22px 16px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .15s}
+.drop:hover,.drop.over{border-color:var(--brand)}
+.drop b{display:block;font-size:15px;margin-bottom:2px}
+.drop span{font-size:13px;color:var(--muted)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.parse{margin-top:14px}
+.parse .status{display:flex;align-items:center;gap:10px;font-size:14px;padding:10px 12px;border-radius:12px;background:var(--bg)}
+.parse .status .ic{width:16px;height:16px;border-radius:50%;flex:none;border:2px solid var(--brand);border-top-color:transparent;animation:spin .8s linear infinite}
+.parse .status.done .ic{animation:none;border:0;background:var(--ok)}
+.parse .status.warn .ic{animation:none;border:0;background:var(--watch)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chips span{font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px;background:var(--bg);border:1px solid var(--line)}
+.extract-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:14px 0 8px}
+.extract-h b{font-size:14px}
+.extract-h span{font-size:12px;color:var(--muted)}
+
+.side{display:grid;gap:12px}
+.side .card{box-shadow:none}
+.side h2{font-size:18px;margin:0 0 10px;color:var(--brand)}
+.side ol{margin:0;padding-left:20px;color:var(--muted);font-size:15px}
+.side ol li{margin:6px 0}
+.side ol b{color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.facts div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.facts b{font:800 24px Manrope,sans-serif;display:block;color:var(--brand)}
+.facts span{font-size:13px;color:var(--muted)}
+
+#progress{display:none}
+#progress.on{display:block}
+#form.off{display:none}
+.found{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:14px;background:var(--bg);margin:12px 0 16px;min-height:62px}
+.found b{display:block}
+.found span{font-size:14px;color:var(--muted)}
+.bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;width:0;background:var(--brand);transition:width .4s ease}
+ol.steps{list-style:none;margin:0;padding:0;columns:2;column-gap:20px}
+@media (max-width:520px){ol.steps{columns:1}}
+ol.steps li{display:flex;gap:9px;align-items:center;font-size:14px;padding:5px 0;color:var(--muted);break-inside:avoid}
+ol.steps li.running{color:var(--ink);font-weight:600}
+ol.steps li.done{color:var(--ink)}
+ol.steps .ic{width:16px;height:16px;border-radius:50%;flex:none;border:2px solid var(--line)}
+li.running .ic{border-color:var(--brand)!important;border-top-color:transparent!important;animation:spin .8s linear infinite}
+li.done .ic{border:0!important;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+li.failed .ic{border:0!important;background:var(--watch)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){li.running .ic,.parse .status .ic{animation:none}}
+
+section.band{padding:64px 0;border-top:1px solid var(--line)}
+section.band h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;color:var(--brand);margin:8px 0 10px}
+section.band p.sub{color:var(--muted);max-width:40em;margin:0 0 30px}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.check{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.check .n{font:700 12px Manrope,sans-serif;color:var(--accent);letter-spacing:.08em}
+.check h3{font-size:17px;margin:6px 0 6px}
+.check p{margin:0;font-size:14px;color:var(--muted)}
+.check .src{margin-top:10px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:8px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.how{grid-template-columns:minmax(0,1fr)}}
+.how div{padding:20px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.how .k{font:800 36px Manrope,sans-serif;color:var(--line)}
+.how h3{font-size:18px;margin:4px 0 6px}
+.how p{margin:0;color:var(--muted);font-size:15px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:14px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px;background:var(--c)}
+footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Primary">
+    <a class="wordmark" href="#start">Lot Dossier</a>
+    <div class="links">
+      <a href="#checks">What we check</a>
+      <a href="#how">How it works</a>
+      <a class="btn ghost cta" href="#start">Start a dossier</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="start">
+    <div>
+      <h1 class="sr-only">Spec home due diligence dossier</h1>
+      <div class="eyebrow">Spec home due diligence dossier generation · Utah pilot</div>
+
+      <div class="card">
+        <form id="form" novalidate>
+          <label class="lbl" for="address">Lot address or parcel ID</label>
+          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="House number, street, city" required>
+          <div class="hint">No address yet? Enter the county parcel ID instead (for example 12-345-6789).</div>
+
+          <div class="planbox">
+            <div class="row">
+              <span class="lbl" id="plan-lbl" style="margin:0">Building plan <span style="color:var(--muted);font-weight:500">(optional)</span></span>
+              <div class="seg" role="group" aria-labelledby="plan-lbl">
+                <button type="button" data-mode="none" aria-pressed="true">None yet</button>
+                <button type="button" data-mode="upload" aria-pressed="false">Upload plan</button>
+                <button type="button" data-mode="custom" aria-pressed="false">Enter details</button>
+              </div>
+            </div>
+            <div id="mode-none" class="hint" style="margin:0">Add a plan to check it against the lot: foundation vs. groundwater, septic sizing, footprint vs. setbacks, design loads and more.</div>
+
+            <div id="mode-upload" hidden>
+              <label class="drop" id="drop">
+                <input type="file" id="planfile" accept="application/pdf,.pdf">
+                <b>Drop a plan set PDF, or click to choose</b>
+                <span>Read in your browser. The file is never uploaded anywhere.</span>
+              </label>
+              <div class="parse" id="parse" hidden>
+                <div class="status" id="parse-status"><span class="ic" aria-hidden="true"></span><span id="parse-msg">Reading plan…</span></div>
+                <div class="chips" id="parse-chips"></div>
+              </div>
+            </div>
+
+            <div id="plan-fields" hidden>
+              <div class="extract-h"><b id="fields-title">Plan details</b><span id="fields-note">Check and correct anything we misread.</span></div>
+              <div class="grid2">
+                <label>House footprint (sq ft)<input type="number" min="0" inputmode="numeric" id="residence_sf"><span class="src" data-for="residence_sf"></span></label>
+                <label>Garage (sq ft)<input type="number" min="0" inputmode="numeric" id="garage_sf"><span class="src" data-for="garage_sf"></span></label>
+                <label>Overall width (ft)<input type="number" min="0" inputmode="decimal" id="width_ft"><span class="src" data-for="width_ft"></span></label>
+                <label>Overall depth (ft)<input type="number" min="0" inputmode="decimal" id="depth_ft"><span class="src" data-for="depth_ft"></span></label>
+                <label>Bedrooms<input type="number" min="0" inputmode="numeric" id="bedrooms"><span class="src" data-for="bedrooms"></span></label>
+                <label>Stories above grade<input type="number" min="0" inputmode="numeric" id="stories"><span class="src" data-for="stories"></span></label>
+                <label>Foundation
+                  <select id="foundation"><option value="">Not specified</option><option value="basement">Full or partial basement</option><option value="crawlspace">Crawlspace</option><option value="slab">Slab on grade</option></select>
+                  <span class="src" data-for="foundation"></span></label>
+                <label>Building height (ft)<input type="number" min="0" inputmode="decimal" id="height_ft"><span class="src" data-for="height_ft"></span></label>
+                <label>Ground snow load (psf)<input type="number" min="0" inputmode="numeric" id="ground_snow_load_psf"><span class="src" data-for="ground_snow_load_psf"></span></label>
+                <label>Allowable soil bearing (psf)<input type="number" min="0" inputmode="numeric" id="bearing_psf"><span class="src" data-for="bearing_psf"></span></label>
+                <label>Heating fuel
+                  <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
+                  <span class="src" data-for="fuel"></span></label>
+                <label>Exterior cladding
+                  <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
+                  <span class="src" data-for="cladding"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="err" id="err" role="alert"></div>
+          <button class="btn submit" id="go" type="submit">Generate dossier</button>
+        </form>
+
+        <div id="progress" aria-live="polite">
+          <div class="eyebrow" id="phase">Finding the parcel</div>
+          <div class="found" id="found"><div><b id="found-title">Looking up the address&hellip;</b><span id="found-sub">Searching Utah county parcel records</span></div></div>
+          <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+          <ol class="steps" id="steps"></ol>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side" aria-label="About the dossier">
+      <div class="card">
+        <h2>What you get</h2>
+        <ol>
+          <li><b>Red flags</b> from state, county and federal hazard, water, soil and utility maps.</li>
+          <li><b>Site cost adders</b> for the items that usually blow up a spec budget.</li>
+          <li><b>Plan conflicts</b>: where your building plan runs into the lot's conditions.</li>
+          <li><b>A call list</b> for the few things public data can't settle.</li>
+        </ol>
+      </div>
+      <div class="facts">
+        <div><b>15+</b><span>public data sources</span></div>
+        <div><b>~1 min</b><span>per dossier</span></div>
+        <div><b>29</b><span>Utah counties searchable</span></div>
+      </div>
+    </aside>
+  </header>
+</div>
+
+<section class="band" id="checks">
+  <div class="wrap">
+    <div class="eyebrow">What we check</div>
+    <h2>The pre-purchase checklist, automated</h2>
+    <p class="sub">Every item an experienced spec builder asks about before buying a lot. Each comes back clear, watch, flag or verify, with its source.</p>
+    <div class="checks">
+      <div class="check"><div class="n">01</div><h3>Land &amp; zoning</h3><p>Parcel boundary, acreage, assessor value, jurisdiction, zoning district and its setbacks.</p><div class="src">UGRC parcels · county GIS · land use code</div></div>
+      <div class="check"><div class="n">02</div><h3>Water rights</h3><p>Culinary water provider, irrigation companies and places of use, nearby wells and water rights.</p><div class="src">Utah Division of Water Rights</div></div>
+      <div class="check"><div class="n">03</div><h3>Geologic hazards</h3><p>Mapped landslides, active faults, liquefaction, shallow groundwater, flood zones, seismic category.</p><div class="src">Utah Geological Survey · FEMA · USGS</div></div>
+      <div class="check"><div class="n">04</div><h3>Septic &amp; perc</h3><p>Sewer availability, soil suitability for absorption fields, water table depth, source protection zones.</p><div class="src">USDA soil survey · health districts</div></div>
+      <div class="check"><div class="n">05</div><h3>Power, gas &amp; internet</h3><p>Utility providers and evidence of service nearby.</p><div class="src">UGRC utilities · county parcels</div></div>
+      <div class="check"><div class="n">06</div><h3>Access &amp; fire</h3><p>Road frontage, wildland-urban interface, nearest fire station and hydrant.</p><div class="src">UGRC roads · county GIS · Utah FFSL</div></div>
+      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision and PUD status, recorded covenants, architectural review to expect.</p><div class="src">County recorder</div></div>
+      <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from 1-meter LiDAR, before you order a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
+      <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Permitting authority, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
+      <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="how">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2>From address to dossier</h2>
+    <p class="sub">Public maps don't replace a survey, a geotech report or a perc test. They tell you which of those you'll need, roughly what they'll cost, and where your plan will have to change, before you spend money on the lot.</p>
+    <div class="how">
+      <div><div class="k">1</div><h3>Locate the parcel</h3><p>We match the address or parcel ID to the county record and its exact boundary.</p></div>
+      <div><div class="k">2</div><h3>Check every layer</h3><p>The boundary is tested against state, county and federal maps. If you add a plan, it's read and compared with what we find.</p></div>
+      <div><div class="k">3</div><h3>Get the dossier</h3><p>Red flags, plan conflicts, cost adders and next steps. Print it or save it as a file to share.</p></div>
+    </div>
+    <div class="legend">
+      <span style="--c:var(--flag)">Flag: likely material cost or risk</span>
+      <span style="--c:var(--watch)">Watch: adds cost or steps</span>
+      <span style="--c:var(--verify)">Verify: needs a document or site test</span>
+      <span style="--c:var(--ok)">Clear: nothing found</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="wordmark">Lot Dossier</span>
+    <span>Screening tool built on public data. Not a survey, geotechnical report, title report or appraisal.</span>
+  </div>
+</footer>
+</body>
+</html>
