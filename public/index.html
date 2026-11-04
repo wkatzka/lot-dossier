@@ -1549,8 +1549,32 @@ body::before{background-image:var(--desert-image);filter:none}
         .finally(function () { t && clearTimeout(t); });
     };
     var sub = parcel.attrs.SUBDIV_NAME;
+    // Parcel record first (fast), then every recorded plat sheet OCR'd in parallel, one function call per sheet.
+    var record = get('/api/parcel-docs?county=' + encodeURIComponent(parcel.county) + '&parcel=' + encodeURIComponent(parcel.id) + '&sheets=0').then(function (rec) {
+      if (!rec || rec.error || !rec.plats || !rec.plats.length) return rec;
+      var sheets = rec.plats.slice(0, 6);
+      return Promise.all(sheets.map(function (sh) {
+        return get('/api/plat-sheet?url=' + encodeURIComponent(sh.url) + (rec.lot ? '&lot=' + encodeURIComponent(rec.lot) : ''));
+      })).then(function (rs) {
+        var plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [] }, lot = null, lotNotes = [];
+        rs.forEach(function (r, i) {
+          if (!r || r.error || !r.plat) return;
+          var p = r.plat, sheet = r.sheet || sheets[i].sheet;
+          if (!plat.setbacks && p.setbacks) plat.setbacks = Object.assign({}, p.setbacks, { sheet: sheet, url: r.url });
+          ['entries', 'approvals', 'associations', 'hazardReports', 'notes'].forEach(function (k) {
+            (p[k] || []).forEach(function (v) { var key = JSON.stringify(v.entry || v.text || v); if (!plat[k].some(function (x) { return JSON.stringify(x.entry || x.text || x) === key; })) plat[k].push(v); });
+          });
+          var L = r.lot, sc = function (x) { return x ? (x.acres ? 2 : 0) + (x.platAddress ? 2 : 0) + x.easements.length + x.mentions.length : -1; };
+          if (L && sc(L) > sc(lot)) lot = Object.assign({}, L, { sheet: sheet, url: r.url });
+          (r.notesForLot || []).forEach(function (n) { lotNotes.push(Object.assign({ sheet: sheet }, n)); });
+        });
+        rec.plat = plat; rec.lotInfo = lot; rec.lotNotes = lotNotes;
+        rec.sheetsRead = rs.filter(function (r) { return r && !r.error; }).length; rec.sheetsTotal = sheets.length;
+        return rec;
+      });
+    });
     return Promise.all([
-      get('/api/parcel-docs?county=' + encodeURIComponent(parcel.county) + '&parcel=' + encodeURIComponent(parcel.id)),
+      record,
       sub ? get('/api/notices?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county) + '&juris=' + encodeURIComponent(juris || '')) : Promise.resolve(null)
     ]).then(function (r) { return { record: r[0], notices: r[1] }; });
   }
@@ -1635,6 +1659,23 @@ body::before{background-image:var(--desert-image);filter:none}
       replaceFinding(ctx, 'water', 'Culinary water', F('water', 'Culinary water', 'watch', 'Culinary water: ' + waterDoc.provider + ' (will-serve letter on file)',
         '"' + waterDoc.text.replace(/\s+/g, ' ').slice(0, 240) + '" (' + cite(waterDoc.doc) + '). This supersedes the state service-area map for this subdivision.',
         cite(waterDoc.doc), waterDoc.doc.url, ctx.cost('culinary_connection'), 'Get the connection fee and any share requirement from ' + waterDoc.provider + '.'));
+    }
+
+    // The lot itself, as drawn on the recorded plat.
+    var L = rec.lotInfo;
+    if (L || (rec.lotNotes && rec.lotNotes.length)) {
+      var bits = [];
+      if (L && L.acres) bits.push(L.acres + ' acres platted');
+      if (L && L.easements.length) bits.push(L.easements.join(', '));
+      if (L && L.mentions.length) bits.push(L.mentions.map(function (x) { return x.toLowerCase(); }).join(', ') + ' marked on the lot');
+      var lotNo = (L && L.lot) || rec.lot;
+      out.push(F('land', 'Lot on the recorded plat', L && L.mentions.length ? 'watch' : 'ok', 'Lot ' + lotNo + (bits.length ? ': ' + bits.join('; ') : ''),
+        (rec.legal ? 'Legal description: ' + rec.legal + ' ' : '') +
+        (L ? 'From recorded plat sheet ' + L.sheet + ': ' + (L.acres ? L.acres + ' acres; ' : '') + (L.platAddress ? 'platted address ' + L.platAddress + '; ' : '') +
+          (L.easements.length ? 'easements drawn on the lot: ' + L.easements.join(', ') + ' (no structures within them). ' : 'no easements labeled on the lot. ') : '') +
+        (rec.lotNotes && rec.lotNotes.length ? 'Plat notes naming this lot: ' + rec.lotNotes.map(function (n) { return '"' + n.text.slice(0, 160) + '"'; }).join(' ') + ' ' : '') +
+        (rec.sheetsTotal ? '(' + rec.sheetsRead + ' of ' + rec.sheetsTotal + ' plat sheets read.)' : ''),
+        'Recorded plat ' + ((L && L.sheet) || ''), (L && L.url) || platUrl));
     }
 
     // Subdivision geologic report referenced on the plat.

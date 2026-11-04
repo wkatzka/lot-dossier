@@ -8,7 +8,8 @@ module.exports = async (req, res) => {
   if (cors(req, res)) return;
   const q = query(req), t0 = Date.now();
   const county = (q.county || 'Weber').trim(), parcel = String(q.parcel || '').replace(/[^0-9]/g, '');
-  const maxSheets = Math.min(3, Math.max(1, +q.sheets || 1));
+  // sheets=0: record only (the app then OCRs every sheet in parallel via /api/plat-sheet).
+  const maxSheets = q.sheets === '0' ? 0 : Math.min(3, Math.max(1, +q.sheets || 1));
   if (!parcel) return send(res, 400, { error: 'parcel is required' });
   if (county !== 'Weber') return send(res, 200, { county, parcel, supported: false, note: 'Recorded plats are only read for Weber County so far.' });
   try {
@@ -30,7 +31,7 @@ module.exports = async (req, res) => {
       } catch (e) { ocr.push({ sheet: s.sheet, url: s.url, error: String(e.message || e) }); }
     }
     send(res, 200, { county, parcel, supported: true, parcelPage: rec.url, subdivision: rec.subdivision, references: rec.references,
-      priorParcels: rec.priorParcels, plats: rec.plats, ocr, plat, ms: Date.now() - t0 }, 30 * 86400);
+      priorParcels: rec.priorParcels, legal: rec.legal, lot: rec.lot, plats: rec.plats, ocr, plat, ms: Date.now() - t0 }, 30 * 86400);
   } catch (e) {
     send(res, 502, { error: String(e.message || e), ms: Date.now() - t0 });
   }

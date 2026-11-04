@@ -9,6 +9,10 @@
     "api/notices.js": {
       "maxDuration": 300,
       "includeFiles": "node_modules/pdfjs-dist/legacy/build/**"
+    },
+    "api/plat-sheet.js": {
+      "maxDuration": 300,
+      "includeFiles": "node_modules/{tesseract.js,tesseract.js-core}/**"
     }
   },
   "headers": [

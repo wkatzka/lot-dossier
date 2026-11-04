@@ -2,6 +2,7 @@
 // Search Utah public notices for a subdivision, read matching agendas/minutes and their packet PDFs, and extract
 // development standards, utility providers and CC&R recordings, each with a citation.
 const pmn = require('../lib/pmn');
+const countydocs = require('../lib/countydocs');
 const ex = require('../lib/extract');
 const { buffer, pool } = require('../lib/http');
 const { cors, query, send } = require('../lib/respond');
@@ -63,7 +64,11 @@ module.exports = async (req, res) => {
     const score = f => (/packet|staff|agreement/i.test(f.name) ? 2 : 0) + (/planning commission|county commission|city council/i.test(f.notice.title + ' ' + f.notice.body) ? 1 : 0)
       + (new RegExp(subRe.source + '[^.]{0,160}(development agreement|rezone|master plan|MPD|PUD)|(development agreement|rezone|MPD|PUD)[^.]{0,160}' + kw.search, 'i').test(f.notice.text) ? 4 : 0)
       + (new RegExp(kw.search + '[^.]{0,120}(final|subdivision)', 'i').test(f.notice.text) ? 2 : 0);
-    const chosen = files.sort((a, b) => score(b) - score(a) || b.notice.date.localeCompare(a.notice.date)).slice(0, +q.docs || 5);
+    // Agreements and staff reports posted only on the county's own site (often the executed version).
+    const county2 = county ? county.replace(/ County$/i, '') : '';
+    const countyFiles = (await countydocs.find(county2, kw.search, subRe).catch(() => []))
+      .filter(f => f.type === 'pdf').sort((a, b) => (/agreement|\bDA\b/i.test(b.name) - /agreement|\bDA\b/i.test(a.name)) || b.notice.date.localeCompare(a.notice.date)).slice(0, 2);
+    const chosen = countyFiles.concat(files.sort((a, b) => score(b) - score(a) || b.notice.date.localeCompare(a.notice.date))).slice(0, +q.docs || 6);
     const documents = (await pool(chosen, 3, async f => {
       if (Date.now() > deadline - 20000) return null;
       const buf = await buffer(f.url, { timeout: Math.max(10000, Math.min(90000, deadline - Date.now() - 15000)), maxBytes: 120e6 });
