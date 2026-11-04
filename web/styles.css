@@ -381,3 +381,8 @@ body::before{background-image:var(--desert-image);filter:none}
 @media(max-width:560px){#rv .frow{grid-template-columns:minmax(0,1fr);gap:12px}}
 }
 
+
+/* Ambiguous-address choices */
+.err .matches{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.err .match{appearance:none;text-align:left;font:500 13px "DM Sans",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.err .match:hover{border-color:var(--brand)}

@@ -100,10 +100,21 @@
     var done = steps.filter(function (s) { return s.state === 'done' || s.state === 'failed'; }).length;
     $('bar').style.width = Math.max(4, Math.round(done / steps.length * 100)) + '%';
   }
-  function fail(msg) {
+  function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
     go.disabled = false; go.textContent = 'Generate dossier';
-    err.textContent = msg; $('address').focus();
+    err.textContent = msg;
+    if (options && options.length) {
+      // Offer the matches as one-click choices that fill the address field.
+      var list = document.createElement('div'); list.className = 'matches';
+      options.forEach(function (o) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'match'; b.textContent = o;
+        b.addEventListener('click', function () { $('address').value = o.replace(/ \((.*?) County.*$/, ', $1 County').replace(/, parcel .*$/, ''); err.textContent = ''; $('address').focus(); });
+        list.appendChild(b);
+      });
+      err.appendChild(list);
+    }
+    $('address').focus();
   }
 
   form.addEventListener('submit', async function (e) {
@@ -122,6 +133,7 @@
     var parcel;
     try { parcel = await LR.locate(q); }
     catch (ex) {
+      if (ex.ambiguous) return fail(ex.message, ex.options);
       return fail(ex.notFound ? ex.message + '. Check the house number and street, or enter the county parcel ID instead.'
         : 'Could not reach the county parcel service (' + ex.message + '). Check your internet connection and try again.');
     }

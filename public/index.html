@@ -392,6 +392,11 @@ body::before{background-image:var(--desert-image);filter:none}
 }
 
 
+/* Ambiguous-address choices */
+.err .matches{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.err .match{appearance:none;text-align:left;font:500 13px "DM Sans",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.err .match:hover{border-color:var(--brand)}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
@@ -719,52 +724,141 @@ body::before{background-image:var(--desert-image);filter:none}
   }
 
   async function findByParcel(pid, county) {
-    var id = String(pid).replace(/[^0-9A-Za-z]/g, '');
-    var f = await arcgisQuery(lirUrl(county), { where: "PARCEL_ID='" + id + "'", returnGeometry: true });
-    if (!f.length) { var e = new Error('Parcel ' + id + ' not found in ' + county + ' County'); e.notFound = true; throw e; }
+    var raw = String(pid).trim().toUpperCase().replace(/'/g, ''), bare = raw.replace(/[^0-9A-Z]/g, '');
+    var f = await arcgisQuery(lirUrl(county), { where: "PARCEL_ID IN ('" + raw + "','" + bare + "')", returnGeometry: true });
+    if (!f.length) { var e = new Error('Parcel ' + raw + ' not found in ' + county + ' County'); e.notFound = true; throw e; }
     return makeParcel(county, f[0]);
   }
 
-  async function searchCounties(fn) {
-    // Pilot counties one by one (most lots are here), then the rest six at a time.
-    var first = COUNTIES.slice(0, 6), rest = COUNTIES.slice(6);
-    for (var i = 0; i < first.length; i++) { var r = await fn(first[i]).catch(function () { return null; }); if (r) return r; }
-    for (var j = 0; j < rest.length; j += 6) {
-      var batch = await Promise.all(rest.slice(j, j + 6).map(function (c) { return fn(c).catch(function () { return null; }); }));
-      var hit = batch.filter(Boolean)[0]; if (hit) return hit;
-    }
-    return null;
+  async function parcelAtPoint(county, x, y) {
+    var f = await arcgisQuery(lirUrl(county), { geometry: { x: x, y: y }, returnGeometry: true });
+    if (!f.length) f = await arcgisQuery(lirUrl(county), { geometry: { x: x, y: y }, distance: 25, returnGeometry: true });
+    if (!f.length) { var e = new Error('No parcel boundary at that address in ' + county + ' County'); e.notFound = true; throw e; }
+    return makeParcel(county, f[0]);
   }
+
+  var FIPS_BY_NAME = {};
+  var FIPS = { '49001': 'Beaver', '49003': 'Box Elder', '49005': 'Cache', '49007': 'Carbon', '49009': 'Daggett', '49011': 'Davis', '49013': 'Duchesne',
+    '49015': 'Emery', '49017': 'Garfield', '49019': 'Grand', '49021': 'Iron', '49023': 'Juab', '49025': 'Kane', '49027': 'Millard', '49029': 'Morgan',
+    '49031': 'Piute', '49033': 'Rich', '49035': 'Salt Lake', '49037': 'San Juan', '49039': 'Sanpete', '49041': 'Sevier', '49043': 'Summit',
+    '49045': 'Tooele', '49047': 'Uintah', '49049': 'Utah', '49051': 'Wasatch', '49053': 'Washington', '49055': 'Wayne', '49057': 'Weber' };
+  Object.keys(FIPS).forEach(function (k) { FIPS_BY_NAME[FIPS[k].toUpperCase()] = k; });
 
   function looksLikeParcel(t) { return /^[0-9]{2}[- ]?[0-9]{3}[- ]?[0-9]{3,4}$|^[0-9]{8,10}$/.test(String(t).trim()); }
 
+  var DIRS = { N: 'N', S: 'S', E: 'E', W: 'W', NORTH: 'N', SOUTH: 'S', EAST: 'E', WEST: 'W' };
+  var TYPES = { RD: 'RD', ROAD: 'RD', DR: 'DR', DRIVE: 'DR', ST: 'ST', STREET: 'ST', LN: 'LN', LANE: 'LN', AVE: 'AVE', AVENUE: 'AVE', AV: 'AVE',
+    WAY: 'WAY', CIR: 'CIR', CIRCLE: 'CIR', CT: 'CT', COURT: 'CT', BLVD: 'BLVD', PL: 'PL', PLACE: 'PL', HWY: 'HWY', HIGHWAY: 'HWY', TRL: 'TRL',
+    TRAIL: 'TRL', LOOP: 'LOOP', PKWY: 'PKWY', PARKWAY: 'PKWY', CV: 'CV', COVE: 'CV', TER: 'TER', XING: 'XING', CROSSING: 'XING', RUN: 'RUN', ROW: 'ROW' };
+
+  // "123 e aspen ridge rd eden, utah 84310" -> {number, pre, name, type, suf, city, zip}
   function parseStreet(address) {
     var s = address.toUpperCase().replace(/\./g, '').replace(/\s+/g, ' ').trim();
-    s = s.replace(/\b\d{5}(-\d{4})?\s*$/, '').replace(/^[ ,]+|[ ,]+$/g, '');
-    var parts = s.split(',').map(function (p) { return p.trim(); }).filter(function (p) { return p && p !== 'UT' && p !== 'UTAH'; });
-    var tokens = parts[0].split(' ').filter(function (t) { return t !== 'UT' && t !== 'UTAH'; });
+    var zip = (/\b(\d{5})(?:-\d{4})?\s*$/.exec(s) || [])[1] || null;
+    s = s.replace(/\b\d{5}(-\d{4})?\s*$/, '').replace(/[ ,]+(UT|UTAH)\s*$/, '').replace(/^[ ,]+|[ ,]+$/g, '');
+    var parts = s.split(',').map(function (p) { return p.trim(); }).filter(Boolean);
+    var tokens = parts[0].split(' '), city = parts.length > 1 ? parts.slice(1).join(' ').replace(/\b(UT|UTAH)\b/g, '').trim() : null;
     if (!/^\d+$/.test(tokens[0] || '')) throw new Error('Start the address with the house number');
-    return { number: tokens[0], street: tokens.slice(1) };
+    var t = tokens.slice(1), pre = null, suf = null, type = null;
+    if (t.length > 1 && DIRS[t[0]]) pre = DIRS[t.shift()];
+    // No comma before the city ("123 e aspen ridge rd eden"): words after the last street type or trailing
+    // direction are the city. Grid streets end in a direction ("400 S"), named streets in a type ("RIDGE RD").
+    if (!city && t.length > 2) {
+      for (var i = t.length - 2; i >= 1; i--) {
+        if (TYPES[t[i]] || (DIRS[t[i]] && /^\d+$/.test(t[i - 1]))) { city = t.slice(i + 1).join(' '); t = t.slice(0, i + 1); break; }
+      }
+    }
+    // No comma before the city: peel trailing words that aren't part of a street (handled by matching below).
+    if (t.length > 1 && DIRS[t[t.length - 1]]) suf = DIRS[t.pop()];
+    if (t.length > 1 && TYPES[t[t.length - 1]]) type = TYPES[t.pop()];
+    return { number: tokens[0], pre: pre, name: t.join(' '), words: t, type: type, suf: suf, city: city || null, zip: zip };
   }
+
+  async function zipsForPlace(name) {
+    if (!name) return [];
+    try {
+      var f = await arcgisQuery(UGRC + '/UtahZipCodeAreas/FeatureServer/0', { where: "UPPER(NAME) = '" + name.replace(/'/g, '') + "'", outFields: 'ZIP5' });
+      return f.map(function (z) { return String(z.attributes.ZIP5); });
+    } catch (e) { return []; }
+  }
+
+  function ambiguous(msg, options) { return Object.assign(new Error(msg), { notFound: true, ambiguous: true, options: options }); }
 
   async function locate(query) {
     query = String(query || '').trim();
     if (looksLikeParcel(query)) {
-      var p = await searchCounties(function (c) { return findByParcel(query, c); });
-      if (!p) throw Object.assign(new Error('No parcel ' + query + ' found in Utah county records'), { notFound: true });
-      return p;
+      // Search every county; parcel-number formats overlap, so ask when more than one county has the ID.
+      var all = [];
+      for (var j = 0; j < COUNTIES.length; j += 8) {
+        var got = await Promise.all(COUNTIES.slice(j, j + 8).map(function (c) { return findByParcel(query, c).catch(function () { return null; }); }));
+        all = all.concat(got.filter(Boolean));
+      }
+      if (!all.length) throw Object.assign(new Error('No parcel ' + query + ' found in Utah county records'), { notFound: true });
+      if (all.length > 1) throw ambiguous('Parcel ' + query + ' exists in ' + all.map(function (p) { return p.county; }).join(' and ') + ' counties. Enter the street address instead, or add the county (for example "' + query + ' ' + all[0].county + '").',
+        all.map(function (p) { return p.county; }));
+      return all[0];
     }
+    var countyHint = null;
+    var m = /^(.*?)[ ,]+(\w[\w ]*?) COUNTY$/i.exec(query);
+    if (m && FIPS_BY_NAME[m[2].toUpperCase()]) { countyHint = m[2]; query = m[1]; }
+
     var a = parseStreet(query);
-    var score = function (addr) { var set = (addr || '').toUpperCase().split(/\s+/); return a.street.filter(function (t) { return set.indexOf(t) >= 0; }).length; };
-    var need = Math.max(1, a.street.length - 1);
-    var found = await searchCounties(async function (c) {
-      var feats = await arcgisQuery(lirUrl(c), { where: "PARCEL_ADD LIKE '" + a.number + " %'", outFields: 'PARCEL_ID,PARCEL_ADD' });
-      if (!feats.length) return null;
-      feats.sort(function (x, y) { return score(y.attributes.PARCEL_ADD) - score(x.attributes.PARCEL_ADD); });
-      return score(feats[0].attributes.PARCEL_ADD) >= need ? { county: c, id: feats[0].attributes.PARCEL_ID } : null;
-    });
-    if (!found) throw Object.assign(new Error('No parcel found for "' + query + '"'), { notFound: true });
-    return findByParcel(found.id, found.county);
+    // 1. Statewide address points: the authoritative way to place a Utah address (they carry city, ZIP and county).
+    var where = ["AddNum='" + a.number + "'", "UPPER(StreetName) LIKE '" + a.words[0].replace(/'/g, '') + "%'"];
+    if (a.pre) where.push("PrefixDir='" + a.pre + "'");
+    if (a.suf) where.push("SuffixDir='" + a.suf + "'");
+    var pts = [];
+    try { pts = await arcgisQuery(UGRC + '/UtahAddressPoints/FeatureServer/0', { where: where.join(' AND '), outFields: 'FullAdd,StreetName,City,ZipCode,CountyID', returnGeometry: true }); }
+    catch (e) { pts = []; }
+    pts = pts.filter(function (f) { var sn = String(f.attributes.StreetName || '').toUpperCase(); return a.words.every(function (w) { return sn.indexOf(w) >= 0; }) || sn === a.name; });
+    var pick = pts;
+    if (a.zip) pick = pick.filter(function (f) { return String(f.attributes.ZipCode) === a.zip; });
+    if (!a.zip && a.city) {
+      var c = a.city.toUpperCase(), byCity = pick.filter(function (f) { return String(f.attributes.City || '').toUpperCase().indexOf(c) === 0; });
+      if (!byCity.length) { var zs = await zipsForPlace(c); byCity = pick.filter(function (f) { return zs.indexOf(String(f.attributes.ZipCode)) >= 0; }); }
+      pick = byCity;
+    }
+    if (countyHint) pick = pick.filter(function (f) { return FIPS[f.attributes.CountyID] && FIPS[f.attributes.CountyID].toUpperCase() === countyHint.toUpperCase(); });
+    // Same address can have several points (units); collapse to distinct places.
+    var places = [], seen = {};
+    pick.forEach(function (f) { var k = f.attributes.CountyID + '|' + f.attributes.ZipCode + '|' + f.attributes.FullAdd; if (!seen[k]) { seen[k] = 1; places.push(f); } });
+    if (places.length === 1 || (places.length > 1 && places.every(function (f) { return f.attributes.CountyID === places[0].attributes.CountyID && f.attributes.ZipCode === places[0].attributes.ZipCode; }))) {
+      var g = places[0];
+      return parcelAtPoint(FIPS[g.attributes.CountyID], g.geometry.x, g.geometry.y);
+    }
+    if (places.length > 1) {
+      var opts = places.slice(0, 12).map(function (f) { return f.attributes.FullAdd + ', ' + (f.attributes.City ? title(f.attributes.City) + ' ' : '') + f.attributes.ZipCode + ' (' + FIPS[f.attributes.CountyID] + ' County)'; });
+      throw ambiguous('"' + query + '" matches ' + places.length + ' places in Utah. Add the city or ZIP code, for example "' + opts[0].replace(/ \(.*$/, '') + '".', opts);
+    }
+    if (pts.length && (a.zip || a.city)) throw Object.assign(new Error('"' + query + '" exists in Utah, but not in ' + (a.zip || a.city) + '. Check the city or ZIP code'), { notFound: true });
+
+    // 2. Fallback for brand-new lots not yet in the address points: county parcel addresses, limited to the hinted county
+    //    (from the ZIP/city) when there is one, and never silently picking one of several matches.
+    var zips = a.zip ? [a.zip] : await zipsForPlace(a.city);
+    var counties = countyHint ? [countyHint] : COUNTIES;
+    if (zips.length) {
+      try {
+        var za = await arcgisQuery(UGRC + '/UtahZipCodeAreas/FeatureServer/0', { where: "ZIP5 IN ('" + zips.join("','") + "')", returnGeometry: true });
+        if (za.length) {
+          var ring = za[0].geometry.rings[0], zx = ring.reduce(function (s2, q) { return s2 + q[0]; }, 0) / ring.length, zy = ring.reduce(function (s2, q) { return s2 + q[1]; }, 0) / ring.length;
+          var cf = await arcgisQuery(UGRC + '/UtahCountyBoundaries/FeatureServer/0', { geometry: { x: zx, y: zy }, outFields: 'NAME' });
+          if (cf.length) counties = [title(cf[0].attributes.NAME)];
+        }
+      } catch (e) {}
+    }
+    var hits = [];
+    for (var k = 0; k < counties.length; k += 8) {
+      var res = await Promise.all(counties.slice(k, k + 8).map(async function (cn) {
+        var feats = await arcgisQuery(lirUrl(cn), { where: "PARCEL_ADD LIKE '" + a.number + " %'", outFields: 'PARCEL_ID,PARCEL_ADD,PARCEL_CITY' }).catch(function () { return []; });
+        return feats.filter(function (f2) { var ad = String(f2.attributes.PARCEL_ADD || '').toUpperCase(); return a.words.every(function (w) { return ad.indexOf(w) >= 0; }) && (!a.pre || ad.indexOf(' ' + a.pre + ' ') >= 0); })
+          .map(function (f2) { return { county: cn, id: f2.attributes.PARCEL_ID, add: f2.attributes.PARCEL_ADD, city: f2.attributes.PARCEL_CITY }; });
+      }));
+      hits = hits.concat([].concat.apply([], res));
+    }
+    if (hits.length === 1) return findByParcel(hits[0].id, hits[0].county);
+    if (hits.length > 1) throw ambiguous('"' + query + '" matches ' + hits.length + ' parcels. Add the city or ZIP code, or enter the parcel ID.',
+      hits.slice(0, 12).map(function (h) { return h.add + ', ' + (h.city || '') + ' (' + h.county + ' County, parcel ' + h.id + ')'; }));
+    throw Object.assign(new Error('No parcel found for "' + query + '"'), { notFound: true });
   }
 
   /* ------------------------------------------------------------ checks */
@@ -1866,10 +1960,21 @@ body::before{background-image:var(--desert-image);filter:none}
     var done = steps.filter(function (s) { return s.state === 'done' || s.state === 'failed'; }).length;
     $('bar').style.width = Math.max(4, Math.round(done / steps.length * 100)) + '%';
   }
-  function fail(msg) {
+  function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
     go.disabled = false; go.textContent = 'Generate dossier';
-    err.textContent = msg; $('address').focus();
+    err.textContent = msg;
+    if (options && options.length) {
+      // Offer the matches as one-click choices that fill the address field.
+      var list = document.createElement('div'); list.className = 'matches';
+      options.forEach(function (o) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'match'; b.textContent = o;
+        b.addEventListener('click', function () { $('address').value = o.replace(/ \((.*?) County.*$/, ', $1 County').replace(/, parcel .*$/, ''); err.textContent = ''; $('address').focus(); });
+        list.appendChild(b);
+      });
+      err.appendChild(list);
+    }
+    $('address').focus();
   }
 
   form.addEventListener('submit', async function (e) {
@@ -1888,6 +1993,7 @@ body::before{background-image:var(--desert-image);filter:none}
     var parcel;
     try { parcel = await LR.locate(q); }
     catch (ex) {
+      if (ex.ambiguous) return fail(ex.message, ex.options);
       return fail(ex.notFound ? ex.message + '. Check the house number and street, or enter the county parcel ID instead.'
         : 'Could not reach the county parcel service (' + ex.message + '). Check your internet connection and try again.');
     }
