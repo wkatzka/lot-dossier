@@ -1,0 +1,93 @@
+{
+  "_note": "PLACEHOLDER planning ranges (USD, Northern Utah, 2026) so the dossier can show orders of magnitude. Replace with local bids.",
+  "culinary_connection": {
+    "low": 10000,
+    "high": 50000,
+    "label": "Culinary water connection / shares"
+  },
+  "well": {
+    "low": 40000,
+    "high": 90000,
+    "label": "Private well, pump & pressure system (excl. water right)"
+  },
+  "geologic_hazards_study": {
+    "low": 8000,
+    "high": 25000,
+    "label": "Geologic hazards study (mitigation extra)"
+  },
+  "fault_study": {
+    "low": 5000,
+    "high": 15000,
+    "label": "Surface fault rupture study"
+  },
+  "geotech_report": {
+    "low": 3000,
+    "high": 8000,
+    "label": "Geotechnical report"
+  },
+  "flood_mitigation": {
+    "low": 20000,
+    "high": 100000,
+    "label": "Floodplain elevation / mitigation"
+  },
+  "septic_conventional": {
+    "low": 15000,
+    "high": 30000,
+    "label": "Conventional septic system"
+  },
+  "septic_alternative": {
+    "low": 35000,
+    "high": 75000,
+    "label": "Engineered / alternative septic system"
+  },
+  "sewer_connection": {
+    "low": 8000,
+    "high": 20000,
+    "label": "Sewer connection & impact fee"
+  },
+  "survey_topo": {
+    "low": 3000,
+    "high": 8000,
+    "label": "Boundary + topographic survey"
+  },
+  "steep_site_work": {
+    "low": 25000,
+    "high": 150000,
+    "label": "Steep-site excavation & retaining"
+  },
+  "power_extension": {
+    "low": 5000,
+    "high": 50000,
+    "label": "Power line extension"
+  },
+  "propane": {
+    "low": 5000,
+    "high": 12000,
+    "label": "Propane tank & piping"
+  },
+  "wui_construction": {
+    "low": 15000,
+    "high": 60000,
+    "label": "WUI ignition-resistant construction premium"
+  },
+  "long_driveway": {
+    "low": 20000,
+    "high": 80000,
+    "label": "Private access / long driveway"
+  },
+  "permit_impact_fees": {
+    "low": 15000,
+    "high": 45000,
+    "label": "Building permit, plan review & impact fees"
+  },
+  "basement_waterproofing": {
+    "low": 15000,
+    "high": 60000,
+    "label": "Basement waterproofing, drainage & dewatering"
+  },
+  "fire_sprinklers": {
+    "low": 10000,
+    "high": 25000,
+    "label": "Residential fire sprinklers (NFPA 13D)"
+  }
+}

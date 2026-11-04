@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "functions": {
+    "api/parcel-docs.js": { "maxDuration": 60 },
+    "api/notices.js": { "maxDuration": 60 }
+  },
+  "headers": [
+    { "source": "/api/(.*)", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
+  ]
+}
