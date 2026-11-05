@@ -496,6 +496,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
                 <label>Heating fuel
                   <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
                   <span class="src" data-for="fuel"></span></label>
+                <label>Fireplace
+                  <select id="fireplace"><option value="">None / not specified</option><option value="gas">Gas or direct-vent</option><option value="wood">Wood-burning or masonry</option><option value="unknown">Fireplace, fuel not confirmed</option></select>
+                  <span class="src" data-for="fireplace"></span></label>
                 <label>Exterior cladding
                   <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
                   <span class="src" data-for="cladding"></span></label>
@@ -546,6 +549,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from 1-meter LiDAR, before you order a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
       <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Permitting authority, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
       <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
+      <div class="check"><div class="n">11</div><h3>Home performance &amp; restrictions</h3><p>Energy code, wood-burning bans, impervious-surface and stormwater rules, water-wise landscaping, checked against your plan.</p><div class="src">Utah code · DEQ · local ordinances</div></div>
     </div>
   </div>
 </section>
@@ -607,7 +611,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   var CHECKLIST = [
     ['land', 'Land, zoning & jurisdiction'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
     ['septic', 'Septic / perc'], ['utilities', 'Power, gas & internet'], ['access', 'Access & fire protection'],
-    ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['plan', 'Your plan vs. this lot']
+    ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['plan', 'Your plan vs. this lot']
   ];
 
   /* ------------------------------------------------------------ http */
@@ -964,6 +968,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       designReview: 'City design review (LUC 108-1) applies to commercial, resort, public and larger multifamily projects, not single-family homes. Single-family standards (108-15) require only a permanent foundation and code compliance; no roof pitch or eave minimums.',
       lighting: 'Outdoor lighting ordinance (LUC 108-16) applies to new homes: fully shielded, downward fixtures, 3000K or warmer, lights off by 10 pm (fixtures of 105 lumens or less exempt), and a lighting plan at permit.',
       septicZones: 'Septic is prohibited in drinking water source protection Zones 1 and 2 (LUC 108-18-6).',
+      turf: { rule: 'Irrigated turf is capped at 35% of the front and side yards or 3,000 sq ft of the lot, whichever is greater, with no turf in park strips or yard areas under 8 ft wide.', cite: 'LUC 108-7-12', url: 'https://ogdenvalley.gov/land-use/' },
+      stormwater: { esuSqft: 6200, esuFee: 1575.78, cityPermit: 'A city stormwater permit is required for land disturbance over 500 sq ft or more than 20 cubic yards of cut and fill (City Code Ch. 6.15, Ord. 2026-51).',
+        esuNote: '1 ESU = 6,200 sq ft of impervious surface per the storm drain impact fee analysis (draft, March 2026)', url: 'https://ogdenvalley.gov/wp-content/uploads/2026/04/OgdenValleyCity_StormDrainIFFP_Draft-1.pdf' },
       wui: 'Weber Fire District adopted the 2024 International Wildland-Urban Interface Code as amended by Utah (Resolution 23-2026, June 11, 2026). It applies in designated WUI areas, not valley-wide; no local designation map had been published as of Nov 2026.',
       zones: {
         'AV-3': { name: 'Agricultural Valley', cite: 'LUC 104-2-5', area: '3 acres', width: 150, front: 30, side: 10, sideTotal: 24, rear: 30, height: 35 },
@@ -1402,6 +1409,60 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     return out;
   };
 
+  /* Home performance requirements and restrictions. Statewide rules, then local facts from the jurisdiction table. */
+  var UTAH_ENERGY = { since: 'July 1, 2026', cite: 'Utah Code 15A-3-203(3), 2026 H.B. 65', url: 'https://le.utah.gov/xcode/Title15A/Chapter3/C15A-3-S203_2026050620260701.html',
+    ceiling: 38, wall: 21, floor: 30, basement: 'R-10 continuous or R-13 cavity', windowU: 0.32, ach50: 5.0 };
+  // R307-302-2(1): PM2.5 nonattainment/maintenance areas where only EPA-certified stoves / EPA-qualified fireplaces may be installed.
+  function solidFuelArea(ctx) {
+    var c = ctx.parcel.county, j = ctx.facts.jurisdiction || '', lon = ctx.parcel.cx;
+    if (/^(Salt Lake|Davis|Utah|Cache)$/.test(c)) return { inside: true, why: c === 'Cache' ? 'Cache Valley' : 'all of ' + c + ' County' };
+    if (c === 'Weber') {
+      var east = /Ogden Valley|Huntsville/.test(j) || lon > -111.875; // the rule covers Weber County west of the Wasatch only
+      return east ? { inside: false, why: 'Ogden Valley, east of the Wasatch (outside the Weber County area the rule covers)' } : { inside: true, why: 'Weber County west of the Wasatch' };
+    }
+    if (c === 'Box Elder' || c === 'Tooele') return { inside: null, why: 'only part of ' + c + ' County is covered (' + (c === 'Tooele' ? 'north of Route 199 between the Oquirrh and Stansbury mountains' : 'from the Wasatch west to the Promontory range, south of Portage') + ')' };
+    if (c === 'Summit' && /Park City|Snyderville/.test(j + ' ' + (ctx.parcel.attrs.PARCEL_CITY || '')) ) return { inside: false, local: 'Summit County bans solid-fuel devices in new construction in the Snyderville Basin (upheld in Property Rights Ombudsman Advisory Opinion 194).' };
+    return { inside: false, why: c + ' County is outside the state PM2.5 areas' };
+  }
+
+  C.check_performance = async function (ctx) {
+    var out = [], kb = ctx.facts.kb, E = UTAH_ENERGY;
+    ctx.facts.energyCode = E;
+    out.push(F('performance', 'Energy code', 'watch', "Utah's residential energy code: R-38 ceiling, R-21 walls, U-0.32 windows, 5.0 ACH50",
+      'Since ' + E.since + ', new homes follow Utah\'s own energy chapter, the same in every climate zone: ceiling R-' + E.ceiling + ', above-grade walls R-' + E.wall + ', floors over unconditioned space R-' + E.floor +
+      ', conditioned basement walls ' + E.basement + ', windows U-' + E.windowU + ' or better. Air leakage may not exceed ' + E.ach50 + ' ACH50; a blower-door test by a BPI or RESNET-certified tester, or the air-sealing checklist, shows compliance. ' +
+      'Ducts in unconditioned attics must be leakage-tested, and homes tested tighter than 3 ACH50 need whole-house mechanical ventilation. Cities cannot require more than the state code (Utah Code 15A-1-204(8)), so this is the ceiling, not just the floor.',
+      E.cite, E.url, null, 'Line up a blower-door tester or plan to use the air-sealing checklist; confirm duct location (in-attic ducts must be tested).'));
+
+    var sf = solidFuelArea(ctx);
+    if (sf.inside === true) out.push(F('performance', 'Wood-burning fireplaces', 'watch', 'Only EPA-certified stoves or EPA-qualified fireplaces may be installed here',
+      'This lot is in a PM2.5 area (' + sf.why + '), where Utah rule R307-302-6 bans installing wood stoves that are not EPA-certified and fireplaces that are not EPA-qualified. Gas fireplaces are not affected. Mandatory no-burn days apply when PM2.5 is forecast at 25 µg/m³ or more.',
+      'Utah Admin. Code R307-302', 'https://www.law.cornell.edu/regulations/utah/environmental-quality/title-R307/rule-R307-302'));
+    else if (sf.inside === null) out.push(F('performance', 'Wood-burning fireplaces', 'verify', 'Check whether the lot is in the state wood-burning area',
+      'Utah rule R307-302 restricts new wood-burning devices in ' + sf.why + '.', 'Utah Admin. Code R307-302', 'https://www.law.cornell.edu/regulations/utah/environmental-quality/title-R307/rule-R307-302'));
+    else out.push(F('performance', 'Wood-burning fireplaces', sf.local ? 'watch' : 'ok', sf.local ? 'Local ban on new solid-fuel devices' : 'No state ban on new wood-burning fireplaces here',
+      (sf.local || ('The state install ban (R307-302-6) covers the PM2.5 areas; this lot is in ' + sf.why + '.')) + ' The countywide smoke rules (20% opacity, prohibited fuels) still apply in the seven covered counties.',
+      'Utah Admin. Code R307-302', 'https://www.law.cornell.edu/regulations/utah/environmental-quality/title-R307/rule-R307-302'));
+    ctx.facts.solidFuel = sf;
+
+    var sw = kb && kb.stormwater, sub = !!ctx.parcel.attrs.SUBDIV_NAME, acres = +ctx.parcel.attrs.PARCEL_ACRES || 0;
+    var stateTxt = 'Disturbing 1 acre or more, or building one lot within a larger common plan of development of 1 acre or more, requires a Utah UPDES construction stormwater permit (' +
+      (sub ? 'for a lot in a subdivision, typically the Common Plan Permit UTRH00000' : 'the Construction General Permit UTRC00000') + ') with a stormwater pollution prevention plan.';
+    out.push(F('performance', 'Impervious surface & stormwater', sub || acres >= 1 ? 'watch' : 'ok',
+      sw ? 'No lot-coverage cap; storm drain fee by impervious area; stormwater permits' : (sub || acres >= 1 ? 'State construction stormwater permit likely' : 'No impervious-surface limits found'),
+      (sw ? 'The zone sets no impervious or lot-coverage cap for a single-family home. The storm drain impact fee is $' + sw.esuFee.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' per ESU (' + sw.esuNote + '), so roof, driveway and patio area drive the fee. ' + sw.cityPermit + ' ' : '') + stateTxt,
+      sw ? ctx.facts.jurisdiction + ' code + Utah DEQ' : 'Utah DEQ', sw ? sw.url : 'https://deq.utah.gov/water-quality/general-construction-storm-water-updes-permits', null,
+      'Keep a stormwater plan (silt fence, inlet protection, stabilized entrance) in the permit set; file the state permit before grading.'));
+
+    var turf = kb && kb.turf;
+    if (turf) out.push(F('performance', 'Water-wise landscaping', 'watch', 'Turf limited to 35% of front and side yards (or 3,000 sq ft)',
+      turf.rule + ' (' + turf.cite + '). Utah law also bars requiring lawn in strips narrower than 8 ft.', ctx.facts.jurisdiction + ' Land Use Code', turf.url));
+    out.push(F('performance', 'Other statewide requirements', 'ok', 'No state radon, sprinkler, EV-ready or solar-ready mandates',
+      'Utah does not adopt the IRC radon appendix, deleted the IRC residential sprinkler requirement (sprinklers only "when installed"), and has no EV-ready or solar-ready rules; cities cannot add them to the building code. A fire district can still require sprinklers or fire flow for large homes far from a hydrant.',
+      'Utah Code 15A-2-103, 15A-3-202', 'https://le.utah.gov/xcode/Title15A/Chapter3/C15A-3-S202_2026050620260701.html'));
+    return out;
+  };
+
   // Utah residential ground snow load: Utah amends the IRC to use the 2018 Utah Snow Load Study (USU/SEAU) grid.
   var snowGrid = null;
   C.check_snow = async function (ctx) {
@@ -1548,6 +1609,42 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         'Homes over 3,600 sq ft of fire area need more fire flow under the fire code\'s Appendix B, and the hydrant must be within 400 ft (600 ft if sprinklered) of every part of the house. ' +
         (far ? (sprk ? 'The plan shows sprinklers, which helps.' : 'The plan shows no fire sprinklers; expect the fire district to require them or a closer hydrant.') : 'The hydrant distance looks workable; the district will confirm required fire flow.'),
         far && !sprk ? ctx.cost('fire_sprinklers') : null, 'Ask the fire district for the required fire flow for a ' + fmt(foot) + ' sq ft wood-frame house.'));
+    }
+
+    // Envelope vs. Utah's energy code (plan keynotes)
+    var E = fx.energyCode, en = p.energy || {}, es = p.energySrc || {};
+    if (E && (en.wallR || en.ceilingR || en.windowU || en.ach50)) {
+      var gaps = [], meets = [];
+      if (en.wallR) { var wr = en.wallR.cavity + (en.wallR.ci || 0); (wr >= E.wall ? meets : gaps).push('walls R-' + en.wallR.cavity + (en.wallR.ci ? '+' + en.wallR.ci + 'ci' : '') + ' vs R-' + E.wall); }
+      if (en.ceilingR) (en.ceilingR >= E.ceiling ? meets : gaps).push('ceiling R-' + en.ceilingR + ' vs R-' + E.ceiling);
+      if (en.windowU) (en.windowU <= E.windowU ? meets : gaps).push('windows U-' + en.windowU + ' vs U-' + E.windowU);
+      if (en.ach50) (en.ach50 <= E.ach50 ? meets : gaps).push(en.ach50 + ' ACH50 target vs ' + E.ach50);
+      var over = en.ceilingR && en.ceilingR > E.ceiling + 5 ? ' The ceiling (R-' + en.ceilingR + ') exceeds the R-' + E.ceiling + ' minimum, an upgrade rather than a requirement.' : '';
+      out.push(P('Envelope vs. energy code', gaps.length ? 'flag' : 'ok',
+        gaps.length ? 'Plan envelope falls short of Utah\'s code: ' + gaps.join('; ') : 'Plan envelope meets Utah\'s current energy code (' + meets.join('; ') + ')',
+        'Compared with the code in effect since ' + E.since + ' (' + E.cite + ').' + over +
+        (Object.keys(es).length ? ' Read from the plan: ' + Object.keys(es).map(function (k) { return es[k]; }).join('; ') + '.' : '') +
+        ' Plan notes that quote IECC tables (for example R-20 + R-5 continuous walls) reflect the older code; Utah\'s 2026 chapter sets R-21 walls with no continuous-insulation path.' +
+        (en.ach50 ? '' : ' The plan states no air-leakage target; the house must test at or below ' + E.ach50 + ' ACH50 or follow the air-sealing checklist.')));
+    }
+    // Fireplace vs. solid-fuel rules
+    var sfa = fx.solidFuel;
+    if (p.fireplace && sfa) {
+      if (sfa.inside === true && p.fireplace !== 'gas') out.push(P('Fireplace vs. air-quality rule', p.fireplace === 'wood' ? 'flag' : 'watch',
+        (p.fireplace === 'wood' ? 'Wood-burning fireplace' : 'Fireplace (fuel not confirmed)') + ' in a PM2.5 area',
+        'Only EPA-qualified fireplaces or EPA-certified stoves may be installed here (R307-302-6). Specify an EPA-qualified unit or a gas fireplace' + from('fireplace') + '.'));
+      else if (sfa.local && p.fireplace !== 'gas') out.push(P('Fireplace vs. local rule', 'flag', 'Plan shows a fireplace where new solid-fuel devices are banned', sfa.local + from('fireplace')));
+      else out.push(P('Fireplace vs. air-quality rule', 'ok', p.fireplace === 'gas' ? 'Gas fireplace: not restricted' : 'Fireplace allowed here (outside the state wood-burning area)',
+        (p.fireplace === 'unknown' ? 'The plan shows a masonry fireplace without a stated fuel' + from('fireplace') + '. ' : '') + 'This lot is outside the R307-302 install-ban area; no-burn-day rules and smoke limits still apply.'));
+    }
+    // Impervious area -> storm drain fee
+    var swk = fx.kb && fx.kb.stormwater;
+    if (swk && foot) {
+      var esu = foot / swk.esuSqft, fee = Math.ceil(esu * 10) / 10 * swk.esuFee;
+      out.push(P('Impervious area vs. storm drain fee', 'watch',
+        fmt(foot) + ' sq ft of roof alone is about ' + esu.toFixed(2) + ' ESU (~$' + fmt(fee) + ' storm drain impact fee)',
+        'At 6,200 sq ft of impervious surface per ESU and $' + swk.esuFee.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' per ESU. Add the driveway, walks and patios from the site plan; how the city rounds partial ESUs is not published.' + from('residence_sf'),
+        { key: 'storm_drain_fee', low: Math.round(swk.esuFee * Math.max(1, esu)), high: Math.round(swk.esuFee * Math.max(1, esu) * 1.6), label: 'Storm drain impact fee (roof + estimated hardscape)' }));
     }
 
     // Hazards under the house
@@ -1785,7 +1882,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     ['check_zoning', 'Zoning district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
-    ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
+    ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
     ['check_plan_fit', 'Plan vs. lot conflicts']
   ];
 
@@ -1971,6 +2068,36 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     if ((f = find(/CEDAR|WOOD SIDING|LAP SIDING|BOARD (AND|&) BATTEN|T&G SIDING|SHIPLAP/))) { out.fields.cladding = 'combustible'; out.src.cladding = f; }
     else if ((f = find(/FIBER CEMENT|HARDIE|STUCCO|METAL SIDING|STONE VENEER/))) { out.fields.cladding = 'noncombustible'; out.src.cladding = f; }
 
+    // Envelope and fuel facts from keynotes and short labels ("07.01 MINERAL WOOL INSULATION IN WALLS, R-21 MIN.").
+    // Long code-note paragraphs quote prescriptive minimums generically, so they're skipped.
+    var energy = {}, esrc = {};
+    // Keynote segments: rows split at keynote numbers ("07.12 BLOWN IN CELLULOSE ..."), searched before short labels.
+    var keynotes = [];
+    pages.forEach(function (p) {
+      p.lines.forEach(function (l) {
+        l.toUpperCase().split(/(?=\b\d{2}\.\d{2}\s+[A-Z])/).forEach(function (seg) { if (/^\d{2}\.\d{2}\s/.test(seg) && seg.length < 110) keynotes.push({ l: seg, p: p }); });
+      });
+    });
+    function grab(key, re, pick) {
+      if (energy[key] != null) return;
+      var h = keynotes.find(function (x) { return re.test(x.l); }) || shorts.find(function (x) { return x.l.length < 80 && re.test(x.l); });
+      if (h) { var m2 = re.exec(h.l); energy[key] = pick(m2); esrc[key] = where(h.p) + ': "' + h.l.trim().slice(0, 70) + '"'; }
+    }
+    grab('wallR', /INSULATION[^R]{0,40}\bWALLS?\b[^R]{0,20}R-?\s?(\d{2})(?:\s*(?:\+|PLUS)\s*R-?\s?(\d{1,2})\s*(?:CI|C\.I\.|CONT))?|\bWALLS?\b[^R]{0,30}INSULATION[^R]{0,20}R-?\s?(\d{2})/, function (m2) { return { cavity: +(m2[1] || m2[3]), ci: m2[2] ? +m2[2] : 0 }; });
+    grab('ceilingR', /INSULATION[^R]{0,40}\b(?:ROOF|CEILING|ATTIC)\b[^R]{0,20}R-?\s?(\d{2})|(?:ROOF|CEILING|ATTIC)[^R]{0,30}INSULATION[^R]{0,20}R-?\s?(\d{2})/, function (m2) { return +(m2[1] || m2[2]); });
+    grab('slabR', /(?:RIGID|SLAB|UNDER.?SLAB|BELOW CONCRETE)[^()]{0,40}(?:\bR-\s?(\d{1,2})\b|\(R-?(\d{1,2})\))/, function (m2) { return +(m2[1] || m2[2]); });
+    grab('foundationR', /FOUNDATION INSULATION[^R]{0,20}R-?\s?(\d{1,2})/, function (m2) { return +m2[1]; });
+    grab('windowU', /(?:WINDOWS?|FENESTRATION|GLAZ)[^.]{0,80}U-?\s?FACTORS?[^0-9.]{0,20}(0?\.\d{2})|U-?\s?FACTORS?[^0-9.]{0,6}(0?\.\d{2})|MAX\.?\s*(0?\.\d{2})\s*U-?\s?FACTOR/, function (m2) { return +(m2[1] || m2[2] || m2[3]); });
+    if (energy.windowU == null) { var wl = pages.map(function (p) { return { t: p.text, p: p }; }).find(function (x) { return /WINDOWS[^.]{0,60}U-?\s?FACTOR\s*[≤≥<=>]*\s*(0?\.\d{2})/.test(x.t); });
+      if (wl) { energy.windowU = +/WINDOWS[^.]{0,60}U-?\s?FACTOR\s*[≤≥<=>]*\s*(0?\.\d{2})/.exec(wl.t)[1]; esrc.windowU = where(wl.p) + ': window U-factor note'; } }
+    grab('ach50', /(\d(?:\.\d)?)\s*ACH\s?50|ACH\s?50[^0-9]{0,10}(\d(?:\.\d)?)/, function (m2) { return +(m2[1] || m2[2]); });
+    if (Object.keys(energy).length) { out.energy = energy; out.src.energy = esrc; }
+    // Fireplace fuel: masonry/wood units vs. gas/direct-vent; masonry brands are often wood-burning but also come as gas.
+    var fpWood = find(/WOOD[- ]?BURNING|SOLID FUEL|WOOD STOVE|MASONRY FIREPLACE|RUMFORD/), fpBrand = find(/ISOKERN|ISOKURN/), fpGas = find(/GAS FIREPLACE|DIRECT[- ]?VENT|GAS LOG|GAS INSERT/);
+    if (fpWood || fpGas || fpBrand) {
+      out.fields.fireplace = fpWood ? 'wood' : fpGas ? 'gas' : 'unknown';
+      out.src.fireplace = fpWood || fpGas || (fpBrand + ': masonry unit (Isokern makes wood and gas versions)');
+    }
     var feat = function (label, re) { var w = find(re); if (w) out.features.push({ label: label, where: w }); };
     feat('Stone veneer', /STONE VENEER/);
     feat('Cedar / wood siding', /CEDAR|WOOD SIDING|LAP SIDING|BOARD (AND|&) BATTEN/);
@@ -2008,7 +2135,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   function fmt(n) { return Number(n || 0).toLocaleString('en-US'); }
 
   /* ---------------- form */
-  var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'cladding'];
+  var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'fireplace', 'cladding'];
   var extracted = null;
   function setMode(m) {
     mode = m;
@@ -2052,7 +2179,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       var chips = (x.codes || []).slice(0, 4).map(function (c) { return c; })
         .concat(x.features.map(function (f) { return f.label; }))
         .concat(x.plan_sds ? ['SDS ' + x.plan_sds + 'g in structural notes'] : [])
-        .concat(x.climate_zone ? ['Climate zone ' + x.climate_zone] : []);
+        .concat(x.climate_zone ? ['Climate zone ' + x.climate_zone] : [])
+        .concat(x.energy ? [x.energy.wallR ? 'Walls R-' + x.energy.wallR.cavity + (x.energy.wallR.ci ? ' + R-' + x.energy.wallR.ci + ' ci' : ' (no continuous)') : null,
+          x.energy.ceilingR ? 'Ceiling R-' + x.energy.ceilingR : null, x.energy.slabR ? 'Slab R-' + x.energy.slabR : null,
+          x.energy.windowU ? 'Windows U-' + x.energy.windowU : null, x.energy.ach50 ? x.energy.ach50 + ' ACH50' : null].filter(Boolean) : []);
       $('parse-chips').innerHTML = chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('');
       fillFields(x);
       setMode('upload');
@@ -2076,7 +2206,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var x = mode === 'upload' ? extracted : null;
     var plan = { name: x ? x.filename : 'Plan details', filename: x ? x.filename : null,
       footprint: { residence_sf: n('residence_sf'), garage_sf: n('garage_sf'), width_ft: n('width_ft'), depth_ft: n('depth_ft') },
-      bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), cladding: v('cladding'),
+      bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), fireplace: v('fireplace'), cladding: v('cladding'),
+      energy: x ? x.energy || null : null, energySrc: x && x.src ? x.src.energy || null : null,
       structural: { ground_snow_load_psf: n('ground_snow_load_psf'), bearing_psf: n('bearing_psf') },
       codes: x ? x.codes : [], features: x ? x.features : [], plan_sds: x ? x.plan_sds : null, plan_sdc: x ? x.plan_sdc : null, src: {} };
     // Keep provenance only for values the user left as read.

@@ -155,6 +155,36 @@
     if ((f = find(/CEDAR|WOOD SIDING|LAP SIDING|BOARD (AND|&) BATTEN|T&G SIDING|SHIPLAP/))) { out.fields.cladding = 'combustible'; out.src.cladding = f; }
     else if ((f = find(/FIBER CEMENT|HARDIE|STUCCO|METAL SIDING|STONE VENEER/))) { out.fields.cladding = 'noncombustible'; out.src.cladding = f; }
 
+    // Envelope and fuel facts from keynotes and short labels ("07.01 MINERAL WOOL INSULATION IN WALLS, R-21 MIN.").
+    // Long code-note paragraphs quote prescriptive minimums generically, so they're skipped.
+    var energy = {}, esrc = {};
+    // Keynote segments: rows split at keynote numbers ("07.12 BLOWN IN CELLULOSE ..."), searched before short labels.
+    var keynotes = [];
+    pages.forEach(function (p) {
+      p.lines.forEach(function (l) {
+        l.toUpperCase().split(/(?=\b\d{2}\.\d{2}\s+[A-Z])/).forEach(function (seg) { if (/^\d{2}\.\d{2}\s/.test(seg) && seg.length < 110) keynotes.push({ l: seg, p: p }); });
+      });
+    });
+    function grab(key, re, pick) {
+      if (energy[key] != null) return;
+      var h = keynotes.find(function (x) { return re.test(x.l); }) || shorts.find(function (x) { return x.l.length < 80 && re.test(x.l); });
+      if (h) { var m2 = re.exec(h.l); energy[key] = pick(m2); esrc[key] = where(h.p) + ': "' + h.l.trim().slice(0, 70) + '"'; }
+    }
+    grab('wallR', /INSULATION[^R]{0,40}\bWALLS?\b[^R]{0,20}R-?\s?(\d{2})(?:\s*(?:\+|PLUS)\s*R-?\s?(\d{1,2})\s*(?:CI|C\.I\.|CONT))?|\bWALLS?\b[^R]{0,30}INSULATION[^R]{0,20}R-?\s?(\d{2})/, function (m2) { return { cavity: +(m2[1] || m2[3]), ci: m2[2] ? +m2[2] : 0 }; });
+    grab('ceilingR', /INSULATION[^R]{0,40}\b(?:ROOF|CEILING|ATTIC)\b[^R]{0,20}R-?\s?(\d{2})|(?:ROOF|CEILING|ATTIC)[^R]{0,30}INSULATION[^R]{0,20}R-?\s?(\d{2})/, function (m2) { return +(m2[1] || m2[2]); });
+    grab('slabR', /(?:RIGID|SLAB|UNDER.?SLAB|BELOW CONCRETE)[^()]{0,40}(?:\bR-\s?(\d{1,2})\b|\(R-?(\d{1,2})\))/, function (m2) { return +(m2[1] || m2[2]); });
+    grab('foundationR', /FOUNDATION INSULATION[^R]{0,20}R-?\s?(\d{1,2})/, function (m2) { return +m2[1]; });
+    grab('windowU', /(?:WINDOWS?|FENESTRATION|GLAZ)[^.]{0,80}U-?\s?FACTORS?[^0-9.]{0,20}(0?\.\d{2})|U-?\s?FACTORS?[^0-9.]{0,6}(0?\.\d{2})|MAX\.?\s*(0?\.\d{2})\s*U-?\s?FACTOR/, function (m2) { return +(m2[1] || m2[2] || m2[3]); });
+    if (energy.windowU == null) { var wl = pages.map(function (p) { return { t: p.text, p: p }; }).find(function (x) { return /WINDOWS[^.]{0,60}U-?\s?FACTOR\s*[≤≥<=>]*\s*(0?\.\d{2})/.test(x.t); });
+      if (wl) { energy.windowU = +/WINDOWS[^.]{0,60}U-?\s?FACTOR\s*[≤≥<=>]*\s*(0?\.\d{2})/.exec(wl.t)[1]; esrc.windowU = where(wl.p) + ': window U-factor note'; } }
+    grab('ach50', /(\d(?:\.\d)?)\s*ACH\s?50|ACH\s?50[^0-9]{0,10}(\d(?:\.\d)?)/, function (m2) { return +(m2[1] || m2[2]); });
+    if (Object.keys(energy).length) { out.energy = energy; out.src.energy = esrc; }
+    // Fireplace fuel: masonry/wood units vs. gas/direct-vent; masonry brands are often wood-burning but also come as gas.
+    var fpWood = find(/WOOD[- ]?BURNING|SOLID FUEL|WOOD STOVE|MASONRY FIREPLACE|RUMFORD/), fpBrand = find(/ISOKERN|ISOKURN/), fpGas = find(/GAS FIREPLACE|DIRECT[- ]?VENT|GAS LOG|GAS INSERT/);
+    if (fpWood || fpGas || fpBrand) {
+      out.fields.fireplace = fpWood ? 'wood' : fpGas ? 'gas' : 'unknown';
+      out.src.fireplace = fpWood || fpGas || (fpBrand + ': masonry unit (Isokern makes wood and gas versions)');
+    }
     var feat = function (label, re) { var w = find(re); if (w) out.features.push({ label: label, where: w }); };
     feat('Stone veneer', /STONE VENEER/);
     feat('Cedar / wood siding', /CEDAR|WOOD SIDING|LAP SIDING|BOARD (AND|&) BATTEN/);

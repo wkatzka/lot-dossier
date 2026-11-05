@@ -13,7 +13,7 @@
   function fmt(n) { return Number(n || 0).toLocaleString('en-US'); }
 
   /* ---------------- form */
-  var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'cladding'];
+  var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'fireplace', 'cladding'];
   var extracted = null;
   function setMode(m) {
     mode = m;
@@ -57,7 +57,10 @@
       var chips = (x.codes || []).slice(0, 4).map(function (c) { return c; })
         .concat(x.features.map(function (f) { return f.label; }))
         .concat(x.plan_sds ? ['SDS ' + x.plan_sds + 'g in structural notes'] : [])
-        .concat(x.climate_zone ? ['Climate zone ' + x.climate_zone] : []);
+        .concat(x.climate_zone ? ['Climate zone ' + x.climate_zone] : [])
+        .concat(x.energy ? [x.energy.wallR ? 'Walls R-' + x.energy.wallR.cavity + (x.energy.wallR.ci ? ' + R-' + x.energy.wallR.ci + ' ci' : ' (no continuous)') : null,
+          x.energy.ceilingR ? 'Ceiling R-' + x.energy.ceilingR : null, x.energy.slabR ? 'Slab R-' + x.energy.slabR : null,
+          x.energy.windowU ? 'Windows U-' + x.energy.windowU : null, x.energy.ach50 ? x.energy.ach50 + ' ACH50' : null].filter(Boolean) : []);
       $('parse-chips').innerHTML = chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('');
       fillFields(x);
       setMode('upload');
@@ -81,7 +84,8 @@
     var x = mode === 'upload' ? extracted : null;
     var plan = { name: x ? x.filename : 'Plan details', filename: x ? x.filename : null,
       footprint: { residence_sf: n('residence_sf'), garage_sf: n('garage_sf'), width_ft: n('width_ft'), depth_ft: n('depth_ft') },
-      bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), cladding: v('cladding'),
+      bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), fireplace: v('fireplace'), cladding: v('cladding'),
+      energy: x ? x.energy || null : null, energySrc: x && x.src ? x.src.energy || null : null,
       structural: { ground_snow_load_psf: n('ground_snow_load_psf'), bearing_psf: n('bearing_psf') },
       codes: x ? x.codes : [], features: x ? x.features : [], plan_sds: x ? x.plan_sds : null, plan_sdc: x ? x.plan_sdc : null, src: {} };
     // Keep provenance only for values the user left as read.
