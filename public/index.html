@@ -428,6 +428,19 @@ body.chk-only #rv .frow:not(.act){display:none}
 body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 @media print{#rv .chk-seg,#rv .chk-attach,#rv .chk-rm,#rv .chk-only-toggle{display:none}}
 
+#rv .contacts{margin-top:32px}
+#rv .ct-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:22px;margin-top:10px}
+#rv .ct{display:flex;flex-direction:column;gap:5px;min-width:0}
+#rv .ct-k{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+#rv .ct b{font-size:15px}
+#rv .ct-p{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:14px}
+#rv .ct-p span{color:var(--muted);flex-basis:100%}
+#rv .ct-p a,#rv .ct-links a{overflow-wrap:anywhere}
+#rv .ct-l{font-size:13px;color:var(--muted)}
+#rv .ct-links{font-size:14px;margin-top:2px}
+#rv .ct-src{font-size:12px;color:var(--muted);margin:14px 0 0}
+@media print{#rv .ct-grid{grid-template-columns:1fr 1fr}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
@@ -545,9 +558,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       <div class="check"><div class="n">04</div><h3>Septic &amp; perc</h3><p>Sewer availability, soil suitability for absorption fields, water table depth, source protection zones.</p><div class="src">USDA soil survey · health districts</div></div>
       <div class="check"><div class="n">05</div><h3>Power, gas &amp; internet</h3><p>Utility providers and evidence of service nearby.</p><div class="src">UGRC utilities · county parcels</div></div>
       <div class="check"><div class="n">06</div><h3>Access &amp; fire</h3><p>Road frontage, wildland-urban interface, nearest fire station and hydrant.</p><div class="src">UGRC roads · county GIS · Utah FFSL</div></div>
-      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision and PUD status, recorded covenants, architectural review to expect.</p><div class="src">County recorder</div></div>
+      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision and PUD status, recorded covenants, HOA registration and contact, historic districts, architectural review to expect.</p><div class="src">County recorder · Utah HOA registry</div></div>
       <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from 1-meter LiDAR, before you order a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
-      <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Permitting authority, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
+      <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Who approves your plans and how to reach them, the city office, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
       <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
       <div class="check"><div class="n">11</div><h3>Home performance &amp; restrictions</h3><p>Energy code, wood-burning bans, impervious-surface and stormwater rules, water-wise landscaping, checked against your plan.</p><div class="src">Utah code · DEQ · local ordinances</div></div>
     </div>
@@ -592,7 +605,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   <div id="rv-body"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "80ca0ffb6a"};</script>
+<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "7c3922276b"};</script>
 <script>
 /* Lot dossier engine: runs entirely in the browser (or Node 18+).
  * A port of lotreport/*.py. Every data source below sends CORS headers, so no server is needed. */
@@ -982,6 +995,27 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
     }
   };
+  // Who approves plans and how to reach the jurisdiction, from each jurisdiction's own published pages. Role-based.
+  var CONTACTS = {
+    'Ogden Valley City': {
+      asOf: 'Nov 2026', source: 'https://ogdenvalley.gov/planning/',
+      office: { name: 'Ogden Valley City', lines: ['City office: Maintenance Building, 167 S 7500 E, Huntsville, UT 84317', 'Mail: PO Box 6, Eden, UT 84310', 'Hours: Mon and Wed 9 am to 1 pm, Thu 1 to 5 pm'], url: 'https://ogdenvalley.gov/' },
+      building: { name: 'Building department (Beacon Code Consultants, for the city)', approver: "the city's building official at Beacon Code Consultants",
+        people: [{ role: 'Building official (plan approval)', email: 'tyler@beaconinspected.com' }, { role: 'Permit technician', phone: '801-726-1606', email: 'robyn@beaconinspected.com' },
+          { role: 'Inspection scheduling', phone: '801-564-0897', email: 'beaconcodeconsultants@gmail.com' }],
+        lines: ['Apply online through City Inspect', 'Permit mail and payments: Attn: Building Department, PO Box 6, Eden, UT 84310'], portal: 'http://utah.cityinspect.com/register?registration_id=Pg3vQmmIh7' },
+      planning: { name: 'Planning & zoning', people: [{ role: 'City planner (JUB Engineering)', email: 'planning@ogdenvalley.gov' }], url: 'https://ogdenvalley.gov/planning/' }
+    },
+    'Unincorporated Weber County': {
+      asOf: 'Nov 2026', source: 'https://www.webercountyutah.gov/inspection/',
+      office: { name: 'Weber County', lines: ['Weber Center, 2380 Washington Blvd, Ogden, UT 84401'], url: 'https://www.webercountyutah.gov/' },
+      building: { name: 'Weber County Building Inspection Division', approver: "the Weber County Building Inspection Division",
+        people: [{ role: 'Building Inspection (plan review and permits)', phone: '801-399-8770' }],
+        lines: ['2380 Washington Blvd, Suite 270, Ogden, UT 84401', 'Hours: Mon to Fri 8 am to 5 pm', 'Apply online through the county OpenGov portal'], portal: 'https://countyofweberut.portal.opengov.com/' },
+      planning: { name: 'Weber County Planning Division', people: [{ role: 'Planning (zoning and land use)', phone: '801-399-8374' }], lines: ['2380 Washington Blvd, Suite 240, Ogden, UT 84401'], url: 'https://www.webercountyutah.gov/planning/' }
+    }
+  };
+
   var HEALTH = {
     'Weber-Morgan': {
       reg: 'https://webermorganhealth.gov/wp-content/uploads/sites/60/2023/05/Onsite-Wastewater-Treatment-Systems-Regulation.pdf',
@@ -1705,10 +1739,11 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         return rec;
       });
     });
+    var hoaQ = sub ? get('/api/hoa?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county)) : Promise.resolve(null);
     return Promise.all([
       record,
       sub ? get('/api/notices?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county) + '&juris=' + encodeURIComponent(juris || '')) : Promise.resolve(null)
-    ]).then(function (r) { return { record: r[0], notices: r[1] }; });
+    ]).then(function (r) { return hoaQ.then(function (h) { return { record: r[0], notices: r[1], hoa: h }; }); });
   }
   function cite(doc, page) { return doc.name + (page ? ', p. ' + page : '') + ' (' + doc.notice.entity + ', ' + doc.notice.date + ')'; }
   function replaceFinding(ctx, section, item, f) {
@@ -1769,6 +1804,25 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         'The recorded text itself is only sold by the Recorder (Weber: $1/page), so the dossier relies on the development standards above for design rules.',
         main ? cite(main.doc) : 'Recorded plat', main ? main.doc.url : platUrl, null,
         entries.length ? 'Order Entry ' + entries.join(', ') + ' from the County Recorder to read the full covenants.' : null));
+    }
+
+    // State HOA registry: registration status and the association's designated contact.
+    var reg = d.hoa && d.hoa.matches && d.hoa.matches[0];
+    if (reg) {
+      ctx.facts.contacts = ctx.facts.contacts || [];
+      ctx.facts.contacts.push({ kind: 'hoa', name: reg.name, people: (reg.contacts || []).map(function (c) { return { role: c.role, phone: c.phone, email: c.email }; }),
+        lines: [(reg.status || 'Status unknown') + (reg.expires ? ', registration expires ' + reg.expires : '')], url: reg.source, source: reg.source });
+      var pickC = (reg.contacts || []).filter(function (c) { return /Community Manager/i.test(c.role); })[0] || (reg.contacts || []).filter(function (c) { return /Payoff/i.test(c.role); })[0] || (reg.contacts || [])[0];
+      var active = /active/i.test(reg.status || '');
+      var others = (d.hoa.matches || []).slice(1).map(function (m) { return m.name + ' (' + (m.status || '?') + ')'; });
+      out.push(F('ccr', 'HOA registration', active ? 'ok' : 'watch', reg.name + ': ' + (reg.status || 'status unknown') + (reg.expires ? ', registration ' + (active ? 'through ' : 'expired ') + reg.expires : ''),
+        'From the Utah HOA registry (registration ' + (reg.registration || 'n/a') + ', ' + [reg.city, reg.county && reg.county + ' County'].filter(Boolean).join(', ') + '). ' +
+        (active ? '' : 'An expired registration can mean the association is not current with the state; ask about its standing, reserves and any pending assessments. ') +
+        (pickC ? 'Contact for documents (' + pickC.role.toLowerCase() + '): ' + [pickC.phone, pickC.email].filter(Boolean).join(', ') + '. ' : '') +
+        (others.length ? 'Other registered associations with this name: ' + others.join('; ') + '. ' : '') +
+        'The registry lists contacts only, not CC&Rs or design guidelines.',
+        'Utah HOA registry', reg.source, null,
+        'Ask the association for its CC&Rs, architectural design guidelines, review timeline and fees' + (pickC && pickC.email ? ' (' + pickC.email + ')' : '') + '.'));
     }
 
     // Utilities: will-serve statements in the approval record and the plat's approval blocks.
@@ -1862,6 +1916,38 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       'UGS Subsurface Geotechnical Database', list[0].url)];
   };
 
+  C.check_contacts = async function (ctx) {
+    var juris = ctx.facts.jurisdiction, c = CONTACTS[juris];
+    ctx.facts.contacts = ctx.facts.contacts || [];
+    if (!c) {
+      ctx.facts.contacts.push({ name: juris, lines: ['Contacts for this jurisdiction are not on file yet.'] });
+      return [F('permits', 'Building department', 'verify', 'Building department contacts not on file for ' + juris + ' yet',
+        'Lot Dossier has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
+        'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
+    }
+    ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
+    var b = c.building, lead = b.people[0];
+    return [F('permits', 'Building department', 'ok', 'Plans are approved by ' + b.approver,
+      b.people.map(function (p) { return p.role + ': ' + [p.phone, p.email].filter(Boolean).join(', '); }).join('. ') + '. ' + (b.lines || []).join('. ') + '. (as of ' + c.asOf + ')',
+      juris + ' building department', b.portal || c.source, null,
+      'Submit plans through the permit portal' + (lead.email ? '; plan-review questions to ' + lead.email : lead.phone ? '; plan-review questions to ' + lead.phone : '') + '.')];
+  };
+
+  // National Register historic districts (UGRC). Listing alone doesn't restrict private owners, but many listed districts
+  // are also local historic overlays with design review by a landmark commission.
+  C.check_historic = async function (ctx) {
+    var hits = [];
+    for (var n of ['HistoricDistricts', 'National_Historic_Building_Districts']) {
+      var f = await arcgisQuery(UGRC + '/' + n + '/FeatureServer/0', { geometry: ctx.parcel.geometry, outFields: 'NAME,CITY,COUNTY' }).catch(function () { return []; });
+      f.forEach(function (x) { if (hits.indexOf(x.attributes.NAME) < 0) hits.push(x.attributes.NAME); });
+      if (hits.length) break;
+    }
+    if (!hits.length) return [F('land', 'Historic district', 'ok', 'Not in a National Register historic district', 'Checked the state historic district layers.', 'UGRC historic districts')];
+    return [F('land', 'Historic district', 'watch', 'Inside the ' + hits.join(' and '),
+      'National Register listing by itself does not limit what a private owner builds, but many listed districts are also local historic districts where new construction and exterior changes need design approval from a landmark or historic preservation commission. Check the city zoning map for a historic overlay.',
+      'UGRC historic districts', null, null, 'Confirm with ' + (ctx.facts.jurisdiction || 'the city') + ' planning whether a local historic overlay applies and what its design review requires.')];
+  };
+
   C.check_ugs_archive = async function (ctx) {
     var a = ctx.parcel.attrs, ugs = 'https://geodata.geology.utah.gov/pages/search.php?search=';
     var sub = (a.SUBDIV_NAME || '').replace(/\b(phase|ph\.?|plat|unit|amended|subdivision|subd\.?|pud|no\.?)\b.*$/i, '').trim();
@@ -1878,8 +1964,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   };
 
   var STEPS = [
-    ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'],
-    ['check_zoning', 'Zoning district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
+    ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
+    ['check_zoning', 'Zoning district'], ['check_historic', 'Historic district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
@@ -2271,7 +2357,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       steps.forEach(function (s) { if (s.id === id) s.state = state; }); renderSteps();
     });
     $('phase').textContent = 'Report ready';
-    last = { parcel: parcel, plan: plan, findings: res.findings, date: new Date() };
+    last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, date: new Date() };
     showReport();
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
   });
@@ -2355,6 +2441,16 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
+    var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', hoa: 'HOA (state registry)' };
+    var contacts = ((r.facts || {}).contacts || []).slice().sort(function (p, q) { return Object.keys(KIND).indexOf(p.kind) - Object.keys(KIND).indexOf(q.kind); });
+    var link = function (u, t) { return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(t) + '</a>' : ''; };
+    var contactsHtml = contacts.length ? '<div class="card contacts"><h2>Contacts</h2><div class="ct-grid">' + contacts.map(function (c) {
+      return '<div class="ct"><div class="ct-k">' + esc(KIND[c.kind] || 'Jurisdiction') + '</div><b>' + esc(c.name) + '</b>' +
+        (c.people || []).map(function (p) { return '<div class="ct-p"><span>' + esc(p.role) + '</span>' + (p.phone ? '<a href="tel:' + esc(p.phone.replace(/[^\d]/g, '')) + '">' + esc(p.phone) + '</a>' : '') +
+          (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + '</div>'; }).join('') +
+        (c.lines || []).map(function (l) { return '<div class="ct-l">' + esc(l) + '</div>'; }).join('') +
+        '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website')].filter(Boolean).join(' · ') + '</div></div>';
+    }).join('') + '</div>' + (contacts[0] && contacts[0].asOf ? '<p class="ct-src">From the jurisdiction\'s published pages, ' + esc(contacts[0].asOf) + '.</p>' : '') + '</div>' : '';
     var costRows = costs.map(function (x) { return '<tr><td><span class="dot s-' + x.status + '"></span>' + esc(x.cost.label) + '</td><td>' + money(x.cost.low) + '</td><td>' + money(x.cost.high) + '</td></tr>'; }).join('');
     var planHtml = '';
     if (plan) {
@@ -2378,7 +2474,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
       checklistSummary(f, state, saved) +
       '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + '</div></div>' + planHtml + groups +
+      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + '</div></div>' + planHtml + contactsHtml + groups +
       '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
       '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +

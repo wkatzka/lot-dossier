@@ -386,6 +386,27 @@
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
     }
   };
+  // Who approves plans and how to reach the jurisdiction, from each jurisdiction's own published pages. Role-based.
+  var CONTACTS = {
+    'Ogden Valley City': {
+      asOf: 'Nov 2026', source: 'https://ogdenvalley.gov/planning/',
+      office: { name: 'Ogden Valley City', lines: ['City office: Maintenance Building, 167 S 7500 E, Huntsville, UT 84317', 'Mail: PO Box 6, Eden, UT 84310', 'Hours: Mon and Wed 9 am to 1 pm, Thu 1 to 5 pm'], url: 'https://ogdenvalley.gov/' },
+      building: { name: 'Building department (Beacon Code Consultants, for the city)', approver: "the city's building official at Beacon Code Consultants",
+        people: [{ role: 'Building official (plan approval)', email: 'tyler@beaconinspected.com' }, { role: 'Permit technician', phone: '801-726-1606', email: 'robyn@beaconinspected.com' },
+          { role: 'Inspection scheduling', phone: '801-564-0897', email: 'beaconcodeconsultants@gmail.com' }],
+        lines: ['Apply online through City Inspect', 'Permit mail and payments: Attn: Building Department, PO Box 6, Eden, UT 84310'], portal: 'http://utah.cityinspect.com/register?registration_id=Pg3vQmmIh7' },
+      planning: { name: 'Planning & zoning', people: [{ role: 'City planner (JUB Engineering)', email: 'planning@ogdenvalley.gov' }], url: 'https://ogdenvalley.gov/planning/' }
+    },
+    'Unincorporated Weber County': {
+      asOf: 'Nov 2026', source: 'https://www.webercountyutah.gov/inspection/',
+      office: { name: 'Weber County', lines: ['Weber Center, 2380 Washington Blvd, Ogden, UT 84401'], url: 'https://www.webercountyutah.gov/' },
+      building: { name: 'Weber County Building Inspection Division', approver: "the Weber County Building Inspection Division",
+        people: [{ role: 'Building Inspection (plan review and permits)', phone: '801-399-8770' }],
+        lines: ['2380 Washington Blvd, Suite 270, Ogden, UT 84401', 'Hours: Mon to Fri 8 am to 5 pm', 'Apply online through the county OpenGov portal'], portal: 'https://countyofweberut.portal.opengov.com/' },
+      planning: { name: 'Weber County Planning Division', people: [{ role: 'Planning (zoning and land use)', phone: '801-399-8374' }], lines: ['2380 Washington Blvd, Suite 240, Ogden, UT 84401'], url: 'https://www.webercountyutah.gov/planning/' }
+    }
+  };
+
   var HEALTH = {
     'Weber-Morgan': {
       reg: 'https://webermorganhealth.gov/wp-content/uploads/sites/60/2023/05/Onsite-Wastewater-Treatment-Systems-Regulation.pdf',
@@ -1109,10 +1130,11 @@
         return rec;
       });
     });
+    var hoaQ = sub ? get('/api/hoa?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county)) : Promise.resolve(null);
     return Promise.all([
       record,
       sub ? get('/api/notices?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county) + '&juris=' + encodeURIComponent(juris || '')) : Promise.resolve(null)
-    ]).then(function (r) { return { record: r[0], notices: r[1] }; });
+    ]).then(function (r) { return hoaQ.then(function (h) { return { record: r[0], notices: r[1], hoa: h }; }); });
   }
   function cite(doc, page) { return doc.name + (page ? ', p. ' + page : '') + ' (' + doc.notice.entity + ', ' + doc.notice.date + ')'; }
   function replaceFinding(ctx, section, item, f) {
@@ -1173,6 +1195,25 @@
         'The recorded text itself is only sold by the Recorder (Weber: $1/page), so the dossier relies on the development standards above for design rules.',
         main ? cite(main.doc) : 'Recorded plat', main ? main.doc.url : platUrl, null,
         entries.length ? 'Order Entry ' + entries.join(', ') + ' from the County Recorder to read the full covenants.' : null));
+    }
+
+    // State HOA registry: registration status and the association's designated contact.
+    var reg = d.hoa && d.hoa.matches && d.hoa.matches[0];
+    if (reg) {
+      ctx.facts.contacts = ctx.facts.contacts || [];
+      ctx.facts.contacts.push({ kind: 'hoa', name: reg.name, people: (reg.contacts || []).map(function (c) { return { role: c.role, phone: c.phone, email: c.email }; }),
+        lines: [(reg.status || 'Status unknown') + (reg.expires ? ', registration expires ' + reg.expires : '')], url: reg.source, source: reg.source });
+      var pickC = (reg.contacts || []).filter(function (c) { return /Community Manager/i.test(c.role); })[0] || (reg.contacts || []).filter(function (c) { return /Payoff/i.test(c.role); })[0] || (reg.contacts || [])[0];
+      var active = /active/i.test(reg.status || '');
+      var others = (d.hoa.matches || []).slice(1).map(function (m) { return m.name + ' (' + (m.status || '?') + ')'; });
+      out.push(F('ccr', 'HOA registration', active ? 'ok' : 'watch', reg.name + ': ' + (reg.status || 'status unknown') + (reg.expires ? ', registration ' + (active ? 'through ' : 'expired ') + reg.expires : ''),
+        'From the Utah HOA registry (registration ' + (reg.registration || 'n/a') + ', ' + [reg.city, reg.county && reg.county + ' County'].filter(Boolean).join(', ') + '). ' +
+        (active ? '' : 'An expired registration can mean the association is not current with the state; ask about its standing, reserves and any pending assessments. ') +
+        (pickC ? 'Contact for documents (' + pickC.role.toLowerCase() + '): ' + [pickC.phone, pickC.email].filter(Boolean).join(', ') + '. ' : '') +
+        (others.length ? 'Other registered associations with this name: ' + others.join('; ') + '. ' : '') +
+        'The registry lists contacts only, not CC&Rs or design guidelines.',
+        'Utah HOA registry', reg.source, null,
+        'Ask the association for its CC&Rs, architectural design guidelines, review timeline and fees' + (pickC && pickC.email ? ' (' + pickC.email + ')' : '') + '.'));
     }
 
     // Utilities: will-serve statements in the approval record and the plat's approval blocks.
@@ -1266,6 +1307,38 @@
       'UGS Subsurface Geotechnical Database', list[0].url)];
   };
 
+  C.check_contacts = async function (ctx) {
+    var juris = ctx.facts.jurisdiction, c = CONTACTS[juris];
+    ctx.facts.contacts = ctx.facts.contacts || [];
+    if (!c) {
+      ctx.facts.contacts.push({ name: juris, lines: ['Contacts for this jurisdiction are not on file yet.'] });
+      return [F('permits', 'Building department', 'verify', 'Building department contacts not on file for ' + juris + ' yet',
+        'Lot Dossier has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
+        'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
+    }
+    ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
+    var b = c.building, lead = b.people[0];
+    return [F('permits', 'Building department', 'ok', 'Plans are approved by ' + b.approver,
+      b.people.map(function (p) { return p.role + ': ' + [p.phone, p.email].filter(Boolean).join(', '); }).join('. ') + '. ' + (b.lines || []).join('. ') + '. (as of ' + c.asOf + ')',
+      juris + ' building department', b.portal || c.source, null,
+      'Submit plans through the permit portal' + (lead.email ? '; plan-review questions to ' + lead.email : lead.phone ? '; plan-review questions to ' + lead.phone : '') + '.')];
+  };
+
+  // National Register historic districts (UGRC). Listing alone doesn't restrict private owners, but many listed districts
+  // are also local historic overlays with design review by a landmark commission.
+  C.check_historic = async function (ctx) {
+    var hits = [];
+    for (var n of ['HistoricDistricts', 'National_Historic_Building_Districts']) {
+      var f = await arcgisQuery(UGRC + '/' + n + '/FeatureServer/0', { geometry: ctx.parcel.geometry, outFields: 'NAME,CITY,COUNTY' }).catch(function () { return []; });
+      f.forEach(function (x) { if (hits.indexOf(x.attributes.NAME) < 0) hits.push(x.attributes.NAME); });
+      if (hits.length) break;
+    }
+    if (!hits.length) return [F('land', 'Historic district', 'ok', 'Not in a National Register historic district', 'Checked the state historic district layers.', 'UGRC historic districts')];
+    return [F('land', 'Historic district', 'watch', 'Inside the ' + hits.join(' and '),
+      'National Register listing by itself does not limit what a private owner builds, but many listed districts are also local historic districts where new construction and exterior changes need design approval from a landmark or historic preservation commission. Check the city zoning map for a historic overlay.',
+      'UGRC historic districts', null, null, 'Confirm with ' + (ctx.facts.jurisdiction || 'the city') + ' planning whether a local historic overlay applies and what its design review requires.')];
+  };
+
   C.check_ugs_archive = async function (ctx) {
     var a = ctx.parcel.attrs, ugs = 'https://geodata.geology.utah.gov/pages/search.php?search=';
     var sub = (a.SUBDIV_NAME || '').replace(/\b(phase|ph\.?|plat|unit|amended|subdivision|subd\.?|pud|no\.?)\b.*$/i, '').trim();
@@ -1282,8 +1355,8 @@
   };
 
   var STEPS = [
-    ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'],
-    ['check_zoning', 'Zoning district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
+    ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
+    ['check_zoning', 'Zoning district'], ['check_historic', 'Historic district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],

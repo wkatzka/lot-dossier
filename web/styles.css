@@ -417,3 +417,16 @@ body::before{background-image:var(--desert-image);filter:none}
 body.chk-only #rv .frow:not(.act){display:none}
 body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 @media print{#rv .chk-seg,#rv .chk-attach,#rv .chk-rm,#rv .chk-only-toggle{display:none}}
+
+#rv .contacts{margin-top:32px}
+#rv .ct-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:22px;margin-top:10px}
+#rv .ct{display:flex;flex-direction:column;gap:5px;min-width:0}
+#rv .ct-k{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+#rv .ct b{font-size:15px}
+#rv .ct-p{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:14px}
+#rv .ct-p span{color:var(--muted);flex-basis:100%}
+#rv .ct-p a,#rv .ct-links a{overflow-wrap:anywhere}
+#rv .ct-l{font-size:13px;color:var(--muted)}
+#rv .ct-links{font-size:14px;margin-top:2px}
+#rv .ct-src{font-size:12px;color:var(--muted);margin:14px 0 0}
+@media print{#rv .ct-grid{grid-template-columns:1fr 1fr}}
