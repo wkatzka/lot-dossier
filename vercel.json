@@ -13,6 +13,10 @@
     "api/plat-sheet.js": {
       "maxDuration": 300,
       "includeFiles": "node_modules/{tesseract.js,tesseract.js-core}/**"
+    },
+    "api/packet-ocr.js": {
+      "maxDuration": 300,
+      "includeFiles": "node_modules/{tesseract.js,tesseract.js-core,pdfjs-dist/legacy/build}/**"
     }
   },
   "headers": [

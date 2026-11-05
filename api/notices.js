@@ -4,6 +4,7 @@
 const pmn = require('../lib/pmn');
 const countydocs = require('../lib/countydocs');
 const ex = require('../lib/extract');
+const scans = require('../lib/scans');
 const { buffer, pool } = require('../lib/http');
 const { cors, query, send } = require('../lib/respond');
 
@@ -83,6 +84,15 @@ module.exports = async (req, res) => {
         numPages, readPages: pages.length, truncated, mentionPages: hits.map(i => i + 1).slice(0, 20),
         standards: ex.standards(windowText), standardsPage: (pages.slice(from, to).findIndex(p => /Site Development Standards|Front Yard Setback/i.test(p)) + from + 1) || null,
         uses: ex.uses(windowText), ccrs: ex.ccrs(windowText),
+        // This subdivision's own staff report(s): water lines (secondary water allotment, landscape covenants) and the
+        // scanned will-serve exhibits to OCR. Packets carry several subdivisions' reports, so never use the whole window.
+        ...(() => {
+          const mine = scans.pickReports(scans.staffReports(pages), name);
+          if (!mine.length) return { water: ex.waterNotes(near).slice(0, 6).map(t => ({ text: t, page: null })), scans: [] };
+          return { staffReports: mine.map(r => ({ request: r.request, pages: [r.start + 1, r.end] })),
+            water: [].concat(...mine.map(r => [r.request].concat(ex.waterNotes(pages.slice(r.start, r.end).join('\n'))).filter(t => /well|water/i.test(t)).map(t => ({ text: t, page: r.start + 1 })))).slice(0, 8),
+            scans: [].concat(...mine.map(r => scans.scannedExhibits(pages, r.start, r.end).map(x => Object.assign({ request: r.request }, x)))) };
+        })(),
         utilities: ex.utilities(near, kw.search).filter(u => subRe.test(u.text) || u.provider).slice(0, 8) };
     }));
     const skipped = chosen.map((f, i) => documents[i] && documents[i].error ? { name: f.name, url: f.url, error: documents[i].error } : (documents[i] ? null : { name: f.name, url: f.url, error: 'no mention of ' + kw.search + ' in the text (or out of time)' })).filter(Boolean);

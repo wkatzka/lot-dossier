@@ -4,6 +4,7 @@
   'use strict';
 
   var UGRC = 'https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services';
+  var BROADBAND = 'https://services.arcgis.com/pA2nEVnB6tquxgOW/arcgis/rest/services/all_record_hexes_dissolved/FeatureServer/0';
   var WEBER = 'https://maps.webercountyutah.gov/arcgis/rest/services';
   var UTAH_AGO = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services';
   var SDA = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
@@ -348,7 +349,7 @@
     var f = await arcgisQuery(WEBER + '/gis/OpenGov_Layers/MapServer/9', { where: "PARCEL_ID='" + ctx.parcel.id + "'",
       outFields: 'PARCEL_ID,TOT_MARKET,PROP_DESC,SUB_PHASE,NAME_ONE,TaxYear' });
     if (!f.length) return [];
-    var a = f[0].attributes; ctx.facts.prop_desc = a.PROP_DESC || ''; ctx.facts.assessed = a.TOT_MARKET;
+    var a = f[0].attributes; ctx.facts.prop_desc = a.PROP_DESC || ''; ctx.facts.assessed = a.TOT_MARKET; ctx.facts.owner = (a.NAME_ONE || '').trim();
     return [F('land', 'Assessor', 'ok', a.TaxYear + ' assessed market value $' + fmt(a.TOT_MARKET || 0),
       'Owner of record: ' + (a.NAME_ONE || '').trim() + '. Property type: ' + a.PROP_DESC + '. Plat: ' + a.SUB_PHASE +
       '. Assessed value lags the market; use it to sanity-check asking price, not as an appraisal. The county parcel page lists recorded documents and links the subdivision plat images.',
@@ -368,7 +369,7 @@
       code: 'https://ogdenvalley.gov/land-use/',
       impact: [['Roads', 4512.14, 'Ord. 2026-19'], ['Trails', 3101.97, 'Ord. 2026-19'], ['Storm drain (per ESU)', 1575.78, 'Ord. 2026-19']],
       impactSrc: 'https://ogdenvalley.gov/wp-content/uploads/2026/04/Ordinance-2026-19-Impact-Fees-FINAL.pdf',
-      fireImpact: [704, 'Weber Fire District, proposed in its Sept 2025 impact fee study (adoption not confirmed)'],
+      fireImpact: [704, 'Weber Fire District public safety impact fee, Resolution 16-2025, adopted Sept 23, 2025 ($704 per residential unit)', 'https://www.utah.gov/pmn/files/1336665.pdf'],
       designReview: 'City design review (LUC 108-1) applies to commercial, resort, public and larger multifamily projects, not single-family homes. Single-family standards (108-15) require only a permanent foundation and code compliance; no roof pitch or eave minimums.',
       lighting: 'Outdoor lighting ordinance (LUC 108-16) applies to new homes: fully shielded, downward fixtures, 3000K or warmer, lights off by 10 pm (fixtures of 105 lumens or less exempt), and a lighting plan at permit.',
       septicZones: 'Septic is prohibited in drinking water source protection Zones 1 and 2 (LUC 108-18-6).',
@@ -383,6 +384,12 @@
         'RE-20': { name: 'Residential Estates', cite: 'LUC 104-3', area: '20,000 sq ft', width: 100, front: 30, side: 10, sideTotal: 24, rear: 30, height: 35 },
         'F-5': { name: 'Forest', cite: 'LUC 104-9-5', area: '5 acres', width: 300, front: 30, side: 20, rear: 30, height: null }
       },
+      // Development agreements that change fees for a specific developer's permits.
+      feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)',
+        text: 'Resolution 2026-25 (Development Mitigation Contribution and Impact Fee Lock Agreement, adopted May 19, 2026, 4-1) lets EVO pay impact fees at the lower Weber County rate on its building permits, in exchange for a mitigation contribution to the city. EVO had 19 building permits pending when it was negotiated, and the council discussed a cap or sunset.',
+        src: 'https://www.utah.gov/pmn/files/1452527.pdf' }],
+      permitFees: { adopted: 'Resolution 2026-28, adopted May 5, 2026', src: 'https://www.utah.gov/pmn/files/1438293.pdf',
+        note: 'The schedule itself is not posted online. Council minutes (May 4, 2026 work session) say the residential plan review fee is higher than Weber County\'s but not the maximum allowed.' },
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
     }
   };
@@ -406,6 +413,25 @@
       planning: { name: 'Weber County Planning Division', people: [{ role: 'Planning (zoning and land use)', phone: '801-399-8374' }], lines: ['2380 Washington Blvd, Suite 240, Ogden, UT 84401'], url: 'https://www.webercountyutah.gov/planning/' }
     }
   };
+
+  // ICC Building Valuation Data, August 2026 (Type VB wood frame). Weber County values permits on the latest table.
+  var BVD = { asOf: 'August 2026', r3: 177.63, garage: 71.79, unfinishedBasement: 31.50, src: 'https://www.iccsafe.org/wp-content/uploads/BVD-BSJ-AUG2026.pdf' };
+  // Weber County building permit fee (County Code 12-3-6) by total valuation.
+  function weberPermitFee(v) {
+    var k = function (base, rate, from) { return base + rate * Math.ceil((v - from) / 1000); };
+    if (v <= 2000) return 69.25;
+    if (v <= 25000) return k(69.25, 14, 2000);
+    if (v <= 50000) return k(391.75, 10.10, 25000);
+    if (v <= 100000) return k(643.75, 7, 50000);
+    if (v <= 500000) return k(993.75, 5.60, 100000);
+    if (v <= 1e6) return k(3233.75, 4.75, 500000);
+    return k(5608.75, 3.65, 1e6);
+  }
+  // Building permit + plan review (35%, 12-3-8) + electrical/plumbing/mechanical + 1% state surcharge on the permit fee.
+  function weberBuildingFees(houseSf, garageSf) {
+    var val = houseSf * BVD.r3 + (garageSf || 0) * BVD.garage, permit = weberPermitFee(val);
+    return { valuation: val, permit: permit, planReview: permit * 0.35, trades: 350, surcharge: permit * 0.01, total: permit * 1.36 + 350 };
+  }
 
   var HEALTH = {
     'Weber-Morgan': {
@@ -550,10 +576,17 @@
   C.check_liquefaction_groundwater = async function (ctx) {
     var out = [], liq = await area(ctx, UGRC + '/LiquefactionPotential/FeatureServer/0');
     if (liq.length) {
-      var codes = Array.from(new Set(liq.map(function (f) { return f.attributes.PCODE; }))).sort();
-      out.push(F('geo', 'Liquefaction', 'verify', 'Inside a mapped liquefaction-potential area (class code ' + codes.join(', ') + ')',
-        "From the 1994 USU/UGS county liquefaction studies. The class legend isn't published with the data layer; the geotech report should address liquefaction directly.",
-        'UGS/USU liquefaction potential via UGRC', 'https://geology.utah.gov/apps/hazards/'));
+      // Legend from the 1994 USU/UGS studies (labels published in Utah Division of Emergency Management's copy of this layer):
+      // chance of an earthquake strong enough to cause liquefaction within 100 years.
+      var LIQ = { 1: ['Very Low', '<5%', 'ok'], 2: ['Very Low to Low', '<5-10%', 'ok'], 3: ['Low', '5-10%', 'ok'], 4: ['Low to Moderate', '5-50%', 'watch'],
+        5: ['Moderate', '10-50%', 'watch'], 6: ['Moderate to High', '10->50%', 'flag'], 7: ['High', '>50%', 'flag'], 8: ['Landslide (not rated)', null, 'watch'] };
+      var codes = Array.from(new Set(liq.map(function (f) { return f.attributes.PCODE; }))).sort(function (x, y) { return x - y; });
+      var rank = { ok: 0, watch: 1, flag: 2 }, worst = codes.map(function (c) { return LIQ[c] || ['Not classified', null, 'watch']; })
+        .reduce(function (w, c) { return !w || rank[c[2]] > rank[w[2]] ? c : w; }, null);
+      out.push(F('geo', 'Liquefaction', worst[2], worst[0] + ' liquefaction potential' + (worst[1] ? ' (' + worst[1] + ' chance in 100 years)' : ''),
+        'Mapped classes on the lot: ' + codes.map(function (c) { return (LIQ[c] || ['code ' + c])[0]; }).join(', ') + '. The 1994 USU/UGS county studies rate the chance of an earthquake strong enough to liquefy saturated sandy soils within 100 years. ' +
+        (worst[2] === 'ok' ? 'A low rating reflects the soils and groundwater the 1994 study mapped at regional scale; the site geotechnical report still has to address liquefaction for seismic design category D.' : 'Expect the geotechnical report to test for liquefaction and possibly require ground improvement or deeper foundations.'),
+        'UGS/USU liquefaction potential (UGRC; legend via Utah DEM)', 'https://geology.utah.gov/apps/hazards/', worst[2] === 'flag' ? ctx.cost('geotech_mitigation') : null));
     }
     var gw = await area(ctx, UGRC + '/ShallowGroundWater/FeatureServer/0');
     if (gw.length) {
@@ -748,11 +781,89 @@
       out.push(F('utilities', 'Natural gas', 'ok', g.PROVIDER + ' service area (approximate)', 'Confirm a main runs along the lot frontage.', 'UGRC natural gas service areas', g.WEBLINK));
     } else out.push(F('utilities', 'Natural gas', 'watch', 'No natural gas service mapped', 'Plan for propane or all-electric heat.', 'UGRC natural gas service areas', null, ctx.cost('propane')));
     var prov = Array.from(new Set(r[2].map(function (f) { return f.attributes.PROVIDER; }))).sort().join(', ') || 'none mapped';
-    out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov,
-      'Check the FCC National Broadband Map at this location for fiber/cable availability. Buyers of high-end spec homes expect fiber.', 'UGRC telecom boundaries + FCC',
-      'https://broadbandmap.fcc.gov/location-summary/fixed?lat=' + ctx.parcel.cy.toFixed(6) + '&lon=' + ctx.parcel.cx.toFixed(6)));
+    var fccUrl = 'https://broadbandmap.fcc.gov/location-summary/fixed?lat=' + ctx.parcel.cy.toFixed(6) + '&lon=' + ctx.parcel.cx.toFixed(6);
+    // Utah Broadband Center service areas, built from providers' FCC Broadband Data Collection filings (H3 hexagons, ~0.3 sq mi).
+    var bb = await area(ctx, BROADBAND, { outFields: 'brand_name,max_advertised_download_speed,max_advertised_upload_speed,common_tech,category' }).catch(function () { return null; });
+    if (!bb) {
+      out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov, 'The broadband availability layer did not respond. Buyers of high-end spec homes expect fiber.', 'UGRC telecom boundaries + FCC', fccUrl));
+      return out;
+    }
+    var best = {};
+    bb.forEach(function (f) {
+      var a = f.attributes, k = a.brand_name + '|' + a.common_tech;
+      if (!best[k] || a.max_advertised_download_speed > best[k].down) best[k] = { name: a.brand_name, tech: a.common_tech, cat: a.category, down: a.max_advertised_download_speed, up: a.max_advertised_upload_speed };
+    });
+    var list = Object.keys(best).map(function (k) { return best[k]; }).sort(function (x, y) { return y.down - x.down; });
+    var spd = function (m) { return m >= 1000 ? (m / 1000) + ' Gbps' : m + ' Mbps'; };
+    var desc = function (x) { return x.name + ' (' + x.tech + ', ' + spd(x.down) + ' down / ' + spd(x.up) + ' up)'; };
+    var fiber = list.filter(function (x) { return /fiber/i.test(x.tech); }), cable = list.filter(function (x) { return /cable/i.test(x.tech); });
+    var wired = list.filter(function (x) { return x.cat === 'wired'; }), other = list.filter(function (x) { return x.cat !== 'wired'; });
+    ctx.facts.fiber = fiber.length > 0;
+    var caveat = ' Providers report coverage to the FCC by hexagon (about 0.3 sq mi), so a listed provider serves part of the area around the lot, not necessarily this lot. A new lot may not be in the FCC location list until a home is built.';
+    var status = fiber.length ? 'ok' : cable.length ? 'watch' : 'flag';
+    var head = fiber.length ? 'Fiber reported nearby: ' + fiber.map(function (x) { return x.name + ' ' + spd(x.down); }).join(', ')
+      : cable.length ? 'No fiber reported; cable from ' + cable.map(function (x) { return x.name; }).join(', ')
+      : wired.length ? 'No fiber or cable; best wired option is ' + desc(wired[0]) : 'No wired broadband reported; wireless and satellite only';
+    out.push(F('utilities', 'Internet', status, head,
+      'Wired: ' + (wired.map(desc).join('; ') || 'none') + '. Wireless and satellite: ' + (other.slice(0, 5).map(desc).join('; ') || 'none') + '.' + caveat +
+      (fiber.length ? '' : ' Buyers of high-end spec homes expect fiber; a line extension may be negotiable with a provider before closing.'),
+      'Utah Broadband Center (FCC filings)', fccUrl, null,
+      fiber.length ? 'Ask ' + fiber[0].name + "'s new-construction team to confirm service to this lot and any build-out charge." : 'Ask wired providers for a line-extension quote to the lot.'));
     return out;
   };
+
+  // Distance a fire crew lays hose: along mapped roads from each hydrant to the lot frontage, then from the frontage to the
+  // middle of the lot (where the house is assumed to sit). Roads are densified to ~10 m nodes; segments sharing an endpoint connect.
+  function hydrantRoute(ctx, roads, hydrants) {
+    var lat0 = ctx.parcel.cy, key = function (q) { return Math.round(q[0] * 2) + ',' + Math.round(q[1] * 2); };
+    var nodes = [], idx = {}, adj = [];
+    var node = function (q) { var k = key(q); if (idx[k] == null) { idx[k] = nodes.length; nodes.push(q); adj.push([]); } return idx[k]; };
+    roads.forEach(function (r) {
+      ((r.geometry || {}).paths || []).forEach(function (path) {
+        var prev = null;
+        path.forEach(function (pt) {
+          var q = toLocal(pt[0], pt[1], lat0);
+          if (prev) {
+            var d = Math.hypot(q[0] - prev[0], q[1] - prev[1]), n = Math.max(1, Math.ceil(d / 10)), a = node(prev);
+            for (var i = 1; i <= n; i++) {
+              var b = node([prev[0] + (q[0] - prev[0]) * i / n, prev[1] + (q[1] - prev[1]) * i / n]), w = d / n;
+              if (a !== b) { adj[a].push([b, w]); adj[b].push([a, w]); }
+              a = b;
+            }
+          }
+          prev = q;
+        });
+      });
+    });
+    if (!nodes.length) return null;
+    var c = toLocal(ctx.parcel.cx, ctx.parcel.cy, lat0), ring = ctx.parcel.rings[0].map(function (q) { return toLocal(q[0], q[1], lat0); });
+    var toRing = function (q) {
+      var best = Infinity;
+      for (var i = 0; i < ring.length - 1; i++) {
+        var a = ring[i], b = ring[i + 1], dx = b[0] - a[0], dy = b[1] - a[1], t = ((q[0] - a[0]) * dx + (q[1] - a[1]) * dy) / (dx * dx + dy * dy || 1);
+        t = Math.max(0, Math.min(1, t)); best = Math.min(best, Math.hypot(q[0] - a[0] - t * dx, q[1] - a[1] - t * dy));
+      }
+      return best;
+    };
+    // Multi-source Dijkstra from frontage nodes (within 25 m of the lot line), starting cost = walk to the lot center.
+    var dist = nodes.map(function () { return Infinity; }), done = nodes.map(function () { return false; }), open = [];
+    nodes.forEach(function (q, i) { if (toRing(q) <= 25) { dist[i] = Math.hypot(q[0] - c[0], q[1] - c[1]); open.push(i); } });
+    if (!open.length) return null;
+    while (open.length) {
+      var bi = 0; for (var j = 1; j < open.length; j++) if (dist[open[j]] < dist[open[bi]]) bi = j;
+      var u = open[bi]; open.splice(bi, 1); if (done[u]) continue; done[u] = true;
+      adj[u].forEach(function (e) { var nd = dist[u] + e[1]; if (nd < dist[e[0]]) { dist[e[0]] = nd; open.push(e[0]); } });
+    }
+    var best = null;
+    hydrants.forEach(function (h) {
+      var q = toLocal(h.geometry.x, h.geometry.y, lat0), ni = -1, nd = Infinity;
+      nodes.forEach(function (n, i) { var d = Math.hypot(n[0] - q[0], n[1] - q[1]); if (d < nd) { nd = d; ni = i; } });
+      if (nd > 40 || !isFinite(dist[ni])) return; // hydrant not on a mapped road, or not connected
+      var total = dist[ni] + nd;
+      if (!best || total < best.m) best = { m: total, straight: Math.hypot(q[0] - c[0], q[1] - c[1]) };
+    });
+    return best;
+  }
 
   C.check_access_fire = async function (ctx) {
     var out = [], roads = await area(ctx, UGRC + '/UtahRoads/FeatureServer/0', { distance: 30 });
@@ -780,13 +891,23 @@
       var hy = await arcgisQuery(WEBER + '/gis/OpenGov_Layers/MapServer/11', { geometry: ctx.parcel.point, distance: 2000, returnGeometry: true, outFields: 'OBJECTID' }).catch(function () { return null; });
       if (hy) {
         var hft = hy.length ? Math.min.apply(0, hy.map(function (h) { return distPts(ctx.parcel.cx, ctx.parcel.cy, h.geometry.x, h.geometry.y); })) * FT_PER_M : null;
-        ctx.facts.hydrant_ft = hft;
+        var route = null;
+        if (hy.length) {
+          var rd = await arcgisQuery(UGRC + '/UtahRoads/FeatureServer/0', { geometry: ctx.parcel.point, distance: 2200, returnGeometry: true, outFields: 'FULLNAME' }).catch(function () { return null; });
+          route = rd && hydrantRoute(ctx, rd, hy);
+        }
+        var rft = route ? route.m * FT_PER_M : null, use = rft || hft;
+        ctx.facts.hydrant_ft = use;
+        var rule = 'For one- and two-family homes the fire code allows up to 600 ft from a hydrant on the fire access road, measured along the route a crew would lay hose to every part of the house (IFC 507.5.1, Exception 1; the fire district can require more). ';
         if (hft == null) out.push(F('access', 'Fire hydrant', 'flag', 'No mapped hydrant within 6,500 ft',
           'Without a hydrant, the fire code generally requires residential sprinklers or on-site water storage for firefighting.', 'Weber County GIS: fire hydrants', null, ctx.cost('fire_sprinklers')));
-        else out.push(F('access', 'Fire hydrant', hft <= 600 ? 'ok' : 'watch', 'Nearest mapped hydrant about ' + fmt(hft) + ' ft from the lot center',
-          hft <= 600 ? 'Within the 600 ft the fire code allows for sprinklered one- and two-family homes (400 ft unsprinklered); measured along the access road it may be longer.'
-            : 'The fire code wants a hydrant within 400 ft of every part of the house (600 ft if sprinklered), measured along the access road. Expect a hydrant extension or residential sprinklers.',
-          'Weber County GIS: fire hydrants', null, hft <= 600 ? null : ctx.cost('fire_sprinklers')));
+        else out.push(F('access', 'Fire hydrant', use <= 600 ? 'ok' : 'watch',
+          rft ? 'Nearest hydrant about ' + fmt(rft) + ' ft by road to the middle of the lot' : 'Nearest mapped hydrant about ' + fmt(hft) + ' ft from the lot center (straight line)',
+          rule + (rft ? 'Measured along mapped roads from the hydrant to the lot frontage, then to the lot center (' + fmt(route.straight * FT_PER_M) + ' ft straight-line). Where the house sits on the lot changes this. ' : 'No road route could be traced, so this is straight-line and the real hose route is longer. ') +
+            (use <= 600 ? 'Within the limit; keep the house near the front of the lot if the margin is thin.' : 'Over the limit: expect a hydrant extension along the road or residential fire sprinklers.' +
+              (ctx.parcel.attrs.SUBDIV_NAME ? " Hydrants installed with a recent subdivision's improvements may not be on the county map yet; the subdivision's approved improvement drawings show them." : '')),
+          'Weber County GIS hydrants + UGRC roads', null, use <= 600 ? null : ctx.cost('fire_sprinklers'),
+          use <= 600 ? null : 'Ask the fire district whether it will accept sprinklers in place of a hydrant extension, and price both.'));
       }
     }
     var st = await arcgisQuery(UGRC + '/FireStations/FeatureServer/0', { geometry: ctx.parcel.point, distance: 25000, returnGeometry: true });
@@ -818,14 +939,19 @@
     if (kb) {
       var known = kb.impact.reduce(function (t, x) { return t + x[1]; }, 0), fire = kb.fireImpact ? kb.fireImpact[0] : 0;
       var list = kb.impact.map(function (x) { return x[0] + ' $' + x[1].toLocaleString('en-US', { minimumFractionDigits: 2 }); }).join(', ');
-      var pc = ctx.cost('permit_impact_fees');
-      out.push(F('permits', 'Permit & impact fees', 'watch', 'Published impact fees total about $' + fmt(known) + ' per house',
+      var pc = ctx.cost('permit_impact_fees'), fp = ctx.plan.footprint || {}, hasPlan = !!fp.residence_sf;
+      var hs = fp.residence_sf || 3500, gs = hasPlan ? (fp.garage_sf || 0) : 800, wb = weberBuildingFees(hs, gs);
+      var pf = kb.permitFees, money2 = function (n) { return '$' + fmt(n); };
+      var bldTxt = 'Building permit and plan review: ' + (pf ? pf.adopted + ' sets the city\'s fees. ' + pf.note + ' ' : 'set locally. ') +
+        'As a floor, Weber County\'s published schedule (County Code 12-3-6 and 12-3-8) on ' + (hasPlan ? 'this plan (' + fmt(hs) + ' sq ft house' + (gs ? ' + ' + fmt(gs) + ' sq ft garage' : '') + ')' : 'a typical ' + fmt(hs) + ' sq ft house with an ' + fmt(gs) + ' sq ft garage') +
+        ' gives a valuation of ' + money2(wb.valuation) + ' (ICC ' + BVD.asOf + ' rates: $' + BVD.r3 + '/sq ft house, $' + BVD.garage + '/sq ft garage), a permit fee of ' + money2(wb.permit) +
+        ', plan review ' + money2(wb.planReview) + ', trade permits $350 and the 1% state surcharge: about ' + money2(wb.total) + '. Expect the city\'s total to be somewhat higher.';
+      out.push(F('permits', 'Permit & impact fees', 'watch', 'Impact fees about $' + fmt(known + fire) + ' + building permit and plan review from about $' + fmt(wb.total),
         'Impact fees: ' + list + ' (' + kb.impact[0][2] + ', one storm-drain unit assumed; more impervious area means more units).' +
-        (kb.fireImpact ? ' Plus $' + fire + ' fire impact fee: ' + kb.fireImpact[1] + '.' : '') +
-        ' The building permit and plan review fees are set by resolution but not posted online; the range below uses a placeholder for them. Permits: ' + kb.permits,
-        juris + ' impact fee ordinance', kb.impactSrc,
-        pc ? { key: 'permit_impact_fees', low: Math.round(known + 8000), high: Math.round(known + fire + 20000), label: 'Impact fees (published) + building permit & plan review (estimate)' } : null,
-        'Submit through the city permit portal; the submission checklist is at ' + kb.submittal));
+        (kb.fireImpact ? ' Plus $' + fire + ' fire impact fee: ' + kb.fireImpact[1] + '.' : '') + ' ' + bldTxt + ' Permits: ' + kb.permits,
+        juris + ' impact fee ordinance + Weber County fee schedule', kb.impactSrc,
+        pc ? { key: 'permit_impact_fees', low: Math.round(known + fire + wb.total), high: Math.round(known + fire + wb.total * 1.5), label: 'Impact fees (published) + building permit & plan review (Weber schedule as floor)' } : null,
+        'Ask the building department for the Resolution 2026-28 fee schedule to replace the floor estimate, then submit through the permit portal (checklist: ' + kb.submittal + ').'));
       out.push(F('permits', 'Outdoor lighting', 'watch', 'Dark-sky lighting plan required at permit', kb.lighting, juris + ' Land Use Code 108-16', kb.code));
     } else {
       out.push(F('permits', 'Building permit', 'verify', 'Permitting authority: ' + juris, 'Permits through ' + juris + '. Fee schedules are set locally.', null, null, ctx.cost('permit_impact_fees'),
@@ -1031,7 +1157,7 @@
       var far = fx.hydrant_ft > 600, sprk = (p.features || []).some(function (f) { return /sprinkler/i.test(f.label); });
       out.push(P('House size vs. fire protection', far && !sprk ? 'watch' : 'ok',
         fmt(foot) + ' sq ft under one roof; nearest hydrant ~' + fmt(fx.hydrant_ft) + ' ft',
-        'Homes over 3,600 sq ft of fire area need more fire flow under the fire code\'s Appendix B, and the hydrant must be within 400 ft (600 ft if sprinklered) of every part of the house. ' +
+        'Homes over 3,600 sq ft of fire area need more fire flow under the fire code\'s Appendix B, and a hydrant must be within 600 ft of every part of a one- or two-family home, measured along the hose route. ' +
         (far ? (sprk ? 'The plan shows sprinklers, which helps.' : 'The plan shows no fire sprinklers; expect the fire district to require them or a closer hydrant.') : 'The hydrant distance looks workable; the district will confirm required fire flow.'),
         far && !sprk ? ctx.cost('fire_sprinklers') : null, 'Ask the fire district for the required fire flow for a ' + fmt(foot) + ' sq ft wood-frame house.'));
     }
@@ -1134,7 +1260,15 @@
     return Promise.all([
       record,
       sub ? get('/api/notices?q=' + encodeURIComponent(sub) + '&county=' + encodeURIComponent(parcel.county) + '&juris=' + encodeURIComponent(juris || '')) : Promise.resolve(null)
-    ]).then(function (r) { return hoaQ.then(function (h) { return { record: r[0], notices: r[1], hoa: h }; }); });
+    ]).then(function (r) {
+      // Scanned will-serve letters in the subdivision's own staff report: OCR them (one call per exhibit, capped at 2).
+      var docsWithScans = ((r[1] && r[1].documents) || []).filter(function (x) { return x && x.scans && x.scans.length; });
+      var jobs = docsWithScans.slice(0, 2).map(function (x) {
+        var sc = x.scans[0], pg = sc.pages[0] + '-' + sc.pages[sc.pages.length - 1];
+        return get('/api/packet-ocr?url=' + encodeURIComponent(x.url) + '&pages=' + pg, 120000).then(function (o) { return o && !o.error ? { doc: x, scan: sc, ocr: o } : null; });
+      });
+      return Promise.all([hoaQ].concat(jobs)).then(function (h) { return { record: r[0], notices: r[1], hoa: h[0], letters: h.slice(1).filter(Boolean) }; });
+    });
   }
   function cite(doc, page) { return doc.name + (page ? ', p. ' + page : '') + ' (' + doc.notice.entity + ', ' + doc.notice.date + ')'; }
   function replaceFinding(ctx, section, item, f) {
@@ -1237,6 +1371,52 @@
         '"' + waterDoc.text.replace(/\s+/g, ' ').slice(0, 240) + '" (' + cite(waterDoc.doc) + '). This supersedes the state service-area map for this subdivision.',
         cite(waterDoc.doc), waterDoc.doc.url, ctx.cost('culinary_connection'), 'Get the connection fee and any share requirement from ' + waterDoc.provider + '.'));
     }
+
+    // Water will-serve letter (OCR'd from the staff report exhibit) and the staff reports' water lines.
+    var letter = (d.letters || []).filter(function (l) { return l.ocr.water && l.ocr.water.supplier; })[0];
+    var wnotes = [].concat.apply([], docs.map(function (x) { return (x.water || []).map(function (w) { return Object.assign({ doc: x }, typeof w === 'string' ? { text: w } : w); }); }));
+    var wellNote = wnotes.filter(function (w) { return /wells? ha(?:ve|s) been drilled/i.test(w.text); })[0];
+    var secNotes = wnotes.filter(function (w) { return /secondary water|Landscape Covenant/i.test(w.text) && !/exempt|wildland|covenant shall/i.test(w.text); });
+    if (letter) {
+      var wf = letter.ocr.water, lp = function (k) { return wf[k] ? cite(letter.doc, wf[k].page) : ''; }, v = function (k) { return wf[k] && wf[k].value; };
+      var sup = v('supplier'), both = /secondary/i.test(v('services') || '');
+      ctx.facts.culinary = sup;
+      var supply = [v('storage') && 'Storage: ' + v('storage') + (v('fireFlow') ? ', sized for a fire flow of ' + v('fireFlow') : '') + '.',
+        v('wells') && 'Supply: ' + v('wells') + ' at the time of the letter' + (wellNote ? '; a later staff report says "' + ((wellNote.text.replace(/\s+/g, ' ').match(/[^.]*wells? ha(?:ve|s) been drilled[^.]*\./i) || [wellNote.text])[0]).trim().slice(0, 200) + '" (' + cite(wellNote.doc, wellNote.page) + ')' : '') + '.',
+        v('waterRights') && 'Water rights: ' + v('waterRights') + '.',
+        v('connections') && 'System approved for ' + v('connections') + '.'].filter(Boolean).join(' ');
+      replaceFinding(ctx, 'water', 'Culinary water', F('water', 'Culinary water', 'watch', 'Culinary' + (both ? ' and secondary' : '') + ' water: ' + sup + ' (feasibility letter' + (v('date') ? ', ' + v('date') : '') + ')',
+        (v('formerly') ? sup + ' (formerly ' + v('formerly') + ')' : sup) + (v('pws') ? ', public water system #' + v('pws') : '') + ', confirmed capacity to serve the subdivision. ' +
+        (v('shares') ? v('shares') + '. ' : '') + supply + (v('fees') ? ' Buyers pay ' + v('fees').replace(/\s+/g, ' ') + '.' : '') +
+        ' Read from the scanned letter in ' + lp('supplier') + '; this supersedes the state service-area map.',
+        cite(letter.doc, wf.supplier.page), letter.doc.url, ctx.cost('culinary_connection'),
+        'Confirm in the purchase contract that the lot\'s ' + (v('shares') && /Class A/i.test(v('shares')) ? 'Class A (connection)' + (/Class C/i.test(v('shares')) ? ' and Class C (irrigation)' : '') + ' shares' : 'water shares') + ' convey at closing, and get the hook-up and connection fees from ' + sup + '.'));
+      if (both || secNotes.length) replaceFinding(ctx, 'water', 'Secondary (irrigation) water', F('water', 'Secondary (irrigation) water', secNotes.length ? 'watch' : 'ok',
+        both ? 'Secondary water from ' + sup + (v('shares') && /Class C/i.test(v('shares')) ? ' (Class C irrigation shares)' : '') : 'Secondary water: see staff report',
+        (both ? 'The feasibility letter covers secondary (irrigation) water as well as culinary. ' : '') +
+        secNotes.slice(0, 3).map(function (w) { return '"' + w.text.replace(/\s+/g, ' ').slice(0, 200) + '" (' + cite(w.doc, w.page) + ')'; }).join(' ') +
+        (secNotes.length ? ' A Restricted Landscape Covenant, if recorded, limits landscaping to what the lot\'s water allotment supports.' : '') +
+        ' The state map also shows an irrigation company system over this area; for this subdivision the letter governs.',
+        cite(letter.doc, wf.supplier.page), letter.doc.url, null,
+        'Get the per-lot secondary water allotment from ' + sup + ', and check the title commitment for a Restricted Landscape Covenant on the lot.'));
+    } else if (secNotes.length) {
+      out.push(F('water', 'Secondary water (staff report)', 'watch', 'Staff report: secondary water allotment not settled',
+        secNotes.slice(0, 3).map(function (w) { return '"' + w.text.replace(/\s+/g, ' ').slice(0, 200) + '" (' + cite(w.doc, w.page) + ')'; }).join(' '),
+        cite(secNotes[0].doc, secNotes[0].page), secNotes[0].doc.url, null, 'Check the title commitment for a Restricted Landscape Covenant and ask the water company for the per-lot allotment.'));
+    }
+
+    // Developer-specific fee agreements (matched on the developer named in the water letter or the owner of record).
+    var kbx = ctx.facts.kb, devName = letter && letter.ocr.water.developer && letter.ocr.water.developer.value;
+    ((kbx && kbx.feeAgreements) || []).forEach(function (ag) {
+      var hit = [devName, ctx.facts.owner].filter(function (n) { return n && ag.match.test(n); })[0];
+      if (!hit) return;
+      var i = ctx.findings.findIndex(function (x) { return x.item === 'Permit & impact fees'; });
+      if (i < 0) return;
+      var fnd = ctx.findings[i];
+      fnd.detail = 'Developer fee agreement: ' + ag.text + ' ' + (hit === devName ? 'The water company\'s letter names ' + devName + ' as the subdivision\'s developer' : 'The owner of record is ' + hit) +
+        (ctx.facts.owner && hit !== ctx.facts.owner ? ' (owner of record: ' + ctx.facts.owner + ')' : '') + ', so impact fees for this lot may be lower than the city rates below if the agreement covers your permit. ' + fnd.detail;
+      fnd.next_step = 'Ask the city whether Resolution 2026-25 applies to a permit you pull on this lot, or only to ' + ag.name + '\'s own permits. ' + (fnd.next_step || '');
+    });
 
     // The lot itself, as drawn on the recorded plat.
     var L = rec.lotInfo;
