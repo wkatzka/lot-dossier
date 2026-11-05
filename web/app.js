@@ -150,6 +150,46 @@
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
   });
 
+  /* ---------------- checklist store: statuses and attached files, kept in this browser per parcel */
+  var Store = (function () {
+    var mem = {}, dbp = null;
+    function db() {
+      if (dbp) return dbp;
+      dbp = new Promise(function (res) {
+        try {
+          var rq = indexedDB.open('lot-dossier', 1);
+          rq.onupgradeneeded = function () { rq.result.createObjectStore('items'); };
+          rq.onsuccess = function () { res(rq.result); };
+          rq.onerror = function () { res(null); };
+        } catch (e) { res(null); }
+      });
+      return dbp;
+    }
+    function fresh() { return { status: 'todo', files: [] }; }
+    function valid(v) { return v && typeof v === 'object' && typeof v.status === 'string' && Array.isArray(v.files) ? v : null; }
+    return {
+      get: function (k) {
+        return db().then(function (d) {
+          if (!d) return valid(mem[k]) || fresh();
+          return new Promise(function (res) {
+            try { var rq = d.transaction('items', 'readonly').objectStore('items').get(k); rq.onsuccess = function () { res(valid(rq.result) || valid(mem[k]) || fresh()); }; rq.onerror = function () { res(valid(mem[k]) || fresh()); }; }
+            catch (e) { res(valid(mem[k]) || fresh()); }
+          });
+        });
+      },
+      put: function (k, v) {
+        mem[k] = v;
+        return db().then(function (d) {
+          if (!d) return;
+          try { d.transaction('items', 'readwrite').objectStore('items').put(v, k); } catch (e) { /* storage blocked: keep in memory */ }
+        });
+      }
+    };
+  })();
+  var checklist = {}; // key -> {status, files:[{id,name,size,type,added,blob}]}
+  function itemKey(x) { return last.parcel.county + '|' + last.parcel.id + '|' + x.section + '|' + x.item; }
+  function actionable(x) { return x.status !== 'ok'; }
+
   /* ---------------- report */
   function rollup(findings) {
     var seen = {}, rows = [];
@@ -159,16 +199,25 @@
     return rows;
   }
 
-  function reportHTML(r) {
+  function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = r.findings, plan = r.plan;
     var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
     var costs = rollup(f), lo = costs.reduce(function (s, x) { return s + x.cost.low; }, 0), hi = costs.reduce(function (s, x) { return s + x.cost.high; }, 0);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
-      return '<article class="frow s-' + x.status + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
+      var k = itemKey(x), st = (state && state[k]) || { status: 'todo', files: [] }, chk = '';
+      if (actionable(x)) {
+        chk = saved
+          ? '<div class="chk saved-chk"><span class="chk-state st-' + st.status + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[st.status] + '</span>' +
+            (st.files.length ? '<span class="chk-files">Attached: ' + st.files.map(function (f) { return esc(f.name); }).join(', ') + '</span>' : '') + '</div>'
+          : '<div class="chk" data-key="' + esc(k) + '"><div class="chk-seg" role="group" aria-label="Checklist status">' +
+            ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
+            '</div><label class="chk-attach">Attach file<input type="file" multiple></label><ul class="chk-list"></ul></div>';
+      }
+      return '<article class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
         (x.cost && x.status !== 'ok' ? '<div class="cost">' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
-        '<div class="src">' + src + '</div></div></article>';
+        '<div class="src">' + src + '</div>' + chk + '</div></article>';
     };
     var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
     var groups = order.map(function (c) {
@@ -201,6 +250,7 @@
       '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
       '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Flags</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Watch</span></div>' +
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
+      checklistSummary(f, state, saved) +
       '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
       '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + '</div></div>' + planHtml + groups +
       '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
@@ -208,6 +258,64 @@
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
       'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
   }
+
+  function checklistSummary(f, state, saved) {
+    var items = f.filter(actionable), done = 0, files = 0;
+    items.forEach(function (x) { var st = (state && state[itemKey(x)]) || { status: 'todo', files: [] }; if (st.status !== 'todo') done++; files += st.files.length; });
+    var pct = items.length ? Math.round(done / items.length * 100) : 100;
+    return '<div class="chk-sum"><h2>Checklist</h2><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="chk-sum-row"><span><b class="chk-done">' + done + '</b> of ' + items.length + ' items closed · <b class="chk-nfiles">' + files + '</b> file' + (files === 1 ? '' : 's') + ' attached</span>' +
+      (saved ? '' : '<label class="chk-only-toggle"><input type="checkbox" id="chk-only"> Show checklist only</label>') + '</div></div>';
+  }
+
+  function refreshSummary() {
+    var box = document.querySelector('#rv .chk-sum'); if (!box || !last) return;
+    var tmp = document.createElement('div'); tmp.innerHTML = checklistSummary(last.findings, checklist, false);
+    var only = $('chk-only') && $('chk-only').checked;
+    box.replaceWith(tmp.firstChild); if ($('chk-only')) $('chk-only').checked = !!only;
+  }
+  function renderFiles(el, st) {
+    var ul = el.querySelector('.chk-list');
+    ul.innerHTML = st.files.map(function (f, i) {
+      return '<li><button type="button" class="chk-open" data-i="' + i + '">' + esc(f.name) + '</button><span>' + Math.max(1, Math.round(f.size / 1024)) + ' KB · ' +
+        new Date(f.added).toLocaleDateString('en-US') + '</span><button type="button" class="chk-rm" data-i="' + i + '" aria-label="Remove ' + esc(f.name) + '">Remove</button></li>';
+    }).join('');
+  }
+  function applyState(el, st) {
+    el.querySelectorAll('.chk-seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.st === st.status)); });
+    var art = el.closest('.frow'); art.classList.remove('st-todo', 'st-done', 'st-na'); art.classList.add('st-' + st.status);
+    renderFiles(el, st);
+  }
+  function loadChecklist() {
+    checklist = {};
+    var els = Array.prototype.slice.call(document.querySelectorAll('#rv .chk[data-key]'));
+    return Promise.all(els.map(function (el) {
+      var k = el.getAttribute('data-key');
+      return Store.get(k).then(function (st) { checklist[k] = st; applyState(el, st); });
+    })).then(refreshSummary);
+  }
+  // One delegated handler for every checklist control in the report.
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('#rv .chk[data-key]'); if (!el) return;
+    var k = el.getAttribute('data-key'), st = checklist[k] || { status: 'todo', files: [] };
+    if (e.target.matches('.chk-seg button')) { st.status = e.target.dataset.st; }
+    else if (e.target.matches('.chk-open')) { var f = st.files[+e.target.dataset.i]; if (f && f.blob) window.open(URL.createObjectURL(f.blob), '_blank'); return; }
+    else if (e.target.matches('.chk-rm')) { st.files.splice(+e.target.dataset.i, 1); }
+    else return;
+    checklist[k] = st; Store.put(k, st); applyState(el, st); refreshSummary();
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.id === 'chk-only') { document.body.classList.toggle('chk-only', e.target.checked); return; }
+    var el = e.target.closest && e.target.closest('#rv .chk[data-key]'); if (!el || e.target.type !== 'file') return;
+    var k = el.getAttribute('data-key'), st = checklist[k] || { status: 'todo', files: [] };
+    Array.prototype.forEach.call(e.target.files, function (f) {
+      st.files.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), name: f.name, size: f.size, type: f.type, added: Date.now(), blob: f });
+    });
+    // Attaching the document usually means the item is handled; mark it done unless the user chose N/A.
+    if (st.status === 'todo' && e.target.files.length) st.status = 'done';
+    e.target.value = '';
+    checklist[k] = st; Store.put(k, st); applyState(el, st); refreshSummary();
+  });
 
   function drawMap(rings) {
     var el = document.getElementById('map');
@@ -223,8 +331,10 @@
   }
 
   function showReport(fromHistory) {
-    $('rv-body').innerHTML = reportHTML(last);
+    $('rv-body').innerHTML = reportHTML(last, null, false);
     document.body.classList.add('show-report');
+    document.body.classList.remove('chk-only');
+    loadChecklist();
     document.title = 'Lot Dossier · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
     window.scrollTo(0, 0);
     drawMap(last.parcel.rings);
@@ -250,7 +360,7 @@
       '<title>' + esc(document.title) + '</title>' +
       '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">' +
       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><style>' + css + '</style></head>' +
-      '<body class="show-report saved"><div id="rv">' + nav + '<div id="rv-body">' + reportHTML(last) + '</div></div>' +
+      '<body class="show-report saved"><div id="rv">' + nav + '<div id="rv-body">' + reportHTML(last, checklist, true) + '</div></div>' +
       '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"><\/script><script>try{var m=L.map("map",{scrollWheelZoom:false});' +
       'L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20,attribution:"Imagery &copy; Esri, Maxar, Earthstar Geographics"}).addTo(m);' +
       'var p=L.polygon(' + rings + ',{color:"#ffd54a",weight:3,fillOpacity:.08}).addTo(m);m.fitBounds(p.getBounds(),{padding:[30,30]});}catch(e){document.getElementById("map").textContent="Map needs an internet connection."}' +

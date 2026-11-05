@@ -386,3 +386,34 @@ body::before{background-image:var(--desert-image);filter:none}
 .err .matches{display:flex;flex-direction:column;gap:6px;margin-top:10px}
 .err .match{appearance:none;text-align:left;font:500 13px "DM Sans",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
 .err .match:hover{border-color:var(--brand)}
+
+/* ---------- Checklist: per-item status and attachments ---------- */
+#rv .chk{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+#rv .chk-seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;gap:2px;background:var(--bg)}
+#rv .chk-seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 12px "DM Sans",sans-serif;padding:5px 11px;border-radius:999px;cursor:pointer}
+#rv .chk-seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+#rv .chk-seg button[data-st=done][aria-pressed=true]{color:var(--ok)}
+#rv .chk-attach{position:relative;font:600 12px "DM Sans",sans-serif;color:var(--brand);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+#rv .chk-attach:hover{border-color:var(--brand)}
+#rv .chk-attach input{position:absolute;inset:0;opacity:0;cursor:pointer}
+#rv .chk-list{list-style:none;margin:0;padding:0;flex-basis:100%;display:grid;gap:4px}
+#rv .chk-list:empty{display:none}
+#rv .chk-list li{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+#rv .chk-list button{appearance:none;border:0;background:none;padding:0;font:inherit;cursor:pointer}
+#rv .chk-open{color:var(--ink)!important;text-decoration:underline;text-underline-offset:2px;font-weight:600!important}
+#rv .chk-rm{color:var(--muted);margin-left:auto}
+#rv .chk-rm:hover{color:var(--flag)}
+#rv .frow.act.st-done,#rv .frow.act.st-na{opacity:.72}
+#rv .frow.act.st-done h4::before{content:"\2713  ";color:var(--ok)}
+#rv .saved-chk{font-size:13px;color:var(--muted)}
+#rv .chk-state{font-weight:700}
+#rv .chk-state.st-done{color:var(--ok)}
+#rv .chk-sum{margin-bottom:18px}
+#rv .chk-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:2px 0 8px}
+#rv .chk-bar i{display:block;height:100%;background:var(--ok);transition:width .3s ease}
+#rv .chk-sum-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+#rv .chk-sum-row b{color:var(--ink)}
+#rv .chk-only-toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+body.chk-only #rv .frow:not(.act){display:none}
+body.chk-only #rv .group:not(:has(.frow.act)){display:none}
+@media print{#rv .chk-seg,#rv .chk-attach,#rv .chk-rm,#rv .chk-only-toggle{display:none}}
