@@ -233,7 +233,7 @@
     var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
-    var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', hoa: 'HOA (state registry)' };
+    var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
     var contacts = ((r.facts || {}).contacts || []).slice().sort(function (p, q) { return Object.keys(KIND).indexOf(p.kind) - Object.keys(KIND).indexOf(q.kind); });
     var link = function (u, t) { return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(t) + '</a>' : ''; };
     var contactsHtml = contacts.length ? '<div class="card contacts"><h2>Contacts</h2><div class="ct-grid">' + contacts.map(function (c) {
@@ -241,7 +241,7 @@
         (c.people || []).map(function (p) { return '<div class="ct-p"><span>' + esc(p.role) + '</span>' + (p.phone ? '<a href="tel:' + esc(p.phone.replace(/[^\d]/g, '')) + '">' + esc(p.phone) + '</a>' : '') +
           (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + '</div>'; }).join('') +
         (c.lines || []).map(function (l) { return '<div class="ct-l">' + esc(l) + '</div>'; }).join('') +
-        '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website')].filter(Boolean).join(' · ') + '</div></div>';
+        '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website'), c.mailto ? '<a href="' + esc(c.mailto) + '">Draft a records request</a>' : ''].filter(Boolean).join(' · ') + '</div></div>';
     }).join('') + '</div>' + (contacts[0] && contacts[0].asOf ? '<p class="ct-src">From the jurisdiction\'s published pages, ' + esc(contacts[0].asOf) + '.</p>' : '') + '</div>' : '';
     var costRows = costs.map(function (x) { return '<tr><td><span class="dot s-' + x.status + '"></span>' + esc(x.cost.label) + '</td><td>' + money(x.cost.low) + '</td><td>' + money(x.cost.high) + '</td></tr>'; }).join('');
     var planHtml = '';

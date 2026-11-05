@@ -388,6 +388,13 @@
       feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)',
         text: 'Resolution 2026-25 (Development Mitigation Contribution and Impact Fee Lock Agreement, adopted May 19, 2026, 4-1) lets EVO pay impact fees at the lower Weber County rate on its building permits, in exchange for a mitigation contribution to the city. EVO had 19 building permits pending when it was negotiated, and the council discussed a cap or sunset.',
         src: 'https://www.utah.gov/pmn/files/1452527.pdf' }],
+      // Records the dossier relies on, as of the last check of the city's agendas. Council fee actions not in `known`
+      // (or agenda items still numbered "XX" after asOf) mean the figures may be stale.
+      records: { asOf: '2026-11-05', since: '2026-01-01', custodian: { role: 'City Recorder', email: 'srobbins@ogdenvalley.gov' },
+        known: ['Ordinance 2026-10', 'Resolution 2026-18', 'Ordinance 2026-19', 'Resolution 2026-25', 'Resolution 2026-28', 'Resolution 2026-34', 'Resolution 2026-55', 'Ordinance 2026-55'],
+        unposted: ['Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it',
+          'Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits'],
+        feeAdopted: '2026-05-05' },
       permitFees: { adopted: 'Resolution 2026-28, adopted May 5, 2026', src: 'https://www.utah.gov/pmn/files/1438293.pdf',
         note: 'The schedule itself is not posted online. Council minutes (May 4, 2026 work session) say the residential plan review fee is higher than Weber County\'s but not the maximum allowed.' },
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
@@ -1220,15 +1227,19 @@
     try { if (/^https?:$/.test(root.location.protocol)) return ''; } catch (e) {}
     return null;
   }
-  function fetchDocs(parcel, juris) {
+  // GET a document-service endpoint; resolves to {error} on failure or timeout, never rejects.
+  function apiGet(path, ms) {
     var base = apiBase();
-    if (base == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
-    var get = function (path, ms) {
-      var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
-      var ver = (root.LR_DATA || {}).apiVersion;
-      return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
-        .finally(function () { t && clearTimeout(t); });
-    };
+    if (base == null) return Promise.resolve({ error: 'not connected' });
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
+    var ver = (root.LR_DATA || {}).apiVersion;
+    return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
+      .finally(function () { t && clearTimeout(t); });
+  }
+
+  function fetchDocs(parcel, juris) {
+    if (apiBase() == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
+    var get = apiGet;
     var sub = parcel.attrs.SUBDIV_NAME;
     // Parcel record first (fast), then every recorded plat sheet OCR'd in parallel, one function call per sheet.
     var record = get('/api/parcel-docs?county=' + encodeURIComponent(parcel.county) + '&parcel=' + encodeURIComponent(parcel.id) + '&sheets=0').then(function (rec) {
@@ -1418,6 +1429,24 @@
       fnd.next_step = 'Ask the city whether Resolution 2026-25 applies to a permit you pull on this lot, or only to ' + ag.name + '\'s own permits. ' + (fnd.next_step || '');
     });
 
+    // Fee figures vs. the city's agendas: anything adopted after the records we hold makes the numbers suspect.
+    var recs = kbx && kbx.records, wd = ctx.watch ? await ctx.watch : null, wl = wd && wd.items;
+    var feeRow = ctx.findings.filter(function (x) { return x.item === 'Permit & impact fees'; })[0];
+    if (recs && feeRow) {
+      if (!wl) feeRow.detail += ' (Could not check the city\'s agendas for newer fee actions this time.)';
+      else {
+        var fresh = wl.filter(function (i) { return /XX/i.test(i.number) ? i.date > recs.asOf : recs.known.indexOf(i.kind + ' ' + i.number) < 0; });
+        var since = wl.filter(function (i) { return i.date > recs.feeAdopted && !/XX/i.test(i.number) && !(i.kind === 'Resolution' && i.number === '2026-28') && fresh.indexOf(i) < 0; }).slice(0, 4);
+        var desc = function (i) { return i.kind + ' ' + i.number + ' (' + i.date + '): ' + i.title.replace(/^An? (?:Resolution|Ordinance) of (?:the City Council of )?[^,]+,\s*Utah,?\s*/i, '').replace(/&#0?39;/g, "'").slice(0, 110); };
+        if (fresh.length) {
+          feeRow.status = 'verify';
+          feeRow.detail = 'Newer fee action on the city\'s agendas: ' + fresh.slice(0, 3).map(desc).join('; ') + '. The figures below predate it. ' + feeRow.detail;
+          feeRow.next_step = 'Request the current fee schedule from the ' + recs.custodian.role + ' (' + recs.custodian.email + '). ' + (feeRow.next_step || '');
+        }
+        feeRow.detail += ' Checked the city\'s agendas through ' + (wl[0] ? wl[0].date : 'today') + (since.length ? '; other fee actions since the schedule was adopted: ' + since.map(desc).join('; ') + '.' : '; no other fee actions since the schedule was adopted.');
+      }
+    }
+
     // The lot itself, as drawn on the recorded plat.
     var L = rec.lotInfo;
     if (L || (rec.lotNotes && rec.lotNotes.length)) {
@@ -1497,6 +1526,17 @@
         'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
     }
     ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
+    var rq = ctx.facts.kb && ctx.facts.kb.records;
+    // Check the city's agendas for fee actions newer than the records we hold (read back in check_documents).
+    if (rq) ctx.watch = apiGet('/api/watch?entity=' + encodeURIComponent(juris) + '&since=' + rq.since, 60000);
+    if (rq && rq.unposted && rq.unposted.length) {
+      var body = 'Under the Utah Government Records Access and Management Act (Utah Code 63G-2-204), I am requesting copies of the following ' + juris + ' records:\n\n' +
+        rq.unposted.map(function (u, i) { return (i + 1) + '. ' + u; }).join('\n\n') +
+        '\n\nElectronic copies (PDF) by email are preferred. If fees will exceed $25, please send an estimate before processing.\n\nThank you,\n\n[Your name]\n[Mailing address]\n[Daytime phone]';
+      ctx.facts.contacts.push({ kind: 'records', name: 'Public records (GRAMA)', people: [{ role: rq.custodian.role, email: rq.custodian.email }],
+        lines: ['Not posted online: ' + rq.unposted.map(function (u) { return u.split(',')[0]; }).join('; ') + '.', 'The city has 10 business days to respond to a written request with your name, mailing address and phone.'],
+        mailto: 'mailto:' + rq.custodian.email + '?subject=' + encodeURIComponent('GRAMA records request') + '&body=' + encodeURIComponent(body) });
+    }
     var b = c.building, lead = b.people[0];
     return [F('permits', 'Building department', 'ok', 'Plans are approved by ' + b.approver,
       b.people.map(function (p) { return p.role + ': ' + [p.phone, p.email].filter(Boolean).join(', '); }).join('. ') + '. ' + (b.lines || []).join('. ') + '. (as of ' + c.asOf + ')',

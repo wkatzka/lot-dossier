@@ -605,7 +605,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   <div id="rv-body"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "1924a5696d"};</script>
+<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "ccffc0caab"};</script>
 <script>
 /* Lot dossier engine: runs entirely in the browser (or Node 18+).
  * A port of lotreport/*.py. Every data source below sends CORS headers, so no server is needed. */
@@ -997,6 +997,13 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)',
         text: 'Resolution 2026-25 (Development Mitigation Contribution and Impact Fee Lock Agreement, adopted May 19, 2026, 4-1) lets EVO pay impact fees at the lower Weber County rate on its building permits, in exchange for a mitigation contribution to the city. EVO had 19 building permits pending when it was negotiated, and the council discussed a cap or sunset.',
         src: 'https://www.utah.gov/pmn/files/1452527.pdf' }],
+      // Records the dossier relies on, as of the last check of the city's agendas. Council fee actions not in `known`
+      // (or agenda items still numbered "XX" after asOf) mean the figures may be stale.
+      records: { asOf: '2026-11-05', since: '2026-01-01', custodian: { role: 'City Recorder', email: 'srobbins@ogdenvalley.gov' },
+        known: ['Ordinance 2026-10', 'Resolution 2026-18', 'Ordinance 2026-19', 'Resolution 2026-25', 'Resolution 2026-28', 'Resolution 2026-34', 'Resolution 2026-55', 'Ordinance 2026-55'],
+        unposted: ['Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it',
+          'Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits'],
+        feeAdopted: '2026-05-05' },
       permitFees: { adopted: 'Resolution 2026-28, adopted May 5, 2026', src: 'https://www.utah.gov/pmn/files/1438293.pdf',
         note: 'The schedule itself is not posted online. Council minutes (May 4, 2026 work session) say the residential plan review fee is higher than Weber County\'s but not the maximum allowed.' },
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
@@ -1829,15 +1836,19 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     try { if (/^https?:$/.test(root.location.protocol)) return ''; } catch (e) {}
     return null;
   }
-  function fetchDocs(parcel, juris) {
+  // GET a document-service endpoint; resolves to {error} on failure or timeout, never rejects.
+  function apiGet(path, ms) {
     var base = apiBase();
-    if (base == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
-    var get = function (path, ms) {
-      var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
-      var ver = (root.LR_DATA || {}).apiVersion;
-      return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
-        .finally(function () { t && clearTimeout(t); });
-    };
+    if (base == null) return Promise.resolve({ error: 'not connected' });
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
+    var ver = (root.LR_DATA || {}).apiVersion;
+    return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
+      .finally(function () { t && clearTimeout(t); });
+  }
+
+  function fetchDocs(parcel, juris) {
+    if (apiBase() == null) return Promise.resolve({ unavailable: 'This copy of the app is not connected to the document service.' });
+    var get = apiGet;
     var sub = parcel.attrs.SUBDIV_NAME;
     // Parcel record first (fast), then every recorded plat sheet OCR'd in parallel, one function call per sheet.
     var record = get('/api/parcel-docs?county=' + encodeURIComponent(parcel.county) + '&parcel=' + encodeURIComponent(parcel.id) + '&sheets=0').then(function (rec) {
@@ -2027,6 +2038,24 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       fnd.next_step = 'Ask the city whether Resolution 2026-25 applies to a permit you pull on this lot, or only to ' + ag.name + '\'s own permits. ' + (fnd.next_step || '');
     });
 
+    // Fee figures vs. the city's agendas: anything adopted after the records we hold makes the numbers suspect.
+    var recs = kbx && kbx.records, wd = ctx.watch ? await ctx.watch : null, wl = wd && wd.items;
+    var feeRow = ctx.findings.filter(function (x) { return x.item === 'Permit & impact fees'; })[0];
+    if (recs && feeRow) {
+      if (!wl) feeRow.detail += ' (Could not check the city\'s agendas for newer fee actions this time.)';
+      else {
+        var fresh = wl.filter(function (i) { return /XX/i.test(i.number) ? i.date > recs.asOf : recs.known.indexOf(i.kind + ' ' + i.number) < 0; });
+        var since = wl.filter(function (i) { return i.date > recs.feeAdopted && !/XX/i.test(i.number) && !(i.kind === 'Resolution' && i.number === '2026-28') && fresh.indexOf(i) < 0; }).slice(0, 4);
+        var desc = function (i) { return i.kind + ' ' + i.number + ' (' + i.date + '): ' + i.title.replace(/^An? (?:Resolution|Ordinance) of (?:the City Council of )?[^,]+,\s*Utah,?\s*/i, '').replace(/&#0?39;/g, "'").slice(0, 110); };
+        if (fresh.length) {
+          feeRow.status = 'verify';
+          feeRow.detail = 'Newer fee action on the city\'s agendas: ' + fresh.slice(0, 3).map(desc).join('; ') + '. The figures below predate it. ' + feeRow.detail;
+          feeRow.next_step = 'Request the current fee schedule from the ' + recs.custodian.role + ' (' + recs.custodian.email + '). ' + (feeRow.next_step || '');
+        }
+        feeRow.detail += ' Checked the city\'s agendas through ' + (wl[0] ? wl[0].date : 'today') + (since.length ? '; other fee actions since the schedule was adopted: ' + since.map(desc).join('; ') + '.' : '; no other fee actions since the schedule was adopted.');
+      }
+    }
+
     // The lot itself, as drawn on the recorded plat.
     var L = rec.lotInfo;
     if (L || (rec.lotNotes && rec.lotNotes.length)) {
@@ -2106,6 +2135,17 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
     }
     ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
+    var rq = ctx.facts.kb && ctx.facts.kb.records;
+    // Check the city's agendas for fee actions newer than the records we hold (read back in check_documents).
+    if (rq) ctx.watch = apiGet('/api/watch?entity=' + encodeURIComponent(juris) + '&since=' + rq.since, 60000);
+    if (rq && rq.unposted && rq.unposted.length) {
+      var body = 'Under the Utah Government Records Access and Management Act (Utah Code 63G-2-204), I am requesting copies of the following ' + juris + ' records:\n\n' +
+        rq.unposted.map(function (u, i) { return (i + 1) + '. ' + u; }).join('\n\n') +
+        '\n\nElectronic copies (PDF) by email are preferred. If fees will exceed $25, please send an estimate before processing.\n\nThank you,\n\n[Your name]\n[Mailing address]\n[Daytime phone]';
+      ctx.facts.contacts.push({ kind: 'records', name: 'Public records (GRAMA)', people: [{ role: rq.custodian.role, email: rq.custodian.email }],
+        lines: ['Not posted online: ' + rq.unposted.map(function (u) { return u.split(',')[0]; }).join('; ') + '.', 'The city has 10 business days to respond to a written request with your name, mailing address and phone.'],
+        mailto: 'mailto:' + rq.custodian.email + '?subject=' + encodeURIComponent('GRAMA records request') + '&body=' + encodeURIComponent(body) });
+    }
     var b = c.building, lead = b.people[0];
     return [F('permits', 'Building department', 'ok', 'Plans are approved by ' + b.approver,
       b.people.map(function (p) { return p.role + ': ' + [p.phone, p.email].filter(Boolean).join(', '); }).join('. ') + '. ' + (b.lines || []).join('. ') + '. (as of ' + c.asOf + ')',
@@ -2621,7 +2661,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
-    var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', hoa: 'HOA (state registry)' };
+    var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
     var contacts = ((r.facts || {}).contacts || []).slice().sort(function (p, q) { return Object.keys(KIND).indexOf(p.kind) - Object.keys(KIND).indexOf(q.kind); });
     var link = function (u, t) { return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(t) + '</a>' : ''; };
     var contactsHtml = contacts.length ? '<div class="card contacts"><h2>Contacts</h2><div class="ct-grid">' + contacts.map(function (c) {
@@ -2629,7 +2669,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         (c.people || []).map(function (p) { return '<div class="ct-p"><span>' + esc(p.role) + '</span>' + (p.phone ? '<a href="tel:' + esc(p.phone.replace(/[^\d]/g, '')) + '">' + esc(p.phone) + '</a>' : '') +
           (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + '</div>'; }).join('') +
         (c.lines || []).map(function (l) { return '<div class="ct-l">' + esc(l) + '</div>'; }).join('') +
-        '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website')].filter(Boolean).join(' · ') + '</div></div>';
+        '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website'), c.mailto ? '<a href="' + esc(c.mailto) + '">Draft a records request</a>' : ''].filter(Boolean).join(' · ') + '</div></div>';
     }).join('') + '</div>' + (contacts[0] && contacts[0].asOf ? '<p class="ct-src">From the jurisdiction\'s published pages, ' + esc(contacts[0].asOf) + '.</p>' : '') + '</div>' : '';
     var costRows = costs.map(function (x) { return '<tr><td><span class="dot s-' + x.status + '"></span>' + esc(x.cost.label) + '</td><td>' + money(x.cost.low) + '</td><td>' + money(x.cost.high) + '</td></tr>'; }).join('');
     var planHtml = '';
