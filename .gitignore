@@ -5,3 +5,6 @@ node_modules/
 .DS_Store
 .banned
 dist/
+
+# Tesseract language data downloaded by local OCR runs
+*.traineddata
