@@ -1,0 +1,28 @@
+# Weekly check of each pilot city's public agendas for new fee actions (fee schedules, impact fees, fee agreements).
+# Opens an issue labelled agenda-watch for anything not yet reviewed in config/records.json.
+name: Agenda watch
+
+on:
+  schedule:
+    - cron: "0 15 * * 1" # Mondays 15:00 UTC (8 or 9 am in Utah)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check agendas and open issues for new fee actions
+        run: node scripts/check-agendas.js
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_ASSIGNEE: ${{ github.repository_owner }}
+          API_BASE: https://lot-dossier-assistant.vercel.app

@@ -388,13 +388,8 @@
       feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)',
         text: 'Resolution 2026-25 (Development Mitigation Contribution and Impact Fee Lock Agreement, adopted May 19, 2026, 4-1) lets EVO pay impact fees at the lower Weber County rate on its building permits, in exchange for a mitigation contribution to the city. EVO had 19 building permits pending when it was negotiated, and the council discussed a cap or sunset.',
         src: 'https://www.utah.gov/pmn/files/1452527.pdf' }],
-      // Records the dossier relies on, as of the last check of the city's agendas. Council fee actions not in `known`
-      // (or agenda items still numbered "XX" after asOf) mean the figures may be stale.
-      records: { asOf: '2026-11-05', since: '2026-01-01', custodian: { role: 'City Recorder', email: 'srobbins@ogdenvalley.gov' },
-        known: ['Ordinance 2026-10', 'Resolution 2026-18', 'Ordinance 2026-19', 'Resolution 2026-25', 'Resolution 2026-28', 'Resolution 2026-34', 'Resolution 2026-55', 'Ordinance 2026-55'],
-        unposted: ['Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it',
-          'Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits'],
-        feeAdopted: '2026-05-05' },
+      // Records the dossier relies on and the fee actions already reviewed (config/records.json, shared with the weekly agenda watch).
+      records: ((root.LR_DATA || {}).records || {})['Ogden Valley City'],
       permitFees: { adopted: 'Resolution 2026-28, adopted May 5, 2026', src: 'https://www.utah.gov/pmn/files/1438293.pdf',
         note: 'The schedule itself is not posted online. Council minutes (May 4, 2026 work session) say the residential plan review fee is higher than Weber County\'s but not the maximum allowed.' },
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']

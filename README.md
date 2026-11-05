@@ -17,9 +17,22 @@ Due-diligence dossiers for Utah spec-home lots, generated from public records. Y
 | Endpoint | What it does |
 |---|---|
 | `GET /api/parcel-docs?county=Weber&parcel=123456789` | Reads the county parcel record and OCRs the recorded subdivision plat (tesseract.js). Returns plat-note setbacks, referenced recorded entries (development agreement, CC&Rs), utility approval blocks, the owners association and referenced geologic reports. |
-| `GET /api/notices?q=<subdivision>&county=Weber&juris=<city>` | Searches Utah's Public Notice Website for the subdivision and reads the matching agendas and meeting packets. Packets are fetched as parallel byte ranges and read in memory, never stored. Returns development standards tables, utility will-serve statements, CC&R recordings and approval history, each with a citation. |
+| `GET /api/notices?q=<subdivision>&county=Weber&juris=<city>` | Searches Utah's Public Notice Website for the subdivision and reads the matching agendas and meeting packets. Packets are fetched as parallel byte ranges and read in memory, never stored. Returns development standards tables, utility will-serve statements, CC&R recordings and approval history, each with a citation. It also splits packets into individual staff reports, so only the lot's own subdivision and phase are read, and flags scanned will-serve exhibits. |
+| `GET /api/plat-sheet?url=<plat sheet>&lot=4` | OCRs one recorded plat sheet: notes, setbacks, referenced entries and what's drawn around the lot. One sheet per call, so all sheets run in parallel. |
+| `GET /api/packet-ocr?url=<packet PDF>&pages=92-98` | OCRs scanned exhibit pages from a public-meeting packet (page images pulled with pdf.js) and extracts water-service facts: supplier, share classes, water rights, storage, fire flow, supply status. |
+| `GET /api/hoa?q=<subdivision>&county=Weber` | Looks the association up in the Utah HOA registry: registration status, expiry and role-based contacts. |
+| `GET /api/watch?entity=<city>&since=2026-01-01` | Lists fee actions (fee schedules, impact fees, fee agreements) on a public body's agendas. Dossiers compare them with `config/records.json` to flag stale fee figures. |
 
 The API only fetches documents for the lot being looked up. Results are cached at Vercel's CDN, so repeat lookups are instant.
+
+## Agenda watch
+
+Fee schedules and impact fees change by council resolution, and every change has to appear on a public agenda first. `config/records.json` lists, for each pilot jurisdiction, the fee actions already reviewed and the records the dossier relies on (with the custodian to request them from).
+
+- Every dossier checks the agendas live: the fee row says when they were last checked and turns to Verify if a fee action is newer than the reviewed list.
+- `.github/workflows/agenda-watch.yml` runs `scripts/check-agendas.js` every Monday and opens an `agenda-watch` issue for each new fee action. To close one, review it, update any figures, add it to `known` and set `asOf`.
+
+Test locally without opening issues: `DRY_RUN=1 node scripts/check-agendas.js`.
 
 ## Develop
 

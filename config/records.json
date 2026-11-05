@@ -1,0 +1,14 @@
+{
+  "_about": "Records each pilot jurisdiction's dossier relies on, and the council fee actions already reviewed. The weekly agenda watch (.github/workflows/agenda-watch.yml) opens an issue for any fee action not listed in `known`, or still numbered XX on an agenda after `asOf`. After reviewing one: add it to `known`, update `asOf`, and refresh any figures it changes.",
+  "Ogden Valley City": {
+    "asOf": "2026-11-05",
+    "since": "2026-01-01",
+    "feeAdopted": "2026-05-05",
+    "custodian": { "role": "City Recorder", "email": "srobbins@ogdenvalley.gov" },
+    "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"],
+    "unposted": [
+      "Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it",
+      "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"
+    ]
+  }
+}
