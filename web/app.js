@@ -87,7 +87,7 @@
       bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), fireplace: v('fireplace'), cladding: v('cladding'),
       energy: x ? x.energy || null : null, energySrc: x && x.src ? x.src.energy || null : null,
       structural: { ground_snow_load_psf: n('ground_snow_load_psf'), bearing_psf: n('bearing_psf') },
-      codes: x ? x.codes : [], features: x ? x.features : [], plan_sds: x ? x.plan_sds : null, plan_sdc: x ? x.plan_sdc : null, src: {} };
+      codes: x ? x.codes : [], features: x ? x.features : [], sheets: x ? x.sheets || null : null, pages: x ? x.pages : null, plan_sds: x ? x.plan_sds : null, plan_sdc: x ? x.plan_sdc : null, src: {} };
     // Keep provenance only for values the user left as read.
     if (x) FIELDS.forEach(function (k) { if (x.src[k] && String(x.fields[k]) === String($(k).value)) plan.src[k] = x.src[k]; });
     if (x && x.src.plan_sds) plan.src.plan_sds = x.src.plan_sds;
@@ -243,6 +243,7 @@
         (c.lines || []).map(function (l) { return '<div class="ct-l">' + esc(l) + '</div>'; }).join('') +
         '<div class="ct-links">' + [link(c.portal, 'Permit portal'), link(c.url, 'Website'), c.mailto ? '<a href="' + esc(c.mailto) + '">Draft a records request</a>' : ''].filter(Boolean).join(' · ') + '</div></div>';
     }).join('') + '</div>' + (contacts[0] && contacts[0].asOf ? '<p class="ct-src">From the jurisdiction\'s published pages, ' + esc(contacts[0].asOf) + '.</p>' : '') + '</div>' : '';
+    var packetHtml = packetSection((r.facts || {}).packet);
     var costRows = costs.map(function (x) { return '<tr><td><span class="dot s-' + x.status + '"></span>' + esc(x.cost.label) + '</td><td>' + money(x.cost.low) + '</td><td>' + money(x.cost.high) + '</td></tr>'; }).join('');
     var planHtml = '';
     if (plan) {
@@ -266,11 +267,58 @@
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
       checklistSummary(f, state, saved) +
       '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + '</div></div>' + planHtml + contactsHtml + groups +
-      '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
+      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + groups +
+      packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
       '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
       'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
+  }
+
+  // Permit packet: what we gathered, estimated or drafted for the building permit application.
+  var PK_STATUS = { ready: ['Ready', 'ok'], drafted: ['Drafted for you', 'ok'], partial: ['Partly there', 'watch'], pro: ['Needs a professional', 'verify'], you: ['Needs you', 'verify'], optional: ['Optional', 'muted'], na: ['Not needed', 'muted'] };
+  function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
+  function packetSection(pk) {
+    if (!pk) return '';
+    var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
+    var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
+    var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
+    var items = pk.items.map(function (it) {
+      var st = PK_STATUS[it.status] || [it.status, 'muted'], acts = [];
+      var l = it.letter && letterById[it.letter];
+      if (l) {
+        if (l.email) acts.push('<a class="pk-btn" href="mailto:' + esc(l.email) + '?subject=' + encodeURIComponent(l.subject) + '&body=' + encodeURIComponent(l.body) + '">Email draft</a>');
+        acts.push('<a class="pk-btn" href="' + esc(dataUri('text/plain', (l.mail ? l.to + '\n' + l.mail + '\n\n' : '') + 'Subject: ' + l.subject + '\n\n' + l.body)) + '" download="' + slug(l.title) + '.txt">Download letter</a>');
+        acts.push('<a class="pk-btn ghost" href="#pk-letter-' + esc(l.id) + '">Read it</a>');
+      }
+      if (/site plan/i.test(it.title) && pk.sitePlan) acts.push('<a class="pk-btn" href="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '" download="draft-site-plan.svg">Download site plan</a>', '<a class="pk-btn ghost" href="#pk-siteplan">View</a>');
+      if (/^Application data/.test(it.title)) acts.push('<button type="button" class="pk-btn" data-copy="pk-app">Copy all</button>', '<a class="pk-btn ghost" href="#pk-app-table">View</a>');
+      if (it.link) acts.push('<a class="pk-btn ghost" href="' + esc(it.link) + '" target="_blank" rel="noopener">Template</a>');
+      return '<li class="pk-item"><span class="pk-badge s-' + st[1] + '">' + esc(st[0]) + '</span><div><b>' + esc(it.title) + '</b>' +
+        '<span class="pk-who">' + esc(it.who || '') + (it.why ? ' · ' + esc(it.why) : '') + (it.lead && it.lead[1] ? ' · typically ' + (it.lead[0] === it.lead[1] ? it.lead[1] : it.lead[0] + '-' + it.lead[1]) + ' business days' : '') + '</span>' +
+        '<p>' + esc(it.detail) + '</p>' + (acts.length ? '<div class="pk-acts">' + acts.join('') + '</div>' : '') + '</div></li>';
+    }).join('');
+    var letters = pk.letters.map(function (l) {
+      return '<details class="pk-letter" id="pk-letter-' + esc(l.id) + '"><summary>' + esc(l.title) + ' <span>to ' + esc(l.to) + (l.email ? ' (' + esc(l.email) + ')' : l.mail ? ' (' + esc(l.mail) + ')' : '') + '</span></summary>' +
+        '<p class="pk-subj"><b>Subject:</b> ' + esc(l.subject) + '</p><pre>' + esc(l.body) + '</pre></details>';
+    }).join('');
+    var rows = pk.rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td><td class="pk-src">' + esc(r[2]) + '</td></tr>'; }).join('');
+    return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + esc(pk.jurisdiction) + '</h2>' +
+      '<p class="pk-sub">Everything public records and your plan let us fill in, estimate or draft. Utah law gives the city 3 business days to screen a complete application and 14 more to finish plan review for a house (Utah Code 10-20-909), so a complete packet on day one is the fastest path.</p>' +
+      '<div class="pk-meter"><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><span><b>' + pk.ready + ' of ' + pk.needed + '</b> items ready or drafted</span></div>' +
+      '<ol class="pk-timeline"><li><b>Today</b> Send the drafted requests; order the survey' + (pk.items.some(function (i) { return /Structural calculations/.test(i.title) && i.status !== 'ready'; }) ? ' and structural engineering' : '') + '.</li>' +
+      '<li><b>' + esc(tl.submitLo) + ' to ' + esc(tl.submitHi) + '</b> Earliest realistic submittal. Longest lead: ' + esc(tl.critical.join('; ')) + '.</li>' +
+      '<li><b>+3 business days</b> City must accept or reject the application as incomplete.</li>' +
+      '<li><b>' + esc(tl.issueLo) + ' to ' + esc(tl.issueHi) + '</b> Plan review due (14 business days after screening). Holidays and correction rounds can add time.</li></ol>' +
+      (pk.portal ? '<p class="pk-portal">Submit through the <a href="' + esc(pk.portal) + '" target="_blank" rel="noopener">city permit portal</a>' + (pk.checklist ? ' · <a href="' + esc(pk.checklist) + '" target="_blank" rel="noopener">city submission checklist</a>' : '') + '.</p>' : '') +
+      '<ol class="pk-items">' + items + '</ol>' +
+      '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
+      '<div class="pk-acts"><button type="button" class="pk-btn" data-copy="pk-app">Copy all</button><a class="pk-btn ghost" href="' + esc(dataUri('text/plain', appText)) + '" download="permit-application-data.txt">Download</a></div>' +
+      '<textarea id="pk-app" hidden>' + esc(appText) + '</textarea><div class="pk-table"><table>' + rows + '</table></div>' +
+      (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and LiDAR contours. Give it to your surveyor as the starting point.</p>' +
+        '<img class="pk-plan" alt="Draft site plan of the lot" src="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '">' : '') +
+      (letters ? '<h3>Drafted requests</h3><p class="pk-note">Written with this lot\'s details. Add your name and contact information, then send.</p>' + letters : '') +
+      '</section>';
   }
 
   function checklistSummary(f, state, saved) {
@@ -310,6 +358,14 @@
   }
   // One delegated handler for every checklist control in the report.
   document.addEventListener('click', function (e) {
+    var cp = e.target.closest && e.target.closest('#rv [data-copy]');
+    if (cp) {
+      var src = document.getElementById(cp.getAttribute('data-copy')), txt = src ? src.value || src.textContent : '';
+      var done = function () { var t = cp.textContent; cp.textContent = 'Copied'; setTimeout(function () { cp.textContent = t; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, function () {});
+      else { src.hidden = false; src.select(); try { document.execCommand('copy'); done(); } catch (x) {} src.hidden = true; }
+      return;
+    }
     var el = e.target.closest && e.target.closest('#rv .chk[data-key]'); if (!el) return;
     var k = el.getAttribute('data-key'), st = checklist[k] || { status: 'todo', files: [] };
     if (e.target.matches('.chk-seg button')) { st.status = e.target.dataset.st; }

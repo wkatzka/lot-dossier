@@ -376,6 +376,9 @@
       turf: { rule: 'Irrigated turf is capped at 35% of the front and side yards or 3,000 sq ft of the lot, whichever is greater, with no turf in park strips or yard areas under 8 ft wide.', cite: 'LUC 108-7-12', url: 'https://ogdenvalley.gov/land-use/' },
       stormwater: { esuSqft: 6200, esuFee: 1575.78, cityPermit: 'A city stormwater permit is required for land disturbance over 500 sq ft or more than 20 cubic yards of cut and fill (City Code Ch. 6.15, Ord. 2026-51).',
         esuNote: '1 ESU = 6,200 sq ft of impervious surface per the storm drain impact fee analysis (draft, March 2026)', url: 'https://ogdenvalley.gov/wp-content/uploads/2026/04/OgdenValleyCity_StormDrainIFFP_Draft-1.pdf' },
+      fireDistrict: 'Weber Fire District',
+      swpppTemplate: 'https://ogdenvalley.gov/wp-content/uploads/2026/09/CPP_SWPPP_Template.pdf',
+      excavation: 'Apply in the same City Inspect portal; excavation permit fees are set by Resolution 2026-34.',
       wui: 'Weber Fire District adopted the 2024 International Wildland-Urban Interface Code as amended by Utah (Resolution 23-2026, June 11, 2026). It applies in designated WUI areas, not valley-wide; no local designation map had been published as of Nov 2026.',
       zones: {
         'AV-3': { name: 'Agricultural Valley', cite: 'LUC 104-2-5', area: '3 acres', width: 150, front: 30, side: 10, sideTotal: 24, rear: 30, height: 35 },
@@ -1296,7 +1299,7 @@
     var sb = plat.setbacks;
     if (sb || std) {
       var front = sb ? sb.front : std.front, side = sb ? sb.side : std.side, rear = sb ? sb.rear : std.rear, street = sb ? sb.streetSide : std.streetSide;
-      ctx.facts.zone_std = { zone: sb ? 'plat' : 'development standards', front: front, side: side, rear: rear,
+      ctx.facts.zone_std = { zone: sb ? 'plat' : 'development standards', front: front, side: side, rear: rear, street: street || null,
         height: std && std.heightMax || (ctx.facts.zone_std || {}).height || null, coverage: std && std.coverageMax ? std.coverageMax / 100 : null };
       replaceFinding(ctx, 'land', 'Plat setbacks', F('land', 'Plat setbacks', 'ok',
         'Setbacks for this lot: ' + front + "' front, " + side + "' side" + (street ? ', ' + street + "' street side on corners" : '') + ', ' + rear + "' rear",
@@ -1340,6 +1343,7 @@
     // State HOA registry: registration status and the association's designated contact.
     var reg = d.hoa && d.hoa.matches && d.hoa.matches[0];
     if (reg) {
+      ctx.facts.hoaReg = reg;
       ctx.facts.contacts = ctx.facts.contacts || [];
       ctx.facts.contacts.push({ kind: 'hoa', name: reg.name, people: (reg.contacts || []).map(function (c) { return { role: c.role, phone: c.phone, email: c.email }; }),
         lines: [(reg.status || 'Status unknown') + (reg.expires ? ', registration expires ' + reg.expires : '')], url: reg.source, source: reg.source });
@@ -1362,6 +1366,7 @@
     var sewerPlat = (plat.approvals || []).find(function (a) { return /SEWER/.test(a); });
     if (sewerDoc || sewerPlat) {
       var prov = sewerDoc ? sewerDoc.provider : title(sewerPlat);
+      ctx.facts.sewer = prov;
       ctx.facts.septic = Object.assign(ctx.facts.septic || {}, { required: false });
       replaceFinding(ctx, 'septic', 'Sewer vs. septic', F('septic', 'Sewer vs. septic', 'watch', 'Sewered: ' + prov + ' serves the subdivision',
         (sewerDoc ? '"' + sewerDoc.text.replace(/\s+/g, ' ').slice(0, 220) + '" (' + cite(sewerDoc.doc) + '). ' : '') +
@@ -1386,6 +1391,7 @@
     if (letter) {
       var wf = letter.ocr.water, lp = function (k) { return wf[k] ? cite(letter.doc, wf[k].page) : ''; }, v = function (k) { return wf[k] && wf[k].value; };
       var sup = v('supplier'), both = /secondary/i.test(v('services') || '');
+      ctx.facts.waterServices = v('services');
       ctx.facts.culinary = sup;
       var supply = [v('storage') && 'Storage: ' + v('storage') + (v('fireFlow') ? ', sized for a fire flow of ' + v('fireFlow') : '') + '.',
         v('wells') && 'Supply: ' + v('wells') + ' at the time of the letter' + (wellNote ? '; a later staff report says "' + ((wellNote.text.replace(/\s+/g, ' ').match(/[^.]*wells? ha(?:ve|s) been drilled[^.]*\./i) || [wellNote.text])[0]).trim().slice(0, 200) + '" (' + cite(wellNote.doc, wellNote.page) + ')' : '') + '.',
@@ -1450,6 +1456,7 @@
       if (L && L.easements.length) bits.push(L.easements.join(', '));
       if (L && L.mentions.length) bits.push(L.mentions.map(function (x) { return x.toLowerCase(); }).join(', ') + ' marked on the lot');
       var lotNo = (L && L.lot) || rec.lot;
+      ctx.facts.parcelDoc = { lot: lotNo, legal: rec.legal || null, platAddress: L && L.platAddress, acres: L && L.acres, easements: (L && L.easements) || [] };
       out.push(F('land', 'Lot on the recorded plat', L && L.mentions.length ? 'watch' : 'ok', 'Lot ' + lotNo + (bits.length ? ': ' + bits.join('; ') : ''),
         (rec.legal ? 'Legal description: ' + rec.legal + ' ' : '') +
         (L ? 'From recorded plat sheet ' + L.sheet + ': ' + (L.acres ? L.acres + ' acres; ' : '') + (L.platAddress ? 'platted address ' + L.platAddress + '; ' : '') +
@@ -1569,13 +1576,383 @@
       'Open the archive search; if a report covers this lot, share it with your geotechnical engineer before ordering a new study.')];
   };
 
+  /* ------------------------------------------------------------ permit packet */
+  // Everything we can gather or estimate for the building permit application, so the user only supplies what needs
+  // their judgment, a signature or a professional's stamp. Statute: Utah Code 10-20-909(12) (complete application).
+  var PROVIDERS = [
+    { re: /Ogden Valley Mutual Water/i, kind: 'water', name: 'Ogden Valley Mutual Water Company', mail: '3718 N. Wolf Creek Drive, Eden, UT 84310',
+      lines: ['3718 N. Wolf Creek Drive, Eden, UT 84310 (address on its letterhead; no published phone or email)'] },
+    { re: /Wolf Creek Water (and|&) Sewer/i, kind: 'sewer', name: 'Wolf Creek Water & Sewer Improvement District', email: 'aames@wcwsid.com', phone: '801-745-3435',
+      lines: ['P.O. Box 658, Eden, UT 84310', 'Office: 2580 N Highway 162, Suite A'], src: 'https://www.utah.gov/pmn/sitemap/publicbody/875.html' },
+    { re: /Weber Fire District/i, kind: 'fire', name: 'Weber Fire District, Fire Marshal\'s Office', email: 'prevention@weberfiredistrict.gov', phone: '801-782-3580 ext. 305',
+      lines: ['Plan reviews and fire permits'], src: 'https://www.weberfiredistrict.gov/fire-prevention' }
+  ];
+  function provider(name) { return name ? PROVIDERS.filter(function (p) { return p.re.test(name); })[0] || null : null; }
+
+  // Business days after a date (weekends skipped; state holidays not counted, so dates can slip a day).
+  function addBusinessDays(d, n) {
+    var x = new Date(d.getTime());
+    while (n > 0) { x.setDate(x.getDate() + 1); if (x.getDay() !== 0 && x.getDay() !== 6) n--; }
+    return x;
+  }
+  function day(d) { return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+
+  function streetCase(t) { return title(t).replace(/\b(RD|DR|ST|LN|CT|AVE|CIR|WAY|PL|BLVD|HWY|PKWY|TRL|LOOP|XING)\b/g, function (m) { return m[0] + m.slice(1).toLowerCase(); }); }
+  function polyArea(p) { var s = 0; for (var i = 0; i < p.length; i++) { var a = p[i], b = p[(i + 1) % p.length]; s += a[0] * b[1] - b[0] * a[1]; } return s / 2; }
+  function centroid(p) { var x = 0, y = 0; p.forEach(function (q) { x += q[0]; y += q[1]; }); return [x / p.length, y / p.length]; }
+  function segDist(p, a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1], t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1);
+    t = Math.max(0, Math.min(1, t)); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+  }
+  function inPoly(p, poly) { return inRing(p[0], p[1], poly); }
+
+  // Marching squares on a regular grid of elevations (feet); returns [[x1,y1,x2,y2,level],...] in local feet.
+  function contours(grid, nx, ny, x0, y0, step, interval, levels) {
+    var segs = [], zs = grid.filter(function (z) { return z != null; });
+    if (zs.length < 4) return segs;
+    var lo = Math.ceil(Math.min.apply(0, zs) / interval) * interval, hi = Math.max.apply(0, zs), list = levels || [];
+    if (!levels) for (var l0 = lo; l0 <= hi; l0 += interval) list.push(l0);
+    for (var li = 0; li < list.length; li++) { var lev = list[li];
+      for (var j = 0; j < ny - 1; j++) for (var i = 0; i < nx - 1; i++) {
+        var c = [grid[j * nx + i], grid[j * nx + i + 1], grid[(j + 1) * nx + i + 1], grid[(j + 1) * nx + i]];
+        if (c.some(function (z) { return z == null; })) continue;
+        var P = [[i, j], [i + 1, j], [i + 1, j + 1], [i, j + 1]], pts = [];
+        for (var k = 0; k < 4; k++) {
+          var za = c[k], zb = c[(k + 1) % 4];
+          if ((za < lev) !== (zb < lev)) {
+            var t = (lev - za) / (zb - za), A = P[k], B = P[(k + 1) % 4];
+            pts.push([x0 + (A[0] + (B[0] - A[0]) * t) * step, y0 + (A[1] + (B[1] - A[1]) * t) * step]);
+          }
+        }
+        if (pts.length >= 2) segs.push([pts[0][0], pts[0][1], pts[1][0], pts[1][1], lev]);
+        if (pts.length === 4) segs.push([pts[2][0], pts[2][1], pts[3][0], pts[3][1], lev]);
+      }
+    }
+    return segs;
+  }
+
+  // Draft site plan: lot lines, setback (buildable) area, house footprint placed toward the street, driveway, LiDAR
+  // contours, distances to lot lines, north arrow and scale. Public data only; a surveyor finalizes it.
+  async function sitePlan(ctx) {
+    var lat0 = ctx.parcel.cy, F2 = FT_PER_M, toFt = function (q) { var m = toLocal(q[0], q[1], lat0); return [m[0] * F2, m[1] * F2]; };
+    var ring = ctx.parcel.rings.reduce(function (a, r) { return r.length > a.length ? r : a; }, []), lot = ring.map(toFt);
+    if (lot.length > 2 && lot[0][0] === lot[lot.length - 1][0] && lot[0][1] === lot[lot.length - 1][1]) lot.pop();
+    if (polyArea(lot) < 0) lot.reverse();
+    var c0 = centroid(lot); lot = lot.map(function (p) { return [p[0] - c0[0], p[1] - c0[1]]; });
+    var shift = function (q) { var p = toFt(q); return [p[0] - c0[0], p[1] - c0[1]]; };
+    // Street edges: lot edges whose midpoint lies within 60 ft of a mapped road centerline.
+    var roads = await arcgisQuery(UGRC + '/UtahRoads/FeatureServer/0', { geometry: ctx.parcel.geometry, distance: 40, returnGeometry: true, outFields: 'FULLNAME' }).catch(function () { return []; });
+    var rsegs = [];
+    roads.forEach(function (r) { ((r.geometry || {}).paths || []).forEach(function (pa) { for (var i = 0; i < pa.length - 1; i++) rsegs.push([shift(pa[i]), shift(pa[i + 1]), r.attributes.FULLNAME]); }); });
+    var edges = lot.map(function (p, i) {
+      var q = lot[(i + 1) % lot.length], mid = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+      var near = rsegs.reduce(function (b, s) { var d = segDist(mid, s[0], s[1]); return !b || d < b.d ? { d: d, name: s[2] } : b; }, null);
+      return { a: p, b: q, mid: mid, len: len, roadD: near ? near.d : Infinity, road: near && near.d < 60 ? near.name : null };
+    });
+    // Frontages: runs of consecutive edges along the same street (curves are drawn as many short segments).
+    var runs = [], start = edges.findIndex(function (e, i) { return e.road !== edges[(i + edges.length - 1) % edges.length].road; });
+    if (start < 0) start = 0;
+    for (var k = 0; k < edges.length; k++) {
+      var e = edges[(start + k) % edges.length], last = runs[runs.length - 1];
+      if (last && last.road === e.road && e.road) { last.edges.push(e); last.len += e.len; }
+      else runs.push({ road: e.road, edges: [e], len: e.len });
+    }
+    var streets = runs.filter(function (r) { return r.road && r.len > 25; });
+    var addr = String(ctx.parcel.attrs.PARCEL_ADD || '').toUpperCase().replace(/^\d+\s+[NSEW]\s+/, '').replace(/\s+(RD|ROAD|DR|DRIVE|ST|STREET|LN|LANE|WAY|CIR|CT|AVE)$/, '');
+    var front = streets.filter(function (r) { return addr && r.road.toUpperCase().indexOf(addr) >= 0; })[0] || streets.reduce(function (a, r) { return !a || r.len > a.len ? r : a; }, null);
+    var zs = ctx.facts.zone_std || {}, sb = { front: zs.front || 30, side: zs.side || 10, rear: zs.rear || 30, street: zs.street || zs.side || 20 };
+    // Front direction: chord of the front run; inward normal points into the lot (polygon is counter-clockwise).
+    var fa = front ? front.edges[0].a : lot[0], fb = front ? front.edges[front.edges.length - 1].b : lot[1];
+    var fdx = fb[0] - fa[0], fdy = fb[1] - fa[1], fL = Math.hypot(fdx, fdy) || 1, ux = fdx / fL, uy = fdy / fL, vx = -uy, vy = ux;
+    edges.forEach(function (e) {
+      var dx = e.b[0] - e.a[0], dy = e.b[1] - e.a[1], L = Math.hypot(dx, dy) || 1, dot = (-dy / L) * vx + (dx / L) * vy;
+      e.kind = front && front.edges.indexOf(e) >= 0 ? 'front' : e.road && streets.some(function (r) { return r.edges.indexOf(e) >= 0; }) ? 'street side' : dot < -0.5 ? 'rear' : 'side';
+      e.set = e.kind === 'front' ? sb.front : e.kind === 'rear' ? sb.rear : e.kind === 'street side' ? sb.street : sb.side;
+    });
+    // Setback margin at a point: how far it is inside every applicable setback line (negative = inside a setback).
+    var margin = function (pt) {
+      if (!inPoly(pt, lot)) return -999;
+      var m = Infinity;
+      for (var i = 0; i < edges.length; i++) { var d = segDist(pt, edges[i].a, edges[i].b) - edges[i].set; if (d < m) m = d; }
+      return m;
+    };
+    var xs0 = lot.map(function (p) { return p[0]; }), ys0 = lot.map(function (p) { return p[1]; });
+    var bx0 = Math.min.apply(0, xs0), by0 = Math.min.apply(0, ys0), bx1 = Math.max.apply(0, xs0), by1 = Math.max.apply(0, ys0);
+    var gs = Math.max(4, Math.sqrt((bx1 - bx0) * (by1 - by0) / 12000)), gnx = Math.ceil((bx1 - bx0) / gs) + 1, gny = Math.ceil((by1 - by0) / gs) + 1, mg = [], buildArea = 0;
+    for (var gj = 0; gj < gny; gj++) for (var gi = 0; gi < gnx; gi++) { var mv = margin([bx0 + gi * gs, by0 + gj * gs]); mg.push(mv); if (mv >= 0) buildArea += gs * gs; }
+    var buildSegs = contours(mg, gnx, gny, bx0, by0, gs, 1, [0]);
+    // House: plan width x depth (long side along the street), at the fitting position closest to the front frontage.
+    var fp = (ctx.plan && ctx.plan.footprint) || {}, W = fp.width_ft, D = fp.depth_ft, house = null, fits = null, drive = null, dims = [], worst = null;
+    var frontDist = function (pt) { return front ? Math.min.apply(0, front.edges.map(function (e) { return segDist(pt, e.a, e.b); })) : 0; };
+    if (W && D && front) {
+      if (W < D) { var t0 = W; W = D; D = t0; }
+      var rect = function (cx, cy) { return [[-W / 2, -D / 2], [W / 2, -D / 2], [W / 2, D / 2], [-W / 2, D / 2]].map(function (p) { return [cx + ux * p[0] + vx * p[1], cy + uy * p[0] + vy * p[1]]; }); };
+      var rimMargin = function (r) {
+        var m = Infinity;
+        for (var e = 0; e < 4; e++) { var A = r[e], B = r[(e + 1) % 4], n = Math.max(2, Math.ceil(Math.hypot(B[0] - A[0], B[1] - A[1]) / 6));
+          for (var q = 0; q <= n; q++) { var v = margin([A[0] + (B[0] - A[0]) * q / n, A[1] + (B[1] - A[1]) * q / n]); if (v < m) m = v; if (m < -50) return m; } }
+        return m;
+      };
+      var best = null, step2 = Math.max(6, gs * 2);
+      for (var cy2 = by0; cy2 <= by1; cy2 += step2) for (var cx2 = bx0; cx2 <= bx1; cx2 += step2) {
+        if (margin([cx2, cy2]) < Math.min(W, D) / 2 - 5) continue;
+        var r = rect(cx2, cy2), m = rimMargin(r), fd = frontDist([cx2, cy2]);
+        var score = m >= 0 ? fd : 1e6 - m; // fitting positions: nearest the street; otherwise the least-bad one
+        if (!best || score < best.score) best = { r: r, m: m, score: score, c: [cx2, cy2] };
+      }
+      if (best) {
+        house = best.r; fits = best.m >= 0; worst = best.m;
+        // Driveway: 16 ft wide from the middle of the street face, straight out to the front lot line.
+        var mid = [best.c[0] - vx * D / 2, best.c[1] - vy * D / 2], len = 0;
+        while (len < 2000 && inPoly([mid[0] - vx * len, mid[1] - vy * len], lot)) len += 1;
+        drive = { len: len, poly: [[mid[0] - ux * 8, mid[1] - uy * 8], [mid[0] + ux * 8, mid[1] + uy * 8], [mid[0] + ux * 8 - vx * len, mid[1] + uy * 8 - vy * len], [mid[0] - ux * 8 - vx * len, mid[1] - uy * 8 - vy * len]] };
+        var bestBy = {};
+        edges.forEach(function (e) {
+          var hp = house.reduce(function (b, p) { return segDist(p, e.a, e.b) < segDist(b, e.a, e.b) ? p : b; }), d = segDist(hp, e.a, e.b);
+          var dx = e.b[0] - e.a[0], dy = e.b[1] - e.a[1], tt = Math.max(0, Math.min(1, ((hp[0] - e.a[0]) * dx + (hp[1] - e.a[1]) * dy) / (dx * dx + dy * dy || 1)));
+          if (!bestBy[e.kind] || d < bestBy[e.kind].d) bestBy[e.kind] = { kind: e.kind, d: d, set: e.set, from: hp, to: [e.a[0] + dx * tt, e.a[1] + dy * tt] };
+        });
+        dims = Object.keys(bestBy).map(function (k) { return bestBy[k]; });
+      }
+    }
+    // Labels: one per street frontage, one per other edge longer than 30 ft.
+    var outside = function (e, d) { var dx = e.b[0] - e.a[0], dy = e.b[1] - e.a[1], L = Math.hypot(dx, dy) || 1; return [e.mid[0] + dy / L * d, e.mid[1] - dx / L * d]; };
+    var labels = streets.map(function (r) { var e = r.edges[Math.floor(r.edges.length / 2)]; return { at: outside(e, 28), text: Math.round(r.len) + "' " + (r === front ? 'front' : 'street side') + ' (' + streetCase(r.road) + ')' }; })
+      .concat(edges.filter(function (e) { return !e.road && e.len > 30; }).map(function (e) { return { at: outside(e, 16), text: Math.round(e.len) + "' " + e.kind }; }));
+    var build = [];
+    // LiDAR contours on a regular grid over the lot (<= ~900 samples).
+    var xs = lot.map(function (p) { return p[0]; }), ys = lot.map(function (p) { return p[1]; });
+    var minX = Math.min.apply(0, xs) - 20, maxX = Math.max.apply(0, xs) + 20, minY = Math.min.apply(0, ys) - 20, maxY = Math.max.apply(0, ys) + 20;
+    var step = Math.max(12, Math.sqrt((maxX - minX) * (maxY - minY) / 900)), nx = Math.ceil((maxX - minX) / step) + 1, ny = Math.ceil((maxY - minY) / step) + 1;
+    var pts = [], mPerDegLon = M_PER_DEG * Math.cos(lat0 * Math.PI / 180);
+    for (var j = 0; j < ny; j++) for (var i = 0; i < nx; i++) {
+      var X = (minX + i * step + c0[0]) / F2, Y = (minY + j * step + c0[1]) / F2;
+      pts.push([X / mPerDegLon, Y / M_PER_DEG]);
+    }
+    var samp = await lidarSamples(pts), grid = new Array(nx * ny).fill(null);
+    samp.forEach(function (s) {
+      var p = shift([s[0], s[1]]), i = Math.round((p[0] - minX) / step), j = Math.round((p[1] - minY) / step);
+      if (i >= 0 && i < nx && j >= 0 && j < ny) grid[j * nx + i] = s[2];
+    });
+    var zsv = grid.filter(function (z) { return z != null; }), relief = zsv.length ? Math.max.apply(0, zsv) - Math.min.apply(0, zsv) : 0;
+    var interval = relief > 60 ? 10 : relief > 25 ? 5 : 2, segs = contours(grid, nx, ny, minX, minY, step, interval);
+    var lotArea = Math.abs(polyArea(lot));
+    return { lot: lot, edges: edges, buildSegs: buildSegs, buildArea: buildArea, house: house, fits: fits, worst: worst, drive: drive, dims: dims, segs: segs, interval: interval, labels: labels,
+      bbox: [minX, minY, maxX, maxY], lotArea: lotArea, front: front && { road: front.road, len: front.len }, streets: streets.map(function (r) { return r.road; }), setbacks: sb, samples: samp.length };
+  }
+
+  function sitePlanSvg(sp, info) {
+    var W = 1000, H = 720, M = 40, DW = 680, bb = sp.bbox, sx = (DW - 2 * M) / (bb[2] - bb[0]), sy = (H - 2 * M - 40) / (bb[3] - bb[1]), s = Math.min(sx, sy);
+    var X = function (x) { return M + (x - bb[0]) * s; }, Y = function (y) { return H - M - 40 - (y - bb[1]) * s; };
+    var pth = function (p) { return p.map(function (q, i) { return (i ? 'L' : 'M') + X(q[0]).toFixed(1) + ' ' + Y(q[1]).toFixed(1); }).join(' ') + ' Z'; };
+    var e = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
+    var o = ['<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" font-family="Helvetica, Arial, sans-serif" font-size="11">',
+      '<rect width="100%" height="100%" fill="#fff"/>'];
+    // Contours (every 5th interval heavier, labelled once).
+    var labelled = {};
+    sp.segs.forEach(function (g) {
+      var major = Math.round(g[4]) % (sp.interval * 5) === 0;
+      o.push('<line x1="' + X(g[0]).toFixed(1) + '" y1="' + Y(g[1]).toFixed(1) + '" x2="' + X(g[2]).toFixed(1) + '" y2="' + Y(g[3]).toFixed(1) + '" stroke="#b9a58a" stroke-width="' + (major ? 1 : 0.5) + '"/>');
+      if (major && !labelled[g[4]] && inPoly([(g[0] + g[2]) / 2, (g[1] + g[3]) / 2], sp.lot)) { labelled[g[4]] = 1; o.push('<text x="' + X(g[0]).toFixed(1) + '" y="' + (Y(g[1]) - 2).toFixed(1) + '" fill="#8a7454" font-size="9">' + Math.round(g[4]) + '</text>'); }
+    });
+    o.push('<path d="' + pth(sp.lot) + '" fill="#eef4ea" stroke="none"/>');
+    sp.buildSegs.forEach(function (g) { o.push('<line x1="' + X(g[0]).toFixed(1) + '" y1="' + Y(g[1]).toFixed(1) + '" x2="' + X(g[2]).toFixed(1) + '" y2="' + Y(g[3]).toFixed(1) + '" stroke="#5b8a4f" stroke-width="1.2" stroke-dasharray="5 3"/>'); });
+    o.push('<path d="' + pth(sp.lot) + '" fill="none" stroke="#111" stroke-width="2"/>');
+    sp.labels.forEach(function (lb) {
+      o.push('<text x="' + X(lb.at[0]).toFixed(1) + '" y="' + Y(lb.at[1]).toFixed(1) + '" fill="#333" font-size="10" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="3">' + e(lb.text) + '</text>');
+    });
+    o.push('<text x="' + M + '" y="' + (M - 12) + '" fill="#5b8a4f" font-size="10">Dashed green line: setback limits (buildable area). Blue: house envelope and distances to lot lines.</text>');
+    if (sp.drive) o.push('<path d="' + pth(sp.drive.poly) + '" fill="#d9d9d9" stroke="#888" stroke-width="0.8"/>');
+    if (sp.house) o.push('<path d="' + pth(sp.house) + '" fill="' + (sp.fits ? '#c9d8ee' : '#f2c4c0') + '" stroke="#1f3b63" stroke-width="1.5"/>',
+      '<text x="' + X(centroid(sp.house)[0]).toFixed(1) + '" y="' + Y(centroid(sp.house)[1]).toFixed(1) + '" text-anchor="middle" font-weight="bold" fill="#1f3b63">HOUSE</text>');
+    sp.dims.forEach(function (d) {
+      var mx = (d.from[0] + d.to[0]) / 2, my = (d.from[1] + d.to[1]) / 2, ok = d.d + 0.5 >= d.set;
+      o.push('<line x1="' + X(d.from[0]).toFixed(1) + '" y1="' + Y(d.from[1]).toFixed(1) + '" x2="' + X(d.to[0]).toFixed(1) + '" y2="' + Y(d.to[1]).toFixed(1) + '" stroke="' + (ok ? '#1f3b63' : '#b42318') + '" stroke-width="0.8" marker-end="url(#a)" marker-start="url(#a)"/>',
+        '<text x="' + X(mx).toFixed(1) + '" y="' + (Y(my) - 3).toFixed(1) + '" fill="' + (ok ? '#1f3b63' : '#b42318') + '" font-size="10" text-anchor="middle">' + Math.round(d.d) + "'</text>");
+    });
+    o.push('<defs><marker id="a" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L6 3 L0 6 z" fill="#1f3b63"/></marker></defs>');
+    // North arrow and scale bar.
+    o.push('<g transform="translate(' + (DW - 40) + ',' + (M + 10) + ')"><path d="M0 -14 L7 10 L0 5 L-7 10 Z" fill="#111"/><text y="24" text-anchor="middle" font-weight="bold">N</text></g>');
+    var bar = [20, 50, 100, 200, 500].filter(function (v) { return v * s <= 160; }).pop() || 20;
+    o.push('<g transform="translate(' + M + ',' + (H - M - 10) + ')"><rect width="' + (bar * s).toFixed(1) + '" height="5" fill="#111"/><text y="18">' + bar + " ft</text><text x=\"" + ((bar * s) + 8).toFixed(1) + '" y="6">Contours every ' + sp.interval + " ft (USGS 3DEP 1 m LiDAR)</text></g>");
+    // Title block.
+    o.push('<g transform="translate(' + (DW + 10) + ',' + M + ')"><rect width="' + (W - DW - 10 - M) + '" height="' + (H - 2 * M) + '" fill="#fafafa" stroke="#ccc"/>');
+    var ty = 22, line = function (t, b) {
+      var words = String(t).split(' '), cur = '', out = [];
+      words.forEach(function (w) { if ((cur + ' ' + w).trim().length > 44) { out.push(cur.trim()); cur = w; } else cur += ' ' + w; });
+      if (cur.trim()) out.push(cur.trim());
+      out.forEach(function (ln, i) { o.push('<text x="' + (i ? 20 : 12) + '" y="' + ty + '"' + (b ? ' font-weight="bold" font-size="13"' : '') + '>' + e(ln) + '</text>'); ty += b ? 20 : 15; });
+    };
+    line('DRAFT SITE PLAN', true);
+    info.forEach(function (r) { if (r === '') { ty += 6; return; } line(r); });
+    ty += 8;
+    ['Drawn from public data: county parcel boundary,', 'recorded plat setbacks, USGS LiDAR. Not a survey.', 'A licensed surveyor must verify the boundary,', 'easements and topography before submittal.']
+      .forEach(function (t) { o.push('<text x="12" y="' + ty + '" fill="#b42318" font-size="10">' + e(t) + '</text>'); ty += 13; });
+    o.push('</g></svg>');
+    return o.join('');
+  }
+
+  C.check_permit_packet = async function (ctx) {
+    var f = ctx.facts, p = ctx.plan || {}, fp = p.footprint || {}, kb = f.kb, a = ctx.parcel.attrs, pd = f.parcelDoc || {};
+    var hasPlan = !!(fp.residence_sf || fp.width_ft), juris = f.jurisdiction || 'the city';
+    // Mailing form of the address: postal city and ZIP from the state ZIP areas (address points carry the municipality).
+    var zipF = await arcgisQuery(UGRC + '/UtahZipCodeAreas/FeatureServer/0', { geometry: ctx.parcel.point, outFields: 'ZIP5,NAME' }).catch(function () { return []; });
+    var zip = zipF[0] && String(zipF[0].attributes.ZIP5), postal = zipF[0] && zipF[0].attributes.NAME;
+    var street = a.PARCEL_ADD ? streetCase(a.PARCEL_ADD) : null;
+    var fullAddr = street ? street + ', ' + (postal ? title(postal) : a.PARCEL_CITY || '') + ', UT' + (zip ? ' ' + zip : '') : null;
+    var sp = await sitePlan(ctx).catch(function (e) { return { error: String(e.message || e) }; });
+
+    // Estimates.
+    var house = fp.residence_sf || null, garage = fp.garage_sf || 0, stories = p.stories || 1;
+    var footprint = house ? house / stories + garage : fp.width_ft && fp.depth_ft ? fp.width_ft * fp.depth_ft * 0.6 : null; // overall dims are a bounding box
+    var driveLen = sp.drive ? Math.max(sp.drive.len, f.zone_std && f.zone_std.front || 20) : (f.zone_std && f.zone_std.front || 30) + 10;
+    var driveSf = driveLen * 16, flatwork = 400, impervious = footprint ? footprint + driveSf + flatwork : null;
+    var esu = impervious && kb && kb.stormwater ? Math.max(1, Math.ceil(impervious / kb.stormwater.esuSqft)) : null;
+    var disturb = footprint ? (Math.sqrt(footprint) + 20) * (Math.sqrt(footprint) + 20) + driveSf + 1500 : null;
+    var depth = p.foundation === 'basement' ? 9.5 : p.foundation === 'crawlspace' ? 4 : 2, perim = footprint ? 4 * Math.sqrt(footprint) : 0;
+    var cut = footprint ? Math.round((footprint * depth + perim * 2 * depth + driveSf * 1) / 27) : null;
+    var fees = hasPlan ? weberBuildingFees(house, garage) : null;
+    var est = { valuation: fees && fees.valuation, permitFloor: fees && fees.total, footprint: footprint, driveLen: driveLen, impervious: impervious, esu: esu,
+      stormFee: esu && kb && kb.stormwater ? esu * kb.stormwater.esuFee : null, disturb: disturb, cut: cut };
+
+    // Providers and contacts.
+    var water = provider(f.culinary), sewer = provider(f.sewer), fire = provider(kb && kb.fireDistrict), hoa = f.hoaReg;
+    var lotPart = [pd.lot && a.SUBDIV_NAME ? 'Lot ' + pd.lot + ' of ' + title(a.SUBDIV_NAME) : a.SUBDIV_NAME ? title(a.SUBDIV_NAME) : null, 'parcel ' + ctx.parcel.id].filter(Boolean).join(', ');
+    var lotLine = fullAddr ? fullAddr + ' (' + lotPart + ')' : lotPart;
+    var reqLine = kb && kb.submittal ? juris + ' requires a will-serve letter specific to the building lot. ' : '';
+    var planLine = hasPlan ? 'a ' + (p.bedrooms ? p.bedrooms + '-bedroom, ' : '') + (house ? fmt(house) + ' sq ft ' : '') + 'single-family home' + (garage ? ' with a ' + fmt(garage) + ' sq ft garage' : '') : 'one single-family home';
+    var sign = '\n\nThank you,\n\n[Your name]\n[Company, if any]\n[Phone]';
+    var letters = [];
+    if (water || f.culinary) letters.push({ id: 'water', title: 'Lot-specific ' + (/secondary/i.test(f.waterServices || '') ? 'culinary and secondary water' : 'water') + ' will-serve letter', to: water ? water.name : f.culinary, email: water && water.email, mail: water && water.mail,
+      subject: 'Will-serve request: ' + lotLine,
+      body: 'Hello,\n\nI am preparing a building permit application for ' + lotLine + '. ' + reqLine + 'Could you issue a will-serve letter for culinary' + (/secondary/i.test(f.waterServices || '') ? ' and secondary (irrigation)' : '') + ' water for this lot?\n\n' +
+        'Proposed use: ' + planLine + ', 1 equivalent residential connection.' + (est.impervious ? ' Estimated impervious area about ' + fmt(est.impervious) + ' sq ft; irrigated turf will stay within the city cap (35% of front and side yards or 3,000 sq ft, whichever is greater).' : '') +
+        '\n\nPlease also let me know the connection, hook-up and share-transfer requirements and fees for this lot, and the secondary water allotment per lot.' + sign });
+    if (sewer || f.sewer) letters.push({ id: 'sewer', title: 'Lot-specific sewer will-serve letter', to: sewer ? sewer.name : f.sewer, email: sewer && sewer.email, mail: sewer && sewer.lines[0],
+      subject: 'Sewer will-serve request: ' + lotLine,
+      body: 'Hello,\n\nI am preparing a building permit application for ' + lotLine + '. ' + reqLine.replace('a will-serve', 'a sewer will-serve') + 'Could you issue a sewer will-serve letter for this lot?\n\nProposed use: ' + planLine + '.' +
+        '\n\nPlease also send the connection and impact fees, the lateral location for this lot if known, and any inspection requirements for the connection.' + sign });
+    var hydrant = f.hydrant_ft;
+    if (fire) letters.push({ id: 'fire', title: 'Fire district: hydrant distance and sprinkler requirement', to: fire.name, email: fire.email,
+      subject: 'Fire protection requirements: ' + lotLine,
+      body: 'Hello,\n\nI am preparing a building permit application for ' + lotLine + ' (' + planLine + ').' +
+        (hydrant ? ' By mapped roads, the nearest hydrant appears to be about ' + fmt(hydrant) + ' ft from the middle of the lot, beyond the 600 ft in IFC 507.5.1.' : '') +
+        '\n\nCould you confirm (1) whether a residential fire sprinkler system (NFPA 13D) will be required in place of a hydrant extension, (2) the required fire flow, (3) any driveway width, turnaround or access requirements for this lot, and (4) what you need with the building permit submittal?' + sign });
+    var hoaC = hoa && (hoa.contacts || []).filter(function (c) { return c.email; })[0];
+    if (hoa) letters.push({ id: 'hoa', title: 'HOA architectural review: guidelines and submittal process', to: hoa.name, email: hoaC && hoaC.email,
+      subject: 'Architectural review and governing documents: ' + lotLine,
+      body: 'Hello,\n\nI am planning to build ' + planLine + ' on ' + lotLine + '. Could you send:\n\n1. The CC&Rs and any amendments, and the architectural or design guidelines\n2. The architectural review submittal requirements, review timeline and fees (including any construction deposit)\n3. Current dues and any pending special assessments\n\nI would like to submit for architectural review before applying for the building permit.' + sign });
+
+    // Items: the statute's complete-application list, the city's submission checklist, and lot-specific approvals.
+    var sh = p.sheets || {}, has = function (k) { return !!(sh[k] && sh[k].length); }, items = [];
+    var I = function (o) { items.push(o); };
+    var cityReq = kb && kb.submittal;
+    I({ group: 'Application', title: 'Applicant and contractor contact information', status: 'you', who: 'You', lead: [0, 0], why: 'Utah Code 10-20-909(12)(a)',
+      detail: 'Name, address, phone and email for the applicant and the general contractor, with the contractor\'s Utah license number (or an owner-builder declaration).' });
+    I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Lot Dossier', lead: [0, 0],
+      detail: 'Prefilled below from the county record, the recorded plat, the zoning and the plan. Copy it into the permit portal.' });
+    I({ group: 'Drawings', title: 'Scaled site plan with existing and proposed contours and distances to property lines', status: sp && !sp.error ? 'drafted' : 'pro', who: 'Surveyor (final)', lead: [10, 20], why: '10-20-909(12)(b)',
+      detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'give them this draft as the starting point.') : 'Order a boundary and topographic survey.' });
+    var sheetRow = function (title, keys, who, why) {
+      var got = keys.filter(has), status = !hasPlan ? 'pro' : got.length === keys.length ? 'ready' : got.length ? 'partial' : 'pro';
+      I({ group: 'Drawings', title: title, status: status, who: who, lead: status === 'ready' ? [0, 0] : [5, 15], why: why,
+        detail: !p.sheets ? 'Upload the plan set to check this.' : got.length ? 'Found: ' + got.map(function (k) { return k + ' (' + sh[k].join(', ') + ')'; }).join('; ') + (got.length < keys.length ? '. Missing: ' + keys.filter(function (k) { return !has(k); }).join(', ') + '.' : '.') : 'Not found in the plan set.' });
+    };
+    sheetRow('Construction drawings: code analysis, floor plans, elevations, sections', ['code', 'floor', 'elevations', 'sections'], 'Designer', '10-20-909(12)(c)');
+    sheetRow('Structural: foundation, floor and roof framing, structural details', ['foundation', 'floorFraming', 'roofFraming', 'structural'], 'Designer / engineer', '10-20-909(12)(c)');
+    sheetRow('Electrical plan', ['electrical'], 'Designer', 'City checklist');
+    I({ group: 'Drawings', title: 'Structural calculations (stamped)', status: has('stamp') ? 'partial' : 'pro', who: 'Structural engineer', lead: [10, 20], why: '10-20-909(12)(e)',
+      detail: (!p.sheets ? 'Needed with the plan set. ' : has('stamp') ? 'The plan set names an engineer (' + sh.stamp.join(', ') + '); include the signed calculation package. ' : 'No engineer named on the plan set. ') + 'Stamped plans also keep the statutory plan-review deadline enforceable.' });
+    I({ group: 'Drawings', title: 'Building area breakdown (each level, basement, garage, porches, decks)', status: hasPlan && house ? (has('areas') ? 'ready' : 'partial') : 'pro', who: 'Designer', lead: [1, 3], why: 'City checklist',
+      detail: hasPlan && house ? 'From the plan: ' + fmt(house) + ' sq ft living' + (garage ? ', ' + fmt(garage) + ' sq ft garage' : '') + '. ' + (has('areas') ? '' : 'Add covered porches, decks and patios, and split by level, as the city asks.') : 'Upload the plan set.' });
+    var en = p.energy, enOk = f.energyCheck;
+    I({ group: 'Drawings', title: 'Energy code compliance (Utah prescriptive path or REScheck)', status: has('energy') ? 'ready' : en ? 'partial' : 'pro', who: 'Designer', lead: [1, 3], why: '10-20-909(12)(d)',
+      detail: (en ? 'Plan values read: ' + Object.keys(en).map(function (k) { var v = en[k]; return k + ' ' + (typeof v === 'object' ? JSON.stringify(v).replace(/[{}"]/g, '') : v); }).join(', ') + '. ' : '') + (enOk ? enOk + ' ' : '') + (has('energy') ? '' : p.sheets ? 'Add a REScheck report or a prescriptive compliance table to the set.' : 'Upload the plan set to check this; it needs a REScheck report or a prescriptive compliance table.') });
+    I({ group: 'Drawings', title: 'Outdoor lighting plan (dark-sky)', status: has('lighting') ? 'ready' : kb && kb.lighting ? 'pro' : kb ? 'na' : 'you', who: kb && !kb.lighting ? '' : 'Designer', lead: [1, 3], why: kb && kb.lighting ? 'City land use code 108-16' : '',
+      detail: kb && kb.lighting ? kb.lighting + ' Show each exterior fixture, its height and a cut sheet.' : kb ? 'Not required here.' : 'Check whether ' + juris + ' requires an exterior lighting plan.' });
+    var steep = f.slope != null && f.slope > 15;
+    I({ group: 'Reports', title: 'Geotechnical report', status: steep ? 'pro' : 'optional', who: 'Geotechnical engineer', lead: steep ? [15, 25] : [0, 0], why: '10-20-909(12)(f): only if slope exceeds 15% and the city requires it',
+      detail: 'Lot slope about ' + (f.slope != null ? f.slope.toFixed(1) + '%' : '?') + (steep ? ', so the city may require one.' : ', so the statute does not require one for the application.') +
+        (f.water_table_in != null && f.water_table_in < 48 ? ' Recommended anyway: the soil survey shows a seasonal water table about ' + f.water_table_in + ' in. down.' : '') });
+    I({ group: 'Stormwater', title: 'Storm water statement, SWPPP and city stormwater permit', status: est.disturb ? 'drafted' : 'partial', who: 'You / builder', lead: [1, 2], why: '10-20-909(12)(g); city code ch. 6.15',
+      detail: (est.disturb ? 'Estimated land disturbance about ' + fmt(est.disturb) + ' sq ft and ' + fmt(est.cut) + ' cubic yards of excavation' + (kb && kb.stormwater ? ', above the city\'s 500 sq ft / 20 cubic yard permit threshold. ' : '. ') : '') +
+        (a.SUBDIV_NAME ? 'The lot is part of a larger subdivision (a common plan of development), so state coverage under the Common Plan Permit (UTRH) is likely needed' + (kb && kb.swpppTemplate ? '; the city posts the SWPPP template for it.' : '.') : ''),
+      link: kb && kb.swpppTemplate });
+    letters.forEach(function (l) {
+      I({ group: 'Approvals', title: l.title, status: 'drafted', who: l.to, lead: l.id === 'hoa' ? [10, 30] : [5, 15], letter: l.id,
+        detail: 'Request drafted below' + (l.email ? ', ready to send to ' + l.email : l.mail ? '; mail it to ' + l.mail : '') + '.' });
+    });
+    if (!water && !f.culinary) I({ group: 'Approvals', title: 'Water will-serve letter or approved well permit', status: 'you', who: 'Water provider', lead: [5, 15], detail: 'No water provider identified for this lot.' });
+    I({ group: 'Approvals', title: 'Excavation permit (driveway approach and utility connections in the street)', status: 'you', who: 'You / builder', lead: [1, 5], why: kb && kb.excavation ? 'City permit portal' : '',
+      detail: kb && kb.excavation ? kb.excavation : 'Most cities require a right-of-way or excavation permit for the driveway approach and utility taps; check with ' + juris + '.' });
+    var feeRow = ctx.findings.filter(function (x) { return x.item === 'Permit & impact fees'; })[0];
+    I({ group: 'Fees', title: 'Permit, plan review and impact fees', status: 'you', who: 'You', lead: [0, 0], why: '10-20-909(12)(h)',
+      detail: (feeRow ? feeRow.headline + '. ' : '') + (est.esu > 1 ? 'With about ' + fmt(est.impervious) + ' sq ft of impervious area this lot is ' + est.esu + ' storm-drain units, so the storm drain impact fee is about $' + fmt(est.stormFee) + ' rather than one unit. ' : '') + 'Paid at issuance through the portal.' });
+
+    // Timeline: everything that gates submittal runs in parallel; then screening (3) + plan review (14) business days.
+    var gating = items.filter(function (x) { return x.status !== 'ready' && x.status !== 'na' && x.status !== 'optional' && x.lead; });
+    var lo = Math.max.apply(0, gating.map(function (x) { return x.lead[0]; }).concat([1])), hi = Math.max.apply(0, gating.map(function (x) { return x.lead[1]; }).concat([2]));
+    var now = new Date(), subLo = addBusinessDays(now, lo), subHi = addBusinessDays(now, hi);
+    var timeline = { submitLo: day(subLo), submitHi: day(subHi), screen: 3, review: 14, issueLo: day(addBusinessDays(subLo, 17)), issueHi: day(addBusinessDays(subHi, 17)),
+      critical: gating.filter(function (x) { return x.lead[1] === hi; }).map(function (x) { return x.title; }) };
+
+    // Application data sheet.
+    var zstd = f.zone_std || {}, rows = [];
+    var R = function (k, v, src) { if (v != null && v !== '') rows.push([k, String(v), src || '']); };
+    R('Project address', fullAddr, 'County parcel record + USPS ZIP area');
+    R('Jurisdiction', juris, 'Municipal boundaries');
+    R('Platted address', pd.platAddress, 'Recorded plat');
+    R('Parcel ID', ctx.parcel.id, ctx.parcel.county + ' County');
+    R('Subdivision / lot', (a.SUBDIV_NAME ? title(a.SUBDIV_NAME) : '') + (pd.lot ? ', Lot ' + pd.lot : ''), 'County record / plat');
+    R('Legal description', pd.legal, 'County parcel record');
+    R('Lot area', (a.PARCEL_ACRES ? a.PARCEL_ACRES + ' acres' : '') + (f.lot_sf ? ' (' + fmt(f.lot_sf) + ' sq ft)' : ''), 'County parcel record');
+    R('Owner of record', f.owner, 'County assessor');
+    R('Zoning', f.zone, 'Zoning map');
+    if (zstd.front) R('Required setbacks', zstd.front + "' front, " + zstd.side + "' side, " + zstd.rear + "' rear" + (zstd.street ? ', ' + zstd.street + "' street side" : ''), zstd.zone === 'plat' ? 'Recorded plat' : 'Development standards');
+    R('Type of work', 'New single-family dwelling');
+    R('Occupancy / construction type', 'R-3 / V-B (wood frame)', 'Typical for a wood-frame house');
+    if (hasPlan) {
+      R('Stories', p.stories, 'Plan'); R('Bedrooms', p.bedrooms, 'Plan'); R('Living area', house && fmt(house) + ' sq ft', 'Plan'); R('Garage', garage && fmt(garage) + ' sq ft', 'Plan');
+      R('Overall dimensions', fp.width_ft && fp.depth_ft ? Math.round(fp.width_ft) + "' x " + Math.round(fp.depth_ft) + "'" : null, 'Plan');
+      R('Building height', p.height_ft && p.height_ft + "'", 'Plan'); R('Foundation', p.foundation, 'Plan'); R('Heating fuel', p.fuel, 'Plan'); R('Fireplace', p.fireplace, 'Plan');
+      R('Construction valuation', est.valuation && '$' + fmt(est.valuation), 'ICC Building Valuation Data, ' + BVD.asOf);
+    }
+    R('Fire sprinklers', hydrant > 600 ? 'Likely required (NFPA 13D): nearest hydrant about ' + fmt(hydrant) + ' ft by road' : hydrant ? 'Not expected: hydrant about ' + fmt(hydrant) + ' ft by road' : null, 'Hydrant map + roads');
+    R('Ground snow load', f.snow && f.snow.pg && f.snow.pg + ' psf', 'Utah Snow Load Study');
+    R('Seismic', f.sds != null ? 'SDS ' + f.sds.toFixed(2) + ' g, seismic design category ' + (f.irc_sdc || '?') : null, 'USGS, site class D default');
+    R('Soil bearing', p.structural && p.structural.bearing_psf ? p.structural.bearing_psf + ' psf (plan)' : (f.soils || []).some(function (s) { return /clay|silt/i.test(s); }) ? '1,500 psf presumptive (IRC Table R401.4.1, clay/silt soils) unless the geotech says otherwise' : null, 'Soil survey');
+    R('Culinary water', f.culinary); R('Sewer', f.sewer || (f.septic && f.septic.required ? 'Septic' : null));
+    R('Impervious area (estimate)', est.impervious && fmt(est.impervious) + ' sq ft = ' + est.esu + ' storm-drain unit' + (est.esu > 1 ? 's' : ''), 'Footprint + ' + Math.round(driveLen) + "' x 16' driveway + 400 sq ft walks");
+    R('Land disturbance (estimate)', est.disturb && fmt(est.disturb) + ' sq ft; ' + fmt(est.cut) + ' cu yd excavation', 'Footprint + 10\' work zone + driveway + staging');
+
+    // Site plan title-block lines.
+    if (sp && !sp.error) {
+      var tb = [fullAddr || '', pd.lot ? 'Lot ' + pd.lot + (a.SUBDIV_NAME ? ', ' + title(a.SUBDIV_NAME) : '') : a.SUBDIV_NAME ? title(a.SUBDIV_NAME) : '', 'Parcel ' + ctx.parcel.id + ', ' + juris].filter(Boolean);
+      tb = tb.concat(['', 'Zone: ' + (f.zone || '?'), 'Setbacks: ' + sp.setbacks.front + "' front, " + sp.setbacks.side + "' side, " + sp.setbacks.rear + "' rear",
+        'Lot area: ' + fmt(sp.lotArea) + ' sq ft; buildable ' + fmt(sp.buildArea) + ' sq ft']);
+      if (sp.house) tb = tb.concat(['House envelope: ' + Math.round(Math.max(fp.width_ft, fp.depth_ft)) + "' x " + Math.round(Math.min(fp.width_ft, fp.depth_ft)) + "' (plan overall)", 'Driveway: about ' + Math.round(sp.drive.len) + "' x 16'",
+        'Impervious (est.): ' + fmt(est.impervious) + ' sq ft', sp.fits ? 'Fits inside the setbacks as placed' : 'DOES NOT FIT inside the setbacks as placed']);
+      if (pd.easements && pd.easements.length) tb.push('Easements on plat: ' + pd.easements.join(', '));
+      if (sp.front && sp.front.road) tb.push('Front: ' + streetCase(sp.front.road) + (sp.streets.length > 1 ? '; corner lot' : ''));
+      if (sp.house && !sp.fits) tb.push('Short of fitting by about ' + Math.ceil(-sp.worst) + ' ft');
+      sp.svg = sitePlanSvg(sp, tb);
+    }
+
+    var ready = items.filter(function (x) { return x.status === 'ready' || x.status === 'drafted'; }).length, needed = items.filter(function (x) { return x.status !== 'na' && x.status !== 'optional'; }).length;
+    f.packet = { jurisdiction: juris, items: items, letters: letters, rows: rows, est: est, timeline: timeline, sitePlan: sp && !sp.error ? { svg: sp.svg, fits: sp.fits, samples: sp.samples } : null,
+      sitePlanError: sp && sp.error, ready: ready, needed: needed, portal: kb && kb.portal, checklist: cityReq };
+    return [F('permits', 'Permit packet', ready >= needed ? 'ok' : 'verify', ready + ' of ' + needed + ' application items ready or drafted',
+      'Utah law makes the city screen a complete application in 3 business days and finish plan review for a house within 14 business days after that (Utah Code 10-20-909). The permit packet below lists every item, fills in what public records and the plan show, and drafts the requests to the water, sewer and fire providers' + (hoa ? ' and the HOA' : '') + '. Earliest realistic submittal ' + timeline.submitLo + ' to ' + timeline.submitHi + '; the longest lead item is: ' + timeline.critical.slice(0, 2).join('; ') + '.',
+      'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Send the drafted requests now; they run in parallel with the survey and engineering.')];
+  };
+
   var STEPS = [
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
     ['check_zoning', 'Zoning district'], ['check_historic', 'Historic district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
-    ['check_plan_fit', 'Plan vs. lot conflicts']
+    ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
   async function run(parcel, plan, costs, onStep) {

@@ -198,6 +198,21 @@
     feat('Septic system shown', /SEPTIC|DRAIN ?FIELD|LEACH/);
     feat('Private well shown', /\bWELL HEAD\b|PRIVATE WELL|WELL PUMP/);
     if (out.baths) out.features.push({ label: out.baths + ' bathrooms', where: 'room labels' });
+    // Sheets the permit checklist asks for, found by their titles (short lines, not code notes that merely mention them).
+    var SHEETS = [['code', /GENERAL NOTES|CODE (ANALYSIS|SUMMARY|INFORMATION|DATA)|DESIGN (CRITERIA|LOADS)|PROJECT (DATA|INFORMATION)/],
+      ['site', /\b(SITE|PLOT) PLAN\b/], ['floor', /FLOOR PLAN|(MAIN|UPPER|LOWER|FIRST|SECOND|BASEMENT|LOFT) (LEVEL|FLOOR)( PLAN)?$/],
+      ['elevations', /ELEVATIONS?$|^(FRONT|REAR|LEFT|RIGHT|NORTH|SOUTH|EAST|WEST) ELEVATION/], ['sections', /BUILDING SECTIONS?|^SECTION [A-Z0-9]|WALL SECTION/],
+      ['foundation', /FOUNDATION PLAN|FOOTING PLAN/], ['floorFraming', /FLOOR FRAMING/], ['roofFraming', /ROOF FRAMING|TRUSS (PLAN|LAYOUT)/],
+      ['electrical', /ELECTRICAL (PLAN|LAYOUT)|POWER (AND|&) LIGHTING|LIGHTING PLAN/], ['structural', /STRUCTURAL (DETAILS|NOTES|PLAN)|SHEAR ?WALL (PLAN|SCHEDULE)|HOLD ?DOWN/],
+      ['energy', /RESCHECK|ENERGY (CODE|COMPLIANCE)|INSULATION SCHEDULE/], ['areas', /SQUARE FOOTAGE|AREA (CALCS?|CALCULATIONS?|SUMMARY|BREAKDOWN|TABULATION)|SQ\.? ?FT\.? (SUMMARY|TABLE)/],
+      ['lighting', /EXTERIOR LIGHT|LIGHT FIXTURE SCHEDULE|DARK[- ]?SKY/], ['stamp', /STRUCTURAL ENGINEER|PROFESSIONAL ENGINEER|\bP\.?E\.?\b|LICENSED ARCHITECT|\bS\.?E\.?\b NO/]];
+    out.sheets = {};
+    pages.forEach(function (p) {
+      var short = shortLines(p), hits = SHEETS.filter(function (sd) { return short.some(function (l) { return sd[1].test(l.trim()); }); });
+      // A cover/index page lists every sheet title; it doesn't mean the sheets are there.
+      if (hits.length >= 6) { out.sheetIndex = where(p); return; }
+      hits.forEach(function (sd) { if ((out.sheets[sd[0]] || []).length < 3) (out.sheets[sd[0]] = out.sheets[sd[0]] || []).push(where(p)); });
+    });
     out.found = Object.keys(out.fields).length;
     return out;
   }

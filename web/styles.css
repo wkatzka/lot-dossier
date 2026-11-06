@@ -430,3 +430,34 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 #rv .ct-links{font-size:14px;margin-top:2px}
 #rv .ct-src{font-size:12px;color:var(--muted);margin:14px 0 0}
 @media print{#rv .ct-grid{grid-template-columns:1fr 1fr}}
+
+#rv .packet{margin-top:40px}
+#rv .packet h3{font-size:18px;margin:30px 0 6px}
+#rv .pk-sub,#rv .pk-note{color:var(--muted);font-size:14px;line-height:1.55;max-width:760px}
+#rv .pk-meter{display:flex;align-items:center;gap:14px;margin:14px 0 6px}
+#rv .pk-meter .chk-bar{flex:1;max-width:320px}
+#rv .pk-timeline{list-style:none;padding:0;margin:14px 0;display:grid;gap:6px;font-size:14px}
+#rv .pk-timeline b{display:inline-block;min-width:200px}
+#rv .pk-portal{font-size:14px}
+#rv .pk-items{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:0}
+#rv .pk-item{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+#rv .pk-item p{margin:4px 0 0;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+#rv .pk-who{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+#rv .pk-badge{align-self:start;font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid currentColor;text-align:center}
+#rv .pk-badge.s-ok{color:var(--ok)}#rv .pk-badge.s-watch{color:var(--watch)}#rv .pk-badge.s-verify{color:var(--verify)}#rv .pk-badge.s-muted{color:var(--muted)}
+#rv .pk-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+#rv .pk-btn{font:inherit;font-size:13px;padding:5px 12px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);text-decoration:none;cursor:pointer}
+#rv .pk-btn.ghost{background:transparent;color:var(--ink)}
+#rv .pk-table{overflow-x:auto}
+#rv .pk-table th{text-align:left;font-weight:600;white-space:nowrap;padding-right:14px;vertical-align:top}
+#rv .pk-table td{vertical-align:top}
+#rv .pk-src{color:var(--muted);font-size:12px}
+#rv .pk-plan{width:100%;max-width:1000px;border:1px solid var(--line);border-radius:8px;background:#fff;margin-top:8px}
+#rv .pk-letter{border-top:1px solid var(--line);padding:10px 0}
+#rv .pk-letter summary{cursor:pointer;font-weight:600}
+#rv .pk-letter summary span{font-weight:400;color:var(--muted);font-size:13px}
+#rv .pk-letter pre{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.55;background:var(--bg-2);padding:12px 14px;border-radius:8px}
+#rv .pk-subj{font-size:14px}
+@media(max-width:640px){#rv .pk-item{grid-template-columns:minmax(0,1fr)}#rv .pk-badge{justify-self:start}#rv .pk-timeline b{display:block;min-width:0}}
+@media print{#rv .pk-acts{display:none}#rv .pk-letter{break-inside:avoid}#rv .pk-letter:not([open]) pre{display:block}}
+#rv .pk-jump{margin:16px 0 0;font-weight:600}
