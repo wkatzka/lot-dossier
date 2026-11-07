@@ -1,7 +1,7 @@
 <svg viewBox="12 419 944 171" xmlns="http://www.w3.org/2000/svg" width="944" height="171">
   <title>CORNERPIN</title>
   <desc>Construction intelligence brand lockup with parcel corner and orange survey pin and custom engineered lettering.</desc>
-  <g id="brand-symbol" transform="translate(9.36 184.32) scale(.64)"><path d="M178 450H50V578M88 578H178V488" stroke="#f5f4ee" stroke-width="16" fill="none"/><circle cx="50" cy="450" r="24" fill="#f26a36"/><path d="M50 488v48M88 450h48" stroke="#f5f4ee" stroke-width="9.6" fill="none"/></g>
+  <g id="brand-symbol" transform="translate(9.36 174.16) scale(.64)"><path d="M178 450H50V578M88 578H178V488" stroke="#f5f4ee" stroke-width="16" fill="none"/><circle cx="50" cy="450" r="24" fill="#f26a36"/><path d="M50 488v48M88 450h48" stroke="#f5f4ee" stroke-width="9.6" fill="none"/></g>
   <g transform="translate(-56 0)" id="brand-wordmark" fill="#f5f4ee">
     <path d="M249 462H308V479H258L252 485V520L258 526H308V543H249L233 527V478Z" />
     <path fill-rule="evenodd" d="M338 462H391L407 478V527L391 543H338L321 527V478ZM347 479 341 485V520L347 526H382L388 520V485L382 479Z" />
