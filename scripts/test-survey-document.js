@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict');
+const {extract,read}=require('../lib/survey-document');
+const r=extract(['LOT 4 ENTRY # 123456, 234567. THE BASIS OF BEARING is grid north.', 'LOT 4 ENTRY NO. 345678; 456789']);
+assert.deepEqual(r.references.map(x=>[x.entry,x.page]),[['123456',1],['234567',1],['345678',2],['456789',2]]);
+assert(r.references.every(x=>x.applicability==='unverified'));
+assert.equal(r.basis[0].geometryRegistered,false);
+assert.deepEqual(r.lots,[{lot:'4',page:1},{lot:'4',page:2}]);
+assert.equal(extract(['No recording reference. 123456']).references.length,0);
+console.log('Survey source-reference extraction checks passed.');
+if(process.argv[2])read(process.argv[2]).then(r=>{assert(r.pagesRead>0);assert(r.sha256.length===64);assert.equal(r.geometryRegistered,false);console.log(JSON.stringify(r,null,2));}).catch(e=>{console.error(e);process.exitCode=1;});

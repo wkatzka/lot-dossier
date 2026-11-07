@@ -14,7 +14,7 @@
     'Garfield', 'Wayne', 'Sevier', 'Millard', 'Beaver', 'Piute', 'Daggett'];
 
   var CHECKLIST = [
-    ['land', 'Land, zoning & jurisdiction'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
+    ['land', 'Land, zoning & jurisdiction'], ['minerals', 'Mineral interests & title'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
     ['septic', 'Septic / perc'], ['utilities', 'Power, gas & internet'], ['access', 'Access & fire protection'],
     ['easements', 'Easements & recorded restrictions'], ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['pool', 'Pool feasibility'], ['plan', 'Your plan vs. this lot']
   ];
@@ -1980,6 +1980,37 @@
   C.check_pool = async function (ctx) {
     return root.PoolScreen.screen(ctx.facts);
   };
+  C.check_minerals = async function (ctx) {
+    var result = await root.MineralScreen.screen(ctx.parcel.rings);
+    ctx.facts.minerals = result.result;
+    return result.findings;
+  };
+  C.check_public_surveys = async function (ctx) {
+    var source='https://www.webercountyutah.gov/forms/survey_index/', name=ctx.parcel.attrs.SUBDIV_NAME;
+    if(ctx.parcel.county!=='Weber'||!name) return [F('survey','Public filed-survey discovery','verify','Survey discovery needs additional coverage',ctx.parcel.county!=='Weber'?'The automated filed-survey index currently covers Weber County.':'No subdivision name is available for index matching. Coordinate and historical-name discovery are not yet implemented.')];
+    var result=await apiGet('/api/surveys?county=Weber&q='+encodeURIComponent(name),25000);
+    ctx.facts.publicSurveys=result;
+    if(result.error||!Array.isArray(result.candidates))return [F('survey','Public filed-survey discovery','verify','Filed-survey source unavailable',String(result.error||'Unexpected response')+'. This does not establish that no survey exists.','Weber County survey index',source)];
+    var findings=[F('survey','Public filed-survey discovery','verify',result.totalMatches+' candidate survey index record(s)',
+      'Searched the public filed-survey index by subdivision-name words. '+result.matchBasis+' Retrieved '+result.retrievedAt+'. '+(result.truncated?'Showing the first 20 matches; additional candidates remain. ':'')+'Name matching does not establish that a survey covers this lot. A zero-match result does not establish absence of surveys under other names. Geometry extraction and applicability review remain open.','Weber County survey index',source)];
+    result.candidates.forEach(function(s){findings.push(F('survey','Candidate filed survey '+s.recordNumber,'verify',s.name,
+      'Filed '+s.filedDate+'; '+s.pages+' indexed page(s); township '+s.township+', range '+s.range+', section '+s.section+'. '+(s.url?'Public original PDF linked. ':'No original PDF link was available in this index row. ')+'Boundary coverage, current applicability and georeferencing have not been verified.','Weber County filed survey '+s.recordNumber,s.url||source));});
+    var readable=result.candidates.filter(function(s){return !!s.url;}).slice(0,3);
+    result.documents=await Promise.all(readable.map(async function(s){
+      var doc=await apiGet('/api/survey-document?record='+encodeURIComponent(s.recordNumber),75000);
+      if(doc.error)return {recordNumber:s.recordNumber,error:doc.error};
+      return doc;
+    }));
+    result.documents.forEach(function(doc){
+      if(doc.error){findings.push(F('survey','Survey reading '+doc.recordNumber,'verify','Public survey could not be read',String(doc.error)+'; source discovery remains available.','Weber County survey index',source));return;}
+      findings.push(F('survey','Survey reading '+doc.recordNumber,'verify',doc.pagesRead+' of '+doc.totalPages+' pages read',
+        (doc.partial?'Reading is incomplete. ':'')+(doc.textStatus==='unreadable_text'?'Insufficient machine-readable text; OCR remains required. ':'')+doc.limitation,'Public filed survey '+doc.recordNumber,doc.url));
+      (doc.references||[]).forEach(function(ref){findings.push(F('survey','Survey '+doc.recordNumber+' entry '+ref.entry+' page '+ref.page,'verify','Recording reference discovered: '+ref.entry,
+        ref.excerpt+' — This is a subdivision-document reference; whether it burdens this lot and remains effective has not been determined.','Filed survey '+doc.recordNumber+', page '+ref.page,doc.url+'#page='+ref.page));});
+    });
+    if(result.candidates.filter(function(s){return !!s.url;}).length>readable.length)findings.push(F('survey','Additional survey reading','verify','Additional candidate documents remain unread','Automatic PDF reading is limited to three candidates per report; the remaining source links are listed above.'));
+    return findings;
+  };
 
   var STEPS = [
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
@@ -1987,7 +2018,7 @@
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
-    ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
+    ['check_public_surveys', 'Public filed surveys'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
   async function run(parcel, plan, costs, onStep, documents) {

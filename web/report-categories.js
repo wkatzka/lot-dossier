@@ -1,7 +1,7 @@
 /* Progressive disclosure for the interactive report; exported reports retain every section. */
 (function () {
   'use strict';
-  const labels = {land:'Land & zoning',water:'Water rights',geo:'Geologic hazards',septic:'Septic & sewer',utilities:'Utilities',access:'Access & fire',easements:'Easements',ccr:'CC&Rs & design review',survey:'Survey & terrain',permits:'Codes & loads',performance:'Home performance',pool:'Pool feasibility',plan:'Plan compatibility'};
+  const labels = {land:'Land & zoning',minerals:'Mineral interests',water:'Water rights',geo:'Geologic hazards',septic:'Septic & sewer',utilities:'Utilities',access:'Access & fire',easements:'Easements',ccr:'CC&Rs & design review',survey:'Survey & terrain',permits:'Codes & loads',performance:'Home performance',pool:'Pool feasibility',plan:'Plan compatibility'};
   function mount(root) {
     const groups = Array.from(root.querySelectorAll('.group[data-category]'));
     const categories = [];

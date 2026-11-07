@@ -522,14 +522,14 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
 /* The same photographic canvas and palette as the public landing page. */
 @media screen{
-#project-workspace{background:transparent;color:var(--ink);padding-top:24px;padding-bottom:60px}
+#project-workspace{--bg:rgba(12,16,14,.42);--bg-2:rgba(12,16,14,.55);--panel:rgba(12,16,14,.62);--ink:#f7f6f0;--muted:#e3e2da;--line:rgba(242,239,226,.28);--brand:#f7f6f0;--brand-ink:#20231e;--accent:#dfc8a6;--focus:#ecd3ac;--flag:#ffaaa0;--watch:#ffd493;--verify:#add4ff;--ok:#afe0bb;background:transparent;color:var(--ink);padding-top:24px;padding-bottom:60px;color-scheme:dark}
 #project-workspace .wordmark{color:var(--ink)}
 #project-workspace h1{font-family:Manrope,Arial,sans-serif;font-size:clamp(25px,3vw,38px);margin-top:38px}
 #project-workspace .pw-card{background:rgba(12,18,15,.84);border:1px solid var(--line);border-radius:16px;padding:26px;backdrop-filter:blur(8px)}
 #project-workspace .pw-muted{color:var(--muted)}
 #project-workspace button,#project-workspace .pw-link{border:1px solid rgba(245,244,238,.35);background:rgba(17,24,20,.7);color:var(--ink);border-radius:999px;font-weight:600}
 #project-workspace button:hover:not(:disabled),#project-workspace .pw-link:hover{border-color:#ed7a44;background:rgba(80,49,28,.85)}
-#project-workspace button[aria-selected=true],#project-workspace button.primary{background:#dfc49d;color:#19251e;border-color:#dfc49d}
+#project-workspace button[aria-selected=true],#project-workspace button.primary{background:#f0eee4;color:#20231e;border-color:#f0eee4}
 #project-workspace input:not([type=checkbox]),#project-workspace textarea,#project-workspace select{color:var(--ink);background:#17201a;border-color:var(--line);color-scheme:dark}
 #project-workspace .pw-warning{color:var(--ink);background:rgba(42,29,19,.88);border-radius:0 10px 10px 0;font-size:14px}
 #project-workspace a{color:#e4c69e}#project-workspace .pw-status{color:#efb17b}
@@ -793,7 +793,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
             </div>
           </div>
 <p id="plan-error" class="err" role="alert"></p><p id="plan-update-status" role="status"></p><button class="btn" id="plan-apply" type="submit">Update site report</button></form></dialog><script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "13bea74b48", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
+<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "77ad707907", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
 <script>
 /* Evidence, not legal interpretation: preserve every sheet and keep lot attribution uncertain. */
 (function (root) {
@@ -972,6 +972,82 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
 </script>
 <script>
+/* Public mineral-interest discovery; never a private mineral title determination. */
+(function(root){
+  'use strict';
+  const SOURCE='https://gis.trustlands.utah.gov/mapping/rest/services/Ownership_Mineral/MapServer/0';
+  const LIMIT=500;
+  function polygon(rings){
+    if(!Array.isArray(rings)||!rings.length)throw new Error('Mapped parcel boundary unavailable.');
+    let n=0;
+    const copy=rings.map(r=>{
+      if(!Array.isArray(r)||r.length<4)throw new Error('Invalid parcel ring.');
+      const coords=r.map(p=>{
+        n++;if(!Array.isArray(p)||p.length<2||!Number.isFinite(p[0])||!Number.isFinite(p[1])||p[0]<-115||p[0]>-108||p[1]<36||p[1]>43)throw new Error('Parcel coordinates must be Utah longitude/latitude.');
+        return [p[0],p[1]];
+      });
+      if(coords[0][0]!==coords.at(-1)[0]||coords[0][1]!==coords.at(-1)[1])throw new Error('Parcel ring is not closed.');
+      return coords;
+    });
+    if(n>10000)throw new Error('Parcel geometry exceeds the screening limit.');
+    return {rings:copy,spatialReference:{wkid:4326}};
+  }
+  async function request(params){
+    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),15000);
+    try{
+      const r=await fetch(SOURCE+'/query',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({...params,f:'json'}).toString(),signal:ctl.signal});
+      if(!r.ok)throw new Error('Mineral source HTTP '+r.status);
+      const d=await r.json();if(d.error)throw new Error(d.error.message||'Mineral source query failed.');return d;
+    }finally{clearTimeout(timer);}
+  }
+  async function lookup(rings,query=request){
+    const geometry=polygon(rings), attemptedAt=new Date().toISOString();
+    const spatial={where:'1=1',geometry:JSON.stringify(geometry),geometryType:'esriGeometryPolygon',inSR:4326,spatialRel:'esriSpatialRelIntersects'};
+    const index=await query({...spatial,returnIdsOnly:true});
+    // Some ArcGIS services represent an empty ID result as null. Independently
+    // confirm a zero count before interpreting that response as no matches.
+    if(!index.error&&!index.exceededTransferLimit&&index.objectIds===null){
+      const count=await query({...spatial,returnCountOnly:true});
+      if(!count.error&&!count.exceededTransferLimit&&count.count===0)index.objectIds=[];
+    }
+    if(index.error||index.exceededTransferLimit||!Array.isArray(index.objectIds))throw new Error('Mineral source did not return a complete record-ID inventory.');
+    const ids=Array.from(new Set(index.objectIds));
+    if(ids.some(id=>!Number.isSafeInteger(id)||id<0)||ids.length>LIMIT)throw new Error('Mineral source inventory is invalid or exceeds the screening limit.');
+    const records=[];
+    for(let i=0;i<ids.length;i+=100){
+      const batch=ids.slice(i,i+100), d=await query({objectIds:batch.join(','),outFields:'objectid,oilgasown,coalown,otherown,legalown,countylabel',returnGeometry:false});
+      if(d.error||d.exceededTransferLimit||!Array.isArray(d.features))throw new Error('Mineral source returned incomplete record details.');
+      const seen=new Set();
+      for(const feature of d.features){
+        const a=feature.attributes||{};
+        if(!batch.includes(a.objectid)||seen.has(a.objectid))throw new Error('Mineral source record IDs do not reconcile.');seen.add(a.objectid);
+        const interest=v=>v===1?'mapped interest':v===0?'not indicated by this record':'unknown';
+        records.push({sourceId:a.objectid,oilGas:interest(a.oilgasown),coal:interest(a.coalown),other:interest(a.otherown),legalDescription:String(a.legalown||'').trim(),county:String(a.countylabel||'').trim(),sourceUrl:SOURCE+'/query?f=pjson&objectIds='+a.objectid+'&outFields=*&returnGeometry=false'});
+      }
+      if(seen.size!==batch.length)throw new Error('Mineral source omitted requested records.');
+    }
+    return {schemaVersion:1,status:'retrieved',source:SOURCE,attemptedAt,retrievedAt:new Date().toISOString(),sourceEffectiveDate:null,
+      coverage:'Utah Trust Lands mineral interests only',geometryBasis:'Mapped parcel polygon, not a survey',matchRule:'Intersects, including possible boundary touches',records,
+      privateTitleStatus:'not_researched',federalStatus:'not_checked',ownershipDetermined:false};
+  }
+  function findings(result){
+    const base={section:'minerals',source:'Utah Trust Lands mineral ownership',url:SOURCE,status:'verify'};
+    if(result.status!=='retrieved')return [{...base,item:'State mineral-interest screen',headline:'Mineral source check unavailable',detail:'No ownership conclusion was made. '+(result.error||'The source could not be verified.'),next_step:'Retry the source check; the mineral-title research remains open.'}];
+    const names={oilGas:'oil and gas',coal:'coal',other:'other minerals'};
+    const details=result.records.map(r=>'Record '+r.sourceId+': '+Object.keys(names).map(k=>names[k]+' — '+r[k]).join('; ')+(r.legalDescription?'. Source legal description: '+r.legalDescription:'')+'.').join(' ');
+    return [{...base,status:result.records.length?'watch':'verify',item:'State mineral-interest screen',headline:result.records.length?result.records.length+' Trust Lands mineral record(s) intersect the mapped parcel':'No intersecting Trust Lands mineral records returned',
+      detail:(details?details+' ':'')+'Queried the whole mapped parcel, not just its center. Intersections may include boundary touches and do not establish parcel-wide ownership, fractional interests or surveyed overlap. Retrieved '+result.retrievedAt+'; source effective date not supplied. An empty state-layer result does not establish mineral ownership or exclude federal or private interests.',next_step:'Reconcile any mapped candidates with the applicable source instruments and survey.'},
+      {...base,item:'Private and federal mineral title',headline:'Mineral ownership is not determined',detail:'Private mineral reservations, conveyances, fractional interests and subsequent transfers have not been traced. Federal records have not yet been checked. Surface ownership does not establish mineral ownership.',next_step:'Complete the dated mineral-title chain and review applicable surface-use rights before treating ownership as established.'}];
+  }
+  async function screen(rings,query){
+    let result;try{result=await lookup(rings,query);}catch(e){result={schemaVersion:1,status:'unavailable',attemptedAt:new Date().toISOString(),source:SOURCE,error:String(e.message||e),ownershipDetermined:false};}
+    return {result,findings:findings(result)};
+  }
+  const api={SOURCE,polygon,lookup,screen,findings};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MineralScreen=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+<script>
 /* Lot dossier engine: runs entirely in the browser (or Node 18+).
  * A port of lotreport/*.py. Every data source below sends CORS headers, so no server is needed. */
 (function (root) {
@@ -988,7 +1064,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
     'Garfield', 'Wayne', 'Sevier', 'Millard', 'Beaver', 'Piute', 'Daggett'];
 
   var CHECKLIST = [
-    ['land', 'Land, zoning & jurisdiction'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
+    ['land', 'Land, zoning & jurisdiction'], ['minerals', 'Mineral interests & title'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
     ['septic', 'Septic / perc'], ['utilities', 'Power, gas & internet'], ['access', 'Access & fire protection'],
     ['easements', 'Easements & recorded restrictions'], ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['pool', 'Pool feasibility'], ['plan', 'Your plan vs. this lot']
   ];
@@ -2954,6 +3030,37 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
   C.check_pool = async function (ctx) {
     return root.PoolScreen.screen(ctx.facts);
   };
+  C.check_minerals = async function (ctx) {
+    var result = await root.MineralScreen.screen(ctx.parcel.rings);
+    ctx.facts.minerals = result.result;
+    return result.findings;
+  };
+  C.check_public_surveys = async function (ctx) {
+    var source='https://www.webercountyutah.gov/forms/survey_index/', name=ctx.parcel.attrs.SUBDIV_NAME;
+    if(ctx.parcel.county!=='Weber'||!name) return [F('survey','Public filed-survey discovery','verify','Survey discovery needs additional coverage',ctx.parcel.county!=='Weber'?'The automated filed-survey index currently covers Weber County.':'No subdivision name is available for index matching. Coordinate and historical-name discovery are not yet implemented.')];
+    var result=await apiGet('/api/surveys?county=Weber&q='+encodeURIComponent(name),25000);
+    ctx.facts.publicSurveys=result;
+    if(result.error||!Array.isArray(result.candidates))return [F('survey','Public filed-survey discovery','verify','Filed-survey source unavailable',String(result.error||'Unexpected response')+'. This does not establish that no survey exists.','Weber County survey index',source)];
+    var findings=[F('survey','Public filed-survey discovery','verify',result.totalMatches+' candidate survey index record(s)',
+      'Searched the public filed-survey index by subdivision-name words. '+result.matchBasis+' Retrieved '+result.retrievedAt+'. '+(result.truncated?'Showing the first 20 matches; additional candidates remain. ':'')+'Name matching does not establish that a survey covers this lot. A zero-match result does not establish absence of surveys under other names. Geometry extraction and applicability review remain open.','Weber County survey index',source)];
+    result.candidates.forEach(function(s){findings.push(F('survey','Candidate filed survey '+s.recordNumber,'verify',s.name,
+      'Filed '+s.filedDate+'; '+s.pages+' indexed page(s); township '+s.township+', range '+s.range+', section '+s.section+'. '+(s.url?'Public original PDF linked. ':'No original PDF link was available in this index row. ')+'Boundary coverage, current applicability and georeferencing have not been verified.','Weber County filed survey '+s.recordNumber,s.url||source));});
+    var readable=result.candidates.filter(function(s){return !!s.url;}).slice(0,3);
+    result.documents=await Promise.all(readable.map(async function(s){
+      var doc=await apiGet('/api/survey-document?record='+encodeURIComponent(s.recordNumber),75000);
+      if(doc.error)return {recordNumber:s.recordNumber,error:doc.error};
+      return doc;
+    }));
+    result.documents.forEach(function(doc){
+      if(doc.error){findings.push(F('survey','Survey reading '+doc.recordNumber,'verify','Public survey could not be read',String(doc.error)+'; source discovery remains available.','Weber County survey index',source));return;}
+      findings.push(F('survey','Survey reading '+doc.recordNumber,'verify',doc.pagesRead+' of '+doc.totalPages+' pages read',
+        (doc.partial?'Reading is incomplete. ':'')+(doc.textStatus==='unreadable_text'?'Insufficient machine-readable text; OCR remains required. ':'')+doc.limitation,'Public filed survey '+doc.recordNumber,doc.url));
+      (doc.references||[]).forEach(function(ref){findings.push(F('survey','Survey '+doc.recordNumber+' entry '+ref.entry+' page '+ref.page,'verify','Recording reference discovered: '+ref.entry,
+        ref.excerpt+' — This is a subdivision-document reference; whether it burdens this lot and remains effective has not been determined.','Filed survey '+doc.recordNumber+', page '+ref.page,doc.url+'#page='+ref.page));});
+    });
+    if(result.candidates.filter(function(s){return !!s.url;}).length>readable.length)findings.push(F('survey','Additional survey reading','verify','Additional candidate documents remain unread','Automatic PDF reading is limited to three candidates per report; the remaining source links are listed above.'));
+    return findings;
+  };
 
   var STEPS = [
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
@@ -2961,7 +3068,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
-    ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
+    ['check_public_surveys', 'Public filed surveys'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
   async function run(parcel, plan, costs, onStep, documents) {
@@ -3783,7 +3890,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 /* Progressive disclosure for the interactive report; exported reports retain every section. */
 (function () {
   'use strict';
-  const labels = {land:'Land & zoning',water:'Water rights',geo:'Geologic hazards',septic:'Septic & sewer',utilities:'Utilities',access:'Access & fire',easements:'Easements',ccr:'CC&Rs & design review',survey:'Survey & terrain',permits:'Codes & loads',performance:'Home performance',pool:'Pool feasibility',plan:'Plan compatibility'};
+  const labels = {land:'Land & zoning',minerals:'Mineral interests',water:'Water rights',geo:'Geologic hazards',septic:'Septic & sewer',utilities:'Utilities',access:'Access & fire',easements:'Easements',ccr:'CC&Rs & design review',survey:'Survey & terrain',permits:'Codes & loads',performance:'Home performance',pool:'Pool feasibility',plan:'Plan compatibility'};
   function mount(root) {
     const groups = Array.from(root.querySelectorAll('.group[data-category]'));
     const categories = [];

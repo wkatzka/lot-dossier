@@ -16,14 +16,14 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
 /* The same photographic canvas and palette as the public landing page. */
 @media screen{
-#project-workspace{background:transparent;color:var(--ink);padding-top:24px;padding-bottom:60px}
+#project-workspace{--bg:rgba(12,16,14,.42);--bg-2:rgba(12,16,14,.55);--panel:rgba(12,16,14,.62);--ink:#f7f6f0;--muted:#e3e2da;--line:rgba(242,239,226,.28);--brand:#f7f6f0;--brand-ink:#20231e;--accent:#dfc8a6;--focus:#ecd3ac;--flag:#ffaaa0;--watch:#ffd493;--verify:#add4ff;--ok:#afe0bb;background:transparent;color:var(--ink);padding-top:24px;padding-bottom:60px;color-scheme:dark}
 #project-workspace .wordmark{color:var(--ink)}
 #project-workspace h1{font-family:Manrope,Arial,sans-serif;font-size:clamp(25px,3vw,38px);margin-top:38px}
 #project-workspace .pw-card{background:rgba(12,18,15,.84);border:1px solid var(--line);border-radius:16px;padding:26px;backdrop-filter:blur(8px)}
 #project-workspace .pw-muted{color:var(--muted)}
 #project-workspace button,#project-workspace .pw-link{border:1px solid rgba(245,244,238,.35);background:rgba(17,24,20,.7);color:var(--ink);border-radius:999px;font-weight:600}
 #project-workspace button:hover:not(:disabled),#project-workspace .pw-link:hover{border-color:#ed7a44;background:rgba(80,49,28,.85)}
-#project-workspace button[aria-selected=true],#project-workspace button.primary{background:#dfc49d;color:#19251e;border-color:#dfc49d}
+#project-workspace button[aria-selected=true],#project-workspace button.primary{background:#f0eee4;color:#20231e;border-color:#f0eee4}
 #project-workspace input:not([type=checkbox]),#project-workspace textarea,#project-workspace select{color:var(--ink);background:#17201a;border-color:var(--line);color-scheme:dark}
 #project-workspace .pw-warning{color:var(--ink);background:rgba(42,29,19,.88);border-radius:0 10px 10px 0;font-size:14px}
 #project-workspace a{color:#e4c69e}#project-workspace .pw-status{color:#efb17b}

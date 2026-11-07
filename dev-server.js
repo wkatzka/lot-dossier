@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const routes = { '/api/plat-bundle': require('./api/plat-bundle'), '/api/hoa': require('./api/hoa'), '/api/parcel-docs': require('./api/parcel-docs'), '/api/plat-sheet': require('./api/plat-sheet'), '/api/notices': require('./api/notices'), '/api/packet-ocr': require('./api/packet-ocr'), '/api/watch': require('./api/watch') };
+const routes = { '/api/survey-document': require('./api/survey-document'), '/api/surveys': require('./api/surveys'), '/api/plat-bundle': require('./api/plat-bundle'), '/api/hoa': require('./api/hoa'), '/api/parcel-docs': require('./api/parcel-docs'), '/api/plat-sheet': require('./api/plat-sheet'), '/api/notices': require('./api/notices'), '/api/packet-ocr': require('./api/packet-ocr'), '/api/watch': require('./api/watch') };
 const port = +process.env.PORT || 3000;
 
 http.createServer((req, res) => {
