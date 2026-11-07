@@ -1149,10 +1149,10 @@
       var z = fx.zone_std, ew = d[0], ed = d[1], setTxt = '';
       if (z && z.front != null) { ew = d[0] - 2 * z.side; ed = d[1] - z.front - z.rear; setTxt = ' after ' + z.zone + ' setbacks (front ' + z.front + "', side " + z.side + "', rear " + z.rear + "')"; }
       var fits = bw <= ew && bd <= ed;
-      out.push(P('Footprint vs. buildable area', fits ? (bw < ew - 20 ? 'ok' : 'watch') : 'flag',
-        Math.round(bw) + "' x " + Math.round(bd) + "' envelope vs. ~" + Math.max(0, Math.round(ew)) + "' x " + Math.max(0, Math.round(ed)) + "' buildable" + setTxt,
-        (fits ? 'The house fits the buildable area of the lot\'s bounding rectangle' + setTxt + '.' : 'The house does not fit the buildable area' + setTxt + '.') +
-        ' The lot is irregular, so confirm on the survey with the actual setback lines' + from('width_ft') + '.', null,
+      out.push(P('Footprint vs. setback-only dimensions', fits ? 'verify' : 'flag',
+        Math.round(bw) + "' x " + Math.round(bd) + "' envelope vs. ~" + Math.max(0, Math.round(ew)) + "' x " + Math.max(0, Math.round(ed)) + "' setback-only dimensions" + setTxt,
+        (fits ? 'The envelope fits an approximate bounding-rectangle screen' + setTxt + '.' : 'The envelope exceeds the approximate bounding-rectangle screen' + setTxt + '.') +
+        ' This is not a verified buildable area: easements and other no-build restrictions have not been subtracted. Confirm the actual lot shape and setback lines on the survey' + from('width_ft') + '.', null,
         'Overlay the footprint on the survey with setbacks, the septic field and any no-build areas.'));
     }
     if (p.height_ft && fx.zone_std && fx.zone_std.height) out.push(P('Building height', p.height_ft <= fx.zone_std.height ? 'ok' : 'flag',

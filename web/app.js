@@ -228,7 +228,7 @@
     return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · coverage incomplete</div><h2>Easements &amp; the complete plat set</h2>' +
       '<p>' + (coverage.processed || 0) + ' of ' + (coverage.total || 0) + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
       '<p>A single sheet may cut through a lot. Read the adjoining drawings and the notes, dedication and legend sheets together. Original scans are preserved; we do not invent or stitch easement geometry.</p>' +
-      (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" target="_blank" rel="noopener">Download all linked plat sheets (PDF)</a></p>' : '') +
+      (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" download="recorded-plat.pdf">Download all linked plat sheets (PDF)</a></p>' : '') +
       (preferred ? '<p>Suggested starting sheet: <a href="' + esc(preferred.url) + '" target="_blank" rel="noopener">' + esc(preferred.sheet) + '</a>. Selected by lot-label position; confirm the entire boundary visually.</p>' : '') +
       '<ul class="plat-sheets">' + sources + '</ul>' +
       (readings.length ? '<p>Lot facts are combined across these sheets; a preferred sheet is a navigation aid, not the sole source.</p>' : '') +
@@ -292,7 +292,7 @@
     }
     var legal = a.SUBDIV_NAME || '';
     var pc = f.filter(function (x) { return x.section === 'plan' && (x.status === 'flag' || x.status === 'watch'); });
-    var planSum = plan ? '<h2 style="margin-top:18px">Plan conflicts</h2><ul class="top">' + (pc.length ? pc.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No conflicts between the plan and the lot found.</li>') + '</ul>' : '';
+    var planSum = plan ? '<h2 style="margin-top:18px">Plan conflicts</h2><ul class="top">' + (pc.length ? pc.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No confirmed conflicts in the checks completed. ' + f.filter(function (x) { return x.section === 'plan' && x.status === 'verify'; }).length + ' plan checks still need verification, including easement clearance.</li>') + '</ul>' : '';
     var date = r.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     return '<div class="wrap"><div class="eyebrow">Due diligence dossier · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
       '<div class="meta"><span>' + esc((a.PARCEL_CITY || '') + ', UT') + '</span><span>' + esc(legal) + '</span><span>Parcel ' + esc(r.parcel.id) + ' · ' + esc(r.parcel.county) +
