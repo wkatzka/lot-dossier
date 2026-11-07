@@ -17,10 +17,10 @@ Mineral research shares the title chain. Public comparable and market-evidence a
 
 ### A. Source access and pilot evidence inventory
 
-- A1: Test the official state mineral service schema, spatial queries, browser access, partial results and failures. Preserve source record IDs and retrieval timestamps. **Implemented and tested against a live positive-control source polygon; pilot browser verification pending.**
+- A1: Test the official state mineral service schema, spatial queries, browser access, partial results and failures. Preserve source record IDs and retrieval timestamps. **Implemented and tested against a live positive-control source polygon; pilot browser verification passed.**
 - A2: Verify county abstract/instrument retrieval, parent-parcel search, image coverage, automated retrieval/caching/display rights and credentials. Subscription existence does not establish API rights. **Investigated; access not established.**
 - A3: Build the pilot evidence inventory from public parcel history, recorded references and filed survey sources. Match legal description, parcel and effective dates; do not wait for user-provided documents. **Public survey discovery implemented; title-instrument discovery/reconciliation remains incomplete.**
-- A4: Investigate county survey index and public surveys as discovery sources; distinguish indexed coverage from a current boundary/topographic survey. **Public index adapter implemented and live-tested; original links discovered. Survey applicability and geometry remain unverified.**
+- A4: Investigate county survey index and public surveys as discovery sources; distinguish indexed coverage from a current boundary/topographic survey. **Public index adapter implemented and live-tested; original links discovered and five-page pilot PDF read successfully with page-cited recording references. Survey applicability and geometry remain unverified.**
 - A5: Audit publicly available transaction prices, public market statistics, permitted listing observations and public cost/fee sources. Separate actual closed-sale prices from asking prices and assessed values. **Public coverage audit not completed.**
 - A6: Confirm federal mineral-status coverage and original-patent discovery paths. State and federal screens must not label the remainder privately owned. **Source identified; connector not implemented.**
 
