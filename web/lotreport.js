@@ -1063,25 +1063,27 @@
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
     out.push(P('House and driveway vs. easements', 'verify', 'Easement clearance has not been established',
       'The plat evidence section preserves candidate restrictions and all linked sheets, but easement boundaries are not mapped. A house that fits zoning setbacks can still intersect a utility, access, drainage or other easement. Neither the house nor the driveway has been cleared against them.'));
-    var wt = fx.water_table_in;
-    if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) wt = Math.round(fx.boreholes.gwMin * 12);
+    var wt = fx.water_table_in, wtSource = 'Mapped soil-survey estimate';
+    if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) {
+      wt = Math.round(fx.boreholes.gwMin * 12); wtSource = 'Nearby boring archive';
+    }
+    var wtEvidence = wtSource + ': approximately ' + wt + ' in below ground. This is not a groundwater measurement at the proposed foundation.';
 
     // Foundation vs. seasonal groundwater
     if (p.foundation === 'basement' && wt != null && wt < 60) out.push(P('Foundation vs. groundwater', 'flag',
-      'Basement planned, but the seasonal water table is ~' + wt + ' in below the surface',
-      'The plan shows a basement' + from('foundation') + '. The soil survey puts the seasonal high water table at about ' + wt + ' inches and rates these soils "' + (fx.basement_rating || 'limited').toLowerCase() +
-      '" for basements. A basement here would sit in groundwater part of the year: expect full waterproofing, perimeter drains to daylight or a sump, possibly dewatering during construction, or redesigning to a raised crawlspace or slab.',
+      'Basement plan needs groundwater review; available evidence indicates ~' + wt + ' in',
+      'The plan shows a basement' + from('foundation') + '. ' + wtEvidence + ' If confirmed at basement depth, groundwater could require waterproofing, drainage, construction dewatering or a different foundation design. Seasonal site measurements and geotechnical design are still needed.',
       ctx.cost('basement_waterproofing'), 'Have the geotech measure groundwater (test pits in spring) before committing to the basement.'));
     else if (p.foundation === 'crawlspace' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'watch',
-      'Crawlspace planned with a seasonal water table ~' + wt + ' in down',
-      'Crawlspaces dug below the seasonal water table flood. Keep the crawlspace floor above grade where possible, raise finish grades, and add a sealed vapor barrier and sump.', null,
+      'Crawlspace plan needs groundwater review; available evidence indicates ~' + wt + ' in',
+      wtEvidence + ' Compare the proposed floor elevation with seasonal site measurements before selecting drainage and moisture-control details.', null,
       'Ask the geotech for the minimum crawlspace floor elevation.'));
-    else if (p.foundation === 'slab' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'ok',
-      'Slab on grade suits the shallow water table (~' + wt + ' in)',
-      'A slab with a capillary break and raised finish grade avoids most groundwater problems on this lot' + from('foundation') + '. Keep footings at frost depth with footing drains.'));
+    else if (p.foundation === 'slab' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'verify',
+      'Slab proposed; shallow-groundwater evidence still needs site verification',
+      wtEvidence + ' Slab elevation, bearing, capillary protection and drainage require site-specific design' + from('foundation') + '. A slab selection alone does not resolve groundwater risk.'));
     else if (!p.foundation && wt != null && wt < 60) out.push(P('Foundation vs. groundwater', 'verify',
-      'Foundation type not found in the plan; water table is ~' + wt + ' in',
-      'Choose slab or a shallow crawlspace over a basement here unless a geotech report shows deeper groundwater.'));
+      'Foundation type not found; shallow groundwater indicated in available evidence',
+      wtEvidence + ' Establish seasonal groundwater and compare foundation options with the geotechnical engineer.'));
 
     // Septic sizing by bedrooms
     if (fx.septic && fx.septic.required && p.bedrooms) {
@@ -1988,14 +1990,16 @@
     ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
-  async function run(parcel, plan, costs, onStep) {
+  async function run(parcel, plan, costs, onStep, documents) {
     var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: {},
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
     if (ctx.grid.length >= 4) ctx.elevation = lidarSamples(ctx.grid);
     var findings = [];
     ctx.findings = findings;
     // Start the slow document lookup now so it runs alongside the map checks (jurisdiction resolves early; refine later).
-    ctx.docs = fetchDocs(parcel, null);
+    // A plan revision reuses this property's retrieved documents, including missing-record outcomes.
+    // It does not claim to refresh title evidence or silently repeat the slow document downloads.
+    ctx.docs = documents ? Promise.resolve(documents) : fetchDocs(parcel, null);
     for (var i = 0; i < STEPS.length; i++) {
       var id = STEPS[i][0];
       onStep && onStep(id, 'running');
@@ -2005,7 +2009,7 @@
         findings.push(F('land', STEPS[i][1], 'verify', 'Automated check failed', String(e && e.message || e).slice(0, 300)));
       }
     }
-    return { findings: findings, facts: ctx.facts };
+    return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
   }
 
   root.LotReport = { locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };

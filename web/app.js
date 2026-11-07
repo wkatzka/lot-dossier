@@ -6,7 +6,7 @@
   var form = $('form'), prog = $('progress'), err = $('err'), go = $('go');
   var mode = 'none', last = null, map = null;
 
-  var STATUS = { flag: 'Flag', watch: 'Watch', verify: 'Verify', ok: 'Clear' };
+  var STATUS = { flag: 'Potential concern', watch: 'Review condition', verify: 'Needs verification', ok: 'No issue identified' };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -14,7 +14,7 @@
 
   /* ---------------- form */
   var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'fireplace', 'cladding'];
-  var extracted = null;
+  var extracted = null, readingPlan = false, updatingPlan = false, readVersion = 0;
   function setMode(m) {
     mode = m;
     document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
@@ -37,8 +37,10 @@
 
   async function handleFile(file) {
     if (!file) return;
-    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { err.textContent = 'Choose a PDF plan set.'; return; }
-    err.textContent = '';
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { $('plan-error').textContent = 'Choose a PDF plan set.'; return; }
+    var version = ++readVersion;
+    readingPlan = true; $('plan-apply').disabled = true;
+    $('plan-error').textContent = '';
     extracted = null; setMode('upload');
     $('parse').hidden = false;
     var st = $('parse-status'); st.className = 'status';
@@ -46,6 +48,7 @@
     $('parse-chips').innerHTML = '';
     try {
       var x = await window.PlanReader.read(file, function (i, n) { $('parse-msg').textContent = 'Reading ' + file.name + ': page ' + i + ' of ' + n; });
+      if (version !== readVersion) return;
       extracted = x;
       if (x.textChars < 200) {
         st.className = 'status warn';
@@ -65,10 +68,13 @@
       fillFields(x);
       setMode('upload');
     } catch (ex) {
+      if (version !== readVersion) return;
       st.className = 'status warn';
       $('parse-msg').textContent = 'Could not read that PDF (' + ex.message + '). Enter the plan details by hand below.';
       extracted = { fields: {}, src: {}, features: [], codes: [], filename: file.name };
       fillFields(extracted); setMode('upload');
+    } finally {
+      if (version === readVersion) { readingPlan = false; $('plan-apply').disabled = false; }
     }
   }
   $('planfile').addEventListener('change', function () { handleFile(this.files[0]); });
@@ -106,7 +112,7 @@
   }
   function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
-    go.disabled = false; go.textContent = 'Generate dossier';
+    go.disabled = false; go.textContent = 'Generate site report';
     err.textContent = msg;
     if (options && options.length) {
       // Offer the matches as one-click choices that fill the address field.
@@ -126,7 +132,9 @@
     err.textContent = '';
     var q = $('address').value.trim();
     if (!/^\d+\s+\S+/.test(q) && !LR.looksLikeParcel(q)) { err.textContent = 'Enter a street address starting with the house number, or a county parcel ID.'; $('address').focus(); return; }
-    var plan = planFromForm();
+    // Every property starts with a site review; never carry another property's plan into it.
+    var plan = null;
+    readVersion++; readingPlan = false; extracted = null; fillFields(null); setMode('none'); $('planfile').value = ''; $('parse').hidden = true;
     go.disabled = true;
     steps.forEach(function (s) { s.state = 'pending'; });
     form.classList.add('off'); prog.classList.add('on');
@@ -149,9 +157,43 @@
       steps.forEach(function (s) { if (s.id === id) s.state = state; }); renderSteps();
     });
     $('phase').textContent = 'Report ready';
-    last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, date: new Date() };
+    last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: new Date() };
     showReport();
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
+  });
+
+  $('rv-plan').addEventListener('click', function () {
+    if (!last) return;
+    $('plan-property').textContent = last.parcel.attrs.PARCEL_ADD || 'Parcel ' + last.parcel.id;
+    $('plan-error').textContent = ''; $('plan-update-status').textContent = '';
+    $('plan-dialog-title').textContent = last.plan ? 'Update building plans' : 'Add building plans';
+    $('plan-apply').disabled = readingPlan;
+    $('plan-dialog').showModal();
+  });
+  $('plan-close').addEventListener('click', function () { if (!updatingPlan) $('plan-dialog').close(); });
+  $('plan-dialog').addEventListener('cancel', function (e) { if (updatingPlan) e.preventDefault(); });
+  $('plan-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!last || readingPlan || updatingPlan) return;
+    var plan = planFromForm();
+    if (mode !== 'none' && !plan) { $('plan-error').textContent = 'Upload a readable plan or enter at least one plan detail.'; return; }
+    if (!$('plan-form').reportValidity()) return;
+    updatingPlan = true;
+    Array.from($('plan-form').elements).forEach(function (el) { el.disabled = true; });
+    $('plan-error').textContent = '';
+    try {
+      var prior = last;
+      var res = await LR.run(prior.parcel, plan, DATA.costs, function (id, state) {
+        if (state === 'running') $('plan-update-status').textContent = 'Updating: ' + (LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1];
+      }, prior.documents);
+      last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
+      $('plan-dialog').close(); showReport(true);
+    } catch (ex) {
+      $('plan-error').textContent = 'The plan check could not finish. Your previous report is unchanged. ' + (ex.message || ex);
+    } finally {
+      updatingPlan = false;
+      Array.from($('plan-form').elements).forEach(function (el) { el.disabled = false; });
+    }
   });
 
   /* ---------------- checklist store: statuses and attached files, kept in this browser per parcel */
@@ -251,7 +293,7 @@
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = r.findings, plan = r.plan;
     var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
-    var costs = rollup(f), lo = costs.reduce(function (s, x) { return s + x.cost.low; }, 0), hi = costs.reduce(function (s, x) { return s + x.cost.high; }, 0);
+    var costs = rollup(f);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
       var k = itemKey(x), st = (state && state[k]) || { status: 'todo', files: [] }, chk = '';
@@ -265,7 +307,7 @@
       }
       return '<article class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
-        (x.cost && x.status !== 'ok' ? '<div class="cost">' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
+        (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
         '<div class="src">' + src + '</div>' + chk + '</div></article>';
     };
     var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
@@ -275,7 +317,7 @@
       return '<section class="group"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return x.status === 'flag'; });
-    var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
+    var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
     var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
@@ -304,17 +346,17 @@
     var pc = f.filter(function (x) { return x.section === 'plan' && (x.status === 'flag' || x.status === 'watch'); });
     var planSum = plan ? '<h2 style="margin-top:18px">Plan conflicts</h2><ul class="top">' + (pc.length ? pc.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No confirmed conflicts in the checks completed. ' + f.filter(function (x) { return x.section === 'plan' && x.status === 'verify'; }).length + ' plan checks still need verification, including easement clearance.</li>') + '</ul>' : '';
     var date = r.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    return '<div class="wrap"><div class="eyebrow">Due diligence dossier · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
+    return '<div class="wrap"><div class="eyebrow">Site report · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
       '<div class="meta"><span>' + esc((a.PARCEL_CITY || '') + ', UT') + '</span><span>' + esc(legal) + '</span><span>Parcel ' + esc(r.parcel.id) + ' · ' + esc(r.parcel.county) +
       ' County</span><span>' + esc(a.PARCEL_ACRES) + ' acres</span></div>' +
       '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
-      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Flags</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Watch</span></div>' +
-      '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
+      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
+      '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>No issue identified</span></div></div>' +
       checklistSummary(f, state, saved) +
-      '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
+      '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +
+      '<h2 style="margin-top:18px">Priority findings</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
-      '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
+      '<div class="card"><h2>Items to price</h2><details><summary>Unvalidated planning ranges (' + costs.length + ' items)</summary><p>These generic placeholders are not bids or site-specific estimates. They may overlap or represent alternatives; do not add them into a project budget.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></details></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
       'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
   }
@@ -324,7 +366,7 @@
   function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
-    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the dossier again to retry.</p></section>';
+    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
     var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
@@ -448,6 +490,7 @@
   function showReport(fromHistory) {
     $('rv-body').innerHTML = reportHTML(last, null, false);
     document.body.classList.add('show-report');
+    $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
     document.body.classList.remove('chk-only');
     loadChecklist();
     document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);

@@ -45,9 +45,10 @@ def build(api_base, inline_assets=False):
     <span class="wordmark"><!--CORNERPIN_WORDMARK--></span>
     <div class="acts">
       <a class="btn ghost" href="#packet">Permit packet</a>
+      <button class="btn ghost only-live" id="rv-plan" type="button">Add building plans</button>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
-      <button class="btn ghost only-live" id="rv-save" type="button">Save dossier</button>
-      <button class="btn only-live" id="rv-new" type="button">New dossier</button>
+      <button class="btn ghost only-live" id="rv-save" type="button">Download site report</button>
+      <button class="btn only-live" id="rv-new" type="button">Review another property</button>
     </div>
   </nav>
   <div id="rv-body"></div>
@@ -73,7 +74,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
     ])
-    html = html.replace("</body>", report_view + scripts + "\n</body>", 1)
+    html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")
     wordmark = wordmark.replace('<svg ', '<svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" ', 1).replace('fill="#f5f4ee"', 'fill="currentColor"').replace('stroke="#f5f4ee"', 'stroke="currentColor"')
     # Inline the generated outlines so emailed HTML and saved reports carry their own logo.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cornerpin</title>
-<meta name="description" content="Due diligence dossiers for spec home lots in Utah: water, hazards, septic, utilities, zoning and permits from one address, checked against your building plan.">
+<meta name="description" content="Site due diligence for Utah builders. Review mapped constraints, cost considerations, recorded restrictions and permit requirements by address or parcel ID.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -14,81 +14,31 @@
 </head>
 <body>
 
-<a class="skip-link" href="#start">Skip to dossier form</a>
+<a class="skip-link" href="#start">Skip to property search</a>
 <div class="wrap">
   <nav class="top" aria-label="Primary">
     <a class="wordmark" href="#start"><!--CORNERPIN_WORDMARK--></a>
     <div class="links">
       <a href="#checks">What we check</a>
       <a href="#permits">Permit preparation</a>
-      <a class="btn ghost cta" href="#start">Start a dossier</a>
+      <a class="btn ghost cta" href="#start">Review a property</a>
     </div>
   </nav>
 
 <header class="hero" id="start">
     <div>
-      <div class="workspace-heading"><div class="eyebrow">01 / Start with the site</div><h1>A clearer picture of your next lot.</h1></div>
+      <div class="workspace-heading"><div class="eyebrow">Land intelligence for builders</div><h1>Know the lot before you buy.</h1><p class="hero-description">Site constraints, cost considerations and permit requirements. One report.</p></div>
 
       <div class="card">
         <form id="form" novalidate>
-          <label class="lbl" for="address">Lot address or parcel ID</label>
-          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="House number, street, city" required>
-          <div class="hint">No address yet? Enter the county parcel ID instead (for example 12-345-6789).</div>
+          <label class="lbl" for="address">Property address or parcel ID</label>
+          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="Enter a street address or parcel number" required>
+          <div class="hint">Utah properties · include the city or ZIP code.</div>
 
-          <div class="planbox">
-            <div class="row">
-              <span class="lbl" id="plan-lbl" style="margin:0">Building plan <span style="color:var(--muted);font-weight:500">(optional)</span></span>
-              <div class="seg" role="group" aria-labelledby="plan-lbl">
-                <button type="button" data-mode="none" aria-pressed="true">None yet</button>
-                <button type="button" data-mode="upload" aria-pressed="false">Upload plan</button>
-                <button type="button" data-mode="custom" aria-pressed="false">Enter details</button>
-              </div>
-            </div>
-            <div id="mode-none" class="hint" style="margin:0">Add a plan to check it against the lot: foundation vs. groundwater, septic sizing, footprint vs. setbacks, design loads and more.</div>
-
-            <div id="mode-upload" hidden>
-              <label class="drop" id="drop">
-                <input type="file" id="planfile" accept="application/pdf,.pdf">
-                <b>Drop a plan set PDF, or click to choose</b>
-                <span>Read in your browser. The file is never uploaded anywhere.</span>
-              </label>
-              <div class="parse" id="parse" hidden>
-                <div class="status" id="parse-status"><span class="ic" aria-hidden="true"></span><span id="parse-msg">Reading plan…</span></div>
-                <div class="chips" id="parse-chips"></div>
-              </div>
-            </div>
-
-            <div id="plan-fields" hidden>
-              <div class="extract-h"><b id="fields-title">Plan details</b><span id="fields-note">Check and correct anything we misread.</span></div>
-              <div class="grid2">
-                <label>House footprint (sq ft)<input type="number" min="0" inputmode="numeric" id="residence_sf"><span class="src" data-for="residence_sf"></span></label>
-                <label>Garage (sq ft)<input type="number" min="0" inputmode="numeric" id="garage_sf"><span class="src" data-for="garage_sf"></span></label>
-                <label>Overall width (ft)<input type="number" min="0" inputmode="decimal" id="width_ft"><span class="src" data-for="width_ft"></span></label>
-                <label>Overall depth (ft)<input type="number" min="0" inputmode="decimal" id="depth_ft"><span class="src" data-for="depth_ft"></span></label>
-                <label>Bedrooms<input type="number" min="0" inputmode="numeric" id="bedrooms"><span class="src" data-for="bedrooms"></span></label>
-                <label>Stories above grade<input type="number" min="0" inputmode="numeric" id="stories"><span class="src" data-for="stories"></span></label>
-                <label>Foundation
-                  <select id="foundation"><option value="">Not specified</option><option value="basement">Full or partial basement</option><option value="crawlspace">Crawlspace</option><option value="slab">Slab on grade</option></select>
-                  <span class="src" data-for="foundation"></span></label>
-                <label>Building height (ft)<input type="number" min="0" inputmode="decimal" id="height_ft"><span class="src" data-for="height_ft"></span></label>
-                <label>Ground snow load (psf)<input type="number" min="0" inputmode="numeric" id="ground_snow_load_psf"><span class="src" data-for="ground_snow_load_psf"></span></label>
-                <label>Allowable soil bearing (psf)<input type="number" min="0" inputmode="numeric" id="bearing_psf"><span class="src" data-for="bearing_psf"></span></label>
-                <label>Heating fuel
-                  <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
-                  <span class="src" data-for="fuel"></span></label>
-                <label>Fireplace
-                  <select id="fireplace"><option value="">None / not specified</option><option value="gas">Gas or direct-vent</option><option value="wood">Wood-burning or masonry</option><option value="unknown">Fireplace, fuel not confirmed</option></select>
-                  <span class="src" data-for="fireplace"></span></label>
-                <label>Exterior cladding
-                  <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
-                  <span class="src" data-for="cladding"></span></label>
-              </div>
-            </div>
-          </div>
 
           <div class="err" id="err" role="alert"></div>
-          <button class="btn submit" id="go" type="submit">Generate dossier &amp; permit packet</button>
-          <p class="hint">Start with an address. Your report includes a permit checklist and drafted application information; add plans for a more complete packet.</p>
+          <button class="btn submit" id="go" type="submit">Generate site report</button>
+          <p class="hint">Building plans can be added after the initial site review.</p>
         </form>
 
         <div id="progress" aria-live="polite">
@@ -100,15 +50,15 @@
       </div>
     </div>
 
-    <aside class="side" aria-label="About the dossier">
+    <aside class="side" aria-label="Your site report">
       <div class="card">
-        <h2>What you get</h2>
-        <ol>
-          <li><b>Red flags</b> from state, county and federal hazard, water, soil and utility maps.</li>
-          <li><b>Site cost adders</b> for the items that usually blow up a spec budget.</li>
-          <li><b>Plan check</b>: upload your plans and see what fits this lot and what has to change.</li>
-          <li><b>Permit preparation</b>: prefilled application data, a submission checklist and draft requests for the Ogden Valley pilot.</li>
-          <li><b>A call list and checklist</b>: attach the perc test, survey and will-serve letters as they come in.</li>
+        <h2>Your site report</h2>
+        <ol class="report-outline">
+          <li><b>Site constraints</b><span>Flood risk, slope, soils, groundwater, utilities</span></li>
+          <li><b>Cost considerations</b><span>Grading, foundations, septic, site access</span></li>
+          <li><b>Plan compatibility</b><span>Setbacks, footprint, site conditions</span></li>
+          <li><b>Permitting</b><span>Requirements, application details, checklist</span></li>
+          <li><b>Outstanding items</b><span>Surveys, tests, documents, follow-ups</span></li>
         </ol>
       </div>
     </aside>
@@ -117,58 +67,73 @@
 
 <section class="band" id="checks">
   <div class="wrap">
-    <div class="eyebrow">What we check</div>
-    <h2>The pre-purchase checklist, automated</h2>
-    <p class="sub">Every item an experienced spec builder asks about before buying a lot. Each comes back clear, watch, flag or verify, with its source.</p>
+    <div class="eyebrow">Coverage</div>
+    <h2>What we check</h2>
+    <p class="sub">Property conditions that affect buildability, cost and permitting. Document coverage is deepest in the Ogden Valley pilot; availability varies by jurisdiction.</p>
     <div class="checks">
-      <div class="check"><div class="n">01</div><h3>Land &amp; zoning</h3><p>Parcel boundary, acreage, assessor value, jurisdiction, zoning district and its setbacks.</p><div class="src">UGRC parcels · county GIS · land use code</div></div>
+      <div class="check"><div class="n">01</div><h3>Land &amp; zoning</h3><p>Mapped parcel boundary, acreage, assessor value, jurisdiction, zoning and setback standards.</p><div class="src">UGRC parcels · county GIS · land use code</div></div>
       <div class="check"><div class="n">02</div><h3>Water rights</h3><p>Culinary water provider, irrigation companies and places of use, nearby wells and water rights.</p><div class="src">Utah Division of Water Rights</div></div>
       <div class="check"><div class="n">03</div><h3>Geologic hazards</h3><p>Mapped landslides, active faults, liquefaction, shallow groundwater, flood zones, seismic category.</p><div class="src">Utah Geological Survey · FEMA · USGS</div></div>
       <div class="check"><div class="n">04</div><h3>Septic &amp; perc</h3><p>Sewer availability, soil suitability for absorption fields, water table depth, source protection zones.</p><div class="src">USDA soil survey · health districts</div></div>
       <div class="check"><div class="n">05</div><h3>Power, gas &amp; internet</h3><p>Utility providers and evidence of service nearby.</p><div class="src">UGRC utilities · county parcels</div></div>
       <div class="check"><div class="n">06</div><h3>Access &amp; fire</h3><p>Road frontage, wildland-urban interface, nearest fire station and hydrant.</p><div class="src">UGRC roads · county GIS · Utah FFSL</div></div>
-      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision and PUD status, recorded covenants, HOA registration and contact, historic districts, architectural review to expect.</p><div class="src">County recorder · Utah HOA registry</div></div>
-      <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from 1-meter LiDAR, before you order a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
+      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision status, covenant references, HOA registration and historic districts. Full covenant text and design approval may remain outstanding.</p><div class="src">County recorder · Utah HOA registry</div></div>
+      <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from elevation data. Mapped boundaries and terrain are not a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
       <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Who approves your plans and how to reach them, the city office, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
-      <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
+      <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Extracted or entered dimensions, foundation and design loads compared with available site findings. Placement and approvals remain separate checks.</p><div class="src">Your plan, read in the browser</div></div>
       <div class="check"><div class="n">11</div><h3>Home performance &amp; restrictions</h3><p>Energy code, wood-burning bans, impervious-surface and stormwater rules, water-wise landscaping, checked against your plan.</p><div class="src">Utah code · DEQ · local ordinances</div></div>
       <div class="check"><div class="n">12</div><h3>Easements &amp; recorded restrictions</h3><p>All linked plat sheets, potential utility, access, drainage and unusual easement references, with explicit gaps where title records or geometry remain unverified.</p><div class="src">Recorded plats · county parcel references</div></div>
-      <div class="check"><div class="n">13</div><h3>Pool feasibility</h3><p>Pilot-city pool rules alongside groundwater, terrain, easements and utility constraints. See what is known before committing to a pool layout.</p><div class="src">City pool code · site evidence · state pool code</div></div>
+      <div class="check"><div class="n">13</div><h3>Pool feasibility</h3><p>Pilot-city pool rules alongside groundwater, terrain, easements and utility constraints. Pool placement and engineering are not established.</p><div class="src">City pool code · site evidence · state pool code</div></div>
     </div>
+  </div>
+</section>
+
+<section class="band" id="report-preview">
+  <div class="wrap">
+    <div class="eyebrow">Report excerpt · published rule</div>
+    <h2>A finding, its source and what remains open.</h2>
+    <article class="source-preview">
+      <div class="preview-meta"><span>Ogden Valley City</span><span>Private in-ground pools</span><span>Rule checked November 7, 2026</span></div>
+      <div class="evidence-label">Published requirement</div>
+      <h3>Pool and machinery: at least 10 feet from property lines.</h3>
+      <p>The city allows permanent in-ground pools to the side or rear as an accessory use. A larger setback required by the zone takes precedence.</p>
+      <a href="https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-7-Supplementary-And-Qualifying-Regulations.pdf#page=16" target="_blank" rel="noopener">Source: Ogden Valley City Land Use Code, §108-7-18, pages 16–17</a>
+      <div class="preview-open"><b>Still to establish for a property</b><p>Applicable zone setbacks, recorded restrictions and the proposed pool location. This published rule does not establish that a pool fits a particular lot.</p></div>
+      <p class="hint">An actual rule used in Cornerpin reports. This excerpt is not a completed property review.</p>
+    </article>
   </div>
 </section>
 
 <section class="band" id="how">
   <div class="wrap">
-    <div class="eyebrow">How it works</div>
-    <h2>From address to permit preparation</h2>
-    <p class="sub">Public maps don't replace a survey, a geotech report or a perc test. They tell you which of those you'll need, roughly what they'll cost, and where your plan will have to change, before you spend money on the lot.</p>
+    <div class="eyebrow">Sources &amp; verification</div>
+    <h2>Public records. Mapped conditions. Open questions.</h2>
     <div class="how">
-      <div><div class="k">1</div><h3>Locate the parcel</h3><p>We match the address or parcel ID to the county record and its exact boundary.</p></div>
-      <div><div class="k">2</div><h3>Check every layer</h3><p>The boundary is tested against state, county and federal maps. If you add a plan, it's read and compared with what we find.</p></div>
-      <div><div class="k">3</div><h3>Review your dossier &amp; permit packet</h3><p>See site risks and costs, then open the permit packet in your report for application data, draft requests and remaining requirements. Print or save it to share.</p></div>
+      <div><h3>Source references</h3><p>Findings identify their source: Utah UGRC parcels, county GIS and recorder records, UGS hazard maps, USDA soil surveys, USGS elevation, FEMA flood mapping and local codes. Dates are included where supplied; a report date is not a source-update date.</p></div>
+      <div><h3>Evidence limits</h3><p>A mapped soil condition is not a geotechnical result. A parcel polygon is not a survey. Failed lookups and missing records remain open; they do not establish an absence of restrictions.</p></div>
+      <div><h3>Cost basis</h3><p>Site conditions identify items to price. Current planning ranges are unvalidated placeholders, not lot-specific estimates or contractor bids. Published fees are cited separately where available.</p></div>
     </div>
     <div class="legend">
-      <span style="--c:var(--flag)">Flag: likely material cost or risk</span>
-      <span style="--c:var(--watch)">Watch: adds cost or steps</span>
-      <span style="--c:var(--verify)">Verify: needs a document or site test</span>
-      <span style="--c:var(--ok)">Clear: nothing found</span>
+      <span style="--c:var(--flag)">Potential concern</span>
+      <span style="--c:var(--watch)">Review condition</span>
+      <span style="--c:var(--verify)">Needs verification</span>
+      <span style="--c:var(--ok)">No issue identified in this check</span>
     </div>
   </div>
 </section>
 
 <section class="band" id="permits">
   <div class="wrap">
-    <div class="eyebrow">02 / Prepare to build · Ogden Valley pilot</div>
-    <h2>Your next step: the permit packet.</h2>
-    <p class="sub">Generate a dossier above to assemble your permit preparation packet for the same lot. No second form to start over.</p>
+    <div class="eyebrow">Ogden Valley pilot</div>
+    <h2>Permit preparation</h2>
+    <p class="sub">The site report carries property information into a draft application packet.</p>
     <div class="how">
-      <div><div class="k">01</div><h3>Application information, gathered</h3><p>Parcel details, zoning, design loads and available plan information brought together, with estimates labeled for review.</p></div>
-      <div><div class="k">02</div><h3>Requests, already drafted</h3><p>Lot-specific letters for utility service, fire review and HOA requirements where contacts are available. Review them and send from your email.</p></div>
-      <div><div class="k">03</div><h3>A clear path to submission</h3><p>See what is gathered, drafted or still missing, including documents that need your signature or a professional. Download a draft site plan when available.</p></div>
+      <div><div class="k">01</div><h3>Application details</h3><p>Parcel details, zoning, design loads and plan information. Estimates are identified for review.</p></div>
+      <div><div class="k">02</div><h3>Supporting requests</h3><p>Lot-specific letters for utility service, fire review and HOA requirements where contacts are available. Review them and send from your email.</p></div>
+      <div><div class="k">03</div><h3>Submission checklist</h3><p>Documents gathered, drafts prepared and items still missing. Signatures, professional reports and approvals remain identifiable requirements.</p></div>
     </div>
     <p class="sub">Cornerpin prepares the packet. You review the details and submit through the permitting authority; automatic filing is not available yet.</p>
-    <a class="btn" href="#start">Start my dossier &amp; permit packet</a>
+    <a class="btn" href="#start">Generate site report</a>
   </div>
 </section>
 

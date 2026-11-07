@@ -473,3 +473,23 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 .easement-gates > li { padding: 16px 0; border-bottom: 1px solid var(--line, #d5d5d5); break-inside: avoid; }
 .easement-gates h4 { margin: 0 0 8px; font-size: 16px; }
 .easement-gates p { margin: 8px 0; overflow-wrap: anywhere; }
+.hero-description{max-width:38em;margin:12px 0 0;color:var(--muted);font-size:16px}
+.report-outline li b,.report-outline li span{display:block}
+.report-outline li span{margin-top:4px;font-size:14px;color:var(--muted)}
+.source-preview{max-width:850px;border:1px solid var(--line);padding:24px;background:rgba(10,14,12,.65)}
+.preview-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted);margin-bottom:20px}
+.evidence-label{font-size:12px;color:var(--accent);font-weight:700}
+.source-preview h3{font-size:21px;margin:8px 0}
+.source-preview a{color:inherit;text-underline-offset:3px;font-size:13px}
+.preview-open{border-top:1px solid var(--line);padding-top:18px;margin-top:22px}
+dialog#plan-dialog{color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:12px;width:min(760px,calc(100% - 32px));max-height:88vh;padding:28px;overflow:auto}
+#plan-dialog::backdrop{background:rgba(0,0,0,.75)}
+#plan-dialog .dialog-heading{display:flex;justify-content:space-between;align-items:start;gap:20px}
+#plan-dialog h2{margin:6px 0;font-size:24px}
+#plan-dialog .planbox{margin-top:18px}
+#plan-dialog .err:empty,#plan-update-status:empty{display:none}
+#plan-dialog .btn{cursor:pointer}
+#rv .badge{white-space:normal;line-height:1.3}
+@media(min-width:561px){#rv .frow{grid-template-columns:120px minmax(0,1fr)}}
+@media screen{body::before{background-image:linear-gradient(rgba(7,10,9,.58),rgba(7,10,9,.58)),var(--desert-image)!important}#home .hero>div:first-child{background:linear-gradient(110deg,rgba(7,10,9,.3),transparent);padding:12px 16px 18px;margin-left:-16px}#home .hero>.side{padding-top:40px}}
+@media(max-width:640px){dialog#plan-dialog{padding:20px}#plan-dialog .row{flex-wrap:wrap}#home .hero>.side{padding-top:0}.source-preview{padding:18px}}

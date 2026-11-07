@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cornerpin</title>
-<meta name="description" content="Due diligence dossiers for spec home lots in Utah: water, hazards, septic, utilities, zoning and permits from one address, checked against your building plan.">
+<meta name="description" content="Site due diligence for Utah builders. Review mapped constraints, cost considerations, recorded restrictions and permit requirements by address or parcel ID.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -483,6 +483,26 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 .easement-gates > li { padding: 16px 0; border-bottom: 1px solid var(--line, #d5d5d5); break-inside: avoid; }
 .easement-gates h4 { margin: 0 0 8px; font-size: 16px; }
 .easement-gates p { margin: 8px 0; overflow-wrap: anywhere; }
+.hero-description{max-width:38em;margin:12px 0 0;color:var(--muted);font-size:16px}
+.report-outline li b,.report-outline li span{display:block}
+.report-outline li span{margin-top:4px;font-size:14px;color:var(--muted)}
+.source-preview{max-width:850px;border:1px solid var(--line);padding:24px;background:rgba(10,14,12,.65)}
+.preview-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted);margin-bottom:20px}
+.evidence-label{font-size:12px;color:var(--accent);font-weight:700}
+.source-preview h3{font-size:21px;margin:8px 0}
+.source-preview a{color:inherit;text-underline-offset:3px;font-size:13px}
+.preview-open{border-top:1px solid var(--line);padding-top:18px;margin-top:22px}
+dialog#plan-dialog{color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:12px;width:min(760px,calc(100% - 32px));max-height:88vh;padding:28px;overflow:auto}
+#plan-dialog::backdrop{background:rgba(0,0,0,.75)}
+#plan-dialog .dialog-heading{display:flex;justify-content:space-between;align-items:start;gap:20px}
+#plan-dialog h2{margin:6px 0;font-size:24px}
+#plan-dialog .planbox{margin-top:18px}
+#plan-dialog .err:empty,#plan-update-status:empty{display:none}
+#plan-dialog .btn{cursor:pointer}
+#rv .badge{white-space:normal;line-height:1.3}
+@media(min-width:561px){#rv .frow{grid-template-columns:120px minmax(0,1fr)}}
+@media screen{body::before{background-image:linear-gradient(rgba(7,10,9,.58),rgba(7,10,9,.58)),var(--desert-image)!important}#home .hero>div:first-child{background:linear-gradient(110deg,rgba(7,10,9,.3),transparent);padding:12px 16px 18px;margin-left:-16px}#home .hero>.side{padding-top:40px}}
+@media(max-width:640px){dialog#plan-dialog{padding:20px}#plan-dialog .row{flex-wrap:wrap}#home .hero>.side{padding-top:0}.source-preview{padding:18px}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -491,7 +511,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 <body>
 <div id="home">
 
-<a class="skip-link" href="#start">Skip to dossier form</a>
+<a class="skip-link" href="#start">Skip to property search</a>
 <div class="wrap">
   <nav class="top" aria-label="Primary">
     <a class="wordmark" href="#start"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="12 419 944 171" xmlns="http://www.w3.org/2000/svg" width="944" height="171">
@@ -513,74 +533,24 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     <div class="links">
       <a href="#checks">What we check</a>
       <a href="#permits">Permit preparation</a>
-      <a class="btn ghost cta" href="#start">Start a dossier</a>
+      <a class="btn ghost cta" href="#start">Review a property</a>
     </div>
   </nav>
 
 <header class="hero" id="start">
     <div>
-      <div class="workspace-heading"><div class="eyebrow">01 / Start with the site</div><h1>A clearer picture of your next lot.</h1></div>
+      <div class="workspace-heading"><div class="eyebrow">Land intelligence for builders</div><h1>Know the lot before you buy.</h1><p class="hero-description">Site constraints, cost considerations and permit requirements. One report.</p></div>
 
       <div class="card">
         <form id="form" novalidate>
-          <label class="lbl" for="address">Lot address or parcel ID</label>
-          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="House number, street, city" required>
-          <div class="hint">No address yet? Enter the county parcel ID instead (for example 12-345-6789).</div>
+          <label class="lbl" for="address">Property address or parcel ID</label>
+          <input id="address" name="address" type="text" autocomplete="street-address" placeholder="Enter a street address or parcel number" required>
+          <div class="hint">Utah properties · include the city or ZIP code.</div>
 
-          <div class="planbox">
-            <div class="row">
-              <span class="lbl" id="plan-lbl" style="margin:0">Building plan <span style="color:var(--muted);font-weight:500">(optional)</span></span>
-              <div class="seg" role="group" aria-labelledby="plan-lbl">
-                <button type="button" data-mode="none" aria-pressed="true">None yet</button>
-                <button type="button" data-mode="upload" aria-pressed="false">Upload plan</button>
-                <button type="button" data-mode="custom" aria-pressed="false">Enter details</button>
-              </div>
-            </div>
-            <div id="mode-none" class="hint" style="margin:0">Add a plan to check it against the lot: foundation vs. groundwater, septic sizing, footprint vs. setbacks, design loads and more.</div>
-
-            <div id="mode-upload" hidden>
-              <label class="drop" id="drop">
-                <input type="file" id="planfile" accept="application/pdf,.pdf">
-                <b>Drop a plan set PDF, or click to choose</b>
-                <span>Read in your browser. The file is never uploaded anywhere.</span>
-              </label>
-              <div class="parse" id="parse" hidden>
-                <div class="status" id="parse-status"><span class="ic" aria-hidden="true"></span><span id="parse-msg">Reading plan…</span></div>
-                <div class="chips" id="parse-chips"></div>
-              </div>
-            </div>
-
-            <div id="plan-fields" hidden>
-              <div class="extract-h"><b id="fields-title">Plan details</b><span id="fields-note">Check and correct anything we misread.</span></div>
-              <div class="grid2">
-                <label>House footprint (sq ft)<input type="number" min="0" inputmode="numeric" id="residence_sf"><span class="src" data-for="residence_sf"></span></label>
-                <label>Garage (sq ft)<input type="number" min="0" inputmode="numeric" id="garage_sf"><span class="src" data-for="garage_sf"></span></label>
-                <label>Overall width (ft)<input type="number" min="0" inputmode="decimal" id="width_ft"><span class="src" data-for="width_ft"></span></label>
-                <label>Overall depth (ft)<input type="number" min="0" inputmode="decimal" id="depth_ft"><span class="src" data-for="depth_ft"></span></label>
-                <label>Bedrooms<input type="number" min="0" inputmode="numeric" id="bedrooms"><span class="src" data-for="bedrooms"></span></label>
-                <label>Stories above grade<input type="number" min="0" inputmode="numeric" id="stories"><span class="src" data-for="stories"></span></label>
-                <label>Foundation
-                  <select id="foundation"><option value="">Not specified</option><option value="basement">Full or partial basement</option><option value="crawlspace">Crawlspace</option><option value="slab">Slab on grade</option></select>
-                  <span class="src" data-for="foundation"></span></label>
-                <label>Building height (ft)<input type="number" min="0" inputmode="decimal" id="height_ft"><span class="src" data-for="height_ft"></span></label>
-                <label>Ground snow load (psf)<input type="number" min="0" inputmode="numeric" id="ground_snow_load_psf"><span class="src" data-for="ground_snow_load_psf"></span></label>
-                <label>Allowable soil bearing (psf)<input type="number" min="0" inputmode="numeric" id="bearing_psf"><span class="src" data-for="bearing_psf"></span></label>
-                <label>Heating fuel
-                  <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
-                  <span class="src" data-for="fuel"></span></label>
-                <label>Fireplace
-                  <select id="fireplace"><option value="">None / not specified</option><option value="gas">Gas or direct-vent</option><option value="wood">Wood-burning or masonry</option><option value="unknown">Fireplace, fuel not confirmed</option></select>
-                  <span class="src" data-for="fireplace"></span></label>
-                <label>Exterior cladding
-                  <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
-                  <span class="src" data-for="cladding"></span></label>
-              </div>
-            </div>
-          </div>
 
           <div class="err" id="err" role="alert"></div>
-          <button class="btn submit" id="go" type="submit">Generate dossier &amp; permit packet</button>
-          <p class="hint">Start with an address. Your report includes a permit checklist and drafted application information; add plans for a more complete packet.</p>
+          <button class="btn submit" id="go" type="submit">Generate site report</button>
+          <p class="hint">Building plans can be added after the initial site review.</p>
         </form>
 
         <div id="progress" aria-live="polite">
@@ -592,15 +562,15 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       </div>
     </div>
 
-    <aside class="side" aria-label="About the dossier">
+    <aside class="side" aria-label="Your site report">
       <div class="card">
-        <h2>What you get</h2>
-        <ol>
-          <li><b>Red flags</b> from state, county and federal hazard, water, soil and utility maps.</li>
-          <li><b>Site cost adders</b> for the items that usually blow up a spec budget.</li>
-          <li><b>Plan check</b>: upload your plans and see what fits this lot and what has to change.</li>
-          <li><b>Permit preparation</b>: prefilled application data, a submission checklist and draft requests for the Ogden Valley pilot.</li>
-          <li><b>A call list and checklist</b>: attach the perc test, survey and will-serve letters as they come in.</li>
+        <h2>Your site report</h2>
+        <ol class="report-outline">
+          <li><b>Site constraints</b><span>Flood risk, slope, soils, groundwater, utilities</span></li>
+          <li><b>Cost considerations</b><span>Grading, foundations, septic, site access</span></li>
+          <li><b>Plan compatibility</b><span>Setbacks, footprint, site conditions</span></li>
+          <li><b>Permitting</b><span>Requirements, application details, checklist</span></li>
+          <li><b>Outstanding items</b><span>Surveys, tests, documents, follow-ups</span></li>
         </ol>
       </div>
     </aside>
@@ -609,58 +579,73 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
 <section class="band" id="checks">
   <div class="wrap">
-    <div class="eyebrow">What we check</div>
-    <h2>The pre-purchase checklist, automated</h2>
-    <p class="sub">Every item an experienced spec builder asks about before buying a lot. Each comes back clear, watch, flag or verify, with its source.</p>
+    <div class="eyebrow">Coverage</div>
+    <h2>What we check</h2>
+    <p class="sub">Property conditions that affect buildability, cost and permitting. Document coverage is deepest in the Ogden Valley pilot; availability varies by jurisdiction.</p>
     <div class="checks">
-      <div class="check"><div class="n">01</div><h3>Land &amp; zoning</h3><p>Parcel boundary, acreage, assessor value, jurisdiction, zoning district and its setbacks.</p><div class="src">UGRC parcels · county GIS · land use code</div></div>
+      <div class="check"><div class="n">01</div><h3>Land &amp; zoning</h3><p>Mapped parcel boundary, acreage, assessor value, jurisdiction, zoning and setback standards.</p><div class="src">UGRC parcels · county GIS · land use code</div></div>
       <div class="check"><div class="n">02</div><h3>Water rights</h3><p>Culinary water provider, irrigation companies and places of use, nearby wells and water rights.</p><div class="src">Utah Division of Water Rights</div></div>
       <div class="check"><div class="n">03</div><h3>Geologic hazards</h3><p>Mapped landslides, active faults, liquefaction, shallow groundwater, flood zones, seismic category.</p><div class="src">Utah Geological Survey · FEMA · USGS</div></div>
       <div class="check"><div class="n">04</div><h3>Septic &amp; perc</h3><p>Sewer availability, soil suitability for absorption fields, water table depth, source protection zones.</p><div class="src">USDA soil survey · health districts</div></div>
       <div class="check"><div class="n">05</div><h3>Power, gas &amp; internet</h3><p>Utility providers and evidence of service nearby.</p><div class="src">UGRC utilities · county parcels</div></div>
       <div class="check"><div class="n">06</div><h3>Access &amp; fire</h3><p>Road frontage, wildland-urban interface, nearest fire station and hydrant.</p><div class="src">UGRC roads · county GIS · Utah FFSL</div></div>
-      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision and PUD status, recorded covenants, HOA registration and contact, historic districts, architectural review to expect.</p><div class="src">County recorder · Utah HOA registry</div></div>
-      <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from 1-meter LiDAR, before you order a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
+      <div class="check"><div class="n">07</div><h3>CC&amp;Rs &amp; design review</h3><p>Subdivision status, covenant references, HOA registration and historic districts. Full covenant text and design approval may remain outstanding.</p><div class="src">County recorder · Utah HOA registry</div></div>
+      <div class="check"><div class="n">08</div><h3>Survey &amp; topo</h3><p>Slope, relief and drainage direction from elevation data. Mapped boundaries and terrain are not a survey.</p><div class="src">USGS 3DEP LiDAR</div></div>
       <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Who approves your plans and how to reach them, the city office, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
-      <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
+      <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Extracted or entered dimensions, foundation and design loads compared with available site findings. Placement and approvals remain separate checks.</p><div class="src">Your plan, read in the browser</div></div>
       <div class="check"><div class="n">11</div><h3>Home performance &amp; restrictions</h3><p>Energy code, wood-burning bans, impervious-surface and stormwater rules, water-wise landscaping, checked against your plan.</p><div class="src">Utah code · DEQ · local ordinances</div></div>
       <div class="check"><div class="n">12</div><h3>Easements &amp; recorded restrictions</h3><p>All linked plat sheets, potential utility, access, drainage and unusual easement references, with explicit gaps where title records or geometry remain unverified.</p><div class="src">Recorded plats · county parcel references</div></div>
-      <div class="check"><div class="n">13</div><h3>Pool feasibility</h3><p>Pilot-city pool rules alongside groundwater, terrain, easements and utility constraints. See what is known before committing to a pool layout.</p><div class="src">City pool code · site evidence · state pool code</div></div>
+      <div class="check"><div class="n">13</div><h3>Pool feasibility</h3><p>Pilot-city pool rules alongside groundwater, terrain, easements and utility constraints. Pool placement and engineering are not established.</p><div class="src">City pool code · site evidence · state pool code</div></div>
     </div>
+  </div>
+</section>
+
+<section class="band" id="report-preview">
+  <div class="wrap">
+    <div class="eyebrow">Report excerpt · published rule</div>
+    <h2>A finding, its source and what remains open.</h2>
+    <article class="source-preview">
+      <div class="preview-meta"><span>Ogden Valley City</span><span>Private in-ground pools</span><span>Rule checked November 7, 2026</span></div>
+      <div class="evidence-label">Published requirement</div>
+      <h3>Pool and machinery: at least 10 feet from property lines.</h3>
+      <p>The city allows permanent in-ground pools to the side or rear as an accessory use. A larger setback required by the zone takes precedence.</p>
+      <a href="https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-7-Supplementary-And-Qualifying-Regulations.pdf#page=16" target="_blank" rel="noopener">Source: Ogden Valley City Land Use Code, §108-7-18, pages 16–17</a>
+      <div class="preview-open"><b>Still to establish for a property</b><p>Applicable zone setbacks, recorded restrictions and the proposed pool location. This published rule does not establish that a pool fits a particular lot.</p></div>
+      <p class="hint">An actual rule used in Cornerpin reports. This excerpt is not a completed property review.</p>
+    </article>
   </div>
 </section>
 
 <section class="band" id="how">
   <div class="wrap">
-    <div class="eyebrow">How it works</div>
-    <h2>From address to permit preparation</h2>
-    <p class="sub">Public maps don't replace a survey, a geotech report or a perc test. They tell you which of those you'll need, roughly what they'll cost, and where your plan will have to change, before you spend money on the lot.</p>
+    <div class="eyebrow">Sources &amp; verification</div>
+    <h2>Public records. Mapped conditions. Open questions.</h2>
     <div class="how">
-      <div><div class="k">1</div><h3>Locate the parcel</h3><p>We match the address or parcel ID to the county record and its exact boundary.</p></div>
-      <div><div class="k">2</div><h3>Check every layer</h3><p>The boundary is tested against state, county and federal maps. If you add a plan, it's read and compared with what we find.</p></div>
-      <div><div class="k">3</div><h3>Review your dossier &amp; permit packet</h3><p>See site risks and costs, then open the permit packet in your report for application data, draft requests and remaining requirements. Print or save it to share.</p></div>
+      <div><h3>Source references</h3><p>Findings identify their source: Utah UGRC parcels, county GIS and recorder records, UGS hazard maps, USDA soil surveys, USGS elevation, FEMA flood mapping and local codes. Dates are included where supplied; a report date is not a source-update date.</p></div>
+      <div><h3>Evidence limits</h3><p>A mapped soil condition is not a geotechnical result. A parcel polygon is not a survey. Failed lookups and missing records remain open; they do not establish an absence of restrictions.</p></div>
+      <div><h3>Cost basis</h3><p>Site conditions identify items to price. Current planning ranges are unvalidated placeholders, not lot-specific estimates or contractor bids. Published fees are cited separately where available.</p></div>
     </div>
     <div class="legend">
-      <span style="--c:var(--flag)">Flag: likely material cost or risk</span>
-      <span style="--c:var(--watch)">Watch: adds cost or steps</span>
-      <span style="--c:var(--verify)">Verify: needs a document or site test</span>
-      <span style="--c:var(--ok)">Clear: nothing found</span>
+      <span style="--c:var(--flag)">Potential concern</span>
+      <span style="--c:var(--watch)">Review condition</span>
+      <span style="--c:var(--verify)">Needs verification</span>
+      <span style="--c:var(--ok)">No issue identified in this check</span>
     </div>
   </div>
 </section>
 
 <section class="band" id="permits">
   <div class="wrap">
-    <div class="eyebrow">02 / Prepare to build · Ogden Valley pilot</div>
-    <h2>Your next step: the permit packet.</h2>
-    <p class="sub">Generate a dossier above to assemble your permit preparation packet for the same lot. No second form to start over.</p>
+    <div class="eyebrow">Ogden Valley pilot</div>
+    <h2>Permit preparation</h2>
+    <p class="sub">The site report carries property information into a draft application packet.</p>
     <div class="how">
-      <div><div class="k">01</div><h3>Application information, gathered</h3><p>Parcel details, zoning, design loads and available plan information brought together, with estimates labeled for review.</p></div>
-      <div><div class="k">02</div><h3>Requests, already drafted</h3><p>Lot-specific letters for utility service, fire review and HOA requirements where contacts are available. Review them and send from your email.</p></div>
-      <div><div class="k">03</div><h3>A clear path to submission</h3><p>See what is gathered, drafted or still missing, including documents that need your signature or a professional. Download a draft site plan when available.</p></div>
+      <div><div class="k">01</div><h3>Application details</h3><p>Parcel details, zoning, design loads and plan information. Estimates are identified for review.</p></div>
+      <div><div class="k">02</div><h3>Supporting requests</h3><p>Lot-specific letters for utility service, fire review and HOA requirements where contacts are available. Review them and send from your email.</p></div>
+      <div><div class="k">03</div><h3>Submission checklist</h3><p>Documents gathered, drafts prepared and items still missing. Signatures, professional reports and approvals remain identifiable requirements.</p></div>
     </div>
     <p class="sub">Cornerpin prepares the packet. You review the details and submit through the permitting authority; automatic filing is not available yet.</p>
-    <a class="btn" href="#start">Start my dossier &amp; permit packet</a>
+    <a class="btn" href="#start">Generate site report</a>
   </div>
 </section>
 
@@ -706,14 +691,65 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 </svg></span>
     <div class="acts">
       <a class="btn ghost" href="#packet">Permit packet</a>
+      <button class="btn ghost only-live" id="rv-plan" type="button">Add building plans</button>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
-      <button class="btn ghost only-live" id="rv-save" type="button">Save dossier</button>
-      <button class="btn only-live" id="rv-new" type="button">New dossier</button>
+      <button class="btn ghost only-live" id="rv-save" type="button">Download site report</button>
+      <button class="btn only-live" id="rv-new" type="button">Review another property</button>
     </div>
   </nav>
   <div id="rv-body"></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<dialog id="plan-dialog" aria-labelledby="plan-dialog-title"><form id="plan-form"><div class="dialog-heading"><div><div class="eyebrow">Plan compatibility</div><h2 id="plan-dialog-title">Add building plans</h2></div><button type="button" class="btn ghost" id="plan-close" aria-label="Close building plans">Close</button></div><p id="plan-property"></p>          <div class="planbox">
+            <div class="row">
+              <span class="lbl" id="plan-lbl" style="margin:0">Building plan <span style="color:var(--muted);font-weight:500">(optional)</span></span>
+              <div class="seg" role="group" aria-labelledby="plan-lbl">
+                <button type="button" data-mode="none" aria-pressed="true">None yet</button>
+                <button type="button" data-mode="upload" aria-pressed="false">Upload plan</button>
+                <button type="button" data-mode="custom" aria-pressed="false">Enter details</button>
+              </div>
+            </div>
+            <div id="mode-none" class="hint" style="margin:0">Select Upload plan or Enter details to compare the design with this property. Select None yet to remove an existing plan from the report.</div>
+
+            <div id="mode-upload" hidden>
+              <label class="drop" id="drop">
+                <input type="file" id="planfile" accept="application/pdf,.pdf">
+                <b>Drop a plan set PDF, or click to choose</b>
+                <span>Read in your browser. The file is never uploaded anywhere.</span>
+              </label>
+              <div class="parse" id="parse" hidden>
+                <div class="status" id="parse-status"><span class="ic" aria-hidden="true"></span><span id="parse-msg">Reading plan…</span></div>
+                <div class="chips" id="parse-chips"></div>
+              </div>
+            </div>
+
+            <div id="plan-fields" hidden>
+              <div class="extract-h"><b id="fields-title">Plan details</b><span id="fields-note">Check and correct anything we misread.</span></div>
+              <div class="grid2">
+                <label>House footprint (sq ft)<input type="number" min="0" inputmode="numeric" id="residence_sf"><span class="src" data-for="residence_sf"></span></label>
+                <label>Garage (sq ft)<input type="number" min="0" inputmode="numeric" id="garage_sf"><span class="src" data-for="garage_sf"></span></label>
+                <label>Overall width (ft)<input type="number" min="0" inputmode="decimal" id="width_ft" step="any"><span class="src" data-for="width_ft"></span></label>
+                <label>Overall depth (ft)<input type="number" min="0" inputmode="decimal" id="depth_ft" step="any"><span class="src" data-for="depth_ft"></span></label>
+                <label>Bedrooms<input type="number" min="0" inputmode="numeric" id="bedrooms"><span class="src" data-for="bedrooms"></span></label>
+                <label>Stories above grade<input type="number" min="0" inputmode="numeric" id="stories"><span class="src" data-for="stories"></span></label>
+                <label>Foundation
+                  <select id="foundation"><option value="">Not specified</option><option value="basement">Full or partial basement</option><option value="crawlspace">Crawlspace</option><option value="slab">Slab on grade</option></select>
+                  <span class="src" data-for="foundation"></span></label>
+                <label>Building height (ft)<input type="number" min="0" inputmode="decimal" id="height_ft" step="any"><span class="src" data-for="height_ft"></span></label>
+                <label>Ground snow load (psf)<input type="number" min="0" inputmode="numeric" id="ground_snow_load_psf" step="any"><span class="src" data-for="ground_snow_load_psf"></span></label>
+                <label>Allowable soil bearing (psf)<input type="number" min="0" inputmode="numeric" id="bearing_psf" step="any"><span class="src" data-for="bearing_psf"></span></label>
+                <label>Heating fuel
+                  <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
+                  <span class="src" data-for="fuel"></span></label>
+                <label>Fireplace
+                  <select id="fireplace"><option value="">None / not specified</option><option value="gas">Gas or direct-vent</option><option value="wood">Wood-burning or masonry</option><option value="unknown">Fireplace, fuel not confirmed</option></select>
+                  <span class="src" data-for="fireplace"></span></label>
+                <label>Exterior cladding
+                  <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
+                  <span class="src" data-for="cladding"></span></label>
+              </div>
+            </div>
+          </div>
+<p id="plan-error" class="err" role="alert"></p><p id="plan-update-status" role="status"></p><button class="btn" id="plan-apply" type="submit">Update site report</button></form></dialog><script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "13bea74b48", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
 <script>
 /* Evidence, not legal interpretation: preserve every sheet and keep lot attribution uncertain. */
@@ -1958,25 +1994,27 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
     out.push(P('House and driveway vs. easements', 'verify', 'Easement clearance has not been established',
       'The plat evidence section preserves candidate restrictions and all linked sheets, but easement boundaries are not mapped. A house that fits zoning setbacks can still intersect a utility, access, drainage or other easement. Neither the house nor the driveway has been cleared against them.'));
-    var wt = fx.water_table_in;
-    if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) wt = Math.round(fx.boreholes.gwMin * 12);
+    var wt = fx.water_table_in, wtSource = 'Mapped soil-survey estimate';
+    if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) {
+      wt = Math.round(fx.boreholes.gwMin * 12); wtSource = 'Nearby boring archive';
+    }
+    var wtEvidence = wtSource + ': approximately ' + wt + ' in below ground. This is not a groundwater measurement at the proposed foundation.';
 
     // Foundation vs. seasonal groundwater
     if (p.foundation === 'basement' && wt != null && wt < 60) out.push(P('Foundation vs. groundwater', 'flag',
-      'Basement planned, but the seasonal water table is ~' + wt + ' in below the surface',
-      'The plan shows a basement' + from('foundation') + '. The soil survey puts the seasonal high water table at about ' + wt + ' inches and rates these soils "' + (fx.basement_rating || 'limited').toLowerCase() +
-      '" for basements. A basement here would sit in groundwater part of the year: expect full waterproofing, perimeter drains to daylight or a sump, possibly dewatering during construction, or redesigning to a raised crawlspace or slab.',
+      'Basement plan needs groundwater review; available evidence indicates ~' + wt + ' in',
+      'The plan shows a basement' + from('foundation') + '. ' + wtEvidence + ' If confirmed at basement depth, groundwater could require waterproofing, drainage, construction dewatering or a different foundation design. Seasonal site measurements and geotechnical design are still needed.',
       ctx.cost('basement_waterproofing'), 'Have the geotech measure groundwater (test pits in spring) before committing to the basement.'));
     else if (p.foundation === 'crawlspace' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'watch',
-      'Crawlspace planned with a seasonal water table ~' + wt + ' in down',
-      'Crawlspaces dug below the seasonal water table flood. Keep the crawlspace floor above grade where possible, raise finish grades, and add a sealed vapor barrier and sump.', null,
+      'Crawlspace plan needs groundwater review; available evidence indicates ~' + wt + ' in',
+      wtEvidence + ' Compare the proposed floor elevation with seasonal site measurements before selecting drainage and moisture-control details.', null,
       'Ask the geotech for the minimum crawlspace floor elevation.'));
-    else if (p.foundation === 'slab' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'ok',
-      'Slab on grade suits the shallow water table (~' + wt + ' in)',
-      'A slab with a capillary break and raised finish grade avoids most groundwater problems on this lot' + from('foundation') + '. Keep footings at frost depth with footing drains.'));
+    else if (p.foundation === 'slab' && wt != null && wt < 36) out.push(P('Foundation vs. groundwater', 'verify',
+      'Slab proposed; shallow-groundwater evidence still needs site verification',
+      wtEvidence + ' Slab elevation, bearing, capillary protection and drainage require site-specific design' + from('foundation') + '. A slab selection alone does not resolve groundwater risk.'));
     else if (!p.foundation && wt != null && wt < 60) out.push(P('Foundation vs. groundwater', 'verify',
-      'Foundation type not found in the plan; water table is ~' + wt + ' in',
-      'Choose slab or a shallow crawlspace over a basement here unless a geotech report shows deeper groundwater.'));
+      'Foundation type not found; shallow groundwater indicated in available evidence',
+      wtEvidence + ' Establish seasonal groundwater and compare foundation options with the geotechnical engineer.'));
 
     // Septic sizing by bedrooms
     if (fx.septic && fx.septic.required && p.bedrooms) {
@@ -2883,14 +2921,16 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
-  async function run(parcel, plan, costs, onStep) {
+  async function run(parcel, plan, costs, onStep, documents) {
     var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: {},
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
     if (ctx.grid.length >= 4) ctx.elevation = lidarSamples(ctx.grid);
     var findings = [];
     ctx.findings = findings;
     // Start the slow document lookup now so it runs alongside the map checks (jurisdiction resolves early; refine later).
-    ctx.docs = fetchDocs(parcel, null);
+    // A plan revision reuses this property's retrieved documents, including missing-record outcomes.
+    // It does not claim to refresh title evidence or silently repeat the slow document downloads.
+    ctx.docs = documents ? Promise.resolve(documents) : fetchDocs(parcel, null);
     for (var i = 0; i < STEPS.length; i++) {
       var id = STEPS[i][0];
       onStep && onStep(id, 'running');
@@ -2900,7 +2940,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
         findings.push(F('land', STEPS[i][1], 'verify', 'Automated check failed', String(e && e.message || e).slice(0, 300)));
       }
     }
-    return { findings: findings, facts: ctx.facts };
+    return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
   }
 
   root.LotReport = { locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
@@ -3140,7 +3180,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   var form = $('form'), prog = $('progress'), err = $('err'), go = $('go');
   var mode = 'none', last = null, map = null;
 
-  var STATUS = { flag: 'Flag', watch: 'Watch', verify: 'Verify', ok: 'Clear' };
+  var STATUS = { flag: 'Potential concern', watch: 'Review condition', verify: 'Needs verification', ok: 'No issue identified' };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -3148,7 +3188,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
   /* ---------------- form */
   var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'fireplace', 'cladding'];
-  var extracted = null;
+  var extracted = null, readingPlan = false, updatingPlan = false, readVersion = 0;
   function setMode(m) {
     mode = m;
     document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
@@ -3171,8 +3211,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
   async function handleFile(file) {
     if (!file) return;
-    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { err.textContent = 'Choose a PDF plan set.'; return; }
-    err.textContent = '';
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { $('plan-error').textContent = 'Choose a PDF plan set.'; return; }
+    var version = ++readVersion;
+    readingPlan = true; $('plan-apply').disabled = true;
+    $('plan-error').textContent = '';
     extracted = null; setMode('upload');
     $('parse').hidden = false;
     var st = $('parse-status'); st.className = 'status';
@@ -3180,6 +3222,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     $('parse-chips').innerHTML = '';
     try {
       var x = await window.PlanReader.read(file, function (i, n) { $('parse-msg').textContent = 'Reading ' + file.name + ': page ' + i + ' of ' + n; });
+      if (version !== readVersion) return;
       extracted = x;
       if (x.textChars < 200) {
         st.className = 'status warn';
@@ -3199,10 +3242,13 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       fillFields(x);
       setMode('upload');
     } catch (ex) {
+      if (version !== readVersion) return;
       st.className = 'status warn';
       $('parse-msg').textContent = 'Could not read that PDF (' + ex.message + '). Enter the plan details by hand below.';
       extracted = { fields: {}, src: {}, features: [], codes: [], filename: file.name };
       fillFields(extracted); setMode('upload');
+    } finally {
+      if (version === readVersion) { readingPlan = false; $('plan-apply').disabled = false; }
     }
   }
   $('planfile').addEventListener('change', function () { handleFile(this.files[0]); });
@@ -3240,7 +3286,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   }
   function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
-    go.disabled = false; go.textContent = 'Generate dossier';
+    go.disabled = false; go.textContent = 'Generate site report';
     err.textContent = msg;
     if (options && options.length) {
       // Offer the matches as one-click choices that fill the address field.
@@ -3260,7 +3306,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     err.textContent = '';
     var q = $('address').value.trim();
     if (!/^\d+\s+\S+/.test(q) && !LR.looksLikeParcel(q)) { err.textContent = 'Enter a street address starting with the house number, or a county parcel ID.'; $('address').focus(); return; }
-    var plan = planFromForm();
+    // Every property starts with a site review; never carry another property's plan into it.
+    var plan = null;
+    readVersion++; readingPlan = false; extracted = null; fillFields(null); setMode('none'); $('planfile').value = ''; $('parse').hidden = true;
     go.disabled = true;
     steps.forEach(function (s) { s.state = 'pending'; });
     form.classList.add('off'); prog.classList.add('on');
@@ -3283,9 +3331,43 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       steps.forEach(function (s) { if (s.id === id) s.state = state; }); renderSteps();
     });
     $('phase').textContent = 'Report ready';
-    last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, date: new Date() };
+    last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: new Date() };
     showReport();
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
+  });
+
+  $('rv-plan').addEventListener('click', function () {
+    if (!last) return;
+    $('plan-property').textContent = last.parcel.attrs.PARCEL_ADD || 'Parcel ' + last.parcel.id;
+    $('plan-error').textContent = ''; $('plan-update-status').textContent = '';
+    $('plan-dialog-title').textContent = last.plan ? 'Update building plans' : 'Add building plans';
+    $('plan-apply').disabled = readingPlan;
+    $('plan-dialog').showModal();
+  });
+  $('plan-close').addEventListener('click', function () { if (!updatingPlan) $('plan-dialog').close(); });
+  $('plan-dialog').addEventListener('cancel', function (e) { if (updatingPlan) e.preventDefault(); });
+  $('plan-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!last || readingPlan || updatingPlan) return;
+    var plan = planFromForm();
+    if (mode !== 'none' && !plan) { $('plan-error').textContent = 'Upload a readable plan or enter at least one plan detail.'; return; }
+    if (!$('plan-form').reportValidity()) return;
+    updatingPlan = true;
+    Array.from($('plan-form').elements).forEach(function (el) { el.disabled = true; });
+    $('plan-error').textContent = '';
+    try {
+      var prior = last;
+      var res = await LR.run(prior.parcel, plan, DATA.costs, function (id, state) {
+        if (state === 'running') $('plan-update-status').textContent = 'Updating: ' + (LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1];
+      }, prior.documents);
+      last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
+      $('plan-dialog').close(); showReport(true);
+    } catch (ex) {
+      $('plan-error').textContent = 'The plan check could not finish. Your previous report is unchanged. ' + (ex.message || ex);
+    } finally {
+      updatingPlan = false;
+      Array.from($('plan-form').elements).forEach(function (el) { el.disabled = false; });
+    }
   });
 
   /* ---------------- checklist store: statuses and attached files, kept in this browser per parcel */
@@ -3385,7 +3467,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = r.findings, plan = r.plan;
     var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
-    var costs = rollup(f), lo = costs.reduce(function (s, x) { return s + x.cost.low; }, 0), hi = costs.reduce(function (s, x) { return s + x.cost.high; }, 0);
+    var costs = rollup(f);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
       var k = itemKey(x), st = (state && state[k]) || { status: 'todo', files: [] }, chk = '';
@@ -3399,7 +3481,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       }
       return '<article class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
-        (x.cost && x.status !== 'ok' ? '<div class="cost">' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
+        (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
         '<div class="src">' + src + '</div>' + chk + '</div></article>';
     };
     var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
@@ -3409,7 +3491,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       return '<section class="group"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return x.status === 'flag'; });
-    var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No red flags in public data.</li>';
+    var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
     var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
@@ -3438,17 +3520,17 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var pc = f.filter(function (x) { return x.section === 'plan' && (x.status === 'flag' || x.status === 'watch'); });
     var planSum = plan ? '<h2 style="margin-top:18px">Plan conflicts</h2><ul class="top">' + (pc.length ? pc.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No confirmed conflicts in the checks completed. ' + f.filter(function (x) { return x.section === 'plan' && x.status === 'verify'; }).length + ' plan checks still need verification, including easement clearance.</li>') + '</ul>' : '';
     var date = r.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    return '<div class="wrap"><div class="eyebrow">Due diligence dossier · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
+    return '<div class="wrap"><div class="eyebrow">Site report · ' + esc(date) + '</div><h1>' + esc(a.PARCEL_ADD || 'Parcel ' + r.parcel.id) + '</h1>' +
       '<div class="meta"><span>' + esc((a.PARCEL_CITY || '') + ', UT') + '</span><span>' + esc(legal) + '</span><span>Parcel ' + esc(r.parcel.id) + ' · ' + esc(r.parcel.county) +
       ' County</span><span>' + esc(a.PARCEL_ACRES) + ' acres</span></div>' +
       '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
-      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Flags</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Watch</span></div>' +
-      '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
+      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
+      '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>No issue identified</span></div></div>' +
       checklistSummary(f, state, saved) +
-      '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
+      '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +
+      '<h2 style="margin-top:18px">Priority findings</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
-      '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
+      '<div class="card"><h2>Items to price</h2><details><summary>Unvalidated planning ranges (' + costs.length + ' items)</summary><p>These generic placeholders are not bids or site-specific estimates. They may overlap or represent alternatives; do not add them into a project budget.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></details></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
       'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
   }
@@ -3458,7 +3540,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
-    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the dossier again to retry.</p></section>';
+    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
     var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
@@ -3582,6 +3664,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   function showReport(fromHistory) {
     $('rv-body').innerHTML = reportHTML(last, null, false);
     document.body.classList.add('show-report');
+    $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
     document.body.classList.remove('chk-only');
     loadChecklist();
     document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);

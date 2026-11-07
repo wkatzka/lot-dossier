@@ -56,6 +56,10 @@ Vercel deploys `main` automatically (project `lot-dossier-assistant`, framework 
 
 ### Capability checklist
 
+- Homepage and report language: property-first search, report sections, source-backed rule excerpt, explicit data/verification limits and reduced background contrast. Plans are added from the generated report and update the same parcel's checks and permit packet using its retrieved documents. A new property starts without the previous property's plan. Saved reports retain the updated findings. Placeholder cost ranges are disclosed separately and no longer summed into a headline budget.
+- Public preview uses an actual published pilot-city rule, not a full property example. Publishing a complete example report remains unattempted pending selection of a nonproprietary demonstration property; no private pilot details are embedded in the homepage.
+- Validation: browser-tested a real pilot site review followed by manual basement-plan entry, removal of that plan without stale findings, and local PDF extraction followed by a report/permit-packet update. `node scripts/test-plan-evidence.js` checks groundwater provenance and prevents mapped conditions from being presented as a field measurement or slab clearance.
+
 - Delivered: Cornerpin branding, address/plan dossiers, permit-packet navigation and preparation, full plat downloads and cross-sheet easement evidence.
 - Delivered as screening: private in-ground pool rules for Ogden Valley City, linked to existing groundwater, terrain, hazard, service and easement findings. Runs without a pool plan; no pool placement or eligibility approval is calculated. Rules checked 2026-11-07; the verified state code version expires 2027-01-01.
 - Attempted but unresolved: complete easement applicability and geometry. Recorded instrument images/title exceptions remain a records-access dependency; survey registration and interpretation are not implemented.

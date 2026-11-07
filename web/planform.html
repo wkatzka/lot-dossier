@@ -1,0 +1,51 @@
+<dialog id="plan-dialog" aria-labelledby="plan-dialog-title"><form id="plan-form"><div class="dialog-heading"><div><div class="eyebrow">Plan compatibility</div><h2 id="plan-dialog-title">Add building plans</h2></div><button type="button" class="btn ghost" id="plan-close" aria-label="Close building plans">Close</button></div><p id="plan-property"></p>          <div class="planbox">
+            <div class="row">
+              <span class="lbl" id="plan-lbl" style="margin:0">Building plan <span style="color:var(--muted);font-weight:500">(optional)</span></span>
+              <div class="seg" role="group" aria-labelledby="plan-lbl">
+                <button type="button" data-mode="none" aria-pressed="true">None yet</button>
+                <button type="button" data-mode="upload" aria-pressed="false">Upload plan</button>
+                <button type="button" data-mode="custom" aria-pressed="false">Enter details</button>
+              </div>
+            </div>
+            <div id="mode-none" class="hint" style="margin:0">Select Upload plan or Enter details to compare the design with this property. Select None yet to remove an existing plan from the report.</div>
+
+            <div id="mode-upload" hidden>
+              <label class="drop" id="drop">
+                <input type="file" id="planfile" accept="application/pdf,.pdf">
+                <b>Drop a plan set PDF, or click to choose</b>
+                <span>Read in your browser. The file is never uploaded anywhere.</span>
+              </label>
+              <div class="parse" id="parse" hidden>
+                <div class="status" id="parse-status"><span class="ic" aria-hidden="true"></span><span id="parse-msg">Reading plan…</span></div>
+                <div class="chips" id="parse-chips"></div>
+              </div>
+            </div>
+
+            <div id="plan-fields" hidden>
+              <div class="extract-h"><b id="fields-title">Plan details</b><span id="fields-note">Check and correct anything we misread.</span></div>
+              <div class="grid2">
+                <label>House footprint (sq ft)<input type="number" min="0" inputmode="numeric" id="residence_sf"><span class="src" data-for="residence_sf"></span></label>
+                <label>Garage (sq ft)<input type="number" min="0" inputmode="numeric" id="garage_sf"><span class="src" data-for="garage_sf"></span></label>
+                <label>Overall width (ft)<input type="number" min="0" inputmode="decimal" id="width_ft" step="any"><span class="src" data-for="width_ft"></span></label>
+                <label>Overall depth (ft)<input type="number" min="0" inputmode="decimal" id="depth_ft" step="any"><span class="src" data-for="depth_ft"></span></label>
+                <label>Bedrooms<input type="number" min="0" inputmode="numeric" id="bedrooms"><span class="src" data-for="bedrooms"></span></label>
+                <label>Stories above grade<input type="number" min="0" inputmode="numeric" id="stories"><span class="src" data-for="stories"></span></label>
+                <label>Foundation
+                  <select id="foundation"><option value="">Not specified</option><option value="basement">Full or partial basement</option><option value="crawlspace">Crawlspace</option><option value="slab">Slab on grade</option></select>
+                  <span class="src" data-for="foundation"></span></label>
+                <label>Building height (ft)<input type="number" min="0" inputmode="decimal" id="height_ft" step="any"><span class="src" data-for="height_ft"></span></label>
+                <label>Ground snow load (psf)<input type="number" min="0" inputmode="numeric" id="ground_snow_load_psf" step="any"><span class="src" data-for="ground_snow_load_psf"></span></label>
+                <label>Allowable soil bearing (psf)<input type="number" min="0" inputmode="numeric" id="bearing_psf" step="any"><span class="src" data-for="bearing_psf"></span></label>
+                <label>Heating fuel
+                  <select id="fuel"><option value="">Not specified</option><option value="gas">Natural gas / propane appliances</option><option value="electric">All-electric</option></select>
+                  <span class="src" data-for="fuel"></span></label>
+                <label>Fireplace
+                  <select id="fireplace"><option value="">None / not specified</option><option value="gas">Gas or direct-vent</option><option value="wood">Wood-burning or masonry</option><option value="unknown">Fireplace, fuel not confirmed</option></select>
+                  <span class="src" data-for="fireplace"></span></label>
+                <label>Exterior cladding
+                  <select id="cladding"><option value="">Not specified</option><option value="combustible">Wood / cedar siding</option><option value="noncombustible">Stone, fiber cement, stucco or metal</option></select>
+                  <span class="src" data-for="cladding"></span></label>
+              </div>
+            </div>
+          </div>
+<p id="plan-error" class="err" role="alert"></p><p id="plan-update-status" role="status"></p><button class="btn" id="plan-apply" type="submit">Update site report</button></form></dialog>
