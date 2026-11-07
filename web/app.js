@@ -113,7 +113,7 @@
   }
   function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
-    go.disabled = false; go.textContent = 'Generate site report';
+    go.disabled = false; go.textContent = 'Generate dossier';
     err.textContent = msg;
     if (options && options.length) {
       // Offer the matches as one-click choices that fill the address field.
@@ -161,6 +161,7 @@
     last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: new Date() };
     window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
     showReport();
+    window.dispatchEvent(new CustomEvent('cornerpin:open-workflow', { detail: { tab: 'overview' } }));
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
   });
 
@@ -318,7 +319,7 @@
     var groups = order.map(function (c) {
       var fs = f.filter(function (x) { return x.section === c[0]; }).sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; });
       if (!fs.length) return '';
-      return '<section class="group"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
+      return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return x.status === 'flag'; });
     var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
@@ -449,7 +450,7 @@
   }
   // One delegated handler for every checklist control in the report.
   document.addEventListener('click', function (e) {
-    var cp = e.target.closest && e.target.closest('#rv [data-copy]');
+    var cp = e.target.closest && e.target.closest('#rv [data-copy], #project-workspace [data-copy]');
     if (cp) {
       var src = document.getElementById(cp.getAttribute('data-copy')), txt = src ? src.value || src.textContent : '';
       var done = function () { var t = cp.textContent; cp.textContent = 'Copied'; setTimeout(function () { cp.textContent = t; }, 1500); };
@@ -506,6 +507,7 @@
   });
   function showReport(fromHistory) {
     $('rv-body').innerHTML = reportHTML(last, null, false);
+    if (window.ReportCategories) window.ReportCategories.mount($('rv-body'));
     document.body.classList.add('show-report');
     $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
     document.body.classList.remove('chk-only');
@@ -516,15 +518,19 @@
     if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
   }
   function showHome(fromHistory) {
+    document.body.classList.remove('show-project');
     document.body.classList.remove('show-report');
     document.title = 'Cornerpin';
     if (!fromHistory) try { history.pushState({}, '', location.pathname); } catch (e) {}
     $('address').focus();
   }
   $('rv-new').addEventListener('click', function () { showHome(); });
+  window.CornerpinReportViews = { packet: packetSection };
+  window.addEventListener('cornerpin:home', function () { showHome(); });
   $('rv-print').addEventListener('click', function () { window.print(); });
   window.addEventListener('popstate', function (e) {
     var target = document.getElementById(location.hash.slice(1));
+    if (document.body.classList.contains('show-project') && target && target.closest('#project-workspace')) return;
     var reportTarget = location.hash === '#report' || (target && $('rv').contains(target));
     var showingReport = document.body.classList.contains('show-report');
     if (last && ((e.state && e.state.report) || reportTarget)) {

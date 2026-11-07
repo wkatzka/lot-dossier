@@ -44,8 +44,8 @@ def build(api_base, inline_assets=False):
   <nav class="topnav" aria-label="Report">
     <span class="wordmark"><!--CORNERPIN_WORDMARK--></span>
     <div class="acts">
-      <a class="btn ghost" href="#packet">Permit packet</a>
-      <button class="btn ghost only-live" id="rv-workflow" type="button">Permit workflow</button>
+      <a class="btn ghost only-live" href="#packet">Permit filing</a>
+      <button class="btn ghost only-live" id="rv-workflow" type="button">Project overview</button>
       <button class="btn ghost only-live" id="rv-plan" type="button">Add building plans</button>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
       <button class="btn ghost only-live" id="rv-save" type="button">Download site report</button>
@@ -74,6 +74,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
+        "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
         "<script>\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-store.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-workspace.js") + "\n</script>",
