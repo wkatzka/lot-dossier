@@ -3206,7 +3206,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
   /* ---------------- form */
   var FIELDS = ['residence_sf', 'garage_sf', 'width_ft', 'depth_ft', 'bedrooms', 'stories', 'foundation', 'height_ft', 'ground_snow_load_psf', 'bearing_psf', 'fuel', 'fireplace', 'cladding'];
-  var extracted = null, readingPlan = false, updatingPlan = false, readVersion = 0;
+  var extracted = null, readingPlan = false, updatingPlan = false, readVersion = 0, selectedPlanFile = null;
   function setMode(m) {
     mode = m;
     document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
@@ -3230,6 +3230,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
   async function handleFile(file) {
     if (!file) return;
     if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { $('plan-error').textContent = 'Choose a PDF plan set.'; return; }
+    selectedPlanFile = file;
     var version = ++readVersion;
     readingPlan = true; $('plan-apply').disabled = true;
     $('plan-error').textContent = '';
@@ -3326,7 +3327,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
     if (!/^\d+\s+\S+/.test(q) && !LR.looksLikeParcel(q)) { err.textContent = 'Enter a street address starting with the house number, or a county parcel ID.'; $('address').focus(); return; }
     // Every property starts with a site review; never carry another property's plan into it.
     var plan = null;
-    readVersion++; readingPlan = false; extracted = null; fillFields(null); setMode('none'); $('planfile').value = ''; $('parse').hidden = true;
+    readVersion++; readingPlan = false; extracted = null; selectedPlanFile = null; fillFields(null); setMode('none'); $('planfile').value = ''; $('parse').hidden = true;
     go.disabled = true;
     steps.forEach(function (s) { s.state = 'pending'; });
     form.classList.add('off'); prog.classList.add('on');
@@ -3381,7 +3382,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
       }, prior.documents);
       last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
       window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
-      if (mode === 'upload' && $('planfile').files[0]) window.dispatchEvent(new CustomEvent('cornerpin:planfile', { detail: $('planfile').files[0] }));
+      if (mode === 'upload' && selectedPlanFile) window.dispatchEvent(new CustomEvent('cornerpin:planfile', { detail: selectedPlanFile }));
       $('plan-dialog').close(); showReport(true);
     } catch (ex) {
       $('plan-error').textContent = 'The plan check could not finish. Your previous report is unchanged. ' + (ex.message || ex);
@@ -3686,6 +3687,13 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
     last = JSON.parse(JSON.stringify(e.detail));
     last.date = new Date(last.date);
     if (last.planUpdatedAt) last.planUpdatedAt = new Date(last.planUpdatedAt);
+    readVersion++; readingPlan = false; selectedPlanFile = null; $('planfile').value = ''; $('parse').hidden = true;
+    extracted = last.plan ? Object.assign({}, last.plan, {
+      filename: last.plan.filename || last.plan.name,
+      fields: Object.assign({}, last.plan, last.plan.footprint || {}, last.plan.structural || {}),
+      src: Object.assign({}, last.plan.src || {}, { energy: last.plan.energySrc })
+    }) : null;
+    fillFields(extracted); setMode(extracted ? 'upload' : 'none');
     showReport();
   });
   function showReport(fromHistory) {
