@@ -16,7 +16,7 @@
   var CHECKLIST = [
     ['land', 'Land, zoning & jurisdiction'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
     ['septic', 'Septic / perc'], ['utilities', 'Power, gas & internet'], ['access', 'Access & fire protection'],
-    ['easements', 'Easements & recorded restrictions'], ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['plan', 'Your plan vs. this lot']
+    ['easements', 'Easements & recorded restrictions'], ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['pool', 'Pool feasibility'], ['plan', 'Your plan vs. this lot']
   ];
 
   /* ------------------------------------------------------------ http */
@@ -1969,13 +1969,17 @@
       'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Send the drafted requests now; they run in parallel with the survey and engineering.')];
   };
 
+  C.check_pool = async function (ctx) {
+    return root.PoolScreen.screen(ctx.facts);
+  };
+
   var STEPS = [
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
     ['check_zoning', 'Zoning district'], ['check_historic', 'Historic district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
-    ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
+    ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
   async function run(parcel, plan, costs, onStep) {

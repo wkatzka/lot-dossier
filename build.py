@@ -68,6 +68,7 @@ def build(api_base, inline_assets=False):
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
         "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",
+        "<script>\n" + read(WEB, "pool-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",

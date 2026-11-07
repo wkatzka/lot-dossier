@@ -54,6 +54,15 @@ Vercel deploys `main` automatically (project `lot-dossier-assistant`, framework 
 
 ## Limits
 
+### Capability checklist
+
+- Delivered: Cornerpin branding, address/plan dossiers, permit-packet navigation and preparation, full plat downloads and cross-sheet easement evidence.
+- Delivered as screening: private in-ground pool rules for Ogden Valley City, linked to existing groundwater, terrain, hazard, service and easement findings. Runs without a pool plan; no pool placement or eligibility approval is calculated. Rules checked 2026-11-07; the verified state code version expires 2027-01-01.
+- Attempted but unresolved: complete easement applicability and geometry. Recorded instrument images/title exceptions remain a records-access dependency; survey registration and interpretation are not implemented.
+- Unimplemented: mineral-rights ownership determination and defensible market valuation (complete title evidence and licensed comparable sale data are dependencies), pool-plan extraction/placement, and permit submission on behalf of a user. Permit preparation is not filing.
+
+Run `node scripts/test-pool-screen.js` for pool screening scenarios (shallow groundwater, missing evidence, non-pilot jurisdiction, expired state-code verification and sewer/septic distinctions).
+
 - Recorded plats and the parcel-record API are read for **Weber County** only so far. Other counties get the map-based checks.
 - The CC&R *text* is only sold by county recorders. The dossier identifies the recorded documents and uses development standards from public meeting packets.
 - Cost ranges in `config/cost_assumptions.json` are placeholders. Replace them with local bids.
