@@ -33,3 +33,6 @@ assert.throws(()=>G.valid({type:'Feature',geometry:{type:'Polygon',coordinates:[
 console.log('Concavity crossing and invalid exterior-hole tests passed.');
 const A=require('../web/survey-alignment');assert.equal(A.align({},{}).status,'unavailable');assert.equal(A.align({vectors:{pages:[{paths:[],labels:[]}]}},{features:[]}).status,'unresolved');
 console.log('Candidate alignment refuses missing or ambiguous control.');
+
+assert.throws(()=>require("../web/land-value").evaluateHoldout([{actual:100,predicted:100}]),/Invalid/);
+assert.equal(require("../web/mineral-chain").reconcile([],{rootEstablished:true,searchComplete:true}).ownershipDetermined,false);

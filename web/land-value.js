@@ -41,7 +41,7 @@ function comparableRange(subject,records,asOf,validation){
 }
 function evaluateHoldout(rows){
  if(!rows.length)throw Error('Holdout observations required');
- const e=rows.map(r=>{if(!Number.isFinite(r.actual)||r.actual<=0||!Number.isFinite(r.predicted)||r.trainingEnd>=r.saleDate)throw Error('Invalid or temporally leaked holdout');return {absolute:Math.abs(r.actual-r.predicted),relative:Math.abs(r.actual-r.predicted)/r.actual};});
+ const e=rows.map(r=>{if(!Number.isFinite(r.actual)||r.actual<=0||!Number.isFinite(r.predicted)||!Number.isFinite(Date.parse(r.trainingEnd))||!Number.isFinite(Date.parse(r.saleDate))||r.trainingEnd>=r.saleDate)throw Error('Invalid or temporally leaked holdout');return {absolute:Math.abs(r.actual-r.predicted),relative:Math.abs(r.actual-r.predicted)/r.actual};});
  const a=e.map(x=>x.absolute).sort((a,b)=>a-b);return {holdoutCount:e.length,meanAbsoluteError:e.reduce((s,x)=>s+x.absolute,0)/e.length,meanAbsolutePercentageError:e.reduce((s,x)=>s+x.relative,0)/e.length,absoluteError90:a[Math.min(a.length-1,Math.ceil(.9*a.length)-1)]};
 }
 const api={required,residual,comparableRange,evaluateHoldout};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LandValue=api;
