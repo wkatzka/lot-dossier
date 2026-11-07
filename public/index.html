@@ -473,8 +473,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
 /* Cornerpin: a survey pin at a parcel corner. Inline for saved reports. */
 .wordmark{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
-.cornerpin-wordmark{display:block;width:170px;height:auto;flex:none}
-@media(max-width:640px){.cornerpin-wordmark{width:145px}}
+.cornerpin-wordmark{display:block;width:220px;height:auto;flex:none}
+@media(max-width:640px){.cornerpin-wordmark{width:180px}}
 #packet,#permits{scroll-margin-top:24px}
 @media(max-width:640px){.submit{white-space:normal;text-align:center}}
 
@@ -486,7 +486,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiPgogIDxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7I3BhcmNlbC1jb3JuZXJ7ZmlsbDojZjVmNGVlfX08L3N0eWxlPjxnIGlkPSJjb3JuZXJwaW4tc3ltYm9sIj4KICAgIDxwYXRoIGlkPSJwYXJjZWwtY29ybmVyIiBmaWxsPSIjMWYyYjIzIiBkPSJNMjE5IDQ2Nkg3MzZWOTAxSDYxOVY1NzVIMjE5WiIgLz4KICAgIDxwYXRoIGlkPSJzdXJ2ZXktcGluIiBmaWxsPSIjYjc5ODYzIiBkPSJNODA1IDIwMUM4MDUgMjQ0IDc0NSAyNzkgNjcxIDI3OUM1OTcgMjc5IDUzNyAyNDQgNTM3IDIwMUM1MzcgMTU4IDU5NyAxMjMgNjcxIDEyM0M3NDUgMTIzIDgwNSAxNTggODA1IDIwMVpNNjE5IDI2N0g3MjNMNzE2IDQ2Nkw2NzEgNTQ4TDYyNiA0NjZaIiAvPgogIDwvZz4KPC9zdmc+">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEgMzk5IDIyNiAyMjYiIHdpZHRoPSIyMjYiIGhlaWdodD0iMjI2Ij48dGl0bGU+Q29ybmVycGluIHN5bWJvbDwvdGl0bGU+PHN0eWxlPkBtZWRpYShwcmVmZXJzLWNvbG9yLXNjaGVtZTpkYXJrKXtwYXRoOmZpcnN0LWNoaWxke2ZpbGw6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj4KICAgIDxwYXRoIGZpbGw9IiMxZjJiMjMiIGQ9Ik0yNiA0NjMgOTAgNDEzSDE1MEwxNzUgNDMzIDE0NSA0NTcgMTMzIDQ0OEgxMDNMNjEgNDgwVjUxMEw3MSA1MThWNTY4TDI2IDUzM1oiIC8+CiAgICA8cGF0aCBmaWxsPSIjZjI2YTM2IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03NyA1MTUgMTQ1IDQ2MkgxNzhMMjAzIDQ4MVY1MzBMMTc2IDU1MkgxMTJWNTgzTDc3IDYxMVpNMTI2IDUxOUgxNTlMMTY4IDUxMlY1MDFMMTYwIDQ5NVoiIC8+CiAgPC9nPjwvc3ZnPg==">
 </head>
 <body>
 <div id="home">
@@ -494,22 +494,23 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 <a class="skip-link" href="#start">Skip to dossier form</a>
 <div class="wrap">
   <nav class="top" aria-label="Primary">
-    <a class="wordmark" href="#start"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="8 374 1008 260" fill="none" xmlns="http://www.w3.org/2000/svg" width="1008" height="260">
-  <title>Cornerpin</title>
-  <desc>Outlined architectural wordmark in warm ivory, with a muted brass survey boundary pin forming the lowercase i.</desc>
-  <g id="wordmark" fill="currentColor">
-    <path id="letter-C" d="M79 402H119C152 402 169 418 169 449V460H130V452C130 441 124 436 113 436H85C72 436 66 442 66 455V510C66 523 72 529 85 529H113C124 529 130 523 130 512V504H169V516C169 547 152 563 119 563H79C45 563 28 546 28 514V451C28 419 45 402 79 402Z" />
-    <path id="letter-o" fill-rule="evenodd" d="M225 440H243C274 440 290 456 290 486V517C290 548 274 563 243 563H225C194 563 178 548 178 517V486C178 456 194 440 225 440ZM226 471C217 471 213 476 213 485V518C213 527 217 532 226 532H242C251 532 255 527 255 518V485C255 476 251 471 242 471Z" />
-    <path id="letter-r-first" d="M301 441H337V455C345 444 356 440 370 440H375V474H360C345 474 337 481 337 497V562H301Z" />
-    <path id="letter-n-first" d="M383 441H419V452C427 444 438 440 452 440C479 440 494 455 494 483V562H458V487C458 476 453 471 443 471H438C426 471 419 478 419 491V562H383Z" />
-    <path id="letter-e" fill-rule="evenodd" d="M552 440H567C598 440 614 456 614 485V511H540V519C540 529 545 534 555 534H566C575 534 580 531 581 524H614C612 550 596 563 568 563H552C521 563 505 547 505 517V486C505 456 521 440 552 440ZM540 489H580V484C580 474 575 469 565 469H555C545 469 540 474 540 484Z" />
-    <path id="letter-r-second" d="M625 441H661V455C669 444 680 440 694 440H699V474H684C669 474 661 481 661 497V562H625Z" />
-    <path id="letter-p" fill-rule="evenodd" d="M709 441H745V452C753 444 764 440 778 440C807 440 823 456 823 486V517C823 547 807 563 778 563C764 563 753 560 745 554V614H709ZM745 486V517C745 527 750 532 760 532H772C782 532 787 527 787 517V486C787 476 782 471 772 471H760C750 471 745 476 745 486Z" />
-    <path id="letter-n-last" d="M885 441H921V452C929 444 940 440 954 440C981 440 996 455 996 483V562H960V487C960 476 955 471 945 471H940C928 471 921 478 921 491V562H885Z" />
+    <a class="wordmark" href="#start"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="12 419 944 171" xmlns="http://www.w3.org/2000/svg" width="944" height="171">
+  <title>CORNERPIN</title>
+  <desc>Construction intelligence brand lockup with interlocking parcel monogram and custom engineered lettering.</desc>
+  <g id="brand-symbol" transform="translate(9.36 184.32) scale(.64)">
+    <path fill="currentColor" d="M26 463 90 413H150L175 433 145 457 133 448H103L61 480V510L71 518V568L26 533Z" />
+    <path fill="#f26a36" fill-rule="evenodd" d="M77 515 145 462H178L203 481V530L176 552H112V583L77 611ZM126 519H159L168 512V501L160 495Z" />
   </g>
-  <g id="survey-pin-i" fill="#b79863">
-    <circle cx="853" cy="415" r="21" />
-    <path d="M836 445H870L868 550C868 556 866 562 864 568L853 589L842 568C840 562 838 556 838 550Z" />
+  <g transform="translate(-56 0)" id="brand-wordmark" fill="currentColor">
+    <path d="M249 462H308V479H258L252 485V520L258 526H308V543H249L233 527V478Z" />
+    <path fill-rule="evenodd" d="M338 462H391L407 478V527L391 543H338L321 527V478ZM347 479 341 485V520L347 526H382L388 520V485L382 479Z" />
+    <path fill-rule="evenodd" d="M421 462H484L498 476V503L484 516 502 543H480L461 517H440V543H421ZM440 479V501H473L479 495V485L473 479Z" />
+    <path d="M513 543V462H533L575 515V462H594V543H575L532 489V543Z" />
+    <path d="M609 462H678V479H629V494H674V510H629V526H678V543H609Z" />
+    <path fill-rule="evenodd" d="M692 462H755L769 476V503L755 516 773 543H751L732 517H711V543H692ZM711 479V501H744L750 495V485L744 479Z" />
+    <path fill-rule="evenodd" d="M784 462H847L862 477V502L847 517H804V543H784ZM804 479V501H836L842 495V485L836 479Z" />
+    <path fill="#f26a36" d="M877 433H899V455H877ZM877 473H899V541L888 563 877 541Z" />
+    <path d="M916 543V462H936L978 515V462H998V543H978L935 489V543Z" />
   </g>
 </svg></a>
     <div class="links">
@@ -668,22 +669,23 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
 <footer>
   <div class="wrap">
-    <span class="wordmark"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="8 374 1008 260" fill="none" xmlns="http://www.w3.org/2000/svg" width="1008" height="260">
-  <title>Cornerpin</title>
-  <desc>Outlined architectural wordmark in warm ivory, with a muted brass survey boundary pin forming the lowercase i.</desc>
-  <g id="wordmark" fill="currentColor">
-    <path id="letter-C" d="M79 402H119C152 402 169 418 169 449V460H130V452C130 441 124 436 113 436H85C72 436 66 442 66 455V510C66 523 72 529 85 529H113C124 529 130 523 130 512V504H169V516C169 547 152 563 119 563H79C45 563 28 546 28 514V451C28 419 45 402 79 402Z" />
-    <path id="letter-o" fill-rule="evenodd" d="M225 440H243C274 440 290 456 290 486V517C290 548 274 563 243 563H225C194 563 178 548 178 517V486C178 456 194 440 225 440ZM226 471C217 471 213 476 213 485V518C213 527 217 532 226 532H242C251 532 255 527 255 518V485C255 476 251 471 242 471Z" />
-    <path id="letter-r-first" d="M301 441H337V455C345 444 356 440 370 440H375V474H360C345 474 337 481 337 497V562H301Z" />
-    <path id="letter-n-first" d="M383 441H419V452C427 444 438 440 452 440C479 440 494 455 494 483V562H458V487C458 476 453 471 443 471H438C426 471 419 478 419 491V562H383Z" />
-    <path id="letter-e" fill-rule="evenodd" d="M552 440H567C598 440 614 456 614 485V511H540V519C540 529 545 534 555 534H566C575 534 580 531 581 524H614C612 550 596 563 568 563H552C521 563 505 547 505 517V486C505 456 521 440 552 440ZM540 489H580V484C580 474 575 469 565 469H555C545 469 540 474 540 484Z" />
-    <path id="letter-r-second" d="M625 441H661V455C669 444 680 440 694 440H699V474H684C669 474 661 481 661 497V562H625Z" />
-    <path id="letter-p" fill-rule="evenodd" d="M709 441H745V452C753 444 764 440 778 440C807 440 823 456 823 486V517C823 547 807 563 778 563C764 563 753 560 745 554V614H709ZM745 486V517C745 527 750 532 760 532H772C782 532 787 527 787 517V486C787 476 782 471 772 471H760C750 471 745 476 745 486Z" />
-    <path id="letter-n-last" d="M885 441H921V452C929 444 940 440 954 440C981 440 996 455 996 483V562H960V487C960 476 955 471 945 471H940C928 471 921 478 921 491V562H885Z" />
+    <span class="wordmark"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="12 419 944 171" xmlns="http://www.w3.org/2000/svg" width="944" height="171">
+  <title>CORNERPIN</title>
+  <desc>Construction intelligence brand lockup with interlocking parcel monogram and custom engineered lettering.</desc>
+  <g id="brand-symbol" transform="translate(9.36 184.32) scale(.64)">
+    <path fill="currentColor" d="M26 463 90 413H150L175 433 145 457 133 448H103L61 480V510L71 518V568L26 533Z" />
+    <path fill="#f26a36" fill-rule="evenodd" d="M77 515 145 462H178L203 481V530L176 552H112V583L77 611ZM126 519H159L168 512V501L160 495Z" />
   </g>
-  <g id="survey-pin-i" fill="#b79863">
-    <circle cx="853" cy="415" r="21" />
-    <path d="M836 445H870L868 550C868 556 866 562 864 568L853 589L842 568C840 562 838 556 838 550Z" />
+  <g transform="translate(-56 0)" id="brand-wordmark" fill="currentColor">
+    <path d="M249 462H308V479H258L252 485V520L258 526H308V543H249L233 527V478Z" />
+    <path fill-rule="evenodd" d="M338 462H391L407 478V527L391 543H338L321 527V478ZM347 479 341 485V520L347 526H382L388 520V485L382 479Z" />
+    <path fill-rule="evenodd" d="M421 462H484L498 476V503L484 516 502 543H480L461 517H440V543H421ZM440 479V501H473L479 495V485L473 479Z" />
+    <path d="M513 543V462H533L575 515V462H594V543H575L532 489V543Z" />
+    <path d="M609 462H678V479H629V494H674V510H629V526H678V543H609Z" />
+    <path fill-rule="evenodd" d="M692 462H755L769 476V503L755 516 773 543H751L732 517H711V543H692ZM711 479V501H744L750 495V485L744 479Z" />
+    <path fill-rule="evenodd" d="M784 462H847L862 477V502L847 517H804V543H784ZM804 479V501H836L842 495V485L836 479Z" />
+    <path fill="#f26a36" d="M877 433H899V455H877ZM877 473H899V541L888 563 877 541Z" />
+    <path d="M916 543V462H936L978 515V462H998V543H978L935 489V543Z" />
   </g>
 </svg></span>
     <span>Screening tool built on public data. Not a survey, geotechnical report, title report or appraisal.</span>
@@ -692,22 +694,23 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 </div>
 <div id="rv">
   <nav class="topnav" aria-label="Report">
-    <span class="wordmark"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="8 374 1008 260" fill="none" xmlns="http://www.w3.org/2000/svg" width="1008" height="260">
-  <title>Cornerpin</title>
-  <desc>Outlined architectural wordmark in warm ivory, with a muted brass survey boundary pin forming the lowercase i.</desc>
-  <g id="wordmark" fill="currentColor">
-    <path id="letter-C" d="M79 402H119C152 402 169 418 169 449V460H130V452C130 441 124 436 113 436H85C72 436 66 442 66 455V510C66 523 72 529 85 529H113C124 529 130 523 130 512V504H169V516C169 547 152 563 119 563H79C45 563 28 546 28 514V451C28 419 45 402 79 402Z" />
-    <path id="letter-o" fill-rule="evenodd" d="M225 440H243C274 440 290 456 290 486V517C290 548 274 563 243 563H225C194 563 178 548 178 517V486C178 456 194 440 225 440ZM226 471C217 471 213 476 213 485V518C213 527 217 532 226 532H242C251 532 255 527 255 518V485C255 476 251 471 242 471Z" />
-    <path id="letter-r-first" d="M301 441H337V455C345 444 356 440 370 440H375V474H360C345 474 337 481 337 497V562H301Z" />
-    <path id="letter-n-first" d="M383 441H419V452C427 444 438 440 452 440C479 440 494 455 494 483V562H458V487C458 476 453 471 443 471H438C426 471 419 478 419 491V562H383Z" />
-    <path id="letter-e" fill-rule="evenodd" d="M552 440H567C598 440 614 456 614 485V511H540V519C540 529 545 534 555 534H566C575 534 580 531 581 524H614C612 550 596 563 568 563H552C521 563 505 547 505 517V486C505 456 521 440 552 440ZM540 489H580V484C580 474 575 469 565 469H555C545 469 540 474 540 484Z" />
-    <path id="letter-r-second" d="M625 441H661V455C669 444 680 440 694 440H699V474H684C669 474 661 481 661 497V562H625Z" />
-    <path id="letter-p" fill-rule="evenodd" d="M709 441H745V452C753 444 764 440 778 440C807 440 823 456 823 486V517C823 547 807 563 778 563C764 563 753 560 745 554V614H709ZM745 486V517C745 527 750 532 760 532H772C782 532 787 527 787 517V486C787 476 782 471 772 471H760C750 471 745 476 745 486Z" />
-    <path id="letter-n-last" d="M885 441H921V452C929 444 940 440 954 440C981 440 996 455 996 483V562H960V487C960 476 955 471 945 471H940C928 471 921 478 921 491V562H885Z" />
+    <span class="wordmark"><svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" viewBox="12 419 944 171" xmlns="http://www.w3.org/2000/svg" width="944" height="171">
+  <title>CORNERPIN</title>
+  <desc>Construction intelligence brand lockup with interlocking parcel monogram and custom engineered lettering.</desc>
+  <g id="brand-symbol" transform="translate(9.36 184.32) scale(.64)">
+    <path fill="currentColor" d="M26 463 90 413H150L175 433 145 457 133 448H103L61 480V510L71 518V568L26 533Z" />
+    <path fill="#f26a36" fill-rule="evenodd" d="M77 515 145 462H178L203 481V530L176 552H112V583L77 611ZM126 519H159L168 512V501L160 495Z" />
   </g>
-  <g id="survey-pin-i" fill="#b79863">
-    <circle cx="853" cy="415" r="21" />
-    <path d="M836 445H870L868 550C868 556 866 562 864 568L853 589L842 568C840 562 838 556 838 550Z" />
+  <g transform="translate(-56 0)" id="brand-wordmark" fill="currentColor">
+    <path d="M249 462H308V479H258L252 485V520L258 526H308V543H249L233 527V478Z" />
+    <path fill-rule="evenodd" d="M338 462H391L407 478V527L391 543H338L321 527V478ZM347 479 341 485V520L347 526H382L388 520V485L382 479Z" />
+    <path fill-rule="evenodd" d="M421 462H484L498 476V503L484 516 502 543H480L461 517H440V543H421ZM440 479V501H473L479 495V485L473 479Z" />
+    <path d="M513 543V462H533L575 515V462H594V543H575L532 489V543Z" />
+    <path d="M609 462H678V479H629V494H674V510H629V526H678V543H609Z" />
+    <path fill-rule="evenodd" d="M692 462H755L769 476V503L755 516 773 543H751L732 517H711V543H692ZM711 479V501H744L750 495V485L744 479Z" />
+    <path fill-rule="evenodd" d="M784 462H847L862 477V502L847 517H804V543H784ZM804 479V501H836L842 495V485L836 479Z" />
+    <path fill="#f26a36" d="M877 433H899V455H877ZM877 473H899V541L888 563 877 541Z" />
+    <path d="M916 543V462H936L978 515V462H998V543H978L935 489V543Z" />
   </g>
 </svg></span>
     <div class="acts">

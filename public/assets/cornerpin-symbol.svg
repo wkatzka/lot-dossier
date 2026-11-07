@@ -1,6 +1,4 @@
-<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
-  <g id="cornerpin-symbol">
-    <path id="parcel-corner" fill="#f5f4ee" d="M219 466H736V901H619V575H219Z" />
-    <path id="survey-pin" fill="#b79863" d="M805 201C805 244 745 279 671 279C597 279 537 244 537 201C537 158 597 123 671 123C745 123 805 158 805 201ZM619 267H723L716 466L671 548L626 466Z" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 399 226 226" width="226" height="226"><title>Cornerpin symbol</title><g id="brand-symbol">
+    <path fill="#f5f4ee" d="M26 463 90 413H150L175 433 145 457 133 448H103L61 480V510L71 518V568L26 533Z" />
+    <path fill="#f26a36" fill-rule="evenodd" d="M77 515 145 462H178L203 481V530L176 552H112V583L77 611ZM126 519H159L168 512V501L160 495Z" />
+  </g></svg>
