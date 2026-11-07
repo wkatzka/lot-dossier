@@ -477,6 +477,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 #packet,#permits{scroll-margin-top:24px}
 @media(max-width:640px){.submit{white-space:normal;text-align:center}}
 
+#rv .plat-evidence{margin-top:28px}#rv .plat-sheets li{margin:10px 0}#rv .easement-excerpts{padding-left:20px}#rv .easement-excerpts li{padding:14px 0;border-bottom:1px solid var(--line)}#rv .easement-excerpts blockquote{margin:8px 0;padding:10px 14px;border-left:2px solid var(--line);overflow-wrap:anywhere}#rv .plat-evidence summary{cursor:pointer;font-weight:700;padding:12px 0}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
@@ -601,6 +603,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       <div class="check"><div class="n">09</div><h3>Permits &amp; code</h3><p>Who approves your plans and how to reach them, the city office, adopted codes, design loads and fees.</p><div class="src">Jurisdiction · state code</div></div>
       <div class="check"><div class="n">10</div><h3>Plan vs. lot</h3><p>Upload a plan set: we read it and flag where the design conflicts with the site.</p><div class="src">Your plan, read in the browser</div></div>
       <div class="check"><div class="n">11</div><h3>Home performance &amp; restrictions</h3><p>Energy code, wood-burning bans, impervious-surface and stormwater rules, water-wise landscaping, checked against your plan.</p><div class="src">Utah code · DEQ · local ordinances</div></div>
+      <div class="check"><div class="n">12</div><h3>Easements &amp; recorded restrictions</h3><p>All linked plat sheets, potential utility, access, drainage and unusual easement references, with explicit gaps where title records or geometry remain unverified.</p><div class="src">Recorded plats · county parcel references</div></div>
     </div>
   </div>
 </section>
@@ -659,7 +662,77 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   <div id="rv-body"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "ccffc0caab", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
+<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "03bcd266e6", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
+<script>
+/* Evidence, not legal interpretation: preserve every sheet and keep lot attribution uncertain. */
+(function (root) {
+  'use strict';
+  var kinds = [
+    ['Public utility', /\bP\.?\s*U\.?\s*E\.?\b|PUBLIC UTILITY/i],
+    ['Drainage / flood', /DRAINAGE|FLOWAGE|FLOOD/i],
+    ['Access / roadway', /ACCESS|INGRESS|EGRESS|RIGHT[- ]OF[- ]WAY|ROADWAY/i],
+    ['Temporary turnaround', /TURN\s*AROUND|TURNAROUND/i],
+    ['Water / irrigation', /IRRIGATION|DITCH|CANAL|WATER(?:LINE)?/i],
+    ['Sewer / pipeline', /SEWER|PIPELINE/i],
+    ['Conservation / wetland', /CONSERVATION|WETLAND|OPEN SPACE/i],
+    ['Trail / public use', /TRAIL|PEDESTRIAN|PUBLIC USE/i],
+    ['Other recorded restriction', /MINERAL|AVIGATION|AVIATION|SOLAR|SCENIC|SLOPE|SUPPORT|ENCROACHMENT|NO[- ]BUILD|NON[- ]BUILDABLE/i]
+  ];
+  function extractMentions(raw) {
+    var lines = String(raw || '').replace(/[’‘`´]/g, "'").split(/\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    var out = [], seen = {};
+    lines.forEach(function (line, i) {
+      if (!/EASEMENT|\bP\.?\s*U\.?\s*E\.?\b|RIGHT[- ]OF[- ]WAY|NO[- ]BUILD|NON[- ]BUILDABLE|LIMITS OF DISTURBANCE/i.test(line)) return;
+      var text = lines.slice(Math.max(0, i - 1), Math.min(lines.length, i + 3)).join(' ').replace(/\s+/g, ' ').slice(0, 700);
+      var key = text.toUpperCase(); if (seen[key]) return; seen[key] = true;
+      var matches = kinds.filter(function (k) { return k[1].test(text); }).map(function (k) { return k[0]; });
+      var entries = [], re = /ENTRY\s*(?:#|NO\.?|NUMBER)?\s*(\d{6,9})/gi, m;
+      while ((m = re.exec(text))) entries.push(m[1]);
+      out.push({ categories: matches.length ? matches : ['Unclassified easement'], text: text, entries: entries });
+    });
+    return out;
+  }
+  function mergeSheets(rec, results) {
+    var readings = [], evidence = [], sheets = [];
+    results.forEach(function (r, i) {
+      var original = rec.plats[i], source = { sheet: r && r.sheet || original.sheet, url: original.url };
+      sheets.push(Object.assign({}, source, { processed: !!(r && !r.error && r.plat), error: r && r.error || null }));
+      if (!r || r.error) return;
+      if (r.lot) readings.push(Object.assign({}, r.lot, source));
+      ((r.plat && r.plat.easementMentions) || []).forEach(function (x) {
+        evidence.push(Object.assign({}, x, source, { scope: 'Sheet-wide; may concern other lots or the legend' }));
+      });
+      ((r.lot && r.lot.easementMentions) || []).forEach(function (x) {
+        evidence.push(Object.assign({}, x, source, { scope: 'Near this lot label; boundary applicability unverified' }));
+      });
+    });
+    // A label at a sheet edge is a warning, not proof of the lot's geometry. Prefer an interior label,
+    // but keep every reading and its citations instead of losing the other sheets' evidence.
+    readings.sort(function (a, b) {
+      return Number(!!a.nearSheetEdge) - Number(!!b.nearSheetEdge) || (b.labelClearance || 0) - (a.labelClearance || 0);
+    });
+    var lot = readings.length ? Object.assign({}, readings[0]) : null;
+    var conflicts = [];
+    if (lot) {
+      lot.fieldSources = {};
+      ['acres', 'platAddress'].forEach(function (k) {
+        var values = Array.from(new Set(readings.map(function (r) { return r[k]; }).filter(function (v) { return v != null; })));
+        if (values.length > 1) conflicts.push({ field: k, values: values });
+        lot[k] = values.length === 1 ? values[0] : null;
+        lot.fieldSources[k] = readings.filter(function (r) { return r[k] != null; }).map(function (r) { return { sheet: r.sheet, url: r.url, value: r[k] }; });
+      });
+      lot.easements = Array.from(new Set([].concat.apply([], readings.map(function (r) { return r.easements || []; }))));
+      lot.mentions = Array.from(new Set([].concat.apply([], readings.map(function (r) { return r.mentions || []; }))));
+    }
+    return { lot: lot, readings: readings, evidence: evidence, sheets: sheets, conflicts: conflicts,
+      coverage: { processed: sheets.filter(function (s) { return s.processed; }).length, total: rec.plats.length, geometryVerified: false, titleSearchComplete: false } };
+  }
+  var api = { extractMentions: extractMentions, mergeSheets: mergeSheets };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.PlatEvidence = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script>
 /* Lot dossier engine: runs entirely in the browser (or Node 18+).
  * A port of lotreport/*.py. Every data source below sends CORS headers, so no server is needed. */
@@ -679,7 +752,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   var CHECKLIST = [
     ['land', 'Land, zoning & jurisdiction'], ['water', 'Water rights & culinary water'], ['geo', 'Geologic & natural hazards'],
     ['septic', 'Septic / perc'], ['utilities', 'Power, gas & internet'], ['access', 'Access & fire protection'],
-    ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['plan', 'Your plan vs. this lot']
+    ['easements', 'Easements & recorded restrictions'], ['ccr', 'CC&Rs & design review'], ['survey', 'Survey & topography'], ['permits', 'Building permits & code'], ['performance', 'Home performance & restrictions'], ['plan', 'Your plan vs. this lot']
   ];
 
   /* ------------------------------------------------------------ http */
@@ -1724,6 +1797,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     if (!p.footprint && !p.bedrooms && !p.foundation) return [];
     var from = function (k) { return src[k] ? ' (plan: ' + src[k] + ')' : ''; };
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
+    out.push(P('House and driveway vs. easements', 'verify', 'Easement clearance has not been established',
+      'The plat evidence section preserves candidate restrictions and all linked sheets, but easement boundaries are not mapped. A house that fits zoning setbacks can still intersect a utility, access, drainage or other easement. Neither the house nor the driveway has been cleared against them.'));
     var wt = fx.water_table_in;
     if (fx.boreholes && fx.boreholes.gwMin != null && fx.boreholes.nearestKm < 0.5 && (wt == null || fx.boreholes.gwMin * 12 < wt)) wt = Math.round(fx.boreholes.gwMin * 12);
 
@@ -1905,13 +1980,13 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     // Parcel record first (fast), then every recorded plat sheet OCR'd in parallel, one function call per sheet.
     var record = get('/api/parcel-docs?county=' + encodeURIComponent(parcel.county) + '&parcel=' + encodeURIComponent(parcel.id) + '&sheets=0').then(function (rec) {
       if (!rec || rec.error || !rec.plats || !rec.plats.length) return rec;
-      var sheets = rec.plats.slice(0, 6);
+      var sheets = rec.plats;
       return Promise.all(sheets.map(function (sh) {
         // Cap each sheet at 90 s: dense certificate sheets can take two minutes and rarely hold lot detail. A capped
         // sheet keeps running server-side and is cached, so the next dossier for this lot includes it.
         return get('/api/plat-sheet?url=' + encodeURIComponent(sh.url) + (rec.lot ? '&lot=' + encodeURIComponent(rec.lot) : ''), 90000);
       })).then(function (rs) {
-        var plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [] }, lot = null, lotNotes = [];
+        var plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [] }, lotNotes = [];
         rs.forEach(function (r, i) {
           if (!r || r.error || !r.plat) return;
           var p = r.plat, sheet = r.sheet || sheets[i].sheet;
@@ -1919,12 +1994,12 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
           ['entries', 'approvals', 'associations', 'hazardReports', 'notes'].forEach(function (k) {
             (p[k] || []).forEach(function (v) { var key = JSON.stringify(v.entry || v.text || v); if (!plat[k].some(function (x) { return JSON.stringify(x.entry || x.text || x) === key; })) plat[k].push(v); });
           });
-          var L = r.lot, sc = function (x) { return x ? (x.acres ? 2 : 0) + (x.platAddress ? 2 : 0) + x.easements.length + x.mentions.length : -1; };
-          if (L && sc(L) > sc(lot)) lot = Object.assign({}, L, { sheet: sheet, url: r.url });
+
           (r.notesForLot || []).forEach(function (n) { lotNotes.push(Object.assign({ sheet: sheet }, n)); });
         });
-        rec.plat = plat; rec.lotInfo = lot; rec.lotNotes = lotNotes;
-        rec.sheetsRead = rs.filter(function (r) { return r && !r.error; }).length; rec.sheetsTotal = sheets.length;
+        var merged = root.PlatEvidence.mergeSheets(rec, rs);
+        rec.plat = plat; rec.lotInfo = merged.lot; rec.lotNotes = lotNotes; rec.platEvidence = merged;
+        rec.sheetsRead = merged.coverage.processed; rec.sheetsTotal = merged.coverage.total;
         return rec;
       });
     });
@@ -1955,6 +2030,11 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     if (rec.supported === false) out.push(F('ccr', 'Recorded plat', 'verify', 'Recorded plat not read for ' + ctx.parcel.county + ' County yet',
       'Automatic plat reading (setback notes, recorded agreements, utility approvals) covers Weber County so far. Public meeting records were still searched for the subdivision.' +
       (docs.length ? '' : ' None mentioning it were found.'), 'County recorder', ctx.parcel.attrs.BOUNDARY_SRC || null));
+    ctx.facts.platEvidence = rec.platEvidence || { sheets: (rec.plats || []).map(function (s) { return Object.assign({}, s, { processed: false }); }), readings: [], evidence: [], conflicts: [], coverage: { processed: 0, total: (rec.plats || []).length, geometryVerified: false, titleSearchComplete: false } };
+    ctx.facts.platEvidence.references = (plat.entries || []).filter(function (e) { return /easement/i.test(e.label); }).concat((rec.references || []).filter(function (e) { return /easement/i.test(e.label || e.kind); }));
+    ctx.facts.platEvidence.priorParcels = rec.priorParcels || [];
+    ctx.facts.platEvidence.history = rec.history || null;
+    if (rec.plats && rec.plats.length) ctx.facts.platEvidence.bundleUrl = apiBase() + '/api/plat-bundle?county=' + encodeURIComponent(ctx.parcel.county) + '&parcel=' + encodeURIComponent(ctx.parcel.id) + '&v=' + encodeURIComponent((root.LR_DATA || {}).apiVersion || '');
     var platUrl = (rec.plats && rec.plats[0] && rec.plats[0].url) || rec.parcelPage;
 
     // Setbacks: plat note first (it governs the lot), then the development standards table.
@@ -2117,17 +2197,31 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       var bits = [];
       if (L && L.acres) bits.push(L.acres + ' acres platted');
       if (L && L.easements.length) bits.push(L.easements.join(', '));
-      if (L && L.mentions.length) bits.push(L.mentions.map(function (x) { return x.toLowerCase(); }).join(', ') + ' marked on the lot');
+      if (L && L.mentions.length) bits.push(L.mentions.map(function (x) { return x.toLowerCase(); }).join(', ') + ' detected near the lot label');
       var lotNo = (L && L.lot) || rec.lot;
       ctx.facts.parcelDoc = { lot: lotNo, legal: rec.legal || null, platAddress: L && L.platAddress, acres: L && L.acres, easements: (L && L.easements) || [] };
-      out.push(F('land', 'Lot on the recorded plat', L && L.mentions.length ? 'watch' : 'ok', 'Lot ' + lotNo + (bits.length ? ': ' + bits.join('; ') : ''),
+      out.push(F('land', 'Lot on the recorded plat', 'verify', 'Lot ' + lotNo + (bits.length ? ': ' + bits.join('; ') : ''),
         (rec.legal ? 'Legal description: ' + rec.legal + ' ' : '') +
-        (L ? 'From recorded plat sheet ' + L.sheet + ': ' + (L.acres ? L.acres + ' acres; ' : '') + (L.platAddress ? 'platted address ' + L.platAddress + '; ' : '') +
-          (L.easements.length ? 'easements drawn on the lot: ' + L.easements.join(', ') + ' (no structures within them). ' : 'no easements labeled on the lot. ') : '') +
+        (L ? 'Across the linked plat sheets (suggested starting sheet ' + L.sheet + '): ' + (L.acres ? L.acres + ' acres; ' : '') + (L.platAddress ? 'platted address ' + L.platAddress + '; ' : '') +
+          (L.easements.length ? 'easement labels detected near this lot: ' + L.easements.join(', ') + '. Exact extent, applicability and restrictions are not verified. ' : 'No easement labels detected near this lot by OCR; this does not establish absence of easements. ') : '') +
         (rec.lotNotes && rec.lotNotes.length ? 'Plat notes naming this lot: ' + rec.lotNotes.map(function (n) { return '"' + n.text.slice(0, 160) + '"'; }).join(' ') + ' ' : '') +
-        (rec.sheetsTotal ? '(' + rec.sheetsRead + ' of ' + rec.sheetsTotal + ' plat sheets read.)' : ''),
+        (rec.sheetsTotal ? '(' + rec.sheetsRead + ' of ' + rec.sheetsTotal + ' plat sheets processed by OCR; not a complete easement or title review.)' : ''),
         'Recorded plat ' + ((L && L.sheet) || ''), (L && L.url) || platUrl));
     }
+
+    var pe = ctx.facts.platEvidence, categories = Array.from(new Set([].concat.apply([], pe.evidence.map(function (e) { return e.categories || []; }))));
+    out.push(F('easements', 'Easement evidence and coverage', 'verify',
+      pe.evidence.length ? 'Potential easements found; lot boundaries and legal effect unverified' : 'Easement review incomplete',
+      (categories.length ? 'Plat text mentions: ' + categories.join('; ') + '. These can refer to other lots or legend symbols. ' : 'No reliable easement text was extracted. ') +
+      'All linked sheets are listed in the evidence section below. A lot can continue across sheets. OCR labels do not trace easement boundaries, and a current plat does not reveal every separately recorded, historical, amended or released easement. ' +
+      'The generated site plan excludes easement geometry and cannot establish a buildable envelope.',
+      'Recorded plat set', pe.bundleUrl || platUrl));
+    out.push(F('easements', 'Recorded instruments and title exceptions', 'verify', 'Separate easement instruments and title exceptions still unresolved',
+      'Parcel-page references and plat citations are discovery leads, not a complete chain-of-title search. ' +
+      (pe.references.length ? 'Easement references detected: ' + pe.references.map(function (e) { return 'Entry ' + e.entry; }).join(', ') + '. ' : '') +
+      (pe.priorParcels.length ? 'Prior parcels identified for historical record matching: ' + pe.priorParcels.join(', ') + '. ' : '') +
+      'Recorded instrument images, amendments/releases and a current title exception schedule have not been reconciled. No all-clear is issued for utility, access, drainage, conservation, temporary, blanket or other easements.',
+      'County parcel record', rec.parcelPage || platUrl));
 
     // Subdivision geologic report referenced on the plat.
     (plat.hazardReports || []).slice(0, 1).forEach(function (h) {
@@ -2424,7 +2518,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     sp.labels.forEach(function (lb) {
       o.push('<text x="' + X(lb.at[0]).toFixed(1) + '" y="' + Y(lb.at[1]).toFixed(1) + '" fill="#333" font-size="10" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="3">' + e(lb.text) + '</text>');
     });
-    o.push('<text x="' + M + '" y="' + (M - 12) + '" fill="#5b8a4f" font-size="10">Dashed green line: setback limits (buildable area). Blue: house envelope and distances to lot lines.</text>');
+    o.push('<text x="' + M + '" y="' + (M - 12) + '" fill="#5b8a4f" font-size="10">Dashed green: setbacks only. EASEMENTS NOT MAPPED. Blue: illustrative house envelope.</text>');
     if (sp.drive) o.push('<path d="' + pth(sp.drive.poly) + '" fill="#d9d9d9" stroke="#888" stroke-width="0.8"/>');
     if (sp.house) o.push('<path d="' + pth(sp.house) + '" fill="' + (sp.fits ? '#c9d8ee' : '#f2c4c0') + '" stroke="#1f3b63" stroke-width="1.5"/>',
       '<text x="' + X(centroid(sp.house)[0]).toFixed(1) + '" y="' + Y(centroid(sp.house)[1]).toFixed(1) + '" text-anchor="middle" font-weight="bold" fill="#1f3b63">HOUSE</text>');
@@ -2447,6 +2541,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       out.forEach(function (ln, i) { o.push('<text x="' + (i ? 20 : 12) + '" y="' + ty + '"' + (b ? ' font-weight="bold" font-size="13"' : '') + '>' + e(ln) + '</text>'); ty += b ? 20 : 15; });
     };
     line('DRAFT SITE PLAN', true);
+    line('EASEMENTS NOT MAPPED', true);
+    line('Placement checks setbacks only. Buildability is unverified.');
     info.forEach(function (r) { if (r === '') { ty += 6; return; } line(r); });
     ty += 8;
     ['Drawn from public data: county parcel boundary,', 'recorded plat setbacks, USGS LiDAR. Not a survey.', 'A licensed surveyor must verify the boundary,', 'easements and topography before submittal.']
@@ -2515,7 +2611,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Cornerpin', lead: [0, 0],
       detail: 'Prefilled below from the county record, the recorded plat, the zoning and the plan. Copy it into the permit portal.' });
     I({ group: 'Drawings', title: 'Scaled site plan with existing and proposed contours and distances to property lines', status: sp && !sp.error ? 'drafted' : 'pro', who: 'Surveyor (final)', lead: [10, 20], why: '10-20-909(12)(b)',
-      detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'give them this draft as the starting point.') : 'Order a boundary and topographic survey.' });
+      detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'easements are not mapped and house placement is unverified against them.') : 'Order a boundary and topographic survey.' });
     var sheetRow = function (title, keys, who, why) {
       var got = keys.filter(has), status = !hasPlan ? 'pro' : got.length === keys.length ? 'ready' : got.length ? 'partial' : 'pro';
       I({ group: 'Drawings', title: title, status: status, who: who, lead: status === 'ready' ? [0, 0] : [5, 15], why: why,
@@ -2592,10 +2688,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     if (sp && !sp.error) {
       var tb = [fullAddr || '', pd.lot ? 'Lot ' + pd.lot + (a.SUBDIV_NAME ? ', ' + title(a.SUBDIV_NAME) : '') : a.SUBDIV_NAME ? title(a.SUBDIV_NAME) : '', 'Parcel ' + ctx.parcel.id + ', ' + juris].filter(Boolean);
       tb = tb.concat(['', 'Zone: ' + (f.zone || '?'), 'Setbacks: ' + sp.setbacks.front + "' front, " + sp.setbacks.side + "' side, " + sp.setbacks.rear + "' rear",
-        'Lot area: ' + fmt(sp.lotArea) + ' sq ft; buildable ' + fmt(sp.buildArea) + ' sq ft']);
+        'Lot area: ' + fmt(sp.lotArea) + ' sq ft; setback-only area ' + fmt(sp.buildArea) + ' sq ft']);
       if (sp.house) tb = tb.concat(['House envelope: ' + Math.round(Math.max(fp.width_ft, fp.depth_ft)) + "' x " + Math.round(Math.min(fp.width_ft, fp.depth_ft)) + "' (plan overall)", 'Driveway: about ' + Math.round(sp.drive.len) + "' x 16'",
-        'Impervious (est.): ' + fmt(est.impervious) + ' sq ft', sp.fits ? 'Fits inside the setbacks as placed' : 'DOES NOT FIT inside the setbacks as placed']);
-      if (pd.easements && pd.easements.length) tb.push('Easements on plat: ' + pd.easements.join(', '));
+        'Impervious (est.): ' + fmt(est.impervious) + ' sq ft', sp.fits ? 'Setback-only fit; easements not checked' : 'DOES NOT FIT inside the setbacks as placed']);
+      if (pd.easements && pd.easements.length) tb.push('Unverified easement labels: ' + pd.easements.join(', '));
       if (sp.front && sp.front.road) tb.push('Front: ' + streetCase(sp.front.road) + (sp.streets.length > 1 ? '; corner lot' : ''));
       if (sp.house && !sp.fits) tb.push('Short of fitting by about ' + Math.ceil(-sp.worst) + ' ft');
       sp.svg = sitePlanSvg(sp, tb);
@@ -3072,6 +3168,41 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     return rows;
   }
 
+  function platEvidenceSection(r) {
+    var p = (r.facts || {}).platEvidence;
+    if (!p) return '';
+    var coverage = p.coverage || {}, readings = p.readings || [], preferred = readings[0];
+    var sources = (p.sheets || []).map(function (sh) {
+      var read = readings.find(function (x) { return x.url === sh.url; });
+      return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Original sheet ' + esc(sh.sheet) + '</a> — ' +
+        (sh.processed ? 'OCR processed' : 'OCR incomplete') + (read ? '; lot label detected' + (read.nearSheetEdge ? ' near the sheet edge: check adjoining sheets' : '; label away from sheet edge (full boundary not verified)') : '') + '</li>';
+    }).join('');
+    var evidence = (p.evidence || []).map(function (x) {
+      return '<li><b>' + esc((x.categories || []).join(' / ')) + '</b><p>' + esc(x.scope) + '.</p><blockquote>' + esc(x.text) + '</blockquote>' +
+        '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">Sheet ' + esc(x.sheet) + '</a>' +
+        ((x.entries || []).length ? '<p>Recorded entry references: ' + esc(x.entries.join(', ')) + ' (instrument text not retrieved).</p>' : '') + '</li>';
+    }).join('');
+    var historical = p.history ? '<details><summary>Prior-parcel records (' + p.history.processed + ' of ' + p.history.total + ' checked; one generation)</summary><p>These records can reveal older restrictions. Historical plat lot numbers are not automatically matched to this lot, and instrument images have not been read.</p>' +
+      (p.history.records || []).map(function (h) {
+        return '<div><h3>' + (h.url ? '<a href="' + esc(h.url) + '" target="_blank" rel="noopener">Prior parcel ' + esc(h.parcel) + '</a>' : esc(h.parcel)) + '</h3>' +
+          (h.error ? '<p>Record lookup failed; history is incomplete.</p>' : '<p>' + esc((h.references || []).map(function (x) { return 'Entry ' + x.entry + ' (' + (x.label || x.kind || 'instrument') + ')'; }).join('; ') || 'No references extracted.') + '</p><ul>' +
+          (h.plats || []).map(function (sh) { return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Historical parcel plat ' + esc(sh.sheet) + '</a> — not reconciled to the current lot</li>'; }).join('') + '</ul>' +
+          ((h.priorParcels || []).length ? '<p>Further ancestry not checked: ' + esc(h.priorParcels.join(', ')) + '.</p>' : '')) + '</div>';
+      }).join('') + '</details>' : '';
+    var conflicts = (p.conflicts || []).map(function (c) { return esc(c.field) + ': ' + esc(c.values.join(' / ')); }).join('; ');
+    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · coverage incomplete</div><h2>Easements &amp; the complete plat set</h2>' +
+      '<p>' + (coverage.processed || 0) + ' of ' + (coverage.total || 0) + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
+      '<p>A single sheet may cut through a lot. Read the adjoining drawings and the notes, dedication and legend sheets together. Original scans are preserved; we do not invent or stitch easement geometry.</p>' +
+      (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" target="_blank" rel="noopener">Download all linked plat sheets (PDF)</a></p>' : '') +
+      (preferred ? '<p>Suggested starting sheet: <a href="' + esc(preferred.url) + '" target="_blank" rel="noopener">' + esc(preferred.sheet) + '</a>. Selected by lot-label position; confirm the entire boundary visually.</p>' : '') +
+      '<ul class="plat-sheets">' + sources + '</ul>' +
+      (readings.length ? '<p>Lot facts are combined across these sheets; a preferred sheet is a navigation aid, not the sole source.</p>' : '') +
+      (conflicts ? '<p><b>Conflicting OCR readings need review:</b> ' + conflicts + '</p>' : '') +
+      '<details><summary>Potential easement evidence (' + (p.evidence || []).length + ' text excerpts)</summary><p>These are discovery leads. Nearby labels, general notes and legends can concern other parcels. Widths, beneficiaries, permitted uses, duration and release status require the recorded instrument and mapped boundaries.</p>' +
+      (evidence ? '<ul class="easement-excerpts">' + evidence + '</ul>' : '<p>No reliable easement excerpts were extracted. That does not mean the lot is free of easements.</p>') + '</details>' +
+      historical + '<p><b>Not yet resolved:</b> separately recorded easements, prior-parcel history, amendments/releases, current title exceptions and survey-confirmed geometry. The draft site plan checks setbacks only; it does not clear the house or driveway against easements.</p></section>';
+  }
+
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = r.findings, plan = r.plan;
     var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
@@ -3136,7 +3267,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
       checklistSummary(f, state, saved) +
       '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + groups +
+      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
       '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
@@ -3184,7 +3315,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
       '<div class="pk-acts"><button type="button" class="pk-btn" data-copy="pk-app">Copy all</button><a class="pk-btn ghost" href="' + esc(dataUri('text/plain', appText)) + '" download="permit-application-data.txt">Download</a></div>' +
       '<textarea id="pk-app" hidden>' + esc(appText) + '</textarea><div class="pk-table"><table>' + rows + '</table></div>' +
-      (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and LiDAR contours. Give it to your surveyor as the starting point.</p>' +
+      (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and LiDAR contours. Easements are not mapped or checked against the house or driveway; setback fit is not a buildability determination.</p>' +
         '<img class="pk-plan" alt="Draft site plan of the lot" src="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '">' : '') +
       (letters ? '<h3>Drafted requests</h3><p class="pk-note">Written with this lot\'s details. Add your name and contact information, then send.</p>' + letters : '') +
       '</section>';

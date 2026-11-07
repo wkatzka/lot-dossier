@@ -60,12 +60,14 @@ def build(api_base, inline_assets=False):
         for f in sorted(os.listdir(os.path.join(ROOT, d))):
             with open(os.path.join(ROOT, d, f), "rb") as fh:
                 h.update(fh.read())
+    h.update(read(WEB, "plat-evidence.js").encode())
     with open(os.path.join(ROOT, "config", "records.json")) as fh:
         records = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     data = {"costs": costs, "apiBase": api_base, "apiVersion": h.hexdigest()[:10], "records": records}
     scripts = "\n".join([
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
+        "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",

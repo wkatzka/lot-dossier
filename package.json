@@ -4,12 +4,15 @@
   "private": true,
   "description": "Due diligence dossiers for Utah spec-home lots from public records, with plan-vs-lot checks.",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "python3 build.py",
     "dev": "node dev-server.js"
   },
   "dependencies": {
+    "pdf-lib": "1.17.1",
     "pdfjs-dist": "3.11.174",
     "sharp": "0.33.5",
     "tesseract.js": "5.1.1"

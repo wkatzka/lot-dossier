@@ -20,6 +20,9 @@
     },
     "api/watch.js": {
       "maxDuration": 60
+    },
+    "api/plat-bundle.js": {
+      "maxDuration": 300
     }
   },
   "headers": [

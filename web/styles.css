@@ -466,3 +466,5 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 .cornerpin-mark{width:29px;height:29px;flex:none}
 #packet,#permits{scroll-margin-top:24px}
 @media(max-width:640px){.submit{white-space:normal;text-align:center}}
+
+#rv .plat-evidence{margin-top:28px}#rv .plat-sheets li{margin:10px 0}#rv .easement-excerpts{padding-left:20px}#rv .easement-excerpts li{padding:14px 0;border-bottom:1px solid var(--line)}#rv .easement-excerpts blockquote{margin:8px 0;padding:10px 14px;border-left:2px solid var(--line);overflow-wrap:anywhere}#rv .plat-evidence summary{cursor:pointer;font-weight:700;padding:12px 0}

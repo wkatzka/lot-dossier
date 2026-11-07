@@ -3,6 +3,7 @@
 const { parcelRecord } = require('../lib/weber');
 const { ocrSheet, parsePlat } = require('../lib/plat');
 const { cors, query, send } = require('../lib/respond');
+const { pool } = require('../lib/http');
 
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
@@ -14,15 +15,24 @@ module.exports = async (req, res) => {
   if (county !== 'Weber') return send(res, 200, { county, parcel, supported: false, note: 'Recorded plats are only read for Weber County so far.' });
   try {
     const rec = await parcelRecord(parcel);
+    // Prior-parcel metadata can reveal instruments and older plats that predate the current subdivision.
+    // This is one generation of discovery, never a complete title search or a lot-number match across plats.
+    const parentIds = (rec.priorParcels || []).slice(0, 8);
+    const parents = await pool(parentIds, 3, async id => {
+      const p = await parcelRecord(id);
+      return { parcel: id, url: p.url, references: p.references, plats: p.plats, priorParcels: p.priorParcels };
+    });
+    const history = { depth: 1, total: (rec.priorParcels || []).length,
+      processed: parents.filter(p => !p.error).length, records: parents.map((p, i) => ({ parcel: parentIds[i], ...p })) };
     const sheets = rec.plats.slice(0, maxSheets), plat = { setbacks: null, entries: [], approvals: [], associations: [], hazardReports: [], notes: [], wastewater: [] };
     const ocr = [];
     const deadline = t0 + (+q.budget || 280) * 1000;
     for (const s of sheets) {
       if (Date.now() > deadline - 30000) { ocr.push({ sheet: s.sheet, url: s.url, error: 'skipped: out of time' }); continue; }
       try {
-        const raw = await ocrSheet(s.url, deadline - Date.now() - 5000);
+        const scan = await ocrSheet(s.url, deadline - Date.now() - 5000), raw = scan.text;
         const p = parsePlat(raw);
-        ocr.push({ sheet: s.sheet, url: s.url, chars: raw.length, timing: ocrSheet.last });
+        ocr.push({ sheet: s.sheet, url: s.url, chars: raw.length, timing: scan.timing });
         if (!plat.setbacks && p.setbacks) plat.setbacks = { ...p.setbacks, sheet: s.sheet, url: s.url };
         ['entries', 'approvals', 'associations', 'hazardReports', 'notes', 'wastewater'].forEach(k => p[k].forEach(v => {
           const key = JSON.stringify(v.entry || v);
@@ -31,7 +41,7 @@ module.exports = async (req, res) => {
       } catch (e) { ocr.push({ sheet: s.sheet, url: s.url, error: String(e.message || e) }); }
     }
     send(res, 200, { county, parcel, supported: true, parcelPage: rec.url, subdivision: rec.subdivision, references: rec.references,
-      priorParcels: rec.priorParcels, legal: rec.legal, lot: rec.lot, plats: rec.plats, ocr, plat, ms: Date.now() - t0 }, 30 * 86400);
+      priorParcels: rec.priorParcels, history, legal: rec.legal, lot: rec.lot, plats: rec.plats, ocr, plat, ms: Date.now() - t0 }, 30 * 86400);
   } catch (e) {
     send(res, 502, { error: String(e.message || e), ms: Date.now() - t0 });
   }

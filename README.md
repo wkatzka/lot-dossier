@@ -58,3 +58,10 @@ Vercel deploys `main` automatically (project `lot-dossier-assistant`, framework 
 - The CC&R *text* is only sold by county recorders. The dossier identifies the recorded documents and uses development standards from public meeting packets.
 - Cost ranges in `config/cost_assumptions.json` are placeholders. Replace them with local bids.
 - This is a screening tool, not a survey, geotechnical report, title report or appraisal.
+
+
+### Easement evidence and full plat downloads
+
+The dossier retains all linked plat sheets and merges lot readings instead of discarding all but one sheet. Lot-label proximity to an image edge is a citation-selection hint, not verified boundary geometry. Easement excerpts from labels, general notes and legends are marked as discovery leads; they can concern other parcels. Separately recorded instruments, releases, title exceptions and survey geometry remain unresolved. Site-plan fit is a setback-only screen.
+
+`GET /api/plat-bundle?county=Weber&parcel=...` downloads all linked sheets as a PDF, preserving native image pixels and adding source footers outside the drawing. It fails explicitly instead of omitting sheets if a source fails, exceeds the response limit, or is unsupported. Run `node scripts/test-plat-evidence.js` for cross-sheet attribution, incomplete-coverage and extraction regression checks.

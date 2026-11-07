@@ -203,6 +203,41 @@
     return rows;
   }
 
+  function platEvidenceSection(r) {
+    var p = (r.facts || {}).platEvidence;
+    if (!p) return '';
+    var coverage = p.coverage || {}, readings = p.readings || [], preferred = readings[0];
+    var sources = (p.sheets || []).map(function (sh) {
+      var read = readings.find(function (x) { return x.url === sh.url; });
+      return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Original sheet ' + esc(sh.sheet) + '</a> — ' +
+        (sh.processed ? 'OCR processed' : 'OCR incomplete') + (read ? '; lot label detected' + (read.nearSheetEdge ? ' near the sheet edge: check adjoining sheets' : '; label away from sheet edge (full boundary not verified)') : '') + '</li>';
+    }).join('');
+    var evidence = (p.evidence || []).map(function (x) {
+      return '<li><b>' + esc((x.categories || []).join(' / ')) + '</b><p>' + esc(x.scope) + '.</p><blockquote>' + esc(x.text) + '</blockquote>' +
+        '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">Sheet ' + esc(x.sheet) + '</a>' +
+        ((x.entries || []).length ? '<p>Recorded entry references: ' + esc(x.entries.join(', ')) + ' (instrument text not retrieved).</p>' : '') + '</li>';
+    }).join('');
+    var historical = p.history ? '<details><summary>Prior-parcel records (' + p.history.processed + ' of ' + p.history.total + ' checked; one generation)</summary><p>These records can reveal older restrictions. Historical plat lot numbers are not automatically matched to this lot, and instrument images have not been read.</p>' +
+      (p.history.records || []).map(function (h) {
+        return '<div><h3>' + (h.url ? '<a href="' + esc(h.url) + '" target="_blank" rel="noopener">Prior parcel ' + esc(h.parcel) + '</a>' : esc(h.parcel)) + '</h3>' +
+          (h.error ? '<p>Record lookup failed; history is incomplete.</p>' : '<p>' + esc((h.references || []).map(function (x) { return 'Entry ' + x.entry + ' (' + (x.label || x.kind || 'instrument') + ')'; }).join('; ') || 'No references extracted.') + '</p><ul>' +
+          (h.plats || []).map(function (sh) { return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Historical parcel plat ' + esc(sh.sheet) + '</a> — not reconciled to the current lot</li>'; }).join('') + '</ul>' +
+          ((h.priorParcels || []).length ? '<p>Further ancestry not checked: ' + esc(h.priorParcels.join(', ')) + '.</p>' : '')) + '</div>';
+      }).join('') + '</details>' : '';
+    var conflicts = (p.conflicts || []).map(function (c) { return esc(c.field) + ': ' + esc(c.values.join(' / ')); }).join('; ');
+    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · coverage incomplete</div><h2>Easements &amp; the complete plat set</h2>' +
+      '<p>' + (coverage.processed || 0) + ' of ' + (coverage.total || 0) + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
+      '<p>A single sheet may cut through a lot. Read the adjoining drawings and the notes, dedication and legend sheets together. Original scans are preserved; we do not invent or stitch easement geometry.</p>' +
+      (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" target="_blank" rel="noopener">Download all linked plat sheets (PDF)</a></p>' : '') +
+      (preferred ? '<p>Suggested starting sheet: <a href="' + esc(preferred.url) + '" target="_blank" rel="noopener">' + esc(preferred.sheet) + '</a>. Selected by lot-label position; confirm the entire boundary visually.</p>' : '') +
+      '<ul class="plat-sheets">' + sources + '</ul>' +
+      (readings.length ? '<p>Lot facts are combined across these sheets; a preferred sheet is a navigation aid, not the sole source.</p>' : '') +
+      (conflicts ? '<p><b>Conflicting OCR readings need review:</b> ' + conflicts + '</p>' : '') +
+      '<details><summary>Potential easement evidence (' + (p.evidence || []).length + ' text excerpts)</summary><p>These are discovery leads. Nearby labels, general notes and legends can concern other parcels. Widths, beneficiaries, permitted uses, duration and release status require the recorded instrument and mapped boundaries.</p>' +
+      (evidence ? '<ul class="easement-excerpts">' + evidence + '</ul>' : '<p>No reliable easement excerpts were extracted. That does not mean the lot is free of easements.</p>') + '</details>' +
+      historical + '<p><b>Not yet resolved:</b> separately recorded easements, prior-parcel history, amendments/releases, current title exceptions and survey-confirmed geometry. The draft site plan checks setbacks only; it does not clear the house or driveway against easements.</p></section>';
+  }
+
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = r.findings, plan = r.plan;
     var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
@@ -267,7 +302,7 @@
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>Clear</span></div></div>' +
       checklistSummary(f, state, saved) +
       '<h2>Site cost adders</h2><div class="range">' + money(lo) + ' &ndash; ' + money(hi) + '<small>' + costs.length + ' items from placeholder ranges; replace with bids</small></div>' +
-      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + groups +
+      '<h2 style="margin-top:18px">Red flags</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
       '<div class="card"><h2>Cost adders (placeholder ranges)</h2><table>' + costRows + '</table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
@@ -315,7 +350,7 @@
       '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
       '<div class="pk-acts"><button type="button" class="pk-btn" data-copy="pk-app">Copy all</button><a class="pk-btn ghost" href="' + esc(dataUri('text/plain', appText)) + '" download="permit-application-data.txt">Download</a></div>' +
       '<textarea id="pk-app" hidden>' + esc(appText) + '</textarea><div class="pk-table"><table>' + rows + '</table></div>' +
-      (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and LiDAR contours. Give it to your surveyor as the starting point.</p>' +
+      (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and LiDAR contours. Easements are not mapped or checked against the house or driveway; setback fit is not a buildability determination.</p>' +
         '<img class="pk-plan" alt="Draft site plan of the lot" src="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '">' : '') +
       (letters ? '<h3>Drafted requests</h3><p class="pk-note">Written with this lot\'s details. Add your name and contact information, then send.</p>' + letters : '') +
       '</section>';
