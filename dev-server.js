@@ -13,4 +13,4 @@ http.createServer((req, res) => {
   if (!file.startsWith(path.join(__dirname, 'public')) || !fs.existsSync(file)) { res.statusCode = 404; return res.end('not found'); }
   res.setHeader('Content-Type', file.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream');
   fs.createReadStream(file).pipe(res);
-}).listen(port, () => console.log('Lot Dossier dev server on http://localhost:' + port));
+}).listen(port, () => console.log('Cornerpin dev server on http://localhost:' + port));

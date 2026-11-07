@@ -1,4 +1,4 @@
-# Lot Dossier
+# Cornerpin
 
 Live: **https://lot-dossier-assistant.vercel.app**
 
@@ -45,7 +45,7 @@ npm run dev                 # app + API on http://localhost:3000
 Single file to email (calls the deployed API):
 
 ```bash
-python3 build.py --api https://YOUR-PROJECT.vercel.app   # -> dist/Lot Dossier.html
+python3 build.py --api https://YOUR-PROJECT.vercel.app   # -> dist/Cornerpin.html
 ```
 
 ## Deploy

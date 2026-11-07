@@ -279,7 +279,7 @@
   function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
-    if (!pk) return '';
+    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the dossier again to retry.</p></section>';
     var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
@@ -405,20 +405,27 @@
     document.body.classList.add('show-report');
     document.body.classList.remove('chk-only');
     loadChecklist();
-    document.title = 'Lot Dossier · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
+    document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
     window.scrollTo(0, 0);
     drawMap(last.parcel.rings);
     if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
   }
   function showHome(fromHistory) {
     document.body.classList.remove('show-report');
-    document.title = 'Lot Dossier';
+    document.title = 'Cornerpin';
     if (!fromHistory) try { history.pushState({}, '', location.pathname); } catch (e) {}
     $('address').focus();
   }
   $('rv-new').addEventListener('click', function () { showHome(); });
   $('rv-print').addEventListener('click', function () { window.print(); });
-  window.addEventListener('popstate', function (e) { if (e.state && e.state.report && last) showReport(true); else showHome(true); });
+  window.addEventListener('popstate', function (e) {
+    var target = document.getElementById(location.hash.slice(1));
+    var reportTarget = location.hash === '#report' || (target && $('rv').contains(target));
+    var showingReport = document.body.classList.contains('show-report');
+    if (last && ((e.state && e.state.report) || reportTarget)) {
+      if (!showingReport) showReport(true);
+    } else if (showingReport) showHome(true);
+  });
 
   /* Save the current report as its own small HTML file (to email or archive). */
   $('rv-save').addEventListener('click', function () {
@@ -437,7 +444,7 @@
       'document.querySelectorAll("[data-print]").forEach(function(b){b.onclick=function(){print()}});<\/script></body></html>';
     var slug = (last.parcel.attrs.PARCEL_ADD || last.parcel.id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     var url = URL.createObjectURL(new Blob([doc], { type: 'text/html' }));
-    var link = document.createElement('a'); link.href = url; link.download = 'lot-dossier-' + slug + '.html';
+    var link = document.createElement('a'); link.href = url; link.download = 'cornerpin-' + slug + '.html';
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   });

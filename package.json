@@ -1,5 +1,5 @@
 {
-  "name": "lot-dossier",
+  "name": "cornerpin",
   "version": "0.3.0",
   "private": true,
   "description": "Due diligence dossiers for Utah spec-home lots from public records, with plan-vs-lot checks.",

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lot Dossier</title>
+<title>Cornerpin</title>
 <meta name="description" content="Due diligence dossiers for spec home lots in Utah: water, hazards, septic, utilities, zoning and permits from one address, checked against your building plan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -472,6 +472,12 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 @media print{#rv .pk-acts{display:none}#rv .pk-letter{break-inside:avoid}#rv .pk-letter:not([open]) pre{display:block}}
 #rv .pk-jump{margin:16px 0 0;font-weight:600}
 
+/* Cornerpin: a survey pin at a parcel corner. Inline for saved reports. */
+.wordmark{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+.cornerpin-mark{width:29px;height:29px;flex:none}
+#packet,#permits{scroll-margin-top:24px}
+@media(max-width:640px){.submit{white-space:normal;text-align:center}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
@@ -481,10 +487,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 <a class="skip-link" href="#start">Skip to dossier form</a>
 <div class="wrap">
   <nav class="top" aria-label="Primary">
-    <a class="wordmark" href="#start">Lot Dossier</a>
+    <a class="wordmark" href="#start"><svg class="cornerpin-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 6H6v20M12 26h14V12" stroke="currentColor" stroke-width="2.5"/><circle cx="6" cy="6" r="4" fill="currentColor"/><path d="M6 12v8M12 6h8" stroke="currentColor" stroke-width="1.5"/></svg><span>Cornerpin</span></a>
     <div class="links">
       <a href="#checks">What we check</a>
-      <a href="#how">How it works</a>
+      <a href="#permits">Permit preparation</a>
       <a class="btn ghost cta" href="#start">Start a dossier</a>
     </div>
   </nav>
@@ -551,7 +557,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
           </div>
 
           <div class="err" id="err" role="alert"></div>
-          <button class="btn submit" id="go" type="submit">Generate dossier</button>
+          <button class="btn submit" id="go" type="submit">Generate dossier &amp; permit packet</button>
+          <p class="hint">Start with an address. Your report includes a permit checklist and drafted application information; add plans for a more complete packet.</p>
         </form>
 
         <div id="progress" aria-live="polite">
@@ -570,6 +577,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
           <li><b>Red flags</b> from state, county and federal hazard, water, soil and utility maps.</li>
           <li><b>Site cost adders</b> for the items that usually blow up a spec budget.</li>
           <li><b>Plan check</b>: upload your plans and see what fits this lot and what has to change.</li>
+          <li><b>Permit preparation</b>: prefilled application data, a submission checklist and draft requests for the Ogden Valley pilot.</li>
           <li><b>A call list and checklist</b>: attach the perc test, survey and will-serve letters as they come in.</li>
         </ol>
       </div>
@@ -601,12 +609,12 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 <section class="band" id="how">
   <div class="wrap">
     <div class="eyebrow">How it works</div>
-    <h2>From address to dossier</h2>
+    <h2>From address to permit preparation</h2>
     <p class="sub">Public maps don't replace a survey, a geotech report or a perc test. They tell you which of those you'll need, roughly what they'll cost, and where your plan will have to change, before you spend money on the lot.</p>
     <div class="how">
       <div><div class="k">1</div><h3>Locate the parcel</h3><p>We match the address or parcel ID to the county record and its exact boundary.</p></div>
       <div><div class="k">2</div><h3>Check every layer</h3><p>The boundary is tested against state, county and federal maps. If you add a plan, it's read and compared with what we find.</p></div>
-      <div><div class="k">3</div><h3>Get the dossier</h3><p>Red flags, plan conflicts, cost adders and next steps. Print it or save it as a file to share.</p></div>
+      <div><div class="k">3</div><h3>Review your dossier &amp; permit packet</h3><p>See site risks and costs, then open the permit packet in your report for application data, draft requests and remaining requirements. Print or save it to share.</p></div>
     </div>
     <div class="legend">
       <span style="--c:var(--flag)">Flag: likely material cost or risk</span>
@@ -617,17 +625,33 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   </div>
 </section>
 
+<section class="band" id="permits">
+  <div class="wrap">
+    <div class="eyebrow">02 / Prepare to build · Ogden Valley pilot</div>
+    <h2>Your next step: the permit packet.</h2>
+    <p class="sub">Generate a dossier above to assemble your permit preparation packet for the same lot. No second form to start over.</p>
+    <div class="how">
+      <div><div class="k">01</div><h3>Application information, gathered</h3><p>Parcel details, zoning, design loads and available plan information brought together, with estimates labeled for review.</p></div>
+      <div><div class="k">02</div><h3>Requests, already drafted</h3><p>Lot-specific letters for utility service, fire review and HOA requirements where contacts are available. Review them and send from your email.</p></div>
+      <div><div class="k">03</div><h3>A clear path to submission</h3><p>See what is gathered, drafted or still missing, including documents that need your signature or a professional. Download a draft site plan when available.</p></div>
+    </div>
+    <p class="sub">Cornerpin prepares the packet. You review the details and submit through the permitting authority; automatic filing is not available yet.</p>
+    <a class="btn" href="#start">Start my dossier &amp; permit packet</a>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
-    <span class="wordmark">Lot Dossier</span>
+    <span class="wordmark"><svg class="cornerpin-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 6H6v20M12 26h14V12" stroke="currentColor" stroke-width="2.5"/><circle cx="6" cy="6" r="4" fill="currentColor"/><path d="M6 12v8M12 6h8" stroke="currentColor" stroke-width="1.5"/></svg><span>Cornerpin</span></span>
     <span>Screening tool built on public data. Not a survey, geotechnical report, title report or appraisal.</span>
   </div>
 </footer>
 </div>
 <div id="rv">
   <nav class="topnav" aria-label="Report">
-    <span class="wordmark">Lot Dossier</span>
+    <span class="wordmark"><svg class="cornerpin-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 6H6v20M12 26h14V12" stroke="currentColor" stroke-width="2.5"/><circle cx="6" cy="6" r="4" fill="currentColor"/><path d="M6 12v8M12 6h8" stroke="currentColor" stroke-width="1.5"/></svg><span>Cornerpin</span></span>
     <div class="acts">
+      <a class="btn ghost" href="#packet">Permit packet</a>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
       <button class="btn ghost only-live" id="rv-save" type="button">Save dossier</button>
       <button class="btn only-live" id="rv-new" type="button">New dossier</button>
@@ -2164,7 +2188,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     if (!c) {
       ctx.facts.contacts.push({ name: juris, lines: ['Contacts for this jurisdiction are not on file yet.'] });
       return [F('permits', 'Building department', 'verify', 'Building department contacts not on file for ' + juris + ' yet',
-        'Lot Dossier has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
+        'Cornerpin has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
         'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
     }
     ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
@@ -2489,7 +2513,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     var cityReq = kb && kb.submittal;
     I({ group: 'Application', title: 'Applicant and contractor contact information', status: 'you', who: 'You', lead: [0, 0], why: 'Utah Code 10-20-909(12)(a)',
       detail: 'Name, address, phone and email for the applicant and the general contractor, with the contractor\'s Utah license number (or an owner-builder declaration).' });
-    I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Lot Dossier', lead: [0, 0],
+    I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Cornerpin', lead: [0, 0],
       detail: 'Prefilled below from the county record, the recorded plat, the zoning and the plan. Copy it into the permit portal.' });
     I({ group: 'Drawings', title: 'Scaled site plan with existing and proposed contours and distances to property lines', status: sp && !sp.error ? 'drafted' : 'pro', who: 'Surveyor (final)', lead: [10, 20], why: '10-20-909(12)(b)',
       detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'give them this draft as the starting point.') : 'Order a boundary and topographic survey.' });
@@ -3125,7 +3149,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
-    if (!pk) return '';
+    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the dossier again to retry.</p></section>';
     var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
@@ -3251,20 +3275,27 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     document.body.classList.add('show-report');
     document.body.classList.remove('chk-only');
     loadChecklist();
-    document.title = 'Lot Dossier · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
+    document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
     window.scrollTo(0, 0);
     drawMap(last.parcel.rings);
     if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
   }
   function showHome(fromHistory) {
     document.body.classList.remove('show-report');
-    document.title = 'Lot Dossier';
+    document.title = 'Cornerpin';
     if (!fromHistory) try { history.pushState({}, '', location.pathname); } catch (e) {}
     $('address').focus();
   }
   $('rv-new').addEventListener('click', function () { showHome(); });
   $('rv-print').addEventListener('click', function () { window.print(); });
-  window.addEventListener('popstate', function (e) { if (e.state && e.state.report && last) showReport(true); else showHome(true); });
+  window.addEventListener('popstate', function (e) {
+    var target = document.getElementById(location.hash.slice(1));
+    var reportTarget = location.hash === '#report' || (target && $('rv').contains(target));
+    var showingReport = document.body.classList.contains('show-report');
+    if (last && ((e.state && e.state.report) || reportTarget)) {
+      if (!showingReport) showReport(true);
+    } else if (showingReport) showHome(true);
+  });
 
   /* Save the current report as its own small HTML file (to email or archive). */
   $('rv-save').addEventListener('click', function () {
@@ -3283,7 +3314,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
       'document.querySelectorAll("[data-print]").forEach(function(b){b.onclick=function(){print()}});<\/script></body></html>';
     var slug = (last.parcel.attrs.PARCEL_ADD || last.parcel.id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     var url = URL.createObjectURL(new Blob([doc], { type: 'text/html' }));
-    var link = document.createElement('a'); link.href = url; link.download = 'lot-dossier-' + slug + '.html';
+    var link = document.createElement('a'); link.href = url; link.download = 'cornerpin-' + slug + '.html';
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   });

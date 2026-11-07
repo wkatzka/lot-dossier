@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Build the Lot Dossier app.
+"""Build the Cornerpin app.
 
   python3 build.py                                  -> public/index.html (hosted: calls /api on the same domain)
-  python3 build.py --api https://your-app.vercel.app -> also dist/Lot Dossier.html (one file to email; calls that API)
+  python3 build.py --api https://your-app.vercel.app -> also dist/Cornerpin.html (one file to email; calls that API)
 
 Inlines web/home.html, web/styles.css, the in-browser engine (web/lotreport.js), the plan-PDF reader
 (web/planreader.js), the UI (web/app.js) and the generic cost assumptions. Refuses to write output that contains
@@ -42,8 +42,9 @@ def build(api_base, inline_assets=False):
     report_view = """</div>
 <div id="rv">
   <nav class="topnav" aria-label="Report">
-    <span class="wordmark">Lot Dossier</span>
+    <span class="wordmark"><svg class="cornerpin-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 6H6v20M12 26h14V12" stroke="currentColor" stroke-width="2.5"/><circle cx="6" cy="6" r="4" fill="currentColor"/><path d="M6 12v8M12 6h8" stroke="currentColor" stroke-width="1.5"/></svg><span>Cornerpin</span></span>
     <div class="acts">
+      <a class="btn ghost" href="#packet">Permit packet</a>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
       <button class="btn ghost only-live" id="rv-save" type="button">Save dossier</button>
       <button class="btn only-live" id="rv-new" type="button">New dossier</button>
@@ -89,4 +90,4 @@ if __name__ == "__main__":
     a = ap.parse_args()
     write(os.path.join(ROOT, "public", "index.html"), build(""))
     if a.api:
-        write(os.path.join(ROOT, "dist", "Lot Dossier.html"), build(a.api.rstrip("/"), inline_assets=True))
+        write(os.path.join(ROOT, "dist", "Cornerpin.html"), build(a.api.rstrip("/"), inline_assets=True))

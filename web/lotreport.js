@@ -1524,7 +1524,7 @@
     if (!c) {
       ctx.facts.contacts.push({ name: juris, lines: ['Contacts for this jurisdiction are not on file yet.'] });
       return [F('permits', 'Building department', 'verify', 'Building department contacts not on file for ' + juris + ' yet',
-        'Lot Dossier has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
+        'Cornerpin has verified building-department and city contacts for its pilot jurisdictions. For ' + juris + ', use the official city or county website; the Utah Public Notice Website lists its public bodies and meeting locations.',
         'Utah Public Notice Website', 'https://www.utah.gov/pmn/search.html', null, 'Find who approves building plans in ' + juris + ' and how plans are submitted.')];
     }
     ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
@@ -1849,7 +1849,7 @@
     var cityReq = kb && kb.submittal;
     I({ group: 'Application', title: 'Applicant and contractor contact information', status: 'you', who: 'You', lead: [0, 0], why: 'Utah Code 10-20-909(12)(a)',
       detail: 'Name, address, phone and email for the applicant and the general contractor, with the contractor\'s Utah license number (or an owner-builder declaration).' });
-    I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Lot Dossier', lead: [0, 0],
+    I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Cornerpin', lead: [0, 0],
       detail: 'Prefilled below from the county record, the recorded plat, the zoning and the plan. Copy it into the permit portal.' });
     I({ group: 'Drawings', title: 'Scaled site plan with existing and proposed contours and distances to property lines', status: sp && !sp.error ? 'drafted' : 'pro', who: 'Surveyor (final)', lead: [10, 20], why: '10-20-909(12)(b)',
       detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'give them this draft as the starting point.') : 'Order a boundary and topographic survey.' });
