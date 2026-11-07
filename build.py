@@ -75,7 +75,7 @@ def build(api_base, inline_assets=False):
     ])
     html = html.replace("</body>", report_view + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")
-    wordmark = wordmark.replace('<svg ', '<svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" ', 1).replace('fill="#f5f4ee"', 'fill="currentColor"')
+    wordmark = wordmark.replace('<svg ', '<svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" ', 1).replace('fill="#f5f4ee"', 'fill="currentColor"').replace('stroke="#f5f4ee"', 'stroke="currentColor"')
     # Inline the generated outlines so emailed HTML and saved reports carry their own logo.
     html = html.replace("<!--CORNERPIN_WORDMARK-->", wordmark)
     import base64

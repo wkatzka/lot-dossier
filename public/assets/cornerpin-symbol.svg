@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 399 226 226" width="226" height="226"><title>Cornerpin symbol</title><g id="brand-symbol">
-    <path fill="#f5f4ee" d="M26 463 90 413H150L175 433 145 457 133 448H103L61 480V510L71 518V568L26 533Z" />
-    <path fill="#f26a36" fill-rule="evenodd" d="M77 515 145 462H178L203 481V530L176 552H112V583L77 611ZM126 519H159L168 512V501L160 495Z" />
-  </g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 410 192 192" width="192" height="192"><title>Cornerpin symbol</title><g id="brand-symbol"><path d="M178 450H50V578M88 578H178V488" stroke="#f5f4ee" stroke-width="16" fill="none"/><circle cx="50" cy="450" r="24" fill="#f26a36"/><path d="M50 488v48M88 450h48" stroke="#f5f4ee" stroke-width="9.6" fill="none"/></g></svg>
