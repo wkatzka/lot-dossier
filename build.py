@@ -42,7 +42,7 @@ def build(api_base, inline_assets=False):
     report_view = """</div>
 <div id="rv">
   <nav class="topnav" aria-label="Report">
-    <span class="wordmark"><svg class="cornerpin-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 6H6v20M12 26h14V12" stroke="currentColor" stroke-width="2.5"/><circle cx="6" cy="6" r="4" fill="currentColor"/><path d="M6 12v8M12 6h8" stroke="currentColor" stroke-width="1.5"/></svg><span>Cornerpin</span></span>
+    <span class="wordmark"><!--CORNERPIN_WORDMARK--></span>
     <div class="acts">
       <a class="btn ghost" href="#packet">Permit packet</a>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
@@ -74,6 +74,13 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + scripts + "\n</body>", 1)
+    wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")
+    wordmark = wordmark.replace('<svg ', '<svg class="cornerpin-wordmark" role="img" aria-label="Cornerpin" ', 1).replace('fill="#f5f4ee"', 'fill="currentColor"')
+    # Inline the generated outlines so emailed HTML and saved reports carry their own logo.
+    html = html.replace("<!--CORNERPIN_WORDMARK-->", wordmark)
+    import base64
+    favicon = base64.b64encode(read(ROOT, "public", "assets", "cornerpin-favicon.svg").encode()).decode()
+    html = html.replace('</head>', '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,' + favicon + '">\n</head>', 1)
     low = html.lower()
     for b in BANNED:
         assert b not in low, "found %r in build output" % b
