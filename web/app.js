@@ -205,8 +205,18 @@
 
   function platEvidenceSection(r) {
     var p = (r.facts || {}).platEvidence;
-    if (!p) return '';
-    var coverage = p.coverage || {}, readings = p.readings || [], preferred = readings[0];
+    if (!p) p = { sheets: [], evidence: [] };
+    var readings = p.readings || [], preferred = readings[0];
+    var review = window.PlatEvidence.assess(p);
+    var gates = '<div class="easement-review"><h3>Evidence checklist · ' + esc(review.stage) + '</h3>' +
+      '<p>' + (review.assessedAt ? 'Evidence evaluated ' + esc(review.assessedAt) + '. This is the dossier evaluation time, not the recording date, a fresh source check or a title effective date.' : 'No dated evidence evaluation is available.') + '</p>' +
+      (p.recordSource && p.recordSource.url ? '<p><a href="' + esc(p.recordSource.url) + '" target="_blank" rel="noopener">County parcel record used</a></p>' : '') +
+      '<p><b>Linked-sheet processing:</b> ' + (review.linkedSheets.complete ? 'Complete for the retrieved inventory' : 'Incomplete') + ' (' + review.linkedSheets.processed + '/' + review.linkedSheets.total + '). This does not complete the plat-scope or title review.</p>' +
+      '<ol class="easement-gates">' + review.rows.map(function (g) {
+        return '<li><h4>' + esc(g.label) + '</h4><p><b>' + esc(g.status) + '</b></p><p>' + esc(g.evidence) + '</p><p><b>Open gap:</b> ' + esc(g.gap) +
+          '</p><p><b>Completion criterion:</b> ' + esc(g.criterion) + '</p></li>';
+      }).join('') + '</ol><details><summary>How review status advances and when to refresh</summary><p>' + esc(review.stages.join(' → ')) +
+      '. These are evidence milestones, not building approvals. Only the first stage is supported by the current public-record pipeline; title/survey/design reconciliation is not yet implemented.</p><p>' + esc(review.refresh) + '</p><p>' + esc(review.limit) + '</p></details></div>';
     var sources = (p.sheets || []).map(function (sh) {
       var read = readings.find(function (x) { return x.url === sh.url; });
       return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Original sheet ' + esc(sh.sheet) + '</a> — ' +
@@ -225,8 +235,8 @@
           ((h.priorParcels || []).length ? '<p>Further ancestry not checked: ' + esc(h.priorParcels.join(', ')) + '.</p>' : '')) + '</div>';
       }).join('') + '</details>' : '';
     var conflicts = (p.conflicts || []).map(function (c) { return esc(c.field) + ': ' + esc(c.values.join(' / ')); }).join('; ');
-    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · coverage incomplete</div><h2>Easements &amp; the complete plat set</h2>' +
-      '<p>' + (coverage.processed || 0) + ' of ' + (coverage.total || 0) + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
+    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · ' + esc(review.stage) + '</div><h2>Easements &amp; evidence coverage</h2>' + gates +
+      '<p>' + review.linkedSheets.processed + ' of ' + review.linkedSheets.total + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
       '<p>A single sheet may cut through a lot. Read the adjoining drawings and the notes, dedication and legend sheets together. Original scans are preserved; we do not invent or stitch easement geometry.</p>' +
       (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" download="recorded-plat.pdf">Download all linked plat sheets (PDF)</a></p>' : '') +
       (preferred ? '<p>Suggested starting sheet: <a href="' + esc(preferred.url) + '" target="_blank" rel="noopener">' + esc(preferred.sheet) + '</a>. Selected by lot-label position; confirm the entire boundary visually.</p>' : '') +

@@ -1289,7 +1289,10 @@
 
   C.check_documents = async function (ctx) {
     var d = await (ctx.docs || fetchDocs(ctx.parcel, ctx.facts.jurisdiction)), out = [], rec = d.record || {}, no = d.notices || {};
-    if (d.unavailable) return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
+    if (d.unavailable) {
+      ctx.facts.platEvidence = { assessedAt: new Date().toISOString(), sheets: [], evidence: [], recordSource: { error: d.unavailable } };
+      return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
+    }
     var plat = rec.plat || {}, docs = (no.documents || []).filter(Boolean), sub = ctx.parcel.attrs.SUBDIV_NAME || 'the subdivision';
     if (rec.supported === false) out.push(F('ccr', 'Recorded plat', 'verify', 'Recorded plat not read for ' + ctx.parcel.county + ' County yet',
       'Automatic plat reading (setback notes, recorded agreements, utility approvals) covers Weber County so far. Public meeting records were still searched for the subdivision.' +
@@ -1298,6 +1301,9 @@
     ctx.facts.platEvidence.references = (plat.entries || []).filter(function (e) { return /easement/i.test(e.label); }).concat((rec.references || []).filter(function (e) { return /easement/i.test(e.label || e.kind); }));
     ctx.facts.platEvidence.priorParcels = rec.priorParcels || [];
     ctx.facts.platEvidence.history = rec.history || null;
+    ctx.facts.platEvidence.assessedAt = new Date().toISOString();
+    ctx.facts.platEvidence.recordSource = { url: rec.parcelPage || null, legal: rec.legal || null, lot: rec.lot || null,
+      parcel: ctx.parcel.id, error: rec.error || null };
     if (rec.plats && rec.plats.length) ctx.facts.platEvidence.bundleUrl = apiBase() + '/api/plat-bundle?county=' + encodeURIComponent(ctx.parcel.county) + '&parcel=' + encodeURIComponent(ctx.parcel.id) + '&v=' + encodeURIComponent((root.LR_DATA || {}).apiVersion || '');
     var platUrl = (rec.plats && rec.plats[0] && rec.plats[0].url) || rec.parcelPage;
 

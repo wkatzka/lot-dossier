@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { extractMentions, mergeSheets } = require('../web/plat-evidence');
+const { extractMentions, mergeSheets, assess } = require('../web/plat-evidence');
 const { parseLot } = require('../lib/plat');
 const { allowed, bundlePlats } = require('../lib/plat-bundle');
 
@@ -21,10 +21,31 @@ assert.deepEqual(merged.coverage, { processed: 2, total: 3, geometryVerified: fa
 assert(merged.evidence.some(x => x.entries.includes('1234567')));
 assert(merged.evidence.every(x => x.scope.includes('may concern other lots')));
 assert.equal(merged.sheets[2].processed, false);
+// Builder asks: do all five downloaded sheets establish complete easement coverage?
+const completePlats = mergeSheets({ plats }, results.slice(0, 2).concat(sheet(2, null)));
+const checked = assess({ ...completePlats, assessedAt: '2026-11-07T12:00:00Z',
+  recordSource: { legal: 'LOT 7, EXAMPLE SUBDIVISION' },
+  references: [{ entry: '1234567' }], titleSearchComplete: true, geometryVerified: true,
+  checklist: { done: true }, attachments: ['title.pdf', 'survey.pdf'] });
+assert.equal(checked.linkedSheets.complete, true);
+assert.equal(checked.stage, 'Partial evidence');
+assert.equal(checked.rows.length, 5);
+assert.match(checked.rows.find(x => x.id === 'instruments').gap, /have not been reconciled/);
+assert.deepEqual(checked.references, ['1234567']);
+assert.equal(checked.assessedAt, '2026-11-07T12:00:00Z');
+assert.equal(assess({}).linkedSheets.complete, false); // zero of zero is not complete
+assert.equal(assess(merged).linkedSheets.complete, false);
+assert.match(assess(merged).rows.find(x => x.id === 'plats').evidence, /001-003/);
+const omitted = mergeSheets({ plats }, results.slice(0, 1));
+assert.equal(omitted.sheets.length, 3); // omitted result must still expose the missing source
+assert.equal(assess(omitted).linkedSheets.complete, false);
+assert.equal(assess({ sheets: [{ processed: true, error: 'unreadable' }], coverage: { total: 1 } }).linkedSheets.complete, false);
+assert.equal(assess({ sheets: [{ processed: true }], coverage: { total: 2 } }).linkedSheets.complete, false);
 results[0].lot.acres = 3.5;
 const conflict = mergeSheets({ plats }, results);
 assert.equal(conflict.lot.acres, null);
 assert.equal(conflict.conflicts[0].field, 'acres');
+assert.match(assess(conflict).rows[0].evidence, /Conflicting readings: acres/);
 assert(extractMentions('BLANKET ACCESS EASEMENT\nSubject to release recorded separately').some(e => e.categories.includes('Access / roadway')));
 assert(extractMentions('AVIGATION EASEMENT').some(e => e.categories.includes('Other recorded restriction')));
 const words = [{ t: 'LOT', x: 80, y: 300 }, { t: '7', x: 120, y: 300 }];

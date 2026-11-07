@@ -71,6 +71,10 @@ Run `node scripts/test-pool-screen.js` for pool screening scenarios (shallow gro
 
 ### Easement evidence and full plat downloads
 
+The report and saved dossier include a five-gate evidence checklist: property identity, plat scope, recorded restrictions, survey mapping and design comparison. Each gate shows evidence, a concrete gap and a completion criterion. Linked-sheet OCR progress updates from actual results (including omitted/failed results), separately from the overall `Partial evidence` status. Zero sheets, attachments, task completion and unsupported clearance booleans cannot advance that status. The evaluation timestamp is not represented as a fresh source check or a title effective date.
+
+Higher milestones are defined as documents reconciled, mapped, and design checked; their title/survey/design evidence ingestion and verification are **not implemented**. The current pipeline intentionally cannot award them. Refresh triggers include title updates, recorded amendments/releases and survey/design changes, plus purchase/submission milestones; annual refresh is not a completeness test.
+
 The dossier retains all linked plat sheets and merges lot readings instead of discarding all but one sheet. Lot-label proximity to an image edge is a citation-selection hint, not verified boundary geometry. Easement excerpts from labels, general notes and legends are marked as discovery leads; they can concern other parcels. Separately recorded instruments, releases, title exceptions and survey geometry remain unresolved. Site-plan fit is a setback-only screen.
 
 `GET /api/plat-bundle?county=Weber&parcel=...` downloads all linked sheets as a PDF, preserving native image pixels and adding source footers outside the drawing. It fails explicitly instead of omitting sheets if a source fails, exceeds the response limit, or is unsupported. Run `node scripts/test-plat-evidence.js` for cross-sheet attribution, incomplete-coverage and extraction regression checks.

@@ -478,6 +478,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 @media(max-width:640px){.submit{white-space:normal;text-align:center}}
 
 #rv .plat-evidence{margin-top:28px}#rv .plat-sheets li{margin:10px 0}#rv .easement-excerpts{padding-left:20px}#rv .easement-excerpts li{padding:14px 0;border-bottom:1px solid var(--line)}#rv .easement-excerpts blockquote{margin:8px 0;padding:10px 14px;border-left:2px solid var(--line);overflow-wrap:anywhere}#rv .plat-evidence summary{cursor:pointer;font-weight:700;padding:12px 0}
+.easement-gates { padding-left: 24px; }
+.easement-gates > li { padding: 16px 0; border-bottom: 1px solid var(--line, #d5d5d5); break-inside: avoid; }
+.easement-gates h4 { margin: 0 0 8px; font-size: 16px; }
+.easement-gates p { margin: 8px 0; overflow-wrap: anywhere; }
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -663,7 +667,7 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   <div id="rv-body"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "03bcd266e6", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
+<script>window.LR_DATA = {"costs": {"culinary_connection": {"low": 10000, "high": 50000, "label": "Culinary water connection / shares"}, "well": {"low": 40000, "high": 90000, "label": "Private well, pump & pressure system (excl. water right)"}, "geologic_hazards_study": {"low": 8000, "high": 25000, "label": "Geologic hazards study (mitigation extra)"}, "fault_study": {"low": 5000, "high": 15000, "label": "Surface fault rupture study"}, "geotech_report": {"low": 3000, "high": 8000, "label": "Geotechnical report"}, "flood_mitigation": {"low": 20000, "high": 100000, "label": "Floodplain elevation / mitigation"}, "septic_conventional": {"low": 15000, "high": 30000, "label": "Conventional septic system"}, "septic_alternative": {"low": 35000, "high": 75000, "label": "Engineered / alternative septic system"}, "sewer_connection": {"low": 8000, "high": 20000, "label": "Sewer connection & impact fee"}, "survey_topo": {"low": 3000, "high": 8000, "label": "Boundary + topographic survey"}, "steep_site_work": {"low": 25000, "high": 150000, "label": "Steep-site excavation & retaining"}, "power_extension": {"low": 5000, "high": 50000, "label": "Power line extension"}, "propane": {"low": 5000, "high": 12000, "label": "Propane tank & piping"}, "wui_construction": {"low": 15000, "high": 60000, "label": "WUI ignition-resistant construction premium"}, "long_driveway": {"low": 20000, "high": 80000, "label": "Private access / long driveway"}, "permit_impact_fees": {"low": 15000, "high": 45000, "label": "Building permit, plan review & impact fees"}, "basement_waterproofing": {"low": 15000, "high": 60000, "label": "Basement waterproofing, drainage & dewatering"}, "fire_sprinklers": {"low": 10000, "high": 25000, "label": "Residential fire sprinklers (NFPA 13D)"}}, "apiBase": "", "apiVersion": "13bea74b48", "records": {"Ogden Valley City": {"asOf": "2026-11-05", "since": "2026-01-01", "feeAdopted": "2026-05-05", "custodian": {"role": "City Recorder", "email": "srobbins@ogdenvalley.gov"}, "known": ["Ordinance 2026-10", "Resolution 2026-18", "Ordinance 2026-19", "Resolution 2026-25", "Resolution 2026-28", "Resolution 2026-34", "Resolution 2026-55", "Ordinance 2026-55"], "unposted": ["Resolution 2026-28, the building permit, plan review and inspection fee schedule (adopted May 5, 2026), and any later amendment to it", "Resolution 2026-25, the Development Mitigation Contribution and Impact Fee Lock Agreement (adopted May 19, 2026), with the executed agreement and exhibits"]}}};</script>
 <script>
 /* Evidence, not legal interpretation: preserve every sheet and keep lot attribution uncertain. */
 (function (root) {
@@ -695,8 +699,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
   }
   function mergeSheets(rec, results) {
     var readings = [], evidence = [], sheets = [];
-    results.forEach(function (r, i) {
-      var original = rec.plats[i], source = { sheet: r && r.sheet || original.sheet, url: original.url };
+    rec.plats.forEach(function (original, i) {
+      var r = results[i];
+      var source = { sheet: r && r.sheet || original.sheet, url: original.url };
       sheets.push(Object.assign({}, source, { processed: !!(r && !r.error && r.plat), error: r && r.error || null }));
       if (!r || r.error) return;
       if (r.lot) readings.push(Object.assign({}, r.lot, source));
@@ -728,7 +733,49 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     return { lot: lot, readings: readings, evidence: evidence, sheets: sheets, conflicts: conflicts,
       coverage: { processed: sheets.filter(function (s) { return s.processed; }).length, total: rec.plats.length, geometryVerified: false, titleSearchComplete: false } };
   }
-  var api = { extractMentions: extractMentions, mergeSheets: mergeSheets };
+  // Evidence gates deliberately ignore user checklist completion and attachment counts.
+  // Current collectors produce discovery evidence only; no title/survey clearance is inferred.
+  function assess(p) {
+    p = p || {};
+    var sheets = p.sheets || [], readings = p.readings || [], conflicts = p.conflicts || [];
+    var processed = sheets.filter(function (s) { return s.processed && !s.error; }).length;
+    var expected = Math.max(sheets.length, (p.coverage || {}).total || 0);
+    var allLinked = expected > 0 && processed === expected;
+    var source = p.recordSource || {}, missing = sheets.filter(function (s) { return !s.processed || s.error; });
+    var refs = Array.from(new Set((p.references || []).map(function (x) { return String(x.entry || ''); })
+      .concat([].concat.apply([], (p.evidence || []).map(function (x) { return (x.entries || []).map(String); }))).filter(Boolean)));
+    var rows = [
+      { id: 'identity', label: 'Correct property', status: source.legal && readings.length ? 'Partial evidence' : 'Missing evidence',
+        evidence: (source.legal ? 'County legal description retrieved: ' + source.legal : 'County legal description not retrieved.') +
+          (readings.length ? ' Lot labels were detected on ' + readings.length + ' sheet(s).' : 'No matching lot label was extracted.') +
+          (conflicts.length ? ' Conflicting readings: ' + conflicts.map(function (x) { return x.field; }).join(', ') + '.' : ''),
+        gap: 'Parcel, legal description and applicable recorded plat have not been reconciled. OCR label proximity is not a boundary match.',
+        criterion: 'Documented agreement between the parcel, full legal description and recorded plat, with conflicting identifiers or dimensions resolved.' },
+      { id: 'plats', label: 'Complete plat set', status: allLinked ? 'Linked sheets processed; scope unverified' : 'Incomplete',
+        evidence: processed + ' of ' + expected + ' linked sheets processed by OCR.' + (missing.length ? ' Unread or failed: ' + missing.map(function (s) { return s.sheet; }).join(', ') + '.' : '') +
+          (!expected ? ' No linked plat inventory is available.' : '') + (expected > sheets.length ? ' Some expected sheet records are missing.' : ''),
+        gap: 'Applicable amendments and referenced sheets outside the retrieved inventory have not been reconciled; OCR processing does not establish legibility of every restriction.',
+        criterion: 'All applicable plat sheets and amendments are accounted for and readable, with every cross-reference resolved. Finishing linked-sheet OCR alone does not complete this gate.' },
+      { id: 'instruments', label: 'Recorded restrictions', status: 'Blocked: title evidence',
+        evidence: refs.length ? 'Unresolved instrument references: ' + refs.map(function (x) { return 'Entry ' + x; }).join(', ') + '.' : 'No easement entry numbers extracted; this does not establish absence of restrictions.',
+        gap: 'A dated title commitment, its exception schedule and the underlying instruments, amendments and releases have not been reconciled. Public parcel references are not a complete title inventory.',
+        criterion: 'Account for every exception and linked instrument in the identified title commitment; document applicability, amendments/releases and any unresolved terms. State the commitment effective date and review date.' },
+      { id: 'mapping', label: 'Physical location', status: 'Not started: survey reconciliation',
+        evidence: 'No survey-confirmed easement geometry is available in this dossier.',
+        gap: 'Survey registration and interpretation are not implemented. Blanket or ambiguous easements cannot be silently omitted from a map.',
+        criterion: 'A dated survey locates each plottable easement. Blanket, ambiguous or unplottable restrictions are individually identified, with their remaining siting implications stated.' },
+      { id: 'design', label: 'Proposed construction', status: 'Not checked against easements',
+        evidence: 'Any generated house diagram is a setback-only screen. Pool placement and driveway/utility clearance are not established.',
+        gap: 'Mapped restrictions and a versioned layout covering the proposed improvements are missing from the easement review.',
+        criterion: 'Compare the identified house, pool, deck, driveway and utility layout revision against the reconciled restrictions. Record intersections, approvals and unresolved conflicts; checked does not necessarily mean approved.' }
+    ];
+    return { stage: 'Partial evidence', assessedAt: p.assessedAt || null, rows: rows,
+      linkedSheets: { complete: allLinked, processed: processed, total: expected }, references: refs,
+      stages: ['Partial evidence', 'Documents reconciled', 'Mapped', 'Design checked'],
+      refresh: 'Recheck when a new plat, amendment, release, title update, survey or design revision arrives, and before purchase or permit submission. An annual refresh alone is not a completeness test.',
+      limit: 'No guarantee of absence of other easements. Later stages must identify the documents, effective dates, review dates and design revision they cover. Attachments and task completion are not evidence verification.' };
+  }
+  var api = { extractMentions: extractMentions, mergeSheets: mergeSheets, assess: assess };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlatEvidence = api;
 })(typeof window !== 'undefined' ? window : globalThis);
@@ -2090,7 +2137,10 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
   C.check_documents = async function (ctx) {
     var d = await (ctx.docs || fetchDocs(ctx.parcel, ctx.facts.jurisdiction)), out = [], rec = d.record || {}, no = d.notices || {};
-    if (d.unavailable) return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
+    if (d.unavailable) {
+      ctx.facts.platEvidence = { assessedAt: new Date().toISOString(), sheets: [], evidence: [], recordSource: { error: d.unavailable } };
+      return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
+    }
     var plat = rec.plat || {}, docs = (no.documents || []).filter(Boolean), sub = ctx.parcel.attrs.SUBDIV_NAME || 'the subdivision';
     if (rec.supported === false) out.push(F('ccr', 'Recorded plat', 'verify', 'Recorded plat not read for ' + ctx.parcel.county + ' County yet',
       'Automatic plat reading (setback notes, recorded agreements, utility approvals) covers Weber County so far. Public meeting records were still searched for the subdivision.' +
@@ -2099,6 +2149,9 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
     ctx.facts.platEvidence.references = (plat.entries || []).filter(function (e) { return /easement/i.test(e.label); }).concat((rec.references || []).filter(function (e) { return /easement/i.test(e.label || e.kind); }));
     ctx.facts.platEvidence.priorParcels = rec.priorParcels || [];
     ctx.facts.platEvidence.history = rec.history || null;
+    ctx.facts.platEvidence.assessedAt = new Date().toISOString();
+    ctx.facts.platEvidence.recordSource = { url: rec.parcelPage || null, legal: rec.legal || null, lot: rec.lot || null,
+      parcel: ctx.parcel.id, error: rec.error || null };
     if (rec.plats && rec.plats.length) ctx.facts.platEvidence.bundleUrl = apiBase() + '/api/plat-bundle?county=' + encodeURIComponent(ctx.parcel.county) + '&parcel=' + encodeURIComponent(ctx.parcel.id) + '&v=' + encodeURIComponent((root.LR_DATA || {}).apiVersion || '');
     var platUrl = (rec.plats && rec.plats[0] && rec.plats[0].url) || rec.parcelPage;
 
@@ -3239,8 +3292,18 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
 
   function platEvidenceSection(r) {
     var p = (r.facts || {}).platEvidence;
-    if (!p) return '';
-    var coverage = p.coverage || {}, readings = p.readings || [], preferred = readings[0];
+    if (!p) p = { sheets: [], evidence: [] };
+    var readings = p.readings || [], preferred = readings[0];
+    var review = window.PlatEvidence.assess(p);
+    var gates = '<div class="easement-review"><h3>Evidence checklist · ' + esc(review.stage) + '</h3>' +
+      '<p>' + (review.assessedAt ? 'Evidence evaluated ' + esc(review.assessedAt) + '. This is the dossier evaluation time, not the recording date, a fresh source check or a title effective date.' : 'No dated evidence evaluation is available.') + '</p>' +
+      (p.recordSource && p.recordSource.url ? '<p><a href="' + esc(p.recordSource.url) + '" target="_blank" rel="noopener">County parcel record used</a></p>' : '') +
+      '<p><b>Linked-sheet processing:</b> ' + (review.linkedSheets.complete ? 'Complete for the retrieved inventory' : 'Incomplete') + ' (' + review.linkedSheets.processed + '/' + review.linkedSheets.total + '). This does not complete the plat-scope or title review.</p>' +
+      '<ol class="easement-gates">' + review.rows.map(function (g) {
+        return '<li><h4>' + esc(g.label) + '</h4><p><b>' + esc(g.status) + '</b></p><p>' + esc(g.evidence) + '</p><p><b>Open gap:</b> ' + esc(g.gap) +
+          '</p><p><b>Completion criterion:</b> ' + esc(g.criterion) + '</p></li>';
+      }).join('') + '</ol><details><summary>How review status advances and when to refresh</summary><p>' + esc(review.stages.join(' → ')) +
+      '. These are evidence milestones, not building approvals. Only the first stage is supported by the current public-record pipeline; title/survey/design reconciliation is not yet implemented.</p><p>' + esc(review.refresh) + '</p><p>' + esc(review.limit) + '</p></details></div>';
     var sources = (p.sheets || []).map(function (sh) {
       var read = readings.find(function (x) { return x.url === sh.url; });
       return '<li><a href="' + esc(sh.url) + '" target="_blank" rel="noopener">Original sheet ' + esc(sh.sheet) + '</a> — ' +
@@ -3259,8 +3322,8 @@ body.chk-only #rv .group:not(:has(.frow.act)){display:none}
           ((h.priorParcels || []).length ? '<p>Further ancestry not checked: ' + esc(h.priorParcels.join(', ')) + '.</p>' : '')) + '</div>';
       }).join('') + '</details>' : '';
     var conflicts = (p.conflicts || []).map(function (c) { return esc(c.field) + ': ' + esc(c.values.join(' / ')); }).join('; ');
-    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · coverage incomplete</div><h2>Easements &amp; the complete plat set</h2>' +
-      '<p>' + (coverage.processed || 0) + ' of ' + (coverage.total || 0) + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
+    return '<section class="card plat-evidence" id="plat-evidence"><div class="eyebrow">Recorded evidence · ' + esc(review.stage) + '</div><h2>Easements &amp; evidence coverage</h2>' + gates +
+      '<p>' + review.linkedSheets.processed + ' of ' + review.linkedSheets.total + ' linked sheets processed by OCR. This counts text processing, not verification of every easement or the whole lot boundary.</p>' +
       '<p>A single sheet may cut through a lot. Read the adjoining drawings and the notes, dedication and legend sheets together. Original scans are preserved; we do not invent or stitch easement geometry.</p>' +
       (p.bundleUrl ? '<p><a class="pk-btn" href="' + esc(p.bundleUrl) + '" download="recorded-plat.pdf">Download all linked plat sheets (PDF)</a></p>' : '') +
       (preferred ? '<p>Suggested starting sheet: <a href="' + esc(preferred.url) + '" target="_blank" rel="noopener">' + esc(preferred.sheet) + '</a>. Selected by lot-label position; confirm the entire boundary visually.</p>' : '') +
