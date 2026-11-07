@@ -1,0 +1,15 @@
+{
+  "asOf":"2026-11-07",
+  "testStart":"2025-01-01",
+  "submarket":"Ogden Valley residential land",
+  "records":[
+    {"id":"era-2054436","source":"https://brittmccarthy-erabrokersconsolidated.sites.erarealestate.com/listing/UT/Huntsville/2736-N-Evergreen-Park-Dr-300-84317/203610012","submarket":"Ogden Valley residential land","kind":"closed_sale","saleDate":"2025-09-22","price":null,"note":"Public page confirms sale date but explicitly withholds closing price. Published reuse notice restricts commercial use; not ingested as training data."},
+    {"id":"homes-sp7sqjzcrc51p","source":"https://www.homes.com/property/946-mill-rd-huntsville-ut-unit-116/sp7sqjzcrc51p/","submarket":"Ogden Valley residential land","kind":"listing","priceType":"asking_price","note":"Displayed price is a listing price; not a verified closing price. Recreational-property comparability also unresolved."},
+    {"id":"movoto-lj7q1my7ofnw","source":"https://www.movoto.com/eden-ut/4748-e-osprey-ranch-dr-eden-ut-84310/pid_lj7q1my7ofnw/","submarket":"Ogden Valley residential land","kind":"unknown","note":"Search index reports undisclosed price and unavailable sale date; direct retrieval unsuccessful. Excluded."}
+  ],
+  "sourceAudit":[
+    {"source":"https://maps.webercountyutah.gov/arcgis/rest/services/gis/OpenGov_Layers/MapServer/9","finding":"Previously inspected public assessor schema has no closing price field. Assessed values excluded."},
+    {"source":"https://www.webercountyutah.gov/Clerk_Auditor/tax_sale.php","finding":"Tax-deed auction conditions differ from ordinary residential-lot transactions; not used as pilot market labels."},
+    {"source":"https://trustlands.utah.gov/work-with-us/land-sale-auctions/","finding":"Published outcomes found outside the pilot market; not substituted for local comparable sales."}
+  ]
+}

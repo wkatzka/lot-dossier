@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');const {run,metrics}=require('../lib/valuation-backtest');
+const record=(id,saleDate,price,propertyKey=id)=>({id,propertyKey,saleDate,price,kind:'closed_sale',priceType:'closed_price',submarket:'synthetic',verified:true,reusePermitted:true,armLength:true,source:'https://example.org/'+id,availableAt:saleDate,featuresAsOf:'2023-01-01',featureSource:'https://example.org/features',usableAcres:1,adjustments:[]});
+const base={asOf:'2026-11-07',testStart:'2025-01-01',submarket:'synthetic',records:[record('a','2024-01-01',100),record('b','2024-02-01',200),record('c','2024-03-01',300),record('target','2025-01-01',250)]};
+const r=run(base);assert.equal(r.predictions[0].predicted,200);assert.equal(r.metrics.meanAbsoluteError,50);assert.equal(r.metrics.medianAbsolutePercentageError,20);assert.equal(r.marketAccuracyEstablished,false);
+const future=structuredClone(base);future.records[0].availableAt='2026-01-01';assert.equal(run(future).predictions.length,0);
+const self=structuredClone(base);self.records[0].propertyKey='target';assert.equal(run(self).predictions.length,0);
+const leak=structuredClone(base);leak.records[0].featuresAsOf='2025-01-01';assert.equal(run(leak).predictions.length,0);
+const unknown=structuredClone(base);unknown.records.forEach(r=>r.priceType='asking_price');assert.equal(run(unknown).metrics,null);
+assert.equal(metrics([]),null);assert.throws(()=>run({...base,testStart:'2025-02-30'}));
+assert.equal(run({...base,records:[]}).status,'blocked_no_scorable_holdout');
+console.log('Backtest mechanics passed with synthetic fixtures: chronology, publication delay, repeat-parcel leakage, feature leakage, price-type rejection and error arithmetic. These tests establish no real market accuracy.');

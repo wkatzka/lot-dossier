@@ -1,0 +1,70 @@
+{
+  "scope": "Ogden Valley residential land",
+  "asOf": "2026-11-07",
+  "testStart": "2025-01-01",
+  "method": "unit-comparison-v1; zero-adjustment research baseline",
+  "status": "blocked_no_scorable_holdout",
+  "marketAccuracyEstablished": false,
+  "screenedRecords": 3,
+  "eligibleRecords": 0,
+  "predictions": [],
+  "abstentions": [],
+  "excluded": [
+    {
+      "id": "era-2054436",
+      "source": "https://brittmccarthy-erabrokersconsolidated.sites.erarealestate.com/listing/UT/Huntsville/2736-N-Evergreen-Park-Dr-300-84317/203610012",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "homes-sp7sqjzcrc51p",
+      "source": "https://www.homes.com/property/946-mill-rd-huntsville-ut-unit-116/sp7sqjzcrc51p/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "invalid_or_future_sale_date",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "movoto-lj7q1my7ofnw",
+      "source": "https://www.movoto.com/eden-ut/4748-e-osprey-ranch-dr-eden-ut-84310/pid_lj7q1my7ofnw/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "invalid_or_future_sale_date",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    }
+  ],
+  "metrics": null,
+  "simplePriceBaselineMetrics": null,
+  "intervalCoverage": null,
+  "limitations": [
+    "A sparse or selectively public sample cannot establish pilot-wide accuracy.",
+    "No independent interval calibration dataset supplied; interval coverage is unmeasured.",
+    "No target-specific site or time adjustments calibrated.",
+    "Residual development budgets require actual project-cost outcomes, not land sales alone."
+  ]
+}
