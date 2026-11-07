@@ -158,6 +158,7 @@
     });
     $('phase').textContent = 'Report ready';
     last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: new Date() };
+    window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
     showReport();
     prog.classList.remove('on'); form.classList.remove('off'); go.disabled = false;
   });
@@ -187,6 +188,8 @@
         if (state === 'running') $('plan-update-status').textContent = 'Updating: ' + (LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1];
       }, prior.documents);
       last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
+      window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
+      if (mode === 'upload' && $('planfile').files[0]) window.dispatchEvent(new CustomEvent('cornerpin:planfile', { detail: $('planfile').files[0] }));
       $('plan-dialog').close(); showReport(true);
     } catch (ex) {
       $('plan-error').textContent = 'The plan check could not finish. Your previous report is unchanged. ' + (ex.message || ex);
@@ -487,6 +490,12 @@
     } catch (e) { el.textContent = 'Map unavailable.'; }
   }
 
+  window.addEventListener('cornerpin:restore-report', function (e) {
+    last = JSON.parse(JSON.stringify(e.detail));
+    last.date = new Date(last.date);
+    if (last.planUpdatedAt) last.planUpdatedAt = new Date(last.planUpdatedAt);
+    showReport();
+  });
   function showReport(fromHistory) {
     $('rv-body').innerHTML = reportHTML(last, null, false);
     document.body.classList.add('show-report');

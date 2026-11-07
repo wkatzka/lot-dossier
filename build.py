@@ -29,7 +29,7 @@ def read(*p):
 
 def build(api_base, inline_assets=False):
     html = read(WEB, "home.html")
-    css = read(WEB, "styles.css")
+    css = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css")
     if inline_assets:  # one self-contained file: embed the background photo
         import base64
         with open(os.path.join(ROOT, "public", "assets", "site-bg.jpg"), "rb") as fh:
@@ -45,6 +45,7 @@ def build(api_base, inline_assets=False):
     <span class="wordmark"><!--CORNERPIN_WORDMARK--></span>
     <div class="acts">
       <a class="btn ghost" href="#packet">Permit packet</a>
+      <button class="btn ghost only-live" id="rv-workflow" type="button">Permit workflow</button>
       <button class="btn ghost only-live" id="rv-plan" type="button">Add building plans</button>
       <button class="btn ghost" id="rv-print" type="button" data-print>Print</button>
       <button class="btn ghost only-live" id="rv-save" type="button">Download site report</button>
@@ -73,6 +74,9 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
+        "<script>\n" + read(WEB, "permit-workflow.js") + "\n</script>",
+        "<script>\n" + read(WEB, "project-store.js") + "\n</script>",
+        "<script>\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")
