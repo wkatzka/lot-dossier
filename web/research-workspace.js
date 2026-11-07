@@ -1,0 +1,88 @@
+(function(root){
+'use strict';
+const E=root.EvidenceLedger,V=root.LandValue,G=root.PlacementEngine,T=root.turf,P=root.proj4;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number.isFinite(n)?n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}):'Not established';
+const input=(name,label,value='',type='text')=>'<label>'+esc(label)+'<input name="'+name+'" type="'+type+'" step="any" value="'+esc(value)+'"></label>';
+const form=(mode,body)=>'<form data-command="research"><input type="hidden" name="mode" value="'+mode+'">'+body+'<button type="submit" class="primary">Calculate and save scenario</button></form>';
+const link=(u,label)=>/^https:\/\//.test(u||'')?'<a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(label)+'</a>':esc(label);
+function ledger(p){return p.evidence||E.discover(p.report);}
+function vectorPreview(doc){
+ const v=doc.vectors;if(!v||v.error)return '';
+ const pages=v.pages||[],alignment=doc.alignment;
+ const registration=alignment?.registration?'<p>Candidate ground registration: '+alignment.pairs.length+' monument pairs; independent check residual '+alignment.registration.maxErrorM.toFixed(3)+' m. This is not absolute survey accuracy. '+esc(alignment.limitation)+'</p><ul>'+alignment.pairs.map(p=>'<li>'+esc(p.name+' · source quality '+p.sourceQuality+' · source date '+(p.sourceDate||'unspecified'))+'</li>').join('')+'</ul>':'';
+ return '<section class="pw-card"><h3>Original survey drawing layers · '+esc(doc.recordNumber)+'</h3><p>'+esc(v.pathsRead)+' paths extracted; '+esc(v.registered?'registered':'not registered to ground coordinates')+'. '+esc(v.truncated?'Extraction incomplete. ':'')+esc(v.limitation)+'</p>'+registration+pages.map(page=>{
+  const colors={'S-LOT':'#f7f6f0','S-BOUNDARY':'#dfc8a6','S-EASEMENT':'#ff824c','H-EASEMENT':'#ff824c','S-MONUMENT':'#67c9ed','S-SECTION':'#89b7a0','S-TIE':'#999'},bounds=page.view;
+  const pathData=commands=>{let current=[0,0],start=current;return commands.map(c=>{let out;if(c[0]==='V')out='C'+current.join(' ')+' '+c.slice(1).join(' ');else if(c[0]==='Y')out='C'+c.slice(1).join(' ')+' '+c.slice(-2).join(' ');else out=c[0]+c.slice(1).join(' ');if(c[0]==='M')start=c.slice(1);if(c[0]==='Z')current=start;else current=c.slice(-2);return out;}).join(' ');};
+  return '<details><summary>Page '+page.page+' — easements orange, lots white, monuments blue</summary><svg viewBox="'+[bounds[0],bounds[1],bounds[2]-bounds[0],bounds[3]-bounds[1]].join(' ')+'" role="img" aria-label="Original CAD layer paths, survey page '+page.page+'" style="background:#101814;width:100%"><g transform="translate(0 '+(bounds[1]+bounds[3])+') scale(1 -1)">'+page.paths.map(path=>'<path fill="'+(path.fill?colors[path.layer]:'none')+'" stroke="'+(path.stroke?colors[path.layer]:'none')+'" stroke-width="0.15" d="'+esc(pathData(path.commands))+'"/>').join('')+'</g>'+page.labels.filter(t=>/LOT\s*\d/i.test(t.text)).map(t=>'<text x="'+t.position[0]+'" y="'+(bounds[1]+bounds[3]-t.position[1])+'" fill="#fff" font-size="12">'+esc(t.text)+'</text>').join('')+'</svg>'+link(doc.url+'#page='+page.page,'Compare with original PDF page')+'</details>';
+ }).join('')+'</section>';
+}
+function reviewForm(p,x){
+ if(!x.instrument)return '<details><summary>Reconcile an available original instrument</summary><p>Only use the actual recorded instrument matching this entry, not a survey or meeting packet that merely mentions it. Public acquisition remains the default; this review does not complete the missing title search.</p><form data-command="research"><input type="hidden" name="mode" value="instrument"><input type="hidden" name="record" value="'+esc(x.id)+'"><label>Retained original document<select name="documentId"><option value="">Choose an original</option>'+p.documents.map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+'</option>').join('')+'</select></label>'+input('sourceUrl','Public original HTTPS URL','', 'url')+input('pages','Original page count','','number')+'<label><input type="checkbox" name="identityConfirmed"> I verified that this is the original recorded entry '+esc(x.entry)+'.</label><button type="submit" class="primary">Link verified original</button></form></details>';
+ return '<details><summary>Review applicability</summary><form data-command="research"><input type="hidden" name="mode" value="review"><input type="hidden" name="record" value="'+esc(x.id)+'"><label>Disposition<select name="state">'+['applicability_unresolved','applicable','not_applicable','blanket_unplottable','amended','released'].map(v=>'<option value="'+v+'">'+v.replace(/_/g,' ')+'</option>').join('')+'</select></label>'+input('reviewer','Reviewer')+input('basis','Evidence and property-matching basis')+input('effectiveDate','Effective date','','date')+input('pages','Cited pages, separated by commas')+input('relatedIds','Release/amendment entry IDs, separated by commas')+'<button type="submit" class="primary">Save dated review</button></form></details>';
+}
+function evidence(p){
+ const l=ledger(p),s=E.status(l),r=p.report.facts.publicResearch||{};
+ return '<section class="pw-card"><h2>Public evidence & restrictions</h2><p>'+s.discovered+' recording references · '+s.originals+' original instruments retained · '+s.open+' unresolved applicability reviews.</p><p>'+esc(l.scope)+'. '+esc(s.reason)+'</p>'+(s.refreshDue?'<p class="pw-warning">This inventory needs refreshing before a purchase or filing decision.</p>':'')+'<ul>'+l.gaps.map(g=>'<li>'+esc(g)+'</li>').join('')+'</ul></section>'+l.records.map(x=>'<section class="pw-card"><h3>Entry '+esc(x.entry)+' · '+esc(x.kind)+'</h3><p>'+esc(x.state.replace(/_/g,' '))+'</p>'+x.citations.map(c=>'<p>'+link(c.url+(c.page?'#page='+c.page:''),'Original source'+(c.page?' · page '+c.page:''))+' · '+esc(c.scope||'')+'<br>'+esc(c.excerpt||'')+'</p>').join('')+reviewForm(p,x)+'</section>').join('')+'<section class="pw-card"><h3>Source history</h3>'+l.sources.map(s=>'<p>'+link(s.url,s.id)+' · '+s.pagesRead+'/'+s.totalPages+' pages<br><small>Retrieved '+esc(s.retrievedAt)+' · SHA-256 '+esc(s.hash)+'</small></p><details><summary>Extracted clause candidates — legal effect unverified</summary>'+(s.claims||[]).map(c=>'<p>'+link(s.url+'#page='+c.page,c.category+' · page '+c.page)+'<br>'+esc(c.excerpt)+'</p>').join('')+'</details>').join('')+'<h3>Parent parcels</h3>'+((r.history||{}).records||[]).map(s=>'<p>'+link(s.url,s.parcelId)+' · '+esc(s.legal||'Legal description unavailable')+'</p>').join('')+'</section>'+(p.report.facts.publicSurveys?.documents||[]).map(vectorPreview).join('');
+}
+const labels={finishedSale:'Finished-home sale proceeds ($)',vertical:'Vertical construction ($)',sitework:'Site work and utilities ($)',fees:'Permits and impact fees ($)',design:'Design, engineering and professional fees ($)',overhead:'Business overhead and general expenses ($)',contingency:'Construction contingency ($)',finance:'All financing costs ($)',carry:'Taxes, insurance and carry ($)',sellingRate:'Selling cost fraction (0.06 = 6%)',profitRate:'Target profit fraction of revenue',acquisitionRate:'Acquisition cost fraction of land price'};
+function valuation(p){
+ const l=ledger(p),last=l.runs.filter(r=>r.kind==='valuation').at(-1),values=last?last.inputs:{};
+ return '<section class="pw-card"><h2>Lot value & builder budget</h2><p>Market value is unresolved: a verified public closed-sale comparison set and local holdout validation are not yet available. Assessed values and asking prices are not substituted for closed sales.</p><p>'+link('https://www.iaao.org/wp-content/uploads/Standard_on_Mass_Appraisal.pdf','Method reference: IAAO land valuation')+'</p><h3>Residual development scenario</h3><p>Net sale proceeds minus construction, site, fees, financing, carry and target profit, with land acquisition costs solved separately. Every input retains its basis. Blank inputs prevent a calculation; zero is an explicit assumption.</p>'+form('valuation','<div class="pw-grid">'+V.required.map(k=>'<div>'+input(k,labels[k],values[k]?.value??'','number')+input(k+'Basis','Source or assumption basis',values[k]?.basis||'')+'</div>').join('')+'</div>')+'</section>'+runs(l,'valuation');
+}
+function shape(p,values={}){
+ const rings=p.report.parcel.rings;if(!rings)throw Error('Mapped parcel boundary unavailable');
+ const boundary=G.valid(T.polygon(rings)),origin=T.center(boundary).geometry.coordinates;
+ const n=(k,d)=>values[k]===undefined?d:Number(values[k]);
+ const width=n('width',12)*.3048,length=n('length',24)*.3048,x=n('x',0)*.3048,y=n('y',0)*.3048,rotation=n('rotation',0),deck=n('deck',4)*.3048;
+ return {boundary,origin,components:[{name:'Pool waterline',geometry:G.rectangle(origin,x,y,width,length,rotation)},{name:'Pool and deck envelope',geometry:G.rectangle(origin,x,y,width+deck*2,length+deck*2,rotation)},{name:'Equipment',geometry:G.rectangle(origin,x+width/2+deck+1.5,y,1.22,1.83,rotation)}]};
+}
+function svg(p,values){
+ const s=shape(p,values),pr=G.projection(s.origin),rings=s.boundary.geometry.coordinates.map(r=>r.map(c=>P('EPSG:4326',pr,c))),pts=rings.flat(),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),xmin=Math.min(...xs),ymin=Math.min(...ys),w=Math.max(...xs)-xmin,h=Math.max(...ys)-ymin,scale=480/Math.max(w,h),ox=30-xmin*scale,oy=510+ymin*scale;
+ let overlay='';
+ P.defs('EPSG:26912','+proj=utm +zone=12 +datum=NAD83 +units=m +no_defs');
+ for(const doc of p.report.facts.publicSurveys?.documents||[]){
+  const alignment=doc.alignment;if(!alignment?.registration?.withinTolerance)continue;
+  const reg=alignment.registration;
+  for(const path of doc.vectors?.pages?.[0]?.paths||[]){if(!['S-EASEMENT','H-EASEMENT'].includes(path.layer))continue;
+   let current=[0,0],start=current;
+   const commands=path.commands.map(command=>{const c=command.slice();for(let i=1;i<c.length-1;i+=2){const utm=root.SurveyRegistration.transform([[c[i],c[i+1]]],reg)[0],xy=P('EPSG:4326',pr,P('EPSG:26912','EPSG:4326',utm));c[i]=+(ox+xy[0]*scale).toFixed(2);c[i+1]=+(oy-xy[1]*scale).toFixed(2);}let result;if(c[0]==='V')result='C'+current.join(' ')+' '+c.slice(1).join(' ');else if(c[0]==='Y')result='C'+c.slice(1).join(' ')+' '+c.slice(-2).join(' ');else result=c[0]+c.slice(1).join(' ');if(c[0]==='M')start=c.slice(1);current=c[0]==='Z'?start:c.slice(-2);return result;}).join(' ');
+   overlay+='<path d="'+esc(commands)+'" fill="'+(path.fill?'#ff824c':'none')+'" stroke="'+(path.stroke?'#ff824c':'none')+'" stroke-width=".5" opacity=".65"/>';
+  }
+ }
+ const path=rr=>rr.map(r=>'M'+r.map(([x,y])=>(ox+x*scale).toFixed(2)+','+(oy-y*scale).toFixed(2)).join('L')+'Z').join(' ');
+ return '<svg id="placement-preview" viewBox="0 0 560 560" role="img" aria-label="Conceptual pool layout. Click to move the pool centre." data-scale="'+scale+'" data-ox="'+ox+'" data-oy="'+oy+'" style="width:100%;max-height:520px;background:#101814;touch-action:none;cursor:crosshair"><path d="'+path(rings)+'" fill="#273c32" fill-rule="evenodd" stroke="#dfc8a6" stroke-width="2"/>'+overlay+s.components.map((c,i)=>'<path d="'+path(c.geometry.geometry.coordinates.map(r=>r.map(c=>P('EPSG:4326',pr,c))))+'" fill="'+['#4aaedb','#69bfd455','#fd733b'][i]+'" stroke="#fff"/>').join('')+'<text x="16" y="548" fill="white" font-size="12">Conceptual layout · orange drawing overlay unverified</text></svg>';
+}
+function placement(p){
+ const l=ledger(p),last=l.runs.filter(r=>r.kind==='placement').at(-1),v=last?.inputs?.form||{};
+ let preview;try{preview=svg(p,v);}catch(e){preview='<p>'+esc(e.message)+'</p>';}
+ return '<section class="pw-card"><h2>Pool placement study</h2><p>The public parcel outline supports a conceptual layout. Exact siting remains unresolved until survey registration, restrictions, service lines, structures, terrain and applicable pool rules are verified. Dimensions below are editable scenario assumptions.</p>'+form('placement','<div class="pw-grid"><div id="placement-drawing">'+preview+'</div><div>'+input('width','Pool width (ft)',v.width??12,'number')+input('length','Pool length (ft)',v.length??24,'number')+input('deck','Deck around pool (ft)',v.deck??4,'number')+input('x','Centre east of parcel centre (ft)',v.x??0,'number')+input('y','Centre north of parcel centre (ft)',v.y??0,'number')+input('rotation','Rotation (degrees)',v.rotation??0,'number')+input('setback','Scenario boundary clearance (ft)',v.setback??(p.report.facts.jurisdiction==='Ogden Valley City'?10:''),'number')+input('ruleSource','Applicable rule source or assumption',v.ruleSource||(p.report.facts.jurisdiction==='Ogden Valley City'?'LUC 108-7-18 minimum only; larger zone setbacks and side/rear location unresolved':''))+input('tolerance','Placement tolerance (ft)',v.tolerance??1,'number')+'<p>Click or drag on the diagram to move the pool centre. Equipment shown as a 4 × 6 ft scenario footprint; clearance and access need verification.</p></div></div>')+'</section>'+runs(l,'placement');
+}
+function runs(l,kind){return l.runs.filter(r=>r.kind===kind).slice().reverse().map(r=>'<section class="pw-card"><h3>'+esc(r.createdAt)+' · '+esc(r.stale?'Stale — recalculate':r.result.status)+'</h3>'+(kind==='valuation'?'<p>Residual land budget: <strong>'+money(r.result.landBudget)+'</strong></p><p>'+esc(r.result.limitation||r.result.missing?.join(', '))+'</p><table><thead><tr><th>Sale change</th><th>Cost change</th><th>Land budget</th></tr></thead><tbody>'+(r.result.sensitivity||[]).map(s=>'<tr><td>'+Math.round(s.saleChange*100)+'%</td><td>'+Math.round(s.costChange*100)+'%</td><td>'+money(s.landBudget)+'</td></tr>').join('')+'</tbody></table>':'<p>'+esc(r.result.limitation)+'</p><ul>'+[...r.result.conflicts,...r.result.unknown].map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul><details><summary>Checks performed</summary>'+r.result.checks.map(c=>'<p>'+esc(c.component+' · '+c.check+': '+(c.passed?'passes supplied geometry':'conflict'))+'</p>').join('')+'</details>')+'</section>').join('');}
+function command(p,data){
+ const values=Object.fromEntries(data),kind=values.mode;let inputs,result;
+ if(kind==='instrument'){
+  const doc=p.documents.find(d=>d.id===values.documentId),record=ledger(p).records.find(r=>r.id===values.record);if(!doc||!record||!data.has('identityConfirmed'))throw Error('Original document and entry identity confirmation required');
+  return {type:'evidence',action:{type:'instrument',id:record.id,entry:record.entry,url:values.sourceUrl,hash:doc.hash,pages:Number(values.pages),documentId:doc.id}};
+ }else if(kind==='review')return {type:'evidence',action:{type:'review',id:values.record,state:values.state,reviewer:values.reviewer,basis:values.basis,effectiveDate:values.effectiveDate,pages:values.pages.split(',').map(n=>Number(n.trim())),relatedIds:values.relatedIds.split(',').map(x=>x.trim()).filter(Boolean).map(x=>x.startsWith('entry-')?x:'entry-'+x)}};
+ else if(kind==='valuation'){inputs=Object.fromEntries(V.required.map(k=>[k,{value:values[k]===''?null:Number(values[k]),basis:values[k+'Basis']} ]));result=V.residual(inputs);if(result.status==='inputs_required')throw Error('Missing sourced inputs: '+result.missing.join(', '));}
+ else if(kind==='placement'){
+  if(values.setback===''||!values.ruleSource||Number(values.deck)<0)throw Error('Provide a nonnegative scenario clearance, basis and deck width');
+  const s=shape(p,values);inputs={form:values,boundary:s.boundary,components:s.components.map(c=>({...c,setbackM:Number(values.setback)*.3048,ruleSource:values.ruleSource})),toleranceM:Number(values.tolerance)*.3048,coverage:{},survey:null,obstacles:[]};
+  const publicUtilities=p.report.facts.publicResearch?.surveyUtilities;
+  for(const f of publicUtilities?.features||[])if(f.geometry?.rings)inputs.obstacles.push({name:'Public utility area '+(f.attributes.OBJECTID||''),geometry:T.polygon(f.geometry.rings),clearanceM:0,source:publicUtilities.source,reviewed:false});
+  for(const record of ledger(p).records)if(!['not_applicable','released'].includes(record.state))inputs.obstacles.push({name:'Recording reference '+record.entry,geometry:null});
+  result=G.evaluate(inputs);
+ }else throw Error('Unknown research calculation');
+ return {type:'evidence',action:{type:'run',kind,runId:crypto.randomUUID(),inputs,result}};
+}
+let current=null;
+function render(tab,p){current=p;return ({evidence,valuation,placement})[tab](p);}
+function redraw(){if(!current)return;const f=document.querySelector('form[data-command="research"]');if(!f||f.elements.mode.value!=='placement')return;try{document.getElementById('placement-drawing').innerHTML=svg(current,Object.fromEntries(new FormData(f)));}catch(e){/* Keep last valid preview while editing. */}}
+document.addEventListener('input',e=>{if(e.target.closest('form[data-command="research"]'))redraw();});
+let dragging=false;
+document.addEventListener('pointerdown',e=>{if(e.target.closest('#placement-preview')){dragging=true;move(e);}});
+document.addEventListener('pointermove',e=>{if(dragging)move(e);});document.addEventListener('pointerup',()=>{dragging=false;});
+function move(e){const svg=document.getElementById('placement-preview');if(!svg)return;const box=svg.getBoundingClientRect(),ratio=Math.min(box.width/560,box.height/560),px=(e.clientX-box.left-(box.width-560*ratio)/2)/ratio,py=(e.clientY-box.top-(box.height-560*ratio)/2)/ratio,f=svg.closest('form');f.elements.x.value=((px-Number(svg.dataset.ox))/Number(svg.dataset.scale)/.3048).toFixed(1);f.elements.y.value=((Number(svg.dataset.oy)-py)/Number(svg.dataset.scale)/.3048).toFixed(1);redraw();}
+root.ResearchWorkspace={render,command};
+})(window);

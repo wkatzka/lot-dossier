@@ -38,3 +38,10 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 .report-chip:focus-visible,#project-workspace button:focus-visible{outline:3px solid #f58a54;outline-offset:3px}
 .report-category-panel{min-height:220px}.report-category-panel [hidden]{display:none!important}
 @media print{.report-picker{display:none}.report-category-panel [hidden]{display:block!important}}
+#project-workspace #placement-preview:focus-visible{outline:3px solid var(--focus)}
+#project-workspace table{width:100%;border-collapse:collapse;font-size:.9rem}
+#project-workspace th,#project-workspace td{text-align:left;padding:.6rem;border-bottom:1px solid var(--line)}
+#project-workspace small{overflow-wrap:anywhere}
+#project-workspace nav{flex-wrap:wrap}
+
+#project-workspace button[aria-selected=true]:hover:not(:disabled),#project-workspace button.primary:hover:not(:disabled){background:#dfc49d;color:#18231d;border-color:#dfc49d}

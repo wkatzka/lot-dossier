@@ -1,6 +1,7 @@
 /* Evidence-backed permit workflow. Pure state transitions; no network or external side effects. */
 (function (root) {
   'use strict';
+  const E = typeof module !== 'undefined' && module.exports ? require('./evidence-ledger') : root.EvidenceLedger;
   const clone = x => JSON.parse(JSON.stringify(x));
   const required = (x, message) => { if (!x) throw new Error(message); };
   const clean = x => String(x || '').trim();
@@ -25,7 +26,7 @@
     const parcel = report.parcel, packet = (report.facts || {}).packet || {};
     return { schemaVersion: 1, id: id(), revision: 0, createdAt: now, updatedAt: now,
       propertyKey: parcel.county + '|' + parcel.id, property: { county: parcel.county, parcelId: parcel.id, address: parcel.attrs.PARCEL_ADD || 'Parcel ' + parcel.id },
-      siteVersion: 1, report: clone(report), application: { applicant: '', owner: (report.facts || {}).owner || '', contractor: '', description: '',
+      siteVersion: 1, report: clone(report), evidence: E.discover(report), application: { applicant: '', owner: (report.facts || {}).owner || '', contractor: '', description: '',
         jurisdiction: (report.facts || {}).jurisdiction || '', portal: packet.portal || '', reference: '' },
       stage: 'preparing', requirements: requirements(report), documents: [], packages: [], receipts: [], rounds: [], corrections: [], events: [] };
   }
@@ -60,7 +61,7 @@
     switch (a.type) {
       case 'sync_report': {
         required(a.report.parcel.county + '|' + a.report.parcel.id === p.propertyKey, 'The report belongs to a different property.');
-        p.report = clone(a.report); p.siteVersion++;
+        p.evidence = E.sync(p.evidence, a.report); p.report = clone(a.report); p.siteVersion++;
         const fresh = requirements(a.report);
         p.requirements = fresh.map(r => {
           const prior = p.requirements.find(x => x.title === r.title);
@@ -68,6 +69,8 @@
         });
         invalidate(p); event(p, a.type, 'Site/plan snapshot updated. Requirement reviews and unsubmitted package approvals need renewal.', now); break;
       }
+      case 'evidence':
+        p.evidence=E.apply(p.evidence||E.discover(p.report),a.action,now); invalidate(p); event(p,a.type,'Research evidence or calculation updated.',now); break;
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
         invalidate(p); event(p, a.type, 'Application details updated.', now); break;

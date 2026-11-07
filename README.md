@@ -9,7 +9,7 @@ Due-diligence dossiers for Utah spec-home lots, generated from public records. Y
 **In the browser** (`web/`, built into `public/index.html`):
 - Finds the parcel in UGRC's statewide parcel layers.
 - Queries 20+ state, county and federal map services directly (all allow cross-origin requests).
-- Reads an uploaded plan-set PDF with pdf.js. The file is never uploaded anywhere.
+- Reads an uploaded plan-set PDF with pdf.js. The file is read locally. An explicitly requested cloud save can copy project files to configured private storage.
 - Writes the dossier.
 
 **On Vercel** (`api/`), for documents counties don't expose to browsers:
@@ -23,7 +23,7 @@ Due-diligence dossiers for Utah spec-home lots, generated from public records. Y
 | `GET /api/hoa?q=<subdivision>&county=Weber` | Looks the association up in the Utah HOA registry: registration status, expiry and role-based contacts. |
 | `GET /api/watch?entity=<city>&since=2026-01-01` | Lists fee actions (fee schedules, impact fees, fee agreements) on a public body's agendas. Dossiers compare them with `config/records.json` to flag stale fee figures. |
 
-The API only fetches documents for the lot being looked up. Results are cached at Vercel's CDN, so repeat lookups are instant.
+The API only fetches documents for the lot being looked up. Results are cached at Vercel's CDN, so repeat lookups can be faster; source retrieval and OCR can still take minutes.
 
 ## Agenda watch
 
@@ -98,3 +98,13 @@ The dossier retains all linked plat sheets and merges lot readings instead of di
 `GET /api/plat-bundle?county=Weber&parcel=...` downloads all linked sheets as a PDF, preserving native image pixels and adding source footers outside the drawing. It fails explicitly instead of omitting sheets if a source fails, exceeds the response limit, or is unsupported. Run `node scripts/test-plat-evidence.js` for cross-sheet attribution, incomplete-coverage and extraction regression checks.
 
 Public survey PDFs are also read automatically (up to three candidate documents per report, 25 pages / 15 MB each). Recording references retain page citations, content hashes and unresolved lot applicability. Reading a filed PDF does not establish that it is an executed recorded instrument or provide registered survey geometry. Run `node scripts/test-survey-document.js` for reference extraction checks; optionally pass a public index record number for a live source check.
+
+## Research workspace
+
+The project workspace includes an evidence register, page-cited public survey originals, candidate CAD-layer alignment, mineral source screens, residual land-budget scenarios, and pool/deck/equipment layout scenarios. Refresh retains history and marks prior reviews/calculations stale. Project backups include file bytes and validate SHA-256 on restore.
+
+These tools do not establish a complete easement inventory, private mineral title, a validated local market value, or precise construction placement. See [the execution ledger](docs/substantive-dossier-plan.md) and [tested source access](docs/research/source-access-matrix.md) for actual coverage and unresolved dependencies.
+
+Optional owner-only cloud sync is implemented but requires provisioning and live authorization testing described in [storage setup](docs/research/storage-setup.md). Browser storage remains the default. Automatic city filing and review monitoring are not connected.
+
+Run the deterministic checks with `for f in scripts/test-*.js; do node "$f" || exit; done`, then `python3 build.py --api https://lot-dossier-assistant.vercel.app`. Live source tests are opt-in; synthetic tests validate arithmetic and failure behavior, not market accuracy or title completeness.

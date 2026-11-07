@@ -69,6 +69,10 @@ def build(api_base, inline_assets=False):
     scripts = "\n".join([
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
+        "<script>\n" + read(ROOT, "node_modules", "@turf", "turf", "turf.min.js") + "\n</script>",
+        "<script>\n" + read(ROOT, "node_modules", "proj4", "dist", "proj4.js") + "\n</script>",
+        "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
+        "<script>\n" + read(WEB, "land-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",
         "<script>\n" + read(WEB, "pool-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "mineral-screen.js") + "\n</script>",
@@ -76,9 +80,9 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
-        "<script>\n" + read(WEB, "permit-workflow.js") + "\n</script>",
-        "<script>\n" + read(WEB, "project-store.js") + "\n</script>",
-        "<script>\n" + read(WEB, "project-workspace.js") + "\n</script>",
+        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
+        "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
+        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")

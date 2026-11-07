@@ -29,5 +29,21 @@
       t.onabort = t.onerror = () => reject(conflict || t.error || new Error('Project could not be saved. Browser storage may be full.'));
     });
   }
-  root.ProjectStore = { list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save };
+  async function checklistFiles(county,parcelId) {
+    return new Promise((resolve,reject)=>{
+      const request=indexedDB.open('lot-dossier',1);
+      request.onerror=()=>reject(request.error);request.onsuccess=()=>{const d=request.result;if(!d.objectStoreNames.contains('items')){d.close();resolve([]);return;}
+        const files=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
+        r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))for(const file of c.value.files||[])if(file.blob)files.push({...file,checklistKey:c.key});c.continue();};t.oncomplete=()=>{d.close();resolve(files);};t.onerror=()=>reject(t.error);
+      };
+    });
+  }
+  async function restore(project, files) {
+    const d=await db();return new Promise((resolve,reject)=>{
+      const t=d.transaction(['projects','files'],'readwrite'),ps=t.objectStore('projects');let error;
+      const r=ps.get(project.id);r.onsuccess=()=>{if(r.result){error=new Error('This project already exists. Restore into a different browser to avoid overwriting work.');t.abort();return;}ps.put(project);for(const file of files)t.objectStore('files').put(file.blob,file.id);};
+      t.oncomplete=()=>resolve(project);t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
+    });
+  }
+  root.ProjectStore = { list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };
 })(window);

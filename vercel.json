@@ -27,6 +27,9 @@
     "api/survey-document.js": {
       "maxDuration": 90,
       "includeFiles": "node_modules/pdfjs-dist/legacy/build/**"
+    },
+    "api/public-research.js": {
+      "maxDuration": 300
     }
   },
   "headers": [

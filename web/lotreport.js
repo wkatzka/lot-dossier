@@ -1235,7 +1235,7 @@
     if (base == null) return Promise.resolve({ error: 'not connected' });
     var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, t = ctl && setTimeout(function () { ctl.abort(); }, ms || 290000);
     var ver = (root.LR_DATA || {}).apiVersion;
-    return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
+    return fetch(base + path + (ver ? (path.indexOf('?') >= 0 ? '&' : '?') + 'v=' + ver + ((root.LR_DATA||{}).refreshNonce ? '&refresh=' + root.LR_DATA.refreshNonce : '') : ''), { signal: ctl && ctl.signal }).then(function (r) { return r.json(); }).catch(function (e) { return { error: String(e.message || e) }; })
       .finally(function () { t && clearTimeout(t); });
   }
 
@@ -1295,6 +1295,7 @@
       ctx.facts.platEvidence = { assessedAt: new Date().toISOString(), sheets: [], evidence: [], recordSource: { error: d.unavailable } };
       return [F('ccr', 'Recorded documents', 'verify', 'Plat and public-record lookup not connected', d.unavailable + ' Open the hosted version to read the plat and meeting records automatically.')];
     }
+    ctx.facts.documentDiscovery={record:rec,documents:(no.documents||[]).filter(Boolean)};
     var plat = rec.plat || {}, docs = (no.documents || []).filter(Boolean), sub = ctx.parcel.attrs.SUBDIV_NAME || 'the subdivision';
     if (rec.supported === false) out.push(F('ccr', 'Recorded plat', 'verify', 'Recorded plat not read for ' + ctx.parcel.county + ' County yet',
       'Automatic plat reading (setback notes, recorded agreements, utility approvals) covers Weber County so far. Public meeting records were still searched for the subdivision.' +
@@ -1985,6 +1986,24 @@
     ctx.facts.minerals = result.result;
     return result.findings;
   };
+  C.check_public_research = async function(ctx) {
+    var base=apiBase(), ctl=new AbortController(), timer=setTimeout(function(){ctl.abort();},240000), data;
+    try {
+      if(base==null)throw new Error('Public document service unavailable');
+      var response=await fetch(base+'/api/public-research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rings:ctx.parcel.rings,county:ctx.parcel.county,parcelId:ctx.parcel.id}),signal:ctl.signal});
+      if(!response.ok)throw new Error('Public research HTTP '+response.status);data=await response.json();if(data.error)throw new Error(data.error);
+    } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
+    ctx.facts.publicResearch=data;
+    (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);});
+    var federal=data.federal||{}, records=federal.features||[], history=data.history||{}, out=[];
+    out.push(F('minerals','Federal mineral-estate screen',records.length?'watch':'verify',federal.status==='retrieved'?(records.length+' intersecting BLM mineral record(s)'):'Federal mineral source unavailable',
+      records.map(function(x){var a=x.attributes;return 'Record '+a.OBJECTID+': patent '+(a.Patent_NR||'not supplied')+', serial '+(a.Serial_NR||'not supplied')+', all minerals '+(a.ALL_MIN||'unspecified')+', oil/gas '+(a.Oil_Gas||'unspecified')+', coal '+(a.Coal||'unspecified')+'.';}).join(' ')+' '+(federal.error||'Intersections include possible boundary touches. Public mapping is discovery evidence; original patents/reservations and later private transfers remain unverified.'),'BLM Utah Federal Minerals Estate',federal.source));
+    out.push(F('easements','Parent-parcel record inventory','verify',(history.records||[]).length+' public parcel-history record(s) retrieved',
+      (history.limitation||history.error||'Coverage unavailable')+' '+(history.gaps||[]).map(function(g){return g.parcelId+': '+g.reason;}).join('; '),'Weber County parcel records','https://webercountyutah.gov/parcelsearch/ownership-info.php?id='+ctx.parcel.id));
+    ['surveyProperty','surveyUtilities','surveyControl'].forEach(function(k){var v=data[k]||{};out.push(F('survey',k==='surveyProperty'?'Public survey property geometry':k==='surveyControl'?'Nearby survey monuments':'Public survey utility geometry','verify',v.status==='retrieved'?(v.features.length+(k==='surveyControl'?' nearby monument record(s)':' intersecting source feature(s)')):'Geometry source unavailable',(v.error||v.coverage||'Coverage unavailable')+' Coordinate registration, current applicability and survey accuracy remain unverified.','Weber County surveyor GIS',v.source));});
+    (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){var a=doc.alignment;if(a?.registration)out.push(F('survey','Survey alignment '+doc.recordNumber,'verify',a.pairs.length+' monument pairs produce a candidate alignment','Independent check residual '+a.registration.maxErrorM.toFixed(3)+' m. This is not absolute survey accuracy: source monument quality and dates, symbol matching, boundary interpretation and applicability remain unverified.','County survey monuments and original drawing',doc.url));});
+    return out;
+  };
   C.check_public_surveys = async function (ctx) {
     var source='https://www.webercountyutah.gov/forms/survey_index/', name=ctx.parcel.attrs.SUBDIV_NAME;
     if(ctx.parcel.county!=='Weber'||!name) return [F('survey','Public filed-survey discovery','verify','Survey discovery needs additional coverage',ctx.parcel.county!=='Weber'?'The automated filed-survey index currently covers Weber County.':'No subdivision name is available for index matching. Coordinate and historical-name discovery are not yet implemented.')];
@@ -2018,7 +2037,7 @@
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
     ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
-    ['check_public_surveys', 'Public filed surveys'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
+    ['check_public_surveys', 'Public filed surveys'], ['check_public_research', 'Federal minerals, parent parcels & survey geometry'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
   async function run(parcel, plan, costs, onStep, documents) {

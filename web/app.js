@@ -527,6 +527,15 @@
   $('rv-new').addEventListener('click', function () { showHome(); });
   window.CornerpinReportViews = { packet: packetSection };
   window.addEventListener('cornerpin:home', function () { showHome(); });
+  window.addEventListener('cornerpin:refresh', async function(e){
+    if(go.disabled)return;go.disabled=true;showHome();form.classList.add('off');prog.classList.add('on');
+    steps.forEach(function(s){s.state='pending';});renderSteps();$('phase').textContent='Refreshing public evidence';
+    var prior=e.detail;DATA.refreshNonce=Date.now();
+    try{var res=await LR.run(prior.parcel,prior.plan,DATA.costs,function(id,state){steps.forEach(function(s){if(s.id===id)s.state=state;});renderSteps();});
+      last={parcel:prior.parcel,plan:prior.plan,findings:res.findings,facts:res.facts||{},documents:res.documents,date:new Date()};window.dispatchEvent(new CustomEvent('cornerpin:report',{detail:last}));showReport();window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'overview'}}));
+    }catch(err){fail('Refresh failed: '+err.message);}finally{delete DATA.refreshNonce;go.disabled=false;form.classList.remove('off');prog.classList.remove('on');}
+  });
+
   $('rv-print').addEventListener('click', function () { window.print(); });
   window.addEventListener('popstate', function (e) {
     var target = document.getElementById(location.hash.slice(1));
