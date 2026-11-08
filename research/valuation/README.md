@@ -1,4 +1,30 @@
-# Weber County local backtest — November 7, 2026
+# Weber model repair and expanded source audit — November 7, 2026
+
+[Latest development report](../../docs/research/backtest/weber/development-v2.html). This pass repairs the model and expands source research; it **does not establish a larger qualifying single-house-lot dataset or independent accuracy**.
+
+The original ridge fit confounded time, acreage and geography: three older valley tracts versus two newer western lots. Its penalty compressed the size effect; the learned time coefficient was negative. The replacement `weber_comparable_model.py` estimates log-area elasticity from pairs within the same region and segment, then anchors the estimate to size-adjusted local comparables. Pair slopes are not independent observations. The bounded elasticity is a stated modeling assumption. Utility, entitlement and time dollar adjustments remain unidentified rather than invented.
+
+| Reused development outcomes | Previous MAE / within $50k | Revised MAE / within $50k |
+|---|---:|---:|
+| Final two outcomes, fixed first-five training | $109,964 / 1 of 2 | $40,712 / 2 of 2 |
+| Expanding chronological window | $199,316 / 0 of 4 | $39,495 / 3 of 4 |
+| Exclude two atypical transaction remarks | $272,492 / 0 of 2 | $88,359 / 0 of 2 |
+
+All outcomes were previously inspected. These are **development diagnostics**, not a fresh holdout. For the large tract, delete-one-training estimates span $196,947–$928,247; this instability range is not a calibrated interval. A separate land-plus-barn allocation scenario audits the rejected eighth candidate without inflating the primary denominator.
+
+Expanded research screened 37 additional candidate files, fully OCRed 71 pages in nine of them, and fully OCRed 59 further pages in five older packets. Candidate filenames include duplicates and irrelevant items; these counts do not mean 37 useful new appraisal reports. A further 65-page USHE section yielded no extra closing-price table. The state Bear River appendix was text-screened, not exhaustively OCRed. Audit URLs, hashes, coverage and dispositions are in `expanded-source-audit.json`.
+
+Three new priced Weber multifamily-development observations are retained in `additional-cohorts.json`. They are broker-reported, not independently settlement-verified, and include a teardown and a two-transaction assemblage. They are not single-house-lot comparables. Public portal candidates with unverified price provenance or house/land misclassification remain quarantined. **Qualifying primary count is still seven; fresh independent evaluation count is zero.**
+
+```sh
+python3 -B research/valuation/weber_comparable_model.py
+python3 -B research/valuation/render_weber_development.py
+python3 -B -m unittest discover -s research/valuation -p 'test_*.py'
+```
+
+Remaining public-record acquisition leads: the 2550 South appraisal exhibits, Roy/Riverdale 5600 South appraisal exhibits, and vacant-land Board of Equalization comparable exhibits. A public vendor filing identifies the first two report collections (`https://www.utah.gov/pmn/files/1123245.pdf`), but does not include them. No record request or external message has been sent. Unknown records are not represented as retrieved data.
+
+# Original Weber County experiment — November 7, 2026
 
 The current requested experiment is **Weber County only**. [Open the complete local report](../../docs/research/backtest/weber/report.html). Earlier outside-county experiments below are historical work, not evidence for this product's market accuracy.
 

@@ -1,0 +1,483 @@
+{
+  "scope": "Weber public-source expansion; no out-of-county substitutes",
+  "retrievedAt": "2026-11-07",
+  "qualifyingSingleHouseLotRecordsBefore": 7,
+  "qualifyingSingleHouseLotRecordsAfter": 7,
+  "newIndependentEvaluationRecords": 0,
+  "additionalDevelopmentObservations": 3,
+  "expandedPacketInventory": [
+    {
+      "label": "SURPLUS PROPERTY FORM - Weber Medic Truck 2016_.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/SURPLUS PROPERTY FORM - Weber Medic Truck 2016_.pdf",
+      "key": "931915648f92",
+      "pages": 1,
+      "textChars": 1191,
+      "sha256": "0242e035a4babc0acbf11ec8a356d473f54337628d9f2df6049b29da780d4b4b",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F5   SURPLUS PROPERTY FORM - Water Heater - Respirator WCEM.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5   SURPLUS PROPERTY FORM - Water Heater - Respirator WCEM.pdf",
+      "key": "71dc1f8d7516",
+      "pages": 1,
+      "textChars": 1207,
+      "sha256": "e0922fb83578079a48b2feb8209e76e1c0adbbed4a4644524e0ab38122df655a",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "N. Hammer 12781.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/N. Hammer 12781.pdf",
+      "key": "0853eb5b6292",
+      "pages": 4,
+      "textChars": 4,
+      "sha256": "24d0b3f3ecf52358418c84eddd374ddfff7ab716c05f05cb96b8bda34ca6fc3c",
+      "hits": [],
+      "fullyOcrReadPages": 4
+    },
+    {
+      "label": "N. Hammer 12782.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/N. Hammer 12782.pdf",
+      "key": "33e539415d56",
+      "pages": 3,
+      "textChars": 3,
+      "sha256": "ac50ae423b005824010a3ddb057bd34bf2a4635f1da1b8b8dc947ef834c02265",
+      "hits": [],
+      "fullyOcrReadPages": 3
+    },
+    {
+      "label": "clark.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/clark.pdf",
+      "key": "251a90eee19c",
+      "pages": 5,
+      "textChars": 5,
+      "sha256": "e2eff9f0671b98cf05084ad51f2901956612fe03ec12c014b01e3484cce3b090",
+      "hits": [],
+      "fullyOcrReadPages": 5
+    },
+    {
+      "label": "Moulding.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Moulding.pdf",
+      "key": "f2e052919dcb",
+      "pages": 3,
+      "textChars": 3,
+      "sha256": "a1e44ff9964555cbd61ef7e36752e3f6c061fbbda5711a91f264dcd30a93c989",
+      "hits": [],
+      "fullyOcrReadPages": 3
+    },
+    {
+      "label": "wayman.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/wayman.pdf",
+      "key": "244c98068503",
+      "pages": 4,
+      "textChars": 4,
+      "sha256": "fdbda38c8ccb1aa538939f17d52b600991b3512adcf31638b6003df118a4141b",
+      "hits": [],
+      "fullyOcrReadPages": 4
+    },
+    {
+      "label": "G6  Surplus Property Form - Library 02 19 2026.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6  Surplus Property Form - Library 02 19 2026.pdf",
+      "key": "6e735fceda18",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "fe8a017d6bee873bcdeb5abe0f6d10ea16ded6d94d078ef2a1b139b036fe48ca",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G1   Jennifer Clark.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G1   Jennifer Clark.pdf",
+      "key": "3db47703746b",
+      "pages": 8,
+      "textChars": 8,
+      "sha256": "0f39657f31e8a96698a565a94fdb918d29a0d8f1481d23aa5f6eee9ed4eb3ea1",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F9  Surplus Property Form Chev 2011.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F9  Surplus Property Form Chev 2011.pdf",
+      "key": "fa7bc7eed838",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "a6333dff9420edec2620b495bff9d5789018cd0345015331f4cb013ae92be934",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F7  2200 S. Change Order.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7  2200 S. Change Order.pdf",
+      "key": "327273107f20",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "42d80b50ea143f2d9f74d22ef24fce44833ed73ab18eca1f6ac1586f32260f1e",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F5  P&R SURPLUS PROPERTY FORM 2019.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5  P&R SURPLUS PROPERTY FORM 2019.pdf",
+      "key": "6a9068c7e7d0",
+      "pages": 1,
+      "textChars": 829,
+      "sha256": "6acccababca1496713dc2768c0555fba4e5fbb76f1415bad3d2e6162cdc8bd41",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "Jennifer Clark.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Jennifer Clark.pdf",
+      "key": "46d5b283c126",
+      "pages": 8,
+      "textChars": 8,
+      "sha256": "1520e2fbdd50b322e5c6718c95c16bd34df3f2a7a2dc82663787c471fa9539f6",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F10  Avenue acquisition services.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10  Avenue acquisition services.pdf",
+      "key": "741d366c907f",
+      "pages": 9,
+      "textChars": 9,
+      "sha256": "31c833d2b5bec2f2f89d75196f619bb95bba858c92f6c1fedb31d57a8808e580",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F6  Surplus Property Form Basement OECC.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Surplus Property Form Basement OECC.pdf",
+      "key": "7ce9a827f264",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "06fb9612547271127028cddc388f436997eca7140716ad28edc983f0c5fdf84e",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G12  Parr Brown.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G12  Parr Brown.pdf",
+      "key": "67284c2beb18",
+      "pages": 7,
+      "textChars": 7,
+      "sha256": "a1f9b5fec7353979810a92173015b171a33256f800a5a3674dea40089707ec4b",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "Library Surplus Property Form - Chromebooks - 04 24 24.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Library Surplus Property Form - Chromebooks - 04 24 24.pdf",
+      "key": "86aeca8a623b",
+      "pages": 3,
+      "textChars": 3,
+      "sha256": "6d6ff60dcafa6f75be41f0650d037f1261327998b324d516eebcd680d5379557",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "Library Surplus Property Form - 2008 Dodge Sprinter 02 29 2024.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Library Surplus Property Form - 2008 Dodge Sprinter 02 29 2024.pdf",
+      "key": "89ae9f54fd7d",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "14b18560575dc3985576742aaa113e15f200a226b74c7278e305effe00bb5220",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "Moulding & Sons.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Moulding & Sons.pdf",
+      "key": "3a11c16d21c5",
+      "pages": 2,
+      "textChars": 3415,
+      "sha256": "1a42a10bba996f2249cdb0a4f8f1bf67e21d253b87a7d13059114dd0ad8224c5",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G7Paula Brown - Retirement Agreement.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7Paula Brown - Retirement Agreement.pdf",
+      "key": "8fb4500876f5",
+      "pages": 3,
+      "textChars": 5655,
+      "sha256": "23aba333532a451fc48e8d7da140f062e83d965edcd4bb90d1d90f622fb67314",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "LIBRARY SURPLUS PROPERTY.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/LIBRARY SURPLUS PROPERTY.pdf",
+      "key": "0352915c5edb",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "69f7da1c53b2e2efddf305715eec70e110771606c11b097ce64103339d71516b",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F6  Library Surplus Property Form 03 22 2023.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Library Surplus Property Form 03 22 2023.pdf",
+      "key": "ea210637b658",
+      "pages": 1,
+      "textChars": 1,
+      "sha256": "fcc2c7fdf5552022429917e1018dbfd3a23a9c2548c458ce0fbec7ee48d5e2f7",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "H8  John & Sherilyn Clark.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H8  John & Sherilyn Clark.pdf",
+      "key": "118461937b7d",
+      "pages": 9,
+      "textChars": 9,
+      "sha256": "cfbd7ea3ad4f119d5d7c0c31a4b40e26a5b5e3e1eba5cab90b32a1238d2cd150",
+      "hits": [],
+      "fullyOcrReadPages": 9
+    },
+    {
+      "label": "F12 Stephen Wayman.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F12 Stephen Wayman.pdf",
+      "key": "7b1b524386c7",
+      "pages": 25,
+      "textChars": 34255,
+      "sha256": "3e5b7641b25787c45f73ae4c4ce6f22be190aa8652b1e043e834eb4b6e98a9fb",
+      "hits": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G3  Clarks roofing.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G3  Clarks roofing.pdf",
+      "key": "56ce09e0f0f0",
+      "pages": 9,
+      "textChars": 9,
+      "sha256": "b75af9a342f12ec127b3ac8f043af8dd59e33ee29964a2d3f1b8fca895d1f84e",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G3 Gary Nielsen.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G3 Gary Nielsen.pdf",
+      "key": "9202a823ff0a",
+      "pages": 17,
+      "textChars": 14075,
+      "sha256": "b52dc739e47edb2d6537ce364b8977be8887e08e99c401014abd84e41d9628e7",
+      "hits": [],
+      "fullyOcrReadPages": 17
+    },
+    {
+      "label": "G4 Stephen Wayman.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G4 Stephen Wayman.pdf",
+      "key": "c1e38bd10e8c",
+      "pages": 11,
+      "textChars": 11,
+      "sha256": "3971b7d7fb3dace726a3d9b0b017da3e15388a8dda8f26e8dc6ae07e85242bad",
+      "hits": [],
+      "fullyOcrReadPages": 11
+    },
+    {
+      "label": "G5 John and Sherilyn Clark Signed Contract.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5 John and Sherilyn Clark Signed Contract.pdf",
+      "key": "f3353820b135",
+      "pages": 15,
+      "textChars": 15,
+      "sha256": "b759a11ff0883cbd00176d4a4647f1dd23bce862796a14b0ecc498f22bf161bc",
+      "hits": [],
+      "fullyOcrReadPages": 15
+    },
+    {
+      "label": "H2  Brad Brown19.47 acres.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H2  Brad Brown19.47 acres.pdf",
+      "key": "3988df4e442d",
+      "pages": 38,
+      "textChars": 62451,
+      "sha256": "781722a3258bbccf53d016a6c20fbe2c58787aa4061330cc788dc4ef082a2858",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "H2  CC Staff Report -- Brown.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H2  CC Staff Report -- Brown.pdf",
+      "key": "f014c349dd5e",
+      "pages": 38,
+      "textChars": 62468,
+      "sha256": "369fdc8705519561b17e434c6af45553a8c9ebef0753fd336fd243030fb21f52",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "E6  020630009 Mendoza Real Estate Holdings LLC.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E6  020630009 Mendoza Real Estate Holdings LLC.pdf",
+      "key": "e24ea335f331",
+      "pages": 1,
+      "textChars": 1765,
+      "sha256": "35db98a9c9082dce7d056252982c626381ce2dcd36723c838ef17d7c6c85d803",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "E11  Jennifer Clark.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E11  Jennifer Clark.pdf",
+      "key": "198579278b83",
+      "pages": 2,
+      "textChars": 2,
+      "sha256": "03313c95fc342985d704734aaf885a4770f28e102ddba872e6bd36df56199553",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F11 Nielsen.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F11 Nielsen.pdf",
+      "key": "0ac3d678d360",
+      "pages": 3,
+      "textChars": 3,
+      "sha256": "cfdb2679239fc1eb05aad18dc181598bec0a5baa21a2fa10bbf2100c1847bf88",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G2 Front Row.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2 Front Row.pdf",
+      "key": "f4c8ed282c1b",
+      "pages": 6,
+      "textChars": 6,
+      "sha256": "39c588a08f0d45cf2fe8f60c11cc39e1fdbe453dd86f1f6f7fb4ce4c6555a207",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "G12 Jennifer Clark 2021 Amend.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G12 Jennifer Clark 2021 Amend.pdf",
+      "key": "84546e97224f",
+      "pages": 2,
+      "textChars": 2,
+      "sha256": "67999117179bc5669a7b4acf93ba2e768cac6d35b0eb2592f0ab9c3a936dd690",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F5Moulding.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5Moulding.pdf",
+      "key": "9140a47f3781",
+      "pages": 3,
+      "textChars": 5456,
+      "sha256": "b916e62b743d9222066eb2d61d2fffe272e559e7329bdcbd869d25dea5b4d895",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    },
+    {
+      "label": "F7TRBrown Farms.pdf",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7TRBrown Farms.pdf",
+      "key": "398dc990d216",
+      "pages": 1,
+      "textChars": 5777,
+      "sha256": "cce56f068d97d67d2d563fc4b522b36d2af4bf45c93e4160971325bfdc351869",
+      "hits": [],
+      "fullyOcrReadPages": 0
+    }
+  ],
+  "reviewCoverage": {
+    "additionalCandidateFiles": 37,
+    "fullyOcrReadAdditionalPacketPages": 71,
+    "olderPacketsAdditionallyOcrRead": [
+      {
+        "key": "3359d74b5918",
+        "pages": 16
+      },
+      {
+        "key": "9b807e939971",
+        "pages": 10
+      },
+      {
+        "key": "bde0abfe5ceb",
+        "pages": 15
+      },
+      {
+        "key": "60d5c9631f3b",
+        "pages": 10
+      },
+      {
+        "key": "b04663e2767f",
+        "pages": 8
+      }
+    ],
+    "ushe2012OcrPages": [
+      55,
+      119
+    ],
+    "caveat": "Candidate count includes irrelevant filenames and duplicate documents. Text extraction is not full visual review. No claim of exhaustive county records coverage."
+  },
+  "candidateDispositions": [
+    {
+      "source": "https://www.tophap.com/homes/details/5250-RIDGEDALE-DR-OGDEN-UT-84403/222335335",
+      "parcel": "06-207-0004",
+      "reportedPrice": 256944,
+      "reportedDate": "2026-09-15",
+      "status": "quarantined",
+      "reason": "Portal price provenance unverified; alternate Realtor history does not corroborate this closing",
+      "crossCheck": "https://www.realtor.com/realestateandhomes-detail/5250-Ridgedale-Dr_Ogden_UT_84403_M22221-77493"
+    },
+    {
+      "source": "https://www.tophap.com/homes/details/OGDEN-UT-84414/1003596078",
+      "reportedPrice": 4040000,
+      "reportedDate": "2026-09-10",
+      "grossAcres": 54.23,
+      "status": "quarantined",
+      "reason": "Address/parcel and price provenance unverified"
+    },
+    {
+      "source": "https://www.coldwellbankerhomes.com/ut/ogden/1483-s-4125-w-106/pid_71991663/",
+      "address": "1483 S 4125 W, Ogden",
+      "status": "excluded",
+      "reason": "House listing contradicts vacant-land label on another portal; not a lot-only closing"
+    },
+    {
+      "source": "https://www.webercountyutah.gov/Clerk_Auditor/documents/taxsale/2023-tax-sale-results-final.pdf",
+      "status": "separate_source_only",
+      "reason": "Tax auctions; property attributes unverified; forced-sale regime cannot validate ordinary market lot values"
+    },
+    {
+      "source": "https://www.utah.gov/pmn/files/1418721.pdf",
+      "status": "excluded",
+      "reason": "Nordic study comparable closings concern homes, not land-only prices"
+    },
+    {
+      "source": "https://ushe.edu/wp-content/uploads/pdf/current/sbr_2012-07-13_agenda.pdf",
+      "status": "excluded",
+      "reason": "Hooper excerpt has appraisal opinion and proposed purchase, no additional identified comparable closings"
+    },
+    {
+      "source": "https://water.utah.gov/wp-content/uploads/2019/11/Bear-River-Development-Report-Volume-III-low-res-Appendix-Final.pdf",
+      "sha256": "8c7d8f78319e93ac3279d1ddf40f042b9660f0ce8c78f0e9c873bc6c97279194",
+      "status": "no_sales_extracted",
+      "reason": "Appendix contents and extracted text screened; no identifiable individual land-sale table found; not all scanned pages OCRed"
+    },
+    {
+      "source": "https://www.utah.gov/pmn/files/1071581.pdf",
+      "status": "excluded",
+      "reason": "Barrow land acquisition authorization/appraisal amount is not a documented closing"
+    },
+    {
+      "source": "https://www.utah.gov/pmn/files/1123245.pdf",
+      "status": "lead_not_dataset",
+      "reason": "Vendor experience identifies 35+ Weber 2550 South appraisal reviews and 50+ Roy/Riverdale 5600 South reviews; underlying reports not supplied"
+    },
+    {
+      "source": "https://www.acrevalue.com/sales/UT/Weber/",
+      "status": "no_public_records_obtained",
+      "reason": "Public page exposes no priced individual sales"
+    },
+    {
+      "source": "https://images3.loopnet.com/d2/1NG5WWESjT3lo5fXC2uBpsWoQ7PK7ksq4QbG6-scyGg/document.pdf",
+      "status": "separate_development_cohort",
+      "reason": "Three priced development observations retained in additional-cohorts.json; not primary lot-model training"
+    }
+  ],
+  "remainingDependency": "More identifiable residential land closing prices with dated characteristics; currently no uninspected, qualified independent test set. Public search did not establish absence of such records."
+}

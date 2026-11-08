@@ -3,6 +3,10 @@
   'use strict';
   const labels = {land:'Land & zoning',minerals:'Mineral interests',water:'Water rights',geo:'Geologic hazards',septic:'Septic & sewer',utilities:'Utilities',access:'Access & fire',easements:'Easements',ccr:'CC&Rs & design review',survey:'Survey & terrain',permits:'Codes & loads',performance:'Home performance',pool:'Pool feasibility',plan:'Plan compatibility'};
   function mount(root) {
+    const stage=document.createElement('nav');stage.className='report-chips';stage.setAttribute('aria-label','Site review sections');
+    stage.innerHTML='<button type="button" class="report-chip" aria-current="page">Site report</button>'+[['evidence','Evidence & restrictions'],['valuation','Lot economics'],['placement','Pool layout'],['documents','Documents'],['activity','Activity']].map(([tab,label])=>'<button type="button" class="report-chip" data-workspace-tab="'+tab+'">'+label+'</button>').join('');
+    stage.addEventListener('click',e=>{const b=e.target.closest('[data-workspace-tab]');if(b)window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:b.dataset.workspaceTab,section:'site'}}));});
+    root.prepend(stage);
     const groups = Array.from(root.querySelectorAll('.group[data-category]'));
     const categories = [];
     function add(key,label,nodes) { nodes=nodes.filter(Boolean); if(nodes.length)categories.push({key,label,nodes}); }

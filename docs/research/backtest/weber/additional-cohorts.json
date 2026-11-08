@@ -1,0 +1,74 @@
+{
+  "scope": "Separate Weber multifamily-development observations; excluded from single-house-lot model and accuracy denominator",
+  "retrievedAt": "2026-11-07",
+  "source": "https://images3.loopnet.com/d2/1NG5WWESjT3lo5fXC2uBpsWoQ7PK7ksq4QbG6-scyGg/document.pdf",
+  "evidence": "Broker-published comparable exhibit; web text inspected; direct download 403 and screenshot retrieval failed. Settlement/parcel matches not independently verified. Month dates preserved without invented day.",
+  "records": [
+    {
+      "id": "colliers-aderra-2016",
+      "address": "4643 South 3500 West, Roy, UT",
+      "county": "Weber",
+      "price": 1881000,
+      "grossAcres": 7.6,
+      "saleMonths": [
+        "2016-02"
+      ],
+      "page": 7,
+      "segment": "multifamily_development",
+      "units": 114,
+      "flags": [
+        "rezoning_near_sale",
+        "parcel_match_pending"
+      ]
+    },
+    {
+      "id": "colliers-roy-2017",
+      "address": "4497 South 1900 West, Roy, UT",
+      "county": "Weber",
+      "price": 1700000,
+      "grossAcres": 6.18,
+      "saleMonths": [
+        "2017-05"
+      ],
+      "page": 8,
+      "segment": "multifamily_redevelopment",
+      "units": 74,
+      "flags": [
+        "fourplex_and_two_houses_at_sale",
+        "reported_demolition_60000",
+        "parcel_match_pending"
+      ]
+    },
+    {
+      "id": "colliers-skyline-2017",
+      "address": "NWC Skyline Drive and Wasatch Drive, Ogden, UT",
+      "county": "Weber",
+      "price": 3207191,
+      "grossAcres": 10.37,
+      "saleMonths": [
+        "2017-03",
+        "2017-05"
+      ],
+      "page": 8,
+      "segment": "multifamily_assemblage",
+      "units": 208,
+      "flags": [
+        "two_transactions_one_combined_price",
+        "no_individual_allocation",
+        "parcel_match_pending"
+      ]
+    }
+  ],
+  "excludedPending": [
+    {
+      "name": "Moda Vista",
+      "page": 7,
+      "reason": "Pending, not closed"
+    },
+    {
+      "name": "Confidential site",
+      "page": 9,
+      "reason": "Pending and unidentified"
+    }
+  ]
+}

@@ -1,0 +1,1037 @@
+{
+  "model": "weber-within-market-adjusted-comparables-v2",
+  "protocol": "Development re-evaluation of previously inspected outcomes; NOT independent validation",
+  "county": "Weber",
+  "records": 7,
+  "newIndependentEvaluationRecords": 0,
+  "inputSha256": "62046363553ab87fad06360b8202ee9d597425abb2bf54f66c1ffb52022d8240",
+  "productionApproved": false,
+  "frozenDevelopment": {
+    "metrics": {
+      "n": 2,
+      "within50k": 2,
+      "hitRate": 1.0,
+      "mae": 40711.974524463185,
+      "medianAbsoluteError": 40711.974524463185,
+      "rmse": 40756.26812420211,
+      "bias": -1899.610942091509,
+      "hitRateWilson95": [
+        0.34237195288961925,
+        1.0
+      ]
+    },
+    "previousModel": {
+      "n": 2,
+      "within50k": 1,
+      "hitRate": 0.5,
+      "mae": 109963.89220250571,
+      "medianAbsoluteError": 109963.89220250571,
+      "rmse": 131604.97101748272,
+      "bias": -72303.60162666983,
+      "hitRateWilson95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "acreageBaseline": {
+      "n": 2,
+      "within50k": 1,
+      "hitRate": 0.5,
+      "mae": 63738.425925925956,
+      "medianAbsoluteError": 63738.425925925956,
+      "rmse": 73285.62042394468,
+      "bias": -63738.425925925956,
+      "hitRateWilson95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "medianBaseline": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 170000.0,
+      "medianAbsoluteError": 170000.0,
+      "rmse": 171828.40277439583,
+      "bias": 25000.0,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 513812.3635823717,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 3.1721851845936038,
+            "adjustedPrice": 507232.41101651726
+          },
+          {
+            "id": "1735330",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+            "page": 21,
+            "acres": 0.67,
+            "saleDate": "2021-04-14",
+            "price": 132500,
+            "sizeFactor": 3.9281333813410693,
+            "adjustedPrice": 520477.67302769166
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          },
+          {
+            "ids": [
+              "1697726",
+              "1735330"
+            ],
+            "elasticity": 0.5927731649493815
+          }
+        ],
+        "rawElasticity": 0.674066187912422,
+        "acreageElasticity": 0.674066187912422,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "fewer_than_three_same_submarket_sales",
+          "no_same_submarket_and_segment_sales",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "actual": 475000,
+        "saleDate": "2021-11-04",
+        "region": "Western Weber",
+        "segment": "rural_tract",
+        "previousEstimate": 292732.50617082446,
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 447430.5555555555,
+        "error": 38812.363582371676,
+        "within50k": true,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            196946.61280310227,
+            513812.3635823717,
+            928247.4507300161,
+            613848.9649850334,
+            583003.7010334057
+          ],
+          "range": [
+            196946.61280310227,
+            928247.4507300161
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      },
+      {
+        "estimate": 92388.4145334453,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 0.5703894662396621,
+            "adjustedPrice": 91205.27565172198
+          },
+          {
+            "id": "1735330",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+            "page": 21,
+            "acres": 0.67,
+            "saleDate": "2021-04-14",
+            "price": 132500,
+            "sizeFactor": 0.706316237016401,
+            "adjustedPrice": 93586.90140467313
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          },
+          {
+            "ids": [
+              "1697726",
+              "1735330"
+            ],
+            "elasticity": 0.5927731649493815
+          }
+        ],
+        "rawElasticity": 0.674066187912422,
+        "acreageElasticity": 0.674066187912422,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "fewer_than_three_same_submarket_sales",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1779537",
+        "address": "1857 N 2750 W, Plain City, UT",
+        "actual": 135000,
+        "saleDate": "2021-12-17",
+        "region": "Western Weber",
+        "segment": "residential_lot",
+        "previousEstimate": 172660.29057583588,
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 35092.59259259259,
+        "error": -42611.585466554694,
+        "within50k": true,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            130528.80490092412,
+            92388.4145334453,
+            74652.89079418448,
+            89743.75295103432,
+            85234.22388821066
+          ],
+          "range": [
+            74652.89079418448,
+            130528.80490092412
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      }
+    ]
+  },
+  "rollingDevelopment": {
+    "metrics": {
+      "n": 4,
+      "within50k": 3,
+      "hitRate": 0.75,
+      "mae": 39495.03309936906,
+      "medianAbsoluteError": 41303.54396532486,
+      "rmse": 45250.59544993296,
+      "bias": -20088.851308183224,
+      "hitRateWilson95": [
+        0.3006360524426366,
+        0.9544139373553637
+      ]
+    },
+    "previousModel": {
+      "n": 4,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 199316.03382368936,
+      "medianAbsoluteError": 158133.8925394939,
+      "rmse": 242050.62044583584,
+      "bias": 108182.28690910156,
+      "hitRateWilson95": [
+        0.0,
+        0.48990002040399916
+      ]
+    },
+    "acreageBaseline": {
+      "n": 4,
+      "within50k": 1,
+      "hitRate": 0.25,
+      "mae": 76848.93747034017,
+      "medianAbsoluteError": 90022.55865905217,
+      "rmse": 82279.23790783457,
+      "bias": -76848.93747034017,
+      "hitRateWilson95": [
+        0.045586062644636216,
+        0.6993639475573634
+      ]
+    },
+    "medianBaseline": {
+      "n": 4,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 384400.0,
+      "medianAbsoluteError": 358750.0,
+      "rmse": 433255.48467388155,
+      "bias": 311900.0,
+      "hitRateWilson95": [
+        0.0,
+        0.48990002040399916
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 91184.94097701994,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1519709",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 14,
+            "acres": 5.05,
+            "saleDate": "2019-05-22",
+            "price": 330000,
+            "sizeFactor": 0.2763180029606665,
+            "adjustedPrice": 91184.94097701994
+          },
+          {
+            "id": "1603980",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 12,
+            "acres": 10.8,
+            "saleDate": "2019-08-19",
+            "price": 947500,
+            "sizeFactor": 0.1556111274767542,
+            "adjustedPrice": 147441.5432842246
+          },
+          {
+            "id": "1586757",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 10,
+            "acres": 17.26,
+            "saleDate": "2019-12-05",
+            "price": 835000,
+            "sizeFactor": 0.10920352212816758,
+            "adjustedPrice": 91184.94097701993
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          }
+        ],
+        "rawElasticity": 0.7553592108754625,
+        "acreageElasticity": 0.7553592108754625,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "no_same_submarket_comparables",
+          "fewer_than_three_same_submarket_sales",
+          "no_same_submarket_and_segment_sales",
+          "comparables_over_one_year_old_without_time_adjustment"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1697726",
+        "address": "327 N 3600 W, Weber County, UT",
+        "actual": 159900,
+        "saleDate": "2021-02-23",
+        "region": "Western Weber",
+        "segment": "residential_lot",
+        "previousEstimate": 584106.843399024,
+        "medianBaseline": 835000.0,
+        "acreageBaseline": 60118.81188118813,
+        "error": -68715.05902298006,
+        "within50k": false,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [],
+          "range": null,
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      },
+      {
+        "estimate": 125842.01455615353,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 0.7870044687689405,
+            "adjustedPrice": 125842.01455615358
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          }
+        ],
+        "rawElasticity": 0.7553592108754625,
+        "acreageElasticity": 0.7553592108754625,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "fewer_than_three_same_submarket_sales",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1735330",
+        "address": "473 N 2475 W, Ogden, UT",
+        "actual": 132500,
+        "saleDate": "2021-04-14",
+        "region": "Western Weber",
+        "segment": "residential_lot",
+        "previousEstimate": 266500.2912498123,
+        "medianBaseline": 582500.0,
+        "acreageBaseline": 51281.13540520719,
+        "error": -6657.985443846468,
+        "within50k": true,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            159900.00000000006,
+            125842.01455615353,
+            116448.91304347836,
+            71762.95603334671
+          ],
+          "range": [
+            71762.95603334671,
+            159900.00000000006
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      },
+      {
+        "estimate": 513812.3635823717,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 3.1721851845936038,
+            "adjustedPrice": 507232.41101651726
+          },
+          {
+            "id": "1735330",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+            "page": 21,
+            "acres": 0.67,
+            "saleDate": "2021-04-14",
+            "price": 132500,
+            "sizeFactor": 3.9281333813410693,
+            "adjustedPrice": 520477.67302769166
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          },
+          {
+            "ids": [
+              "1697726",
+              "1735330"
+            ],
+            "elasticity": 0.5927731649493815
+          }
+        ],
+        "rawElasticity": 0.674066187912422,
+        "acreageElasticity": 0.674066187912422,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "fewer_than_three_same_submarket_sales",
+          "no_same_submarket_and_segment_sales",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "actual": 475000,
+        "saleDate": "2021-11-04",
+        "region": "Western Weber",
+        "segment": "rural_tract",
+        "previousEstimate": 292732.50617082446,
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 447430.5555555555,
+        "error": 38812.363582371676,
+        "within50k": true,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            196946.61280310227,
+            513812.3635823717,
+            928247.4507300161,
+            613848.9649850334,
+            583003.7010334057
+          ],
+          "range": [
+            196946.61280310227,
+            928247.4507300161
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      },
+      {
+        "estimate": 91205.27565172195,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330",
+          "1766585"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 0.5703894662396621,
+            "adjustedPrice": 91205.27565172198
+          },
+          {
+            "id": "1735330",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+            "page": 21,
+            "acres": 0.67,
+            "saleDate": "2021-04-14",
+            "price": 132500,
+            "sizeFactor": 0.706316237016401,
+            "adjustedPrice": 93586.90140467313
+          },
+          {
+            "id": "1766585",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 26,
+            "acres": 5.1,
+            "saleDate": "2021-11-04",
+            "price": 475000,
+            "sizeFactor": 0.17980963690577734,
+            "adjustedPrice": 85409.57753024423
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          },
+          {
+            "ids": [
+              "1697726",
+              "1735330"
+            ],
+            "elasticity": 0.5927731649493815
+          }
+        ],
+        "rawElasticity": 0.674066187912422,
+        "acreageElasticity": 0.674066187912422,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1779537",
+        "address": "1857 N 2750 W, Plain City, UT",
+        "actual": 135000,
+        "saleDate": "2021-12-17",
+        "region": "Western Weber",
+        "segment": "residential_lot",
+        "previousEstimate": 191789.5068167456,
+        "medianBaseline": 402500.0,
+        "acreageBaseline": 36173.74727668845,
+        "error": -43794.72434827805,
+        "within50k": true,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            139764.20498973213,
+            91205.27565172195,
+            70094.65164687902,
+            78944.20725614941,
+            76935.21289662276,
+            92388.4145334453
+          ],
+          "range": [
+            70094.65164687902,
+            139764.20498973213
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      }
+    ]
+  },
+  "flaggedTransactionSensitivity": {
+    "metrics": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 88359.38002819289,
+      "medianAbsoluteError": 88359.38002819289,
+      "rmse": 90516.73539585074,
+      "bias": 19644.321005212834,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "previousModel": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 272492.1614812113,
+      "medianAbsoluteError": 272492.1614812113,
+      "rmse": 311880.302004031,
+      "bias": 151714.68191781268,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "acreageBaseline": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 92216.12348734873,
+      "medianAbsoluteError": 92216.12348734873,
+      "rmse": 92525.90790644621,
+      "bias": -92216.12348734873,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "medianBaseline": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 391300.0,
+      "medianAbsoluteError": 391300.0,
+      "rmse": 483381.9711160109,
+      "bias": 391300.0,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 91184.94097701994,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1519709",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 14,
+            "acres": 5.05,
+            "saleDate": "2019-05-22",
+            "price": 330000,
+            "sizeFactor": 0.2763180029606665,
+            "adjustedPrice": 91184.94097701994
+          },
+          {
+            "id": "1603980",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 12,
+            "acres": 10.8,
+            "saleDate": "2019-08-19",
+            "price": 947500,
+            "sizeFactor": 0.1556111274767542,
+            "adjustedPrice": 147441.5432842246
+          },
+          {
+            "id": "1586757",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+            "page": 10,
+            "acres": 17.26,
+            "saleDate": "2019-12-05",
+            "price": 835000,
+            "sizeFactor": 0.10920352212816758,
+            "adjustedPrice": 91184.94097701993
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          }
+        ],
+        "rawElasticity": 0.7553592108754625,
+        "acreageElasticity": 0.7553592108754625,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "no_same_submarket_comparables",
+          "fewer_than_three_same_submarket_sales",
+          "no_same_submarket_and_segment_sales",
+          "comparables_over_one_year_old_without_time_adjustment"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1697726",
+        "address": "327 N 3600 W, Weber County, UT",
+        "actual": 159900,
+        "saleDate": "2021-02-23",
+        "region": "Western Weber",
+        "segment": "residential_lot",
+        "previousEstimate": 584106.843399024,
+        "medianBaseline": 835000.0,
+        "acreageBaseline": 60118.81188118813,
+        "error": -68715.05902298006,
+        "within50k": false,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [],
+          "range": null,
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      },
+      {
+        "estimate": 583003.7010334057,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726"
+        ],
+        "comparableAdjustments": [
+          {
+            "id": "1697726",
+            "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+            "page": 25,
+            "acres": 0.92,
+            "saleDate": "2021-02-23",
+            "price": 159900,
+            "sizeFactor": 3.6460519139049787,
+            "adjustedPrice": 583003.7010334061
+          }
+        ],
+        "sizePairs": [
+          {
+            "ids": [
+              "1519709",
+              "1603980"
+            ],
+            "elasticity": 1.3875200076217153
+          },
+          {
+            "ids": [
+              "1519709",
+              "1586757"
+            ],
+            "elasticity": 0.7553592108754625
+          },
+          {
+            "ids": [
+              "1603980",
+              "1586757"
+            ],
+            "elasticity": -0.2695881654301183
+          }
+        ],
+        "rawElasticity": 0.7553592108754625,
+        "acreageElasticity": 0.7553592108754625,
+        "supportWarnings": [
+          "uncalibrated_research_estimate",
+          "time_and_utility_adjustments_not_identified",
+          "fewer_than_three_same_submarket_sales",
+          "no_same_submarket_and_segment_sales",
+          "same_submarket_acreage_extrapolation"
+        ],
+        "predictionInterval": null,
+        "productionApproved": false,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "actual": 475000,
+        "saleDate": "2021-11-04",
+        "region": "Western Weber",
+        "segment": "rural_tract",
+        "previousEstimate": 354222.52043660136,
+        "medianBaseline": 582500.0,
+        "acreageBaseline": 390348.9411441144,
+        "error": 108003.70103340573,
+        "within50k": false,
+        "deleteOneTrainingSensitivity": {
+          "estimates": [
+            159900.00000000006,
+            583003.7010334057,
+            886402.1739130435,
+            332465.02856857626
+          ],
+          "range": [
+            159900.00000000006,
+            886402.1739130435
+          ],
+          "interpretation": "Fit instability only; not calibrated coverage"
+        }
+      }
+    ]
+  },
+  "conditionalBarnDiagnostic": {
+    "estimate": 553160.379386851,
+    "trainingIds": [
+      "1519709",
+      "1603980",
+      "1586757",
+      "1697726",
+      "1735330"
+    ],
+    "comparableAdjustments": [
+      {
+        "id": "1697726",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 25,
+        "acres": 0.92,
+        "saleDate": "2021-02-23",
+        "price": 159900,
+        "sizeFactor": 3.415112762100441,
+        "adjustedPrice": 546076.5306598606
+      },
+      {
+        "id": "1735330",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+        "page": 21,
+        "acres": 0.67,
+        "saleDate": "2021-04-14",
+        "price": 132500,
+        "sizeFactor": 4.228951861638959,
+        "adjustedPrice": 560336.121667162
+      }
+    ],
+    "sizePairs": [
+      {
+        "ids": [
+          "1519709",
+          "1603980"
+        ],
+        "elasticity": 1.3875200076217153
+      },
+      {
+        "ids": [
+          "1519709",
+          "1586757"
+        ],
+        "elasticity": 0.7553592108754625
+      },
+      {
+        "ids": [
+          "1603980",
+          "1586757"
+        ],
+        "elasticity": -0.2695881654301183
+      },
+      {
+        "ids": [
+          "1697726",
+          "1735330"
+        ],
+        "elasticity": 0.5927731649493815
+      }
+    ],
+    "rawElasticity": 0.674066187912422,
+    "acreageElasticity": 0.674066187912422,
+    "supportWarnings": [
+      "uncalibrated_research_estimate",
+      "time_and_utility_adjustments_not_identified",
+      "fewer_than_three_same_submarket_sales",
+      "no_same_submarket_and_segment_sales",
+      "same_submarket_acreage_extrapolation"
+    ],
+    "predictionInterval": null,
+    "productionApproved": false,
+    "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+    "page": 27,
+    "id": "1766052",
+    "reportedCombinedPrice": 505000,
+    "includedInPrimaryMetrics": false,
+    "independentTest": false,
+    "interpretation": "Land plus historic barn. Contribution unknown; these are hypothetical allocations, not measured land prices.",
+    "allocationScenarios": [
+      {
+        "assumedBarnContribution": 0,
+        "hypotheticalLandPrice": 505000,
+        "error": 48160.37938685098,
+        "within50k": true
+      },
+      {
+        "assumedBarnContribution": 10000,
+        "hypotheticalLandPrice": 495000,
+        "error": 58160.37938685098,
+        "within50k": false
+      },
+      {
+        "assumedBarnContribution": 25000,
+        "hypotheticalLandPrice": 480000,
+        "error": 73160.37938685098,
+        "within50k": false
+      },
+      {
+        "assumedBarnContribution": 50000,
+        "hypotheticalLandPrice": 455000,
+        "error": 98160.37938685098,
+        "within50k": false
+      },
+      {
+        "assumedBarnContribution": 100000,
+        "hypotheticalLandPrice": 405000,
+        "error": 148160.37938685098,
+        "within50k": false
+      }
+    ]
+  },
+  "limitations": [
+    "Historical listing descriptions reconstructed from later reports; no public-as-of replay.",
+    "Public MLS exhibit prices, not independently verified settlement amounts.",
+    "Size effects remain confounded with unmeasured property attributes within groups.",
+    "Paired slopes share sales; pair count is not independent sample size.",
+    "No supported dollar adjustments for utility availability, water shares, usable area, entitlements or access.",
+    "No current-market validation, calibrated prediction interval or \u00b1$50k guarantee."
+  ]
+}

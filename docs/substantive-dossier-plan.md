@@ -157,3 +157,12 @@ Valuation data follow-up: four explicit 2019 Ogden Valley sold prices recovered 
 - **Completed:** local model implementation and actual Weber held-out evaluation. **Attempted but unresolved:** representative local price/attribute coverage and reliable tolerance-band accuracy. **Blocked by insufficient local accuracy evidence:** production promotion. Small-sample complexity is not proof of a defensible market valuation.
 - Reproducible inputs/results/report: `docs/research/backtest/weber/`; evaluator/tests: `research/valuation/weber_backtest.py` and `test_weber_backtest.py`. Earlier Cook experiments are not used for Weber training, validation or approval.
 - Original easement/mineral/precise-pool/storage/city requirements retain their existing status; no replacement or completion claim.
+
+## Weber data expansion and model repair — 2026-11-07
+
+- [x] Investigate the hardest dependency: more public local closing prices with attributable historical characteristics. Expanded county packet inventory, OCR, public portals, broker exhibits and state reports; `docs/research/backtest/weber/expanded-source-audit.json` preserves coverage and exclusions.
+- [x] Diagnose the miss and implement a replacement research model: within-region/segment size effects and local adjusted-comparable anchoring; chronology, parcel-overlap and target-outcome leakage tests; source-linked adjustments and explicit unsupported effects.
+- [x] Run actual revised predictions and stability checks. Reused final-two outcomes: 2/2 within $50k, MAE $40,712; rolling 3/4, MAE $39,495. Excluding atypical transactions: 0/2, MAE $88,359. Delete-one instability remains large. These are post-inspection development diagnostics, not fresh validation.
+- [ ] **Attempted but unresolved:** expand the primary residential-lot dataset beyond seven. Three new multifamily-development observations retained separately; unverified portal prices and house-containing transactions do not increase the primary count.
+- [ ] **Blocked by a specific data dependency:** independent, representative Weber closing-price/dated-feature observations sufficient to establish the requested ±$50k accuracy. No fresh independent test records recovered in this pass; no production promotion.
+- Existing dossier navigation, easement completeness, mineral ownership, precise pool placement, cloud storage and city integration retain their earlier ledger statuses. This valuation pass does not complete or remove those requirements.

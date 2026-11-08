@@ -66,6 +66,9 @@ def build(api_base, inline_assets=False):
     with open(os.path.join(ROOT, "config", "records.json")) as fh:
         records = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     data = {"costs": costs, "apiBase": api_base, "apiVersion": h.hexdigest()[:10], "records": records}
+    sales = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "sales.json"))
+    results = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "development-v2.json"))
+    data["weberValue"] = {"records": sales["records"], "metrics": {k: results[k]["metrics"] for k in ("rollingDevelopment", "flaggedTransactionSensitivity")}}
     scripts = "\n".join([
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
@@ -73,6 +76,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(ROOT, "node_modules", "proj4", "dist", "proj4.js") + "\n</script>",
         "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
         "<script>\n" + read(WEB, "land-value.js") + "\n</script>",
+        "<script>\n" + read(WEB, "weber-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",
         "<script>\n" + read(WEB, "pool-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "mineral-screen.js") + "\n</script>",
