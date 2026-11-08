@@ -554,13 +554,13 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
 /* Enlarged parcel-corner mark: interrupted frame and orange survey pin. */
 #project-workspace .pw-stages{gap:28px;margin-top:30px}
-#project-workspace .pw-stages>.pw-card{position:relative;display:flex;flex-direction:column;border:0;border-radius:0;padding:32px;margin:0;background-color:rgba(12,18,15,.88);background-image:linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4);background-size:calc(100% - 30px) 2px,2px calc(100% - 30px),calc(100% - 30px) 2px,2px calc(100% - 30px);background-position:top left,top left,bottom right,bottom right;background-repeat:no-repeat}
-#project-workspace .pw-stages>.pw-card::before{content:"";position:absolute;top:-6px;left:-6px;width:14px;height:14px;border-radius:50%;background:#fb7136}
+#project-workspace .pw-stages>.pw-card,#project-workspace .pw-project-grid>.pw-card{position:relative;display:flex;flex-direction:column;border:0;border-radius:0;padding:32px;margin:0;background-color:rgba(12,18,15,.88);background-image:linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4),linear-gradient(#d9ddd4,#d9ddd4);background-size:calc(100% - 30px) 2px,2px calc(100% - 30px),calc(100% - 30px) 2px,2px calc(100% - 30px);background-position:top left,top left,bottom right,bottom right;background-repeat:no-repeat}
+#project-workspace .pw-stages>.pw-card::before,#project-workspace .pw-project-grid>.pw-card::before{content:"";position:absolute;top:-6px;left:-6px;width:14px;height:14px;border-radius:50%;background:#fb7136}
 #project-workspace .pw-stages h2{margin:0 0 20px}
 #project-workspace .pw-stages p:first-of-type{flex:1;margin-top:0}
 #project-workspace .pw-stages p:last-of-type{margin:12px 0 24px;min-height:3.2em}
 #project-workspace .pw-stages button{align-self:flex-start;margin-top:auto}
-@media(max-width:650px){#project-workspace .pw-stages>.pw-card{padding:26px}#project-workspace .pw-stages p:last-of-type{min-height:0}}
+@media(max-width:650px){#project-workspace .pw-stages>.pw-card,#project-workspace .pw-project-grid>.pw-card{padding:26px}#project-workspace .pw-stages p:last-of-type{min-height:0}}
 
 .account-dialog{color:#f5f4ee;background:#101713;border:1px solid #777d73;max-width:460px;width:calc(100% - 40px);padding:32px;box-sizing:border-box;box-shadow:0 20px 90px #0009}
 .account-dialog::backdrop{background:#000b;backdrop-filter:blur(5px)}
