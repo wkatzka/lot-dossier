@@ -1,0 +1,918 @@
+{
+  "downloadedPackets": [
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F8 Surplus package Parcel 14-016-0025.pdf",
+      "label": "F8 Surplus package Parcel 14-016-0025.pdf",
+      "key": "433a19090a2e",
+      "sha256": "84d9d6a5e1eff37ec42164ffde39263c6ddef696002a2ae7e36a158bdbe43cc4",
+      "pages": 4,
+      "textChars": 4,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6   Parcel 08-022-0041 and 09-022-0088.pdf",
+      "label": "F6   Parcel 08-022-0041 and 09-022-0088.pdf",
+      "key": "60d5c9631f3b",
+      "sha256": "65bc9a1503896361179f328aab2796d2d0fef9d3ee74e2c2c3d5f361520f33f2",
+      "pages": 10,
+      "textChars": 10,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Declare Surplus Property 08-022-0041 and 08-022-0088.pdf",
+      "label": "Declare Surplus Property 08-022-0041 and 08-022-0088.pdf",
+      "key": "d873436c7f35",
+      "sha256": "58c188e56c8ec2a490696170a72fc7e45bfdcda4c3d16275ce399ae6e82d5b18",
+      "pages": 4,
+      "textChars": 7020,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7   Harris Property 2nd Year Extension.pdf",
+      "label": "G7   Harris Property 2nd Year Extension.pdf",
+      "key": "bde0abfe5ceb",
+      "sha256": "675e3992bbe7f1e2d867db58e031dd7c1d002cad33d42ec81a76c4a89024e167",
+      "pages": 15,
+      "textChars": 15,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5   Surplus property.pdf",
+      "label": "F5   Surplus property.pdf",
+      "key": "b6ce963f3c5e",
+      "sha256": "4a21da1f35e4b617c7383d0758e54fd6a74277743b10684cb3de44f70d01f50c",
+      "pages": 2,
+      "textChars": 2358,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5   Surplus Property.pdf",
+      "label": "G5   Surplus Property.pdf",
+      "key": "6f0a5c4498d8",
+      "sha256": "d5323ef1195bff3fd29273107bb9bb78cce7c878ce2d3d7c65d1bd3da688f722",
+      "pages": 1,
+      "textChars": 1,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7   ROW.pdf",
+      "label": "G7   ROW.pdf",
+      "key": "89779deadd3c",
+      "sha256": "fb37364b1907cd855238d11abd49b9698f1eacd6c345a5c31cd0f59ff0c4c640",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7  Property surplus sell.pdf",
+      "label": "G7  Property surplus sell.pdf",
+      "key": "cce740540c6d",
+      "sha256": "132d8e2b31d5039432ac14b6028853ce44b433db2694b1ed970a8c8343edb089",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/ROW LDS.pdf",
+      "label": "ROW LDS.pdf",
+      "key": "c0258fdb60f3",
+      "sha256": "9e42dc9423e1c801db0b5d2ed3d1b7f3b2616ff8453470ad7844bafa93cb0fad",
+      "pages": 5,
+      "textChars": 5,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/2550 South Roadway Project.pdf",
+      "label": "2550 South Roadway Project.pdf",
+      "key": "2b92fa6ea738",
+      "sha256": "d74b05857b9516460a76fcdf8d528f7be87c4a1ccf98d1c2f9cd3ff69ae38cc8",
+      "pages": 10,
+      "textChars": 10,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Sell Surplus Property Adjacent to 19-064-0014.pdf",
+      "label": "Sell Surplus Property Adjacent to 19-064-0014.pdf",
+      "key": "3359d74b5918",
+      "sha256": "7ff2c9eb04e91db720e205f70dc2132d19e1d7806c6aab317e4a6be72fe18709",
+      "pages": 16,
+      "textChars": 16,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7 Commission Memo - Declare Surplus Property Adjacent to 19-064-0014 (May 2025).pdf",
+      "label": "F7 Commission Memo - Declare Surplus Property Adjacent to 19-064-0014 (May 2025).pdf",
+      "key": "706d220cfb39",
+      "sha256": "6a964d7ff310a5b03cf0be70f0950b2876cf5955936101d1ce6dea42e30333b7",
+      "pages": 4,
+      "textChars": 3129,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F11 ROW-Favero.pdf",
+      "label": "F11 ROW-Favero.pdf",
+      "key": "b2bfb5e85c49",
+      "sha256": "f281188911eb4b131ff30f44b6de09818ff7af56b4ac8644294d4079e8e5fb2a",
+      "pages": 5,
+      "textChars": 5,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5  Surplus Parcel 07-070-0022.pdf",
+      "label": "F5  Surplus Parcel 07-070-0022.pdf",
+      "key": "80058dd95a85",
+      "sha256": "af288084fb136a6b6703a818f36635abf63f81f5605102d849de499503f338b1",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  SURPLUS PROPERTY FORM 2019.pdf",
+      "label": "F6  SURPLUS PROPERTY FORM 2019.pdf",
+      "key": "adc3cd5674e8",
+      "sha256": "da8892a8cc37a258986f87de0ced5b5fd572adc010a41db8186e5de778adf4d5",
+      "pages": 1,
+      "textChars": 829,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H2  Parcel 16-040-0130 - Agreement.pdf",
+      "label": "H2  Parcel 16-040-0130 - Agreement.pdf",
+      "key": "b04663e2767f",
+      "sha256": "23b49e520d7c6b75c36bdf8eca8f0e77de82070f31487f2627248eeb1a5848a6",
+      "pages": 8,
+      "textChars": 8,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  12th Street.pdf",
+      "label": "F6  12th Street.pdf",
+      "key": "37f207563eeb",
+      "sha256": "090f7ebcef7d62949c6ac7b8f1004a30599827d7d30fe14fa0f02f927f7bc358",
+      "pages": 10,
+      "textChars": 10,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Scott Christensen -Purchase Agreement - Nov 19,2024.pdf",
+      "label": "Scott Christensen -Purchase Agreement - Nov 19,2024.pdf",
+      "key": "be68da081bfd",
+      "sha256": "81ef48132abcf89d7fe1bac0e38b734c6fe6e34bc3d6e6a83bdb3f874338cc5d",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G4  Abate taxes requests Dixie Bunot multiple parcels.pdf",
+      "label": "G4  Abate taxes requests Dixie Bunot multiple parcels.pdf",
+      "key": "2692bd5240d9",
+      "sha256": "17bf55afb71e83aa75bef34999c39abcb11acbf4e937090889ccc182fbc29563",
+      "pages": 7,
+      "textChars": 21011,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2  Abate taxes requests Dixie Bunot multiple parcels.pdf",
+      "label": "G2  Abate taxes requests Dixie Bunot multiple parcels.pdf",
+      "key": "9ab2f24fa8d3",
+      "sha256": "17bf55afb71e83aa75bef34999c39abcb11acbf4e937090889ccc182fbc29563",
+      "pages": 7,
+      "textChars": 21011,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/12th Street Phase 4.pdf",
+      "label": "12th Street Phase 4.pdf",
+      "key": "958b3e266084",
+      "sha256": "cec0b02d2ab204b8dbd0f350671d4e4d584168c0c8dcd9ed24fed36cd7ce9024",
+      "pages": 11,
+      "textChars": 11,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5  SURPLUS PROPERTY WEBER COUNTY TRANSFER STATION.pdf",
+      "label": "G5  SURPLUS PROPERTY WEBER COUNTY TRANSFER STATION.pdf",
+      "key": "d22a0048ef41",
+      "sha256": "b0961fddfd3bc8191608950297da38a5a485e4d25ea8bb6bb280b91b72bf9243",
+      "pages": 9,
+      "textChars": 9,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7  ROW 23.pdf",
+      "label": "F7  ROW 23.pdf",
+      "key": "39d87500af8f",
+      "sha256": "25c9b6e423b37b36e2a7614c675883389791f0e586aa000c625beb3567f9e11e",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7  ROW 49.pdf",
+      "label": "F7  ROW 49.pdf",
+      "key": "a8c79e4025da",
+      "sha256": "9de731ef2fa2c448a78650073a5b7baa44465067511bca10d94ca18373d6e1ff",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10  Sale of Parcel 19-021-0010 Nilson Homes_.pdf",
+      "label": "F10  Sale of Parcel 19-021-0010 Nilson Homes_.pdf",
+      "key": "f100f9168869",
+      "sha256": "cd788dce6f89c0928ea3c2b295ab46d20e53a5eefe27b20f4def3cc64b83ab2e",
+      "pages": 6,
+      "textChars": 8641,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G16  ROW Thomas Parker.pdf",
+      "label": "G16  ROW Thomas Parker.pdf",
+      "key": "b9bbe4598268",
+      "sha256": "dd43504209dc64cb8c653035fa372ade7dfe4dca0fc1ef7a8d072791f4c16481",
+      "pages": 4,
+      "textChars": 4,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/ROW Cragun.pdf",
+      "label": "ROW Cragun.pdf",
+      "key": "6b252e1fa197",
+      "sha256": "70257e8a14fb104c5bbd4e0c6c0d935c18cbecd43d34a9d53d5d6bcc9e07a80f",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/ROW Joshua Clark.pdf",
+      "label": "ROW Joshua Clark.pdf",
+      "key": "205c6efd65dc",
+      "sha256": "66387e817f4bbf7d174f8f511be2cdf6a4bd11cb1ab024452e2989fe69b9452c",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F9  Clarke row.pdf",
+      "label": "F9  Clarke row.pdf",
+      "key": "e8ce31e21632",
+      "sha256": "f76dd7a283ac36e2537e1fdf8876e82e5c9b8c70a8df3f1e0fb595d10f452161",
+      "pages": 10,
+      "textChars": 10,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7Commission Packet - Declare Surplus Property (15-061-0048 and part of  15-041-0010).pdf",
+      "label": "G7Commission Packet - Declare Surplus Property (15-061-0048 and part of  15-041-0010).pdf",
+      "key": "ba18fa11c4b5",
+      "sha256": "cbb8e4ddf2aa251102fc5f96433b5aeafc13f610000bf7a9a489f76a80d6d97a",
+      "pages": 4,
+      "textChars": 4619,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Declare Surplus Property 16-049-0130_3.5.2024 Agenda (02).pdf",
+      "label": "Declare Surplus Property 16-049-0130_3.5.2024 Agenda (02).pdf",
+      "key": "ee78c7fc7705",
+      "sha256": "e55ec01d60a50cef9605e5b3f18d4ea333ebef8848f6c1f5390ee8de706ecf2f",
+      "pages": 2,
+      "textChars": 3472,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F9  FEB 20, 2024 _Commission Memo to Surplus parcel #17-045-0030.pdf",
+      "label": "F9  FEB 20, 2024 _Commission Memo to Surplus parcel #17-045-0030.pdf",
+      "key": "0ed8d45e68b1",
+      "sha256": "4047295c78744d344f7cbc71aeb267f2264fff5af59bf51896d0a408d9a1fae2",
+      "pages": 2,
+      "textChars": 2,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6  ROW 149 0022.pdf",
+      "label": "G6  ROW 149 0022.pdf",
+      "key": "bf309665f9f0",
+      "sha256": "462dec9791487425d8d21b8d0bd1a9e8a4706e54cc1e6f56c360c4e0f6f617a7",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6  ROW139 006.pdf",
+      "label": "G6  ROW139 006.pdf",
+      "key": "44f4e4dd25ee",
+      "sha256": "47aeb4e0d5eec653c9d5a9b4b95dbcbec69efd58d14b5a11999dcbde3e385512",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6 ROW0 152 156.pdf",
+      "label": "G6 ROW0 152 156.pdf",
+      "key": "f3b8b2163d01",
+      "sha256": "d61be73bd684db743ca9c12208993bb39d1938e1487c5eb5ffb38d449da5bff8",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7 Commission Memo - Grant of Well Protection Easement_Timothy Boyle Parcel 20-035-0010 _1.9.2024 Agenda.pdf",
+      "label": "F7 Commission Memo - Grant of Well Protection Easement_Timothy Boyle Parcel 20-035-0010 _1.9.2024 Agenda.pdf",
+      "key": "a3e1776afdfa",
+      "sha256": "66f92070af363190657ff11be56f4da7a965a6a1e4e7e6d85bcf482a1a6a4ee9",
+      "pages": 6,
+      "textChars": 8638,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Parcel 05-136-0039 - Jan 2, 2024 - Surplus Property.pdf",
+      "label": "F6  Parcel 05-136-0039 - Jan 2, 2024 - Surplus Property.pdf",
+      "key": "3ec0f557ac0a",
+      "sha256": "4a14f3685f772ca9dea45a13afa6109e52d8610dae06a18b056bc7e8842a9ba8",
+      "pages": 2,
+      "textChars": 2,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Commission Memo - Termination of Storm Water Easement_Wonder Block Parcel 01-017-0019_12.12.2023 Agenda - Prep12.7.2023.pdf",
+      "label": "F6  Commission Memo - Termination of Storm Water Easement_Wonder Block Parcel 01-017-0019_12.12.2023 Agenda - Prep12.7.2023.pdf",
+      "key": "796d67606b14",
+      "sha256": "c7c7651874e2b72309041ba3e9ca0bec286dc308642e2e89755f76f757ac1e14",
+      "pages": 10,
+      "textChars": 10706,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6 Commission Memo - Sell of Property 16-049-0057 to North Ogden City_Final for 11.14.2023 Agenda.pdf",
+      "label": "G6 Commission Memo - Sell of Property 16-049-0057 to North Ogden City_Final for 11.14.2023 Agenda.pdf",
+      "key": "f8c39f3a24fd",
+      "sha256": "8ebd92b00df12012ce3b17d2e6c3a4b7780148964903e3275ad44caebaf016db",
+      "pages": 6,
+      "textChars": 11307,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Declare Surplus Property 16-049-0057_10.17.2023 Agenda.pdf",
+      "label": "Declare Surplus Property 16-049-0057_10.17.2023 Agenda.pdf",
+      "key": "10c4525191bf",
+      "sha256": "e5330b8592c8e1121d4d1f15610629a849d73b837f77399f1162e25eec917167",
+      "pages": 2,
+      "textChars": 2827,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Commission Memo - Sell Surplus Property 05-135-0030_10.10.2023 Agenda.pdf",
+      "label": "Commission Memo - Sell Surplus Property 05-135-0030_10.10.2023 Agenda.pdf",
+      "key": "f12254c76bd7",
+      "sha256": "374e68fd983c6ba979815d28b214ed9d619c792f399e56075f3a9f01a9046710",
+      "pages": 7,
+      "textChars": 11428,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10 Commission Memo - Sell Surplus Property 05-131-0031_September 5 2023 Commission Agenda.pdf",
+      "label": "F10 Commission Memo - Sell Surplus Property 05-131-0031_September 5 2023 Commission Agenda.pdf",
+      "key": "3d68d5834eeb",
+      "sha256": "ecbb5912b59147edd55a8eefe15d7c392caba58411ba2352d691a3e8a3e4b508",
+      "pages": 7,
+      "textChars": 12314,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H4 136-Purchase Contract-Edgell.pdf",
+      "label": "H4 136-Purchase Contract-Edgell.pdf",
+      "key": "3f620a771bdd",
+      "sha256": "212cc5906d0d3a36312223b2b2e983c77fa1898f76d4e05014c632338670a1f2",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H5 171-Purchase Contract (2)-Mestas.pdf",
+      "label": "H5 171-Purchase Contract (2)-Mestas.pdf",
+      "key": "1327af0398a2",
+      "sha256": "32cf957ae34087775682f8b5f84a0c126ac3b7d79b01e72cf5ab747d0edc3c2c",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Declare Surplus Property 04-033-0009.pdf",
+      "label": "Declare Surplus Property 04-033-0009.pdf",
+      "key": "830657aef4a1",
+      "sha256": "a711297a81d034c2bf4cd3a0f28175fb051cfef91090baea9851a999308cb80e",
+      "pages": 2,
+      "textChars": 2,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G1  ROW Natalie Kovach.pdf",
+      "label": "G1  ROW Natalie Kovach.pdf",
+      "key": "f04ba90ab77d",
+      "sha256": "d7b89135e9ebdfbd7bb4107abf4cb91826e09f3afd6f1a78085cc01b3503a5a0",
+      "pages": 4,
+      "textChars": 4,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G6 Commission Memo - Declare Surplus Property 05-131-0031_6.6.2023 Agenda.pdf",
+      "label": "G6 Commission Memo - Declare Surplus Property 05-131-0031_6.6.2023 Agenda.pdf",
+      "key": "abd3325b9cc8",
+      "sha256": "62681c347226550acfcee87e8432ed8a88652ba6d3330546e287dd29b79a5674",
+      "pages": 2,
+      "textChars": 2794,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G7 Commission Memo - Declare Surplus Property 05-135-0030_6.6.2023 Agenda.pdf",
+      "label": "G7 Commission Memo - Declare Surplus Property 05-135-0030_6.6.2023 Agenda.pdf",
+      "key": "c64ea7c76c1c",
+      "sha256": "114aec360c6ffac4aaeb19501d8451c3e32106a3fe04d73dde70e2cf59b81763",
+      "pages": 2,
+      "textChars": 2633,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/TR Wright.pdf",
+      "label": "TR Wright.pdf",
+      "key": "c68857d229ce",
+      "sha256": "abe2da2da042a98f1c9ba465792e2a7af8b867ddb6fe225bcf4176d70b121316",
+      "pages": 4,
+      "textChars": 4,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Commission Memo - LM Partners Quitclaim Deed (Parcel 19-042-0078).pdf",
+      "label": "Commission Memo - LM Partners Quitclaim Deed (Parcel 19-042-0078).pdf",
+      "key": "5f089a05c84a",
+      "sha256": "3d042dc3c492d2c924e977fe8307ae493337cac76aad62b1515ea41474a62ca0",
+      "pages": 5,
+      "textChars": 6464,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2Purchase Contract William Anderson.pdf",
+      "label": "G2Purchase Contract William Anderson.pdf",
+      "key": "63ab549b1b8f",
+      "sha256": "899cc96659f420adff1d90d898c8cfa039681bac94ced9e48ede8f1a481c72f7",
+      "pages": 9,
+      "textChars": 9,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2154-Purchase Contract Anderson.pdf",
+      "label": "G2154-Purchase Contract Anderson.pdf",
+      "key": "0d9995241b8f",
+      "sha256": "fe9ee6b94ea7c5ab0b2dde5b73f39433beaa389dd3dbb485454cbc6649e2267e",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2164-Purchase Contract Stauffer.pdf",
+      "label": "G2164-Purchase Contract Stauffer.pdf",
+      "key": "42cc7e9fc50f",
+      "sha256": "09e9100176986d06fc411a1cb23ada19d2b1c05883c2498db494095bbfa81c6c",
+      "pages": 12,
+      "textChars": 12,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10 Surplus property.pdf",
+      "label": "F10 Surplus property.pdf",
+      "key": "44800756ac47",
+      "sha256": "b52197c823b5c36fd0790b0b9a4143da7ebe47d37f9df6c673ec6cc9e52449f8",
+      "pages": 11,
+      "textChars": 22869,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F11  Parcel 15-132-0012 for Agenda.pdf",
+      "label": "F11  Parcel 15-132-0012 for Agenda.pdf",
+      "key": "cf101c02b71a",
+      "sha256": "c6e7dfa074671940cb768e611848fb4dd6b70569e6b93513b7d4a18c5dfd57ae",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5  Draft- Funding Resolution- 2550 South - 2nd ST Request.pdf",
+      "label": "G5  Draft- Funding Resolution- 2550 South - 2nd ST Request.pdf",
+      "key": "9e298e1c203d",
+      "sha256": "8dfada7eec83da8f526383bb0e7b95ab78a40b58ec3137676b16178b5472f767",
+      "pages": 1,
+      "textChars": 2106,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Sale of Property 09-566-0011 to Connext_2.7.2023 Agenda.pdf",
+      "label": "F6  Sale of Property 09-566-0011 to Connext_2.7.2023 Agenda.pdf",
+      "key": "7528e171e46e",
+      "sha256": "b3fa8e9a3b3d8a8f482e56fd74eb2871e0f73650dbe8a4d2131f0581f366ec22",
+      "pages": 6,
+      "textChars": 9293,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H6  Commission Memo January 17 2023 Agenda - Declare Surplus Property Part of 17-092-0016 in North Fork Park - Final.pdf",
+      "label": "H6  Commission Memo January 17 2023 Agenda - Declare Surplus Property Part of 17-092-0016 in North Fork Park - Final.pdf",
+      "key": "ce6857bbd0a1",
+      "sha256": "38a5237993d8dd3774029c2c71a2b41ea16b8967db3405adfe55ecdead45aa65",
+      "pages": 3,
+      "textChars": 4748,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10  ROW.pdf",
+      "label": "F10  ROW.pdf",
+      "key": "2701e1401c70",
+      "sha256": "3683c718695303791de562e5fb5984c0c48376cacff5f3a5e69dd7ea97c312d7",
+      "pages": 5,
+      "textChars": 5,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F11  Norman Hammer ROW.pdf",
+      "label": "F11  Norman Hammer ROW.pdf",
+      "key": "3c83bf095004",
+      "sha256": "485a8adb1c2c8e9f72a44f2222ba8d3d44a56fd62857de46f5d5bb0ba975875f",
+      "pages": 28,
+      "textChars": 60838,
+      "hits": [
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10  Surplus Parcel 11-340-0001.Final.pdf",
+      "label": "F10  Surplus Parcel 11-340-0001.Final.pdf",
+      "key": "a09a67ca4532",
+      "sha256": "3d9158367694c85eb198e51ee8f94528575142a7494875b82ce6fb0fad8a3c14",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F8  Sell of Property to MS City_Parcels A-D and F-P.pdf",
+      "label": "F8  Sell of Property to MS City_Parcels A-D and F-P.pdf",
+      "key": "32746712a900",
+      "sha256": "f6a3f1d304b5975e7d88a8394819eaf5408b4aa9f16a45106bafda0c30e3d447",
+      "pages": 15,
+      "textChars": 37125,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Final- Sale of Parcel 06-004-0039 Travis Truman Justin MacCoy Nielsen.pdf",
+      "label": "F6  Final- Sale of Parcel 06-004-0039 Travis Truman Justin MacCoy Nielsen.pdf",
+      "key": "01841e5b4b41",
+      "sha256": "5b96381066758cd96a10fc9ddf59237bbb12cbed620974b43ec893cf7006243e",
+      "pages": 6,
+      "textChars": 9212,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F8 Sale of Parcel 06-004-0039 Travis Truman Justin MacCoy Nielsen.pdf",
+      "label": "F8 Sale of Parcel 06-004-0039 Travis Truman Justin MacCoy Nielsen.pdf",
+      "key": "559e98889774",
+      "sha256": "4a13a4f12fb9d5e54830dca0f243ea9a128f15f7b73912286b62967fd97be861",
+      "pages": 6,
+      "textChars": 9212,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7  Declare Surplus Property 06-004-0039.pdf",
+      "label": "F7  Declare Surplus Property 06-004-0039.pdf",
+      "key": "5bb0b8d2342b",
+      "sha256": "4aa1e1eb1d316f1aeb96941a5646d16a28a8a0c726546405ffce3fb645ef6a3e",
+      "pages": 2,
+      "textChars": 2370,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G2  Weber Basin - 12th Street Pipeline.pdf",
+      "label": "G2  Weber Basin - 12th Street Pipeline.pdf",
+      "key": "30c2f97df3a9",
+      "sha256": "b5181c73f584a776fba0a01d5726e54e648835d1ab5d28e3db3bcb982f34f2e3",
+      "pages": 18,
+      "textChars": 18,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7  Parcel #04-022-0016(North) Sale.pdf",
+      "label": "F7  Parcel #04-022-0016(North) Sale.pdf",
+      "key": "f8c9896c4c6d",
+      "sha256": "36e19e7315f9ec2ad9e17cade450746fcc98ff7b6ecf4bb7f7ef2e8859e46997",
+      "pages": 9,
+      "textChars": 9,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Property_Management_Lift_7_28_2022.pdf",
+      "label": "F6  Property_Management_Lift_7_28_2022.pdf",
+      "key": "41bd63425a15",
+      "sha256": "c7016a589f9c3cac990a39302b8221ad60e3cfdee24815d8fda9297b12556bcb",
+      "pages": 2,
+      "textChars": 2889,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6  Commission Memo - Sell Surplus Property 04-022-0016 for 7.12.2022 Agenda pdf.pdf",
+      "label": "F6  Commission Memo - Sell Surplus Property 04-022-0016 for 7.12.2022 Agenda pdf.pdf",
+      "key": "02da52359565",
+      "sha256": "5229300b1662d55b4906c7116692a2b28d22317a58fe367d5dac540cf30216c2",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5 Commission Memo June 21 2022 Agenda - Declare Surplus Property 11-044-0025_Canal Parcel.pdf",
+      "label": "G5 Commission Memo June 21 2022 Agenda - Declare Surplus Property 11-044-0025_Canal Parcel.pdf",
+      "key": "c4f92443855c",
+      "sha256": "5294ede9533e88cb2d0feda09a80da165ca718db0eff8feb099a750076e80df2",
+      "pages": 2,
+      "textChars": 3238,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6Commission Memo - Sale of Part of Property 14-023-0006 Viaduct Parcel_Final for May 10 2022 Agenda.pdf",
+      "label": "F6Commission Memo - Sale of Part of Property 14-023-0006 Viaduct Parcel_Final for May 10 2022 Agenda.pdf",
+      "key": "5822f14452ce",
+      "sha256": "ff63c23a247997d79fbfed4d4ed476abb95fcca2dbd93d2a8753bc8d74906a32",
+      "pages": 9,
+      "textChars": 9474,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G4  04-07-22 - Funding Resolution- 2550 South - BQ.pdf",
+      "label": "G4  04-07-22 - Funding Resolution- 2550 South - BQ.pdf",
+      "key": "94423a15b462",
+      "sha256": "b4d284c5d9e73612571d52a4940888078fbad6c5678fd339ed4369c3374da0dd",
+      "pages": 1,
+      "textChars": 2080,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5 Surplus Property.pdf",
+      "label": "F5 Surplus Property.pdf",
+      "key": "9b807e939971",
+      "sha256": "f0d50fcdeea6da08f6f00bc8d88fbb03cf32808ab3ef9bba1047283f395f21d4",
+      "pages": 10,
+      "textChars": 10,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E5  Sale of South Portion of Property 05-112-0051_02.15.2022.pdf",
+      "label": "E5  Sale of South Portion of Property 05-112-0051_02.15.2022.pdf",
+      "key": "5d7e0e2a7132",
+      "sha256": "1d3f4dd44f3706cef56806837b9787b3ad656acbf89c0dcad8e49db3ce2aa527",
+      "pages": 10,
+      "textChars": 17326,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E7  Surplus Property.pdf",
+      "label": "E7  Surplus Property.pdf",
+      "key": "c4ae52039454",
+      "sha256": "5aee9000ff79ce1af70a4342fad0959b16fd2484c9e7fbad146bfbe6ba2d4788",
+      "pages": 8,
+      "textChars": 8,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E8  Declare Surplus Property 05-112-0051.pdf",
+      "label": "E8  Declare Surplus Property 05-112-0051.pdf",
+      "key": "d65b3e324d93",
+      "sha256": "44c3c1bd812baa2636bb4adedf484d2bbc12d55fed040d3a9050839e3dfc4f65",
+      "pages": 2,
+      "textChars": 3069,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E4  USU SURPLUS PROPERTY FORM Nov. 2021.pdf",
+      "label": "E4  USU SURPLUS PROPERTY FORM Nov. 2021.pdf",
+      "key": "eb3f9baf069e",
+      "sha256": "8d0c30b1f03e0f8b638fdbe50a781f5f43cc4c76c16a8893d34a6ffcb99dc346",
+      "pages": 1,
+      "textChars": 912,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E4   Declare Surplus Property.pdf",
+      "label": "E4   Declare Surplus Property.pdf",
+      "key": "53f5263701ef",
+      "sha256": "490804e98e3d356d47147f7dcaa042b0979af2b4ea7524ff938d0320d881c100",
+      "pages": 2,
+      "textChars": 2731,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/E9  sale surplus property.pdf",
+      "label": "E9  sale surplus property.pdf",
+      "key": "b10d17ddeb0b",
+      "sha256": "d0993f26dd31d57b936e249899fba68b1975e4dbde52098937be693404cd8444",
+      "pages": 8,
+      "textChars": 8,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5  Attny Surplus Property Form.pdf",
+      "label": "F5  Attny Surplus Property Form.pdf",
+      "key": "25e280b1a969",
+      "sha256": "8bff6665bd872e5d28642a2feb4f20e554599375f93ec4681b44f02e9bb16d11",
+      "pages": 1,
+      "textChars": 1,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7-   Declare Surplus Property 19-021-0010_Final for 8.10.2021 Agenda.pdf",
+      "label": "F7-   Declare Surplus Property 19-021-0010_Final for 8.10.2021 Agenda.pdf",
+      "key": "7a41408665f3",
+      "sha256": "070664fc219e218e51e9516768a20af581c6d5052fc816ef6947ad9446691522",
+      "pages": 2,
+      "textChars": 2265,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7-  Declare Surplus Property 14-023-0006 Viaduct Parcel_Final for 8.10.2021 Agenda.pdf",
+      "label": "F7-  Declare Surplus Property 14-023-0006 Viaduct Parcel_Final for 8.10.2021 Agenda.pdf",
+      "key": "d5be7198a771",
+      "sha256": "76d497eb377127eb99bac3e3618565b2fc7592d521f79c629c2a01cb335dde36",
+      "pages": 2,
+      "textChars": 3101,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G5Zach Damrow.pdf",
+      "label": "G5Zach Damrow.pdf",
+      "key": "bfa440c80bce",
+      "sha256": "f30dfd4263e30d782e396b242385cfa4692aafca4196944bd6872707ead9cd3a",
+      "pages": 2,
+      "textChars": 2,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10  Commission Packet - Surplus Property (17-061-0012).pdf",
+      "label": "F10  Commission Packet - Surplus Property (17-061-0012).pdf",
+      "key": "5c3dc531a739",
+      "sha256": "f55a682e13d6ccecadbb8b21463d964f003c97ac4011e6ecb28ba9ca669d7b7a",
+      "pages": 6,
+      "textChars": 8514,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F4Commission Packet - Surplus Property (17-061-0012).pdf",
+      "label": "F4Commission Packet - Surplus Property (17-061-0012).pdf",
+      "key": "cb104d1c58b2",
+      "sha256": "4f167f7c532d7ad8aa88dfce984738da30e2a76ff3cc6c70709b71aaf5aa15a1",
+      "pages": 2,
+      "textChars": 1754,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/H3OG - 1200 South Overpass - FA signed.pdf",
+      "label": "H3OG - 1200 South Overpass - FA signed.pdf",
+      "key": "38956091452d",
+      "sha256": "6c44715242cba6d50d6475f31e47d88705016b79c36892e323c7bf98d6b4028c",
+      "pages": 6,
+      "textChars": 6,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5Commission Packet - Surplus Property 8N 1W Section 27.pdf",
+      "label": "F5Commission Packet - Surplus Property 8N 1W Section 27.pdf",
+      "key": "a451397d8f5b",
+      "sha256": "37031f501dec8ad97af3dda649d0aae9a2687aeb54abf10a4430541eca80561e",
+      "pages": 78,
+      "textChars": 78,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F14 Declare Surplus Property 17-019-0016 3.23.2021.pdf",
+      "label": "F14 Declare Surplus Property 17-019-0016 3.23.2021.pdf",
+      "key": "5e900b8e5ef3",
+      "sha256": "fd547626db2387bebe2b2c0b578c46caf39b95697d7f8954694d6bfa67fe1305",
+      "pages": 2,
+      "textChars": 2176,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F8 Surplus Property 8N 1W Section 27.pdf",
+      "label": "F8 Surplus Property 8N 1W Section 27.pdf",
+      "key": "b272bfbb3ae1",
+      "sha256": "3a6ab0cdc0ddcb1f1b4891496cd12b0792d6db7eede3b8e06391a63b2fe58c72",
+      "pages": 20,
+      "textChars": 20,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7 Surplus Property Form - Chairs.pdf",
+      "label": "F7 Surplus Property Form - Chairs.pdf",
+      "key": "93fb71c2de58",
+      "sha256": "28dd98bc7772146540091f6d244f1c54eed84e2fa9a1bc7f71f7748523739b49",
+      "pages": 1,
+      "textChars": 1,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F6Sale of Property 23-013-0225_Final for 1.26.2021 Agenda 2.pdf",
+      "label": "F6Sale of Property 23-013-0225_Final for 1.26.2021 Agenda 2.pdf",
+      "key": "09922597eb26",
+      "sha256": "d0cbebcc0978736b3dd419f7a3d6207b651eadde1ef5a2fc01d26d78d657c5d5",
+      "pages": 9,
+      "textChars": 7486,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F8 Declare Surplus Property.pdf",
+      "label": "F8 Declare Surplus Property.pdf",
+      "key": "c40760c157c0",
+      "sha256": "2a0d65a0c857333566219a192303b639bdbf432ef0be6aee69859a5b2a8eb239",
+      "pages": 2,
+      "textChars": 2528,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F10 Tax Review Recommendation to Adjust Parcel 04-024-0004 and -0030.pdf",
+      "label": "F10 Tax Review Recommendation to Adjust Parcel 04-024-0004 and -0030.pdf",
+      "key": "fe690d10626b",
+      "sha256": "5838917ceb62fab3e0c6caed9b1a84ff7bb2424b461d1a44182d0d0d7eee7857",
+      "pages": 1,
+      "textChars": 1,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5Surplus property.pdf",
+      "label": "F5Surplus property.pdf",
+      "key": "e30e5eb92611",
+      "sha256": "ffd7e721d965716ac7e52417afb0b2a64f50a07e14288f74bab295938e51665e",
+      "pages": 4,
+      "textChars": 4,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F13Commission Packet - Surplus Property (13-075-0012).pdf",
+      "label": "F13Commission Packet - Surplus Property (13-075-0012).pdf",
+      "key": "cbcc1c5dfb8a",
+      "sha256": "c3212e1e171f54aa84f2a219e3d8c7d4cad9f383633a5c2ef3972652e8d1fb78",
+      "pages": 3,
+      "textChars": 2415,
+      "hits": [
+        1
+      ]
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer Right of Way.pdf",
+      "label": "G1Froerer Right of Way.pdf",
+      "key": "f1775dca92ba",
+      "sha256": "0db93b642695f0ce37ac3b08e4a165f949b852fbf556136e8e242b6b818f98a3",
+      "pages": 20,
+      "textChars": 2342,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F7Surplus property Travis Lindsey 05-080-0006.pdf",
+      "label": "F7Surplus property Travis Lindsey 05-080-0006.pdf",
+      "key": "2bbaff5c07d5",
+      "sha256": "c755acad04756a7fae31f108cb14e9c14089229ae0b2a98f7a1ff655cf7ff003",
+      "pages": 7,
+      "textChars": 7,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Commission Memo - Surplus Property (Travis Lindsey 05-080-0006).pdf",
+      "label": "Commission Memo - Surplus Property (Travis Lindsey 05-080-0006).pdf",
+      "key": "cfc12aa73680",
+      "sha256": "1fcb3ab5fe9ddce9c03abc0c70374cd6ac9d576596ad6512cf958c1c48548b1e",
+      "pages": 2,
+      "textChars": 2196,
+      "hits": []
+    },
+    {
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/F5Surplus Property 19-025-0012 and 0057.pdf",
+      "label": "F5Surplus Property 19-025-0012 and 0057.pdf",
+      "key": "60d4ac050d3b",
+      "sha256": "f28cb5ea3b571875f7f0570df3e488edbc0583d1f4807564ecca56e3eaf022ba",
+      "pages": 3,
+      "textChars": 3,
+      "hits": []
+    },
+    {
+      "url": "https://ushe.edu/wp-content/uploads/pdf/current/sbr_2012-07-13_agenda.pdf",
+      "label": "USHE-2012-Hooper",
+      "key": "7eb415299a7e",
+      "sha256": "8a562341d8f73d4748362941963c426f18ad6d85c50ef9ab71c44a838236be2d",
+      "pages": 230,
+      "textChars": 8022,
+      "hits": []
+    }
+  ],
+  "notes": [
+    "100 county/property source packets screened using text extraction; scanned covers OCRed. This is not an exhaustive chain-of-title search.",
+    "106 pages across earlier ROW candidates OCRed without additional priced MLS tables.",
+    "USHE Hooper appraisal excerpt pp87-94 gives a value opinion, not verified closing prices or individual comparables; excluded.",
+    "Chromalox strip purchase is industrial right-of-way, not a residential-lot closing.",
+    "Wayman packet adds two distinct residential lots. Hammer adds two primary records and two excluded improvement/bundle transactions."
+  ]
+}

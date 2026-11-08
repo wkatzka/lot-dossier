@@ -1,3 +1,24 @@
+# Weber County local backtest — November 7, 2026
+
+The current requested experiment is **Weber County only**. [Open the complete local report](../../docs/research/backtest/weber/report.html). Earlier outside-county experiments below are historical work, not evidence for this product's market accuracy.
+
+Recovered seven distinct residential-use land transactions from county-hosted MLS exhibits (2019 and 2021), including rural tracts. Two additional Hammer sales are excluded for a bundled house transaction and an unallocated historic barn. The Wayman/Hammer duplicate is counted once. Original source URLs, PDF pages, hashes, transaction flags and exclusions are in `docs/research/backtest/weber/sales.json`; the packet search inventory is in `source-search.json`.
+
+The new partial-information model uses regularized log-price regression with nonlinear acreage, local submarket, water, sewer, power and date. Unknown optional inputs remain unknown. It uses a fixed penalty and does not tune on test outcomes. It is a small-sample research model, not a claim that seven sales support independently reliable adjustment coefficients.
+
+**Frozen chronological test:** first five sales train, final two test. One of two within ±$50,000; MAE $109,964. The median-price baseline MAE is $170,000; the acreage-rate baseline MAE is $63,738. The more complex model does not beat the acreage baseline on this tiny holdout. **Expanding chronological diagnostic:** zero of four within ±$50,000; MAE $199,316. Excluding the off-market and reported below-market transactions yields zero of two within the band; MAE $272,492. These overlapping runs are not independent validation.
+
+Listing-era property descriptions are reconstructed from later printed reports. This is not a historical public-as-of replay; closing statements, arm-length conditions and immutable pre-sale snapshots are not independently verified. No calibrated intervals or current-market accuracy claims are made. The successful held-out prediction is the transaction carrying a below-market remark; excluding it does not rescue performance.
+
+```sh
+python3 -B research/valuation/weber_backtest.py
+python3 -B research/valuation/test_weber_backtest.py
+```
+
+Checklist: public Weber price recovery **completed for seven research records**; local model and actual held-out test **completed**; representative dataset and reliable ±$50k performance **attempted but unresolved**; production valuation approval **blocked by insufficient representative local accuracy evidence**. Existing dossier, title, pool and permit scope remains in the project ledger.
+
+---
+
 # Qualification audit and real public-data backtests — November 7, 2026
 
 The original zero-eligible result conflated research admission, full-feature model support, and production readiness. The corrected pilot audit admits **3 of 17** candidates for retrospective research. **13** have no attributable closing price; **1** includes improvements. The three retained sales are agricultural/development tracts with documented caveats, not certified finished-lot comparables. Public-as-of replay still admits zero because publication timing is unknown. That is a different experiment.

@@ -1,0 +1,234 @@
+{
+  "scope": "Weber County residential-use land, including rural tracts; exploratory retrospective research",
+  "retrievedAt": "2026-11-07",
+  "evidenceStatus": "Explicit sold prices in county-hosted MLS exhibits; not settlement-statement verification. Listing-era attributes reconstructed from later printed reports; not immutable pre-sale snapshots. Public-as-of replay not established. Arm-length status is not independently established.",
+  "protocol": {
+    "primary": "First five chronological sales train; final two held out together",
+    "secondary": "Expanding chronological training, minimum three preceding sales",
+    "model": "Fixed alpha=10 ridge log-price regression; nonlinear log-acreage hinge, geography, utility categories, date. No test-based tuning.",
+    "toleranceDollars": 50000,
+    "productionApproved": false
+  },
+  "records": [
+    {
+      "id": "1519709",
+      "county": "Weber",
+      "address": "4160 N 3800 E, Liberty, UT",
+      "parcelIds": [
+        "22-010-0021",
+        "22-010-0023"
+      ],
+      "price": 330000,
+      "saleDate": "2019-05-22",
+      "grossAcres": 5.05,
+      "region": "Ogden Valley",
+      "water": "well",
+      "sewer": "septic_or_private",
+      "power": "connected",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "page": 14,
+      "sourceSha256": "0db93b642695f0ce37ac3b08e4a165f949b852fbf556136e8e242b6b818f98a3",
+      "flags": [
+        "Two parcels identified; confirm total sold acreage and conveyance scope"
+      ],
+      "segment": "rural_tract",
+      "sourceFeatures": {
+        "zoning": "agricultural",
+        "water": "certified well",
+        "power": "connected",
+        "sewer": "septic",
+        "terrain": "flat"
+      },
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1603980",
+      "county": "Weber",
+      "address": "3126 N River Dr, Eden, UT",
+      "parcelIds": [
+        "22-022-0187"
+      ],
+      "price": 947500,
+      "saleDate": "2019-08-19",
+      "grossAcres": 10.8,
+      "region": "Ogden Valley",
+      "water": "well_or_culinary",
+      "sewer": "septic_or_private",
+      "power": "stubbed",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "page": 12,
+      "sourceSha256": "0db93b642695f0ce37ac3b08e4a165f949b852fbf556136e8e242b6b818f98a3",
+      "flags": [
+        "Zoning labels differ between MLS exhibit and county summary",
+        "Agricultural/development parcel rather than finished residential lot"
+      ],
+      "segment": "rural_tract",
+      "sourceFeatures": {
+        "zoning": "AG in MLS; AV-3 in county summary",
+        "water": "culinary available; well; irrigation shares",
+        "power": "stubbed",
+        "sewer": "septic",
+        "terrain": "flat"
+      },
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1586757",
+      "county": "Weber",
+      "address": "8049 E 1000 N, Huntsville, UT",
+      "parcelIds": [
+        "21-104-0002"
+      ],
+      "price": 835000,
+      "saleDate": "2019-12-05",
+      "grossAcres": 17.26,
+      "region": "Ogden Valley",
+      "water": "well",
+      "sewer": "septic_or_private",
+      "power": "available",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "page": 10,
+      "sourceSha256": "0db93b642695f0ce37ac3b08e4a165f949b852fbf556136e8e242b6b818f98a3",
+      "flags": [
+        "Subdivision restrictions and usable acreage not independently verified"
+      ],
+      "segment": "rural_tract",
+      "sourceFeatures": {
+        "zoning": "AV3",
+        "water": "well; five irrigation shares",
+        "power": "available",
+        "sewer": "private",
+        "terrain": "flat"
+      },
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1697726",
+      "county": "Weber",
+      "address": "327 N 3600 W, Weber County, UT",
+      "parcelIds": [
+        "15-028-0056"
+      ],
+      "price": 159900,
+      "saleDate": "2021-02-23",
+      "grossAcres": 0.92,
+      "region": "Western Weber",
+      "water": "connected",
+      "sewer": "septic_or_private",
+      "power": "available",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+      "page": 25,
+      "sourceSha256": "485a8adb1c2c8e9f72a44f2222ba8d3d44a56fd62857de46f5d5bb0ba975875f",
+      "flags": [
+        "Gas availability contradictory; not a model input",
+        "Listing describes ready-to-build lot; no independent permit verification"
+      ],
+      "segment": "residential_lot",
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1735330",
+      "county": "Weber",
+      "address": "473 N 2475 W, Ogden, UT",
+      "parcelIds": [
+        "15-655-0007"
+      ],
+      "price": 132500,
+      "saleDate": "2021-04-14",
+      "grossAcres": 0.67,
+      "region": "Western Weber",
+      "water": "available",
+      "sewer": "unknown",
+      "power": "unknown",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+      "page": 21,
+      "sourceSha256": "3e5b7641b25787c45f73ae4c4ce6f22be190aa8652b1e043e834eb4b6e98a9fb",
+      "flags": [
+        "Off-market buyer approached owner; not independently confirmed arm length",
+        "Connection fees identified; connection status not specified"
+      ],
+      "segment": "residential_lot",
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1766585",
+      "county": "Weber",
+      "address": "3929 N 3175 W, Ogden, UT",
+      "parcelIds": [
+        "19-010-0027"
+      ],
+      "price": 475000,
+      "saleDate": "2021-11-04",
+      "grossAcres": 5.1,
+      "region": "Western Weber",
+      "water": "available",
+      "sewer": "septic_or_private",
+      "power": "available",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+      "page": 26,
+      "sourceSha256": "485a8adb1c2c8e9f72a44f2222ba8d3d44a56fd62857de46f5d5bb0ba975875f",
+      "flags": [
+        "Additional neighboring land marketed separately; no approved density inferred",
+        "Private drive and irrigation shares; costs and shares quantity unknown"
+      ],
+      "segment": "rural_tract",
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    },
+    {
+      "id": "1779537",
+      "county": "Weber",
+      "address": "1857 N 2750 W, Plain City, UT",
+      "parcelIds": [
+        "15-768-0002"
+      ],
+      "price": 135000,
+      "saleDate": "2021-12-17",
+      "grossAcres": 0.4,
+      "region": "Western Weber",
+      "water": "unknown",
+      "sewer": "available",
+      "power": "available",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+      "page": 22,
+      "sourceSha256": "3e5b7641b25787c45f73ae4c4ce6f22be190aa8652b1e043e834eb4b6e98a9fb",
+      "flags": [
+        "Closing remark says sold less than market value; retained with sensitivity exclusion",
+        "FHA reported on land sale; terms not independently reconciled"
+      ],
+      "segment": "residential_lot",
+      "priceEvidence": "County-hosted MLS sold report; extracted table checked against source page. Not independent settlement verification."
+    }
+  ],
+  "exclusions": [
+    {
+      "id": "1739371",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+      "page": 24,
+      "price": 440000,
+      "reason": "Explicitly sold with house MLS1739715; independent land allocation unavailable"
+    },
+    {
+      "id": "1766052",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+      "page": 27,
+      "price": 505000,
+      "reason": "Historic barn on site; improvement contribution unavailable",
+      "sensitivityEligible": true
+    },
+    {
+      "id": "1573992",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "page": 16,
+      "price": 750000,
+      "reason": "House and barns; seller financing; not standalone land price"
+    }
+  ],
+  "duplicates": [
+    {
+      "id": "1697726",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+      "page": 23,
+      "reason": "Same transaction as Hammer p25; counted once"
+    }
+  ]
+}

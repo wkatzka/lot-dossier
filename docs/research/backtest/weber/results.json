@@ -1,0 +1,540 @@
+{
+  "model": "weber-partial-information-ridge-v1",
+  "alpha": 10.0,
+  "inputSha256": "62046363553ab87fad06360b8202ee9d597425abb2bf54f66c1ffb52022d8240",
+  "mode": "retrospective_reconstructed_attributes",
+  "marketAccuracyEstablished": false,
+  "county": "Weber",
+  "records": 7,
+  "primary": {
+    "protocol": "Frozen first five sales; final two held out; no test tuning",
+    "metrics": {
+      "n": 2,
+      "within50k": 1,
+      "hitRate": 0.5,
+      "mae": 109963.89220250571,
+      "medianAbsoluteError": 109963.89220250571,
+      "rmse": 131604.97101748272,
+      "bias": -72303.60162666983,
+      "hitRateWilson95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "medianBaseline": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 170000.0,
+      "medianAbsoluteError": 170000.0,
+      "rmse": 171828.40277439583,
+      "bias": 25000.0,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "acreageBaseline": {
+      "n": 2,
+      "within50k": 1,
+      "hitRate": 0.5,
+      "mae": 63738.425925925956,
+      "medianAbsoluteError": 63738.425925925956,
+      "rmse": 73285.62042394468,
+      "bias": -63738.425925925956,
+      "hitRateWilson95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 292732.50617082446,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "supportWarnings": [],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.08398984762956666,
+          "logAcres": 0.20279718354486406,
+          "marketYears": -0.08531072818126653,
+          "power=available": 0.0045501434940998925,
+          "power=connected": -0.02326148700635105,
+          "power=stubbed": 0.051210574352121105,
+          "power=unknown": -0.03249923083986995,
+          "region=Ogden Valley": 0.06409540994716632,
+          "region=Western Weber": -0.06409540994716632,
+          "sewer=septic_or_private": 0.03249923083986995,
+          "sewer=unknown": -0.03249923083986995,
+          "water=available": -0.03249923083986995,
+          "water=connected": -0.03159617910729638,
+          "water=well": 0.012884835595045222,
+          "water=well_or_culinary": 0.051210574352121105
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.03225208787146373,
+          "logAcres": 0.07230676029973214,
+          "marketYears": -0.13374106216726409,
+          "power=available": 0.0027300860964599356,
+          "power=connected": 0.00465229740127021,
+          "power=stubbed": -0.010242114870424222,
+          "power=unknown": 0.00649984616797399,
+          "region=Ogden Valley": -0.038457245968299796,
+          "region=Western Weber": -0.038457245968299796,
+          "sewer=septic_or_private": 0.006499846167973988,
+          "sewer=unknown": 0.00649984616797399,
+          "water=available": -0.02599938467189596,
+          "water=connected": 0.006319235821459277,
+          "water=well": -0.005153934238018089,
+          "water=well_or_culinary": -0.010242114870424222
+        },
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 447430.5555555555,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "date": "2021-11-04",
+        "actual": 475000,
+        "segment": "rural_tract",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 26,
+        "error": -182267.49382917554,
+        "absoluteError": 182267.49382917554,
+        "within50k": false
+      },
+      {
+        "estimate": 172660.29057583588,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "supportWarnings": [
+          "unseen_water",
+          "unseen_sewer",
+          "acreage_extrapolation"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.08398984762956666,
+          "logAcres": 0.20279718354486406,
+          "marketYears": -0.08531072818126653,
+          "power=available": 0.0045501434940998925,
+          "power=connected": -0.02326148700635105,
+          "power=stubbed": 0.051210574352121105,
+          "power=unknown": -0.03249923083986995,
+          "region=Ogden Valley": 0.06409540994716632,
+          "region=Western Weber": -0.06409540994716632,
+          "sewer=septic_or_private": 0.03249923083986995,
+          "sewer=unknown": -0.03249923083986995,
+          "water=available": -0.03249923083986995,
+          "water=connected": -0.03159617910729638,
+          "water=well": 0.012884835595045222,
+          "water=well_or_culinary": 0.051210574352121105
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.03391530752073497,
+          "logAcres": -0.4439198122070237,
+          "marketYears": -0.14378448807224553,
+          "power=available": 0.0027300860964599356,
+          "power=connected": 0.00465229740127021,
+          "power=stubbed": -0.010242114870424222,
+          "power=unknown": 0.00649984616797399,
+          "region=Ogden Valley": -0.038457245968299796,
+          "region=Western Weber": -0.038457245968299796,
+          "sewer=septic_or_private": -0.02599938467189596,
+          "sewer=unknown": 0.00649984616797399,
+          "water=available": 0.00649984616797399,
+          "water=connected": 0.006319235821459277,
+          "water=well": -0.005153934238018089,
+          "water=well_or_culinary": -0.010242114870424222
+        },
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 35092.59259259259,
+        "id": "1779537",
+        "address": "1857 N 2750 W, Plain City, UT",
+        "date": "2021-12-17",
+        "actual": 135000,
+        "segment": "residential_lot",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+        "page": 22,
+        "error": 37660.29057583588,
+        "absoluteError": 37660.29057583588,
+        "within50k": true
+      }
+    ]
+  },
+  "rolling": {
+    "protocol": "Expanding window; minimum three preceding sales; overlaps primary and is not independent replication",
+    "metrics": {
+      "n": 4,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 199316.03382368936,
+      "medianAbsoluteError": 158133.8925394939,
+      "rmse": 242050.62044583584,
+      "bias": 108182.28690910156,
+      "hitRateWilson95": [
+        0.0,
+        0.48990002040399916
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 584106.843399024,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757"
+        ],
+        "supportWarnings": [
+          "unseen_region",
+          "unseen_water",
+          "acreage_extrapolation"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.049095309352169325,
+          "logAcres": 0.04909530935216932,
+          "marketYears": 0.01874212867452421,
+          "power=available": 0.02066460217269055,
+          "power=connected": -0.05184028610920663,
+          "power=stubbed": 0.031175683936516083,
+          "region=Ogden Valley": 0.0,
+          "sewer=septic_or_private": 0.0,
+          "water=well": -0.03117568393651608,
+          "water=well_or_culinary": 0.031175683936516083
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.033041344906513934,
+          "logAcres": -0.11615084298572,
+          "marketYears": 0.028102502771839635,
+          "power=available": 0.013776401448460368,
+          "power=connected": 0.017280095369735543,
+          "power=stubbed": -0.01039189464550536,
+          "region=Ogden Valley": -0.0,
+          "sewer=septic_or_private": 0.0,
+          "water=well": 0.02078378929101072,
+          "water=well_or_culinary": -0.01039189464550536
+        },
+        "medianBaseline": 835000.0,
+        "acreageBaseline": 60118.81188118813,
+        "id": "1697726",
+        "address": "327 N 3600 W, Weber County, UT",
+        "date": "2021-02-23",
+        "actual": 159900,
+        "segment": "residential_lot",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 25,
+        "error": 424206.843399024,
+        "absoluteError": 424206.843399024,
+        "within50k": false
+      },
+      {
+        "estimate": 266500.2912498123,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726"
+        ],
+        "supportWarnings": [
+          "unseen_water",
+          "unseen_sewer",
+          "unseen_power",
+          "acreage_extrapolation"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.07810438023380147,
+          "logAcres": 0.1634842422809134,
+          "marketYears": -0.05889732223932773,
+          "power=available": -0.015928206274560396,
+          "power=connected": -0.030367084197465713,
+          "power=stubbed": 0.04629529047202611,
+          "region=Ogden Valley": 0.05043648243012641,
+          "region=Western Weber": -0.05043648243012641,
+          "sewer=septic_or_private": 0.0,
+          "water=connected": -0.05043648243012641,
+          "water=well": 0.00414119195810031,
+          "water=well_or_culinary": 0.04629529047202611
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.03942342659717624,
+          "logAcres": -0.3419213550041926,
+          "marketYears": -0.07429689588438126,
+          "power=available": 0.007964103137280198,
+          "power=connected": 0.007591771049366428,
+          "power=stubbed": -0.011573822618006527,
+          "region=Ogden Valley": -0.03782736182259481,
+          "region=Western Weber": -0.03782736182259481,
+          "sewer=septic_or_private": -0.0,
+          "water=connected": 0.012609120607531603,
+          "water=well": -0.002070595979050155,
+          "water=well_or_culinary": -0.011573822618006527
+        },
+        "medianBaseline": 582500.0,
+        "acreageBaseline": 51281.13540520719,
+        "id": "1735330",
+        "address": "473 N 2475 W, Ogden, UT",
+        "date": "2021-04-14",
+        "actual": 132500,
+        "segment": "residential_lot",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+        "page": 21,
+        "error": 134000.2912498123,
+        "absoluteError": 134000.2912498123,
+        "within50k": false
+      },
+      {
+        "estimate": 292732.50617082446,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330"
+        ],
+        "supportWarnings": [],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.08398984762956666,
+          "logAcres": 0.20279718354486406,
+          "marketYears": -0.08531072818126653,
+          "power=available": 0.0045501434940998925,
+          "power=connected": -0.02326148700635105,
+          "power=stubbed": 0.051210574352121105,
+          "power=unknown": -0.03249923083986995,
+          "region=Ogden Valley": 0.06409540994716632,
+          "region=Western Weber": -0.06409540994716632,
+          "sewer=septic_or_private": 0.03249923083986995,
+          "sewer=unknown": -0.03249923083986995,
+          "water=available": -0.03249923083986995,
+          "water=connected": -0.03159617910729638,
+          "water=well": 0.012884835595045222,
+          "water=well_or_culinary": 0.051210574352121105
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.03225208787146373,
+          "logAcres": 0.07230676029973214,
+          "marketYears": -0.13374106216726409,
+          "power=available": 0.0027300860964599356,
+          "power=connected": 0.00465229740127021,
+          "power=stubbed": -0.010242114870424222,
+          "power=unknown": 0.00649984616797399,
+          "region=Ogden Valley": -0.038457245968299796,
+          "region=Western Weber": -0.038457245968299796,
+          "sewer=septic_or_private": 0.006499846167973988,
+          "sewer=unknown": 0.00649984616797399,
+          "water=available": -0.02599938467189596,
+          "water=connected": 0.006319235821459277,
+          "water=well": -0.005153934238018089,
+          "water=well_or_culinary": -0.010242114870424222
+        },
+        "medianBaseline": 330000.0,
+        "acreageBaseline": 447430.5555555555,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "date": "2021-11-04",
+        "actual": 475000,
+        "segment": "rural_tract",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 26,
+        "error": -182267.49382917554,
+        "absoluteError": 182267.49382917554,
+        "within50k": false
+      },
+      {
+        "estimate": 191789.5068167456,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726",
+          "1735330",
+          "1766585"
+        ],
+        "supportWarnings": [
+          "unseen_water",
+          "unseen_sewer",
+          "acreage_extrapolation"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.07308315465893958,
+          "logAcres": 0.22378024416029157,
+          "marketYears": -0.04781275147439399,
+          "power=available": 0.018629714179014045,
+          "power=connected": -0.02522177975610545,
+          "power=stubbed": 0.047281793214716525,
+          "power=unknown": -0.04068972763762512,
+          "region=Ogden Valley": 0.05138118977324095,
+          "region=Western Weber": -0.05138118977324095,
+          "sewer=septic_or_private": 0.04068972763762512,
+          "sewer=unknown": -0.04068972763762512,
+          "water=available": -0.010671489055101775,
+          "water=connected": -0.04070970071813918,
+          "water=well": 0.004099396558524438,
+          "water=well_or_culinary": 0.047281793214716525
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.024833838089320864,
+          "logAcres": -0.5031494336298684,
+          "marketYears": -0.06809199057795284,
+          "power=available": 0.009314857089507023,
+          "power=connected": 0.004203629959350908,
+          "power=stubbed": -0.00788029886911942,
+          "power=unknown": 0.00678162127293752,
+          "region=Ogden Valley": -0.025690594886620476,
+          "region=Western Weber": -0.025690594886620476,
+          "sewer=septic_or_private": -0.0339081063646876,
+          "sewer=unknown": 0.00678162127293752,
+          "water=available": 0.003557163018367258,
+          "water=connected": 0.006784950119689864,
+          "water=well": -0.0013664655195081458,
+          "water=well_or_culinary": -0.00788029886911942
+        },
+        "medianBaseline": 402500.0,
+        "acreageBaseline": 36173.74727668845,
+        "id": "1779537",
+        "address": "1857 N 2750 W, Plain City, UT",
+        "date": "2021-12-17",
+        "actual": 135000,
+        "segment": "residential_lot",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F12%20Stephen%20Wayman.pdf",
+        "page": 22,
+        "error": 56789.50681674559,
+        "absoluteError": 56789.50681674559,
+        "within50k": false
+      }
+    ]
+  },
+  "sensitivity": {
+    "protocol": "Exclude off-market MLS1735330 and below-market remark MLS1779537; rolling min three; not selected for better scores",
+    "metrics": {
+      "n": 2,
+      "within50k": 0,
+      "hitRate": 0.0,
+      "mae": 272492.1614812113,
+      "medianAbsoluteError": 272492.1614812113,
+      "rmse": 311880.302004031,
+      "bias": 151714.68191781268,
+      "hitRateWilson95": [
+        0.0,
+        0.6576280471103807
+      ]
+    },
+    "predictions": [
+      {
+        "estimate": 584106.843399024,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757"
+        ],
+        "supportWarnings": [
+          "unseen_region",
+          "unseen_water",
+          "acreage_extrapolation"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.049095309352169325,
+          "logAcres": 0.04909530935216932,
+          "marketYears": 0.01874212867452421,
+          "power=available": 0.02066460217269055,
+          "power=connected": -0.05184028610920663,
+          "power=stubbed": 0.031175683936516083,
+          "region=Ogden Valley": 0.0,
+          "sewer=septic_or_private": 0.0,
+          "water=well": -0.03117568393651608,
+          "water=well_or_culinary": 0.031175683936516083
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.033041344906513934,
+          "logAcres": -0.11615084298572,
+          "marketYears": 0.028102502771839635,
+          "power=available": 0.013776401448460368,
+          "power=connected": 0.017280095369735543,
+          "power=stubbed": -0.01039189464550536,
+          "region=Ogden Valley": -0.0,
+          "sewer=septic_or_private": 0.0,
+          "water=well": 0.02078378929101072,
+          "water=well_or_culinary": -0.01039189464550536
+        },
+        "medianBaseline": 835000.0,
+        "acreageBaseline": 60118.81188118813,
+        "id": "1697726",
+        "address": "327 N 3600 W, Weber County, UT",
+        "date": "2021-02-23",
+        "actual": 159900,
+        "segment": "residential_lot",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 25,
+        "error": 424206.843399024,
+        "absoluteError": 424206.843399024,
+        "within50k": false
+      },
+      {
+        "estimate": 354222.52043660136,
+        "trainingIds": [
+          "1519709",
+          "1603980",
+          "1586757",
+          "1697726"
+        ],
+        "supportWarnings": [
+          "unseen_water"
+        ],
+        "coefficientByFeature": {
+          "largeTractHinge": 0.07810438023380147,
+          "logAcres": 0.1634842422809134,
+          "marketYears": -0.05889732223932773,
+          "power=available": -0.015928206274560396,
+          "power=connected": -0.030367084197465713,
+          "power=stubbed": 0.04629529047202611,
+          "region=Ogden Valley": 0.05043648243012641,
+          "region=Western Weber": -0.05043648243012641,
+          "sewer=septic_or_private": 0.0,
+          "water=connected": -0.05043648243012641,
+          "water=well": 0.00414119195810031,
+          "water=well_or_culinary": 0.04629529047202611
+        },
+        "logContributionsRelativeToTrainingMean": {
+          "largeTractHinge": -0.03787675466520716,
+          "logAcres": -0.010094428347406278,
+          "marketYears": -0.1071923202151762,
+          "power=available": -0.007964103137280198,
+          "power=connected": 0.007591771049366428,
+          "power=stubbed": -0.011573822618006527,
+          "region=Ogden Valley": -0.03782736182259481,
+          "region=Western Weber": -0.03782736182259481,
+          "sewer=septic_or_private": 0.0,
+          "water=connected": 0.012609120607531603,
+          "water=well": -0.002070595979050155,
+          "water=well_or_culinary": -0.011573822618006527
+        },
+        "medianBaseline": 582500.0,
+        "acreageBaseline": 390348.9411441144,
+        "id": "1766585",
+        "address": "3929 N 3175 W, Ogden, UT",
+        "date": "2021-11-04",
+        "actual": 475000,
+        "segment": "rural_tract",
+        "source": "https://www.webercountyutah.gov/commission/documents/uploads/F11%20%20Norman%20Hammer%20ROW.pdf",
+        "page": 26,
+        "error": -120777.47956339864,
+        "absoluteError": 120777.47956339864,
+        "within50k": false
+      }
+    ]
+  },
+  "limitations": [
+    "Only seven research transactions; this is a feasibility experiment, not validated market accuracy.",
+    "Training prices are from earlier sales, but source packets were published later. No historical publicly-available-as-of replay established.",
+    "County-hosted MLS sold reports support recorded amounts; closing statements and arm-length status not independently verified.",
+    "Valley tracts and western county lots differ; size, geography and date are confounded in this sample.",
+    "No interval calibration set; no calibrated prediction interval provided.",
+    "No current 2026 accuracy or \u00b1$50k guarantee can be inferred.",
+    "Hyperparameter is a fixed engineering choice, not empirically validated on independent Weber data."
+  ]
+}
