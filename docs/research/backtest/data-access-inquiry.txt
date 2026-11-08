@@ -1,0 +1,22 @@
+DRAFT ONLY — NOT SENT
+Recipient: UtahRealEstate.com Data Services / Data Licensing, through the official vendor contact channel
+Subject: Historical land-sale data licensing and evaluation access
+
+Hello,
+
+I am evaluating access to historical residential land-sale data for internal valuation research in northern Utah, initially covering Eden, Liberty and Huntsville.
+
+Could you confirm whether a vendor license or broker-sponsored arrangement can provide:
+
+- Actual closed-sale prices and dates, stable listing and parcel identifiers, sale terms/concessions, and property subtype for approximately 2016–2026;
+- Historical property characteristics and listing/status change history, with timestamps identifying what was known before a sale rather than only today's fields;
+- Permission for automated retrieval, retained historical records, valuation development and backtesting, and delivery of derived estimates to customers? Please distinguish these from permission to display individual comparable-sale records.
+
+Before selecting a license, is a limited evaluation extract or coverage report available showing closed vacant-land counts by year, geographic coverage, actual-price completeness and historical-field availability?
+
+Please also provide applicable eligibility or sponsoring-broker requirements, API documentation, setup/recurring costs, and retention/deletion obligations.
+
+There is no need for owner contact information, photographs or other personal data in the evaluation extract.
+
+Thank you,
+Will
