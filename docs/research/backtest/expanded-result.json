@@ -1,0 +1,265 @@
+{
+  "scope": "Ogden Valley residential land",
+  "asOf": "2026-11-07",
+  "testStart": "2019-01-01",
+  "method": "unit-comparison-v1; zero-adjustment research baseline",
+  "status": "blocked_no_scorable_holdout",
+  "marketAccuracyEstablished": false,
+  "screenedRecords": 17,
+  "eligibleRecords": 0,
+  "predictions": [],
+  "abstentions": [],
+  "excluded": [
+    {
+      "id": "era-2054436",
+      "source": "https://brittmccarthy-erabrokersconsolidated.sites.erarealestate.com/listing/UT/Huntsville/2736-N-Evergreen-Park-Dr-300-84317/203610012",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "homes-sp7sqjzcrc51p",
+      "source": "https://www.homes.com/property/946-mill-rd-huntsville-ut-unit-116/sp7sqjzcrc51p/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "invalid_or_future_sale_date",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "movoto-lj7q1my7ofnw",
+      "source": "https://www.movoto.com/eden-ut/4748-e-osprey-ranch-dr-eden-ut-84310/pid_lj7q1my7ofnw/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "invalid_or_future_sale_date",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-2053354466",
+      "source": "https://www.zillow.com/homedetails/1628-S-Toliver-Ln-Huntsville-UT-84317/2053354466_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-112185949",
+      "source": "https://www.zillow.com/homedetails/4964-E-Whispering-Pines-Ln-Eden-UT-84310/112185949_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-112184530",
+      "source": "https://www.zillow.com/homedetails/13403-E-Oak-Canyon-Way-Huntsville-UT-84317/112184530_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-112187420",
+      "source": "https://www.zillow.com/homedetails/3896-N-Eagle-Ridge-Dr-Eden-UT-84310/112187420_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-12019045",
+      "source": "https://www.zillow.com/homedetails/3568-N-Elkridge-Trl-Eden-UT-84310/12019045_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "zillow-102984617",
+      "source": "https://www.zillow.com/homedetails/3957-N-Elk-Ridge-Trl-Eden-UT-84310/102984617_zpid/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "redfin-71389620",
+      "source": "https://www.redfin.com/UT/Eden/5630-E-Highland-View-Ct-84310/home/71389620",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "redfin-95595174",
+      "source": "https://www.redfin.com/UT/Eden/4032-N-Elk-Ridge-Trl-84310/home/95595174",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "coldwell-2014601",
+      "source": "https://www.coldwellbankerhomes.com/ut/eden/1207-n-eden-view-ln-41/pid_60785898/",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "realtor-M96426-02219",
+      "source": "https://www.realtor.com/realestateandhomes-detail/73-N-River-View-Rd_Huntsville_UT_84317_M96426-02219",
+      "reasons": [
+        "missing_property_identity",
+        "no_verified_closing_price",
+        "unverified_original_source",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified",
+        "target_specific_adjustments_not_supported_by_this_baseline"
+      ]
+    },
+    {
+      "id": "county-mls-1586757",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "reasons": [
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified"
+      ]
+    },
+    {
+      "id": "county-mls-1603980",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "reasons": [
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified"
+      ]
+    },
+    {
+      "id": "county-mls-1519709",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "reasons": [
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified"
+      ]
+    },
+    {
+      "id": "county-mls-1573992",
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "reasons": [
+        "not_vacant_land",
+        "reuse_not_established",
+        "transaction_conditions_unverified",
+        "sale_publication_date_unverified",
+        "pre_sale_features_unverified",
+        "usable_area_unverified"
+      ]
+    }
+  ],
+  "metrics": null,
+  "simplePriceBaselineMetrics": null,
+  "intervalCoverage": null,
+  "limitations": [
+    "A sparse or selectively public sample cannot establish pilot-wide accuracy.",
+    "No independent interval calibration dataset supplied; interval coverage is unmeasured.",
+    "No target-specific site or time adjustments calibrated.",
+    "Residual development budgets require actual project-cost outcomes, not land sales alone."
+  ]
+}

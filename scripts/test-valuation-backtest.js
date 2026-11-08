@@ -6,6 +6,7 @@ const future=structuredClone(base);future.records[0].availableAt='2026-01-01';as
 const self=structuredClone(base);self.records[0].propertyKey='target';assert.equal(run(self).predictions.length,0);
 const leak=structuredClone(base);leak.records[0].featuresAsOf='2025-01-01';assert.equal(run(leak).predictions.length,0);
 const unknown=structuredClone(base);unknown.records.forEach(r=>r.priceType='asking_price');assert.equal(run(unknown).metrics,null);
+const improved=structuredClone(base);improved.records[0].propertyType='improved';assert.equal(run(improved).predictions.length,0);assert.ok(run(improved).excluded[0].reasons.includes('not_vacant_land'));
 assert.equal(metrics([]),null);assert.throws(()=>run({...base,testStart:'2025-02-30'}));
 assert.equal(run({...base,records:[]}).status,'blocked_no_scorable_holdout');
 console.log('Backtest mechanics passed with synthetic fixtures: chronology, publication delay, repeat-parcel leakage, feature leakage, price-type rejection and error arithmetic. These tests establish no real market accuracy.');

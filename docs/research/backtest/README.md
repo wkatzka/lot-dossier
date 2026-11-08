@@ -1,4 +1,41 @@
-# Pilot valuation backtest attempt — 2026-11-07
+# Pilot valuation research and backtest — 2026-11-07
+
+## Latest result: expanded search and real-sale diagnostic
+
+The expanded audit contains **17 candidate records**, including six Zillow leads, four additional cross-source leads, the original three candidates and four county-hosted sold reports. Exact URLs, sale events, price classifications and exclusions are in `expanded-public-source-audit.json`; results are in `expanded-result.json`. This is a bounded evidence audit, not a census of the market.
+
+**The strict candidate-model backtest still has zero eligible holdouts.** Four county records have source-verified sold prices; one includes buildings. For the other three, usable acreage, transaction conditions and historical public availability remain unresolved. The ten additional property leads did not supply attributable closing prices. A search snippet mentioning a numeric last-sold price did not establish that amount for its target property; direct Redfin histories withheld the prices. Zillow also labels at least one now-improved property VacantLand, which prevents blindly using today's attributes for an earlier land sale.
+
+A separate, explicitly retrospective **gross-acre diagnostic** uses the three county land records. It holds out the latest sale and calculates a median unit-price estimate from the two earlier sales:
+
+| Held-out sale | Reported sale | Gross-acre diagnostic | Difference |
+|---|---:|---:|---:|
+| MLS 1586757, 2019-12-05 | $835,000 | $1,321,063 | +$486,063 / +58.2% |
+
+This is **one diagnostic observation**, not Cornerpin's measured market accuracy. It uses gross acreage, not the production model's usable acreage, and only two preceding sales. The reports became public after these transactions; the result cannot be described as a public-information replay. Agricultural/development tracts, unresolved parcel scope and unadjusted services/entitlements limit comparability. The result is evidence against relying on this simple calculation, not a basis for selecting a new model or publishing a valuation. An unscaled median-price baseline predicts $638,750, but its smaller error on this one target does not establish superiority.
+
+The existing strict evaluation gates and production valuation remain closed. No Zillow scraping service, licensed feed or live valuation has been deployed by this research.
+
+### Reproduce the latest outputs
+
+```sh
+node scripts/backtest-valuations.js docs/research/backtest/expanded-public-source-audit.json docs/research/backtest/expanded-result.json
+node scripts/diagnose-historical-land-sales.js docs/research/backtest/historical-sales-seed.json docs/research/backtest/historical-diagnostic-result.json
+node scripts/test-valuation-backtest.js
+node scripts/test-historical-land-diagnostic.js
+```
+
+### Capability checklist
+
+- Public-source candidate discovery and source-linked exclusions: implemented; bounded coverage, ongoing source acquisition remains necessary.
+- Verified historical closing-price dataset: attempted, incomplete. Four source-verified reports found, only three are land-only candidates; not independently settlement-verified or representative.
+- Pre-sale property information: attempted, unresolved. Listing-era attributes exist for the county records, but usable-area, scope and availability reconciliation are missing.
+- Chronological evaluation tooling and leakage checks: implemented and tested. A retrospective gross-acre sanity check has also been executed, separately labeled.
+- Defensible pilot valuation accuracy, adjustment calibration and interval coverage: **blocked by insufficient qualified historical observations**, not completed by the diagnostic.
+
+Additional sources checked include a PCMLS Area 57 land-statistics report (aggregate figures, no identifiable closings), public auction results (high bids, not confirmed ordinary residential closings), broker sold pages and RealtyHop reference prices. None was silently substituted for a transaction-level outcome. Removing the commercial-reuse gate alone would not make this dataset backtest-ready.
+
+## Earlier audit and retained methodology
 
 **Result: blocked; zero scorable holdouts. No market-accuracy percentage established.**
 

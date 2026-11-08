@@ -1,0 +1,70 @@
+{
+  "status": "retrospective_sanity_check_only",
+  "method": "median price per gross acre; no adjustments; at least two earlier sales",
+  "productionModelTested": false,
+  "marketAccuracyEstablished": false,
+  "publicInformationReplay": false,
+  "screenedRecords": 4,
+  "includedRecords": 3,
+  "excluded": [
+    {
+      "id": "1573992",
+      "reasons": [
+        "includes_buildings"
+      ]
+    }
+  ],
+  "abstentions": [
+    {
+      "id": "1519709",
+      "reason": "fewer_than_two_prior_sales"
+    },
+    {
+      "id": "1603980",
+      "reason": "fewer_than_two_prior_sales"
+    }
+  ],
+  "predictions": [
+    {
+      "id": "1586757",
+      "address": "8049 E 1000 N, Huntsville, UT",
+      "saleDate": "2019-12-05",
+      "grossAcres": 17.26,
+      "actual": 835000,
+      "predicted": 1321063.2792445912,
+      "error": 486063.27924459125,
+      "absolutePercentageError": 58.211171167016914,
+      "simplePriceBaseline": 638750,
+      "comparableIds": [
+        "1519709",
+        "1603980"
+      ],
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+      "page": 10
+    }
+  ],
+  "descriptiveMetrics": {
+    "n": 1,
+    "meanAbsoluteError": 486063.27924459125,
+    "medianAbsolutePercentageError": 58.211171167016914,
+    "meanBias": 486063.27924459125,
+    "within10Percent": 0,
+    "within20Percent": 0
+  },
+  "simplePriceBaselineMetrics": {
+    "n": 1,
+    "meanAbsoluteError": 196250,
+    "medianAbsolutePercentageError": 23.502994011976046,
+    "meanBias": -196250,
+    "within10Percent": 0,
+    "within20Percent": 0
+  },
+  "limitations": [
+    "Only three source-selected land observations, not a representative sample. One scored target is not an accuracy estimate.",
+    "Source reports were published after these transactions; this cannot establish what a public-data product could predict at the time.",
+    "Gross acreage is used explicitly, not substituted for usable acreage in the production model.",
+    "Historical parcel scope, transaction conditions, entitlements and services are not independently reconciled.",
+    "No adjustments for time, size, location, water rights or development status; no interval calibration.",
+    "These large agricultural/development tracts do not establish accuracy for finished residential lots."
+  ]
+}
