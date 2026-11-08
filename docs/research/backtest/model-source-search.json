@@ -1,0 +1,45 @@
+{
+  "retrievedAt": "2026-11-07",
+  "sources": [
+    {
+      "source": "https://www.utah.gov/pmn/files/1315935.pdf",
+      "localSha256": "73df4bd3feecdee39cc026786e750e1b0d79e6b49a88b6bf1f997c0652557e52",
+      "page": 105,
+      "method": "Downloaded text and visually inspected comparable table",
+      "finding": "Six commercial-land sale prices in South Jordan, Salt Lake County, Layton, Roy, Clinton and Farmington; excluded from pilot residential-lot outcomes."
+    },
+    {
+      "source": "https://www.mountainluxury.com/blog/ogden-valley-real-estate-update-2023-market/",
+      "finding": "Local land-sale counts and medians for 2019\u20132023, not property-level closings. Context only; cannot recover individual prices or calibrate property adjustments from medians."
+    },
+    {
+      "source": "https://www.acrevalue.com/sales/UT/Weber/",
+      "finding": "Public page describes sale-price coverage but returns no identifiable outcomes in accessible content; no subscription or account obtained."
+    },
+    {
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/H4%20136-Purchase%20Contract-Edgell.pdf",
+      "method": "Downloaded scanned PDF; OCR first-page project/property identification",
+      "finding": "2550 South western Weber County transportation corridor acquisition; outside pilot. Remaining pages not fully OCRed."
+    },
+    {
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/H5%20171-Purchase%20Contract%20%282%29-Mestas.pdf",
+      "method": "Downloaded scanned PDF; OCR first-page project/property identification",
+      "finding": "2550 South western Weber County transportation corridor acquisition; outside pilot. Remaining pages not fully OCRed."
+    },
+    {
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G2Purchase%20Contract%20William%20Anderson.pdf",
+      "method": "Downloaded scanned PDF; OCR first-page project/property identification",
+      "finding": "2550 South western Weber County transportation corridor acquisition; outside pilot. Remaining pages not fully OCRed."
+    },
+    {
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G2154-Purchase%20Contract%20Anderson.pdf",
+      "method": "Downloaded scanned PDF; OCR first-page project/property identification",
+      "finding": "2550 South western Weber County transportation corridor acquisition; outside pilot. Remaining pages not fully OCRed."
+    },
+    {
+      "source": "https://www.webercountyutah.gov/commission/documents/uploads/G2164-Purchase%20Contract%20Stauffer.pdf",
+      "method": "Downloaded scanned PDF; OCR first-page project/property identification",
+      "finding": "2550 South western Weber County transportation corridor acquisition; outside pilot. Remaining pages not fully OCRed."
+    }
+  ]
+}

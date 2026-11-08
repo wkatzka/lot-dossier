@@ -1,5 +1,9 @@
 # Pilot valuation research and backtest — 2026-11-07
 
+## Multi-attribute model implementation
+
+The requested hedonic/comparable-adjustment model now has its own implementation and chronological evaluation pipeline in `research/valuation/`. See `../../../research/valuation/README.md`. Its results are `hedonic-public-result.json` and `hedonic-retrospective-result.json`. Both evaluated the 17-candidate evidence input and stopped before fitting because qualified data are insufficient. The earlier 58.2% gross-acre diagnostic below is **not a test of this model** and has no role in its calibration.
+
 ## Latest result: expanded search and real-sale diagnostic
 
 The expanded audit contains **17 candidate records**, including six Zillow leads, four additional cross-source leads, the original three candidates and four county-hosted sold reports. Exact URLs, sale events, price classifications and exclusions are in `expanded-public-source-audit.json`; results are in `expanded-result.json`. This is a bounded evidence audit, not a census of the market.
