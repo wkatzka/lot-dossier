@@ -208,7 +208,7 @@
       if (dbp) return dbp;
       dbp = new Promise(function (res) {
         try {
-          var rq = indexedDB.open('lot-dossier', 1);
+          var rq = indexedDB.open(window.ProjectStore && window.ProjectStore.owner() ? 'lot-dossier-'+window.ProjectStore.owner() : 'lot-dossier', 1);
           rq.onupgradeneeded = function () { rq.result.createObjectStore('items'); };
           rq.onsuccess = function () { res(rq.result); };
           rq.onerror = function () { res(null); };
@@ -219,6 +219,7 @@
     function fresh() { return { status: 'todo', files: [] }; }
     function valid(v) { return v && typeof v === 'object' && typeof v.status === 'string' && Array.isArray(v.files) ? v : null; }
     return {
+      reset: function () { if(dbp)dbp.then(function(d){if(d)d.close();});dbp=null;mem={}; },
       get: function (k) {
         return db().then(function (d) {
           if (!d) return valid(mem[k]) || fresh();
@@ -526,6 +527,7 @@
   }
   $('rv-new').addEventListener('click', function () { showHome(); });
   window.CornerpinReportViews = { packet: packetSection };
+  window.addEventListener('cornerpin:account-changed', function () { last=null;checklist={};Store.reset();readVersion++;extracted=null;selectedPlanFile=null;readingPlan=false;fillFields(null);setMode('none');$('planfile').value='';$('address').value='';if(map){map.remove();map=null;} });
   window.addEventListener('cornerpin:home', function () { showHome(); });
   window.addEventListener('cornerpin:refresh', async function(e){
     if(go.disabled)return;go.disabled=true;showHome();form.classList.add('off');prog.classList.add('on');

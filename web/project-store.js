@@ -1,10 +1,11 @@
 /* Local project persistence. Transactional revision checks prevent silent tab overwrites. */
 (function (root) {
   'use strict';
-  let opening;
+  let opening, owner = null;
+  function setOwner(id) { if(id===owner)return; if(opening)opening.then(d=>d.close()); opening=null; owner=id||null; }
   function db() {
     if (!opening) opening = new Promise((resolve, reject) => {
-      const r = indexedDB.open('cornerpin-projects', 1);
+      const r = indexedDB.open(owner ? 'cornerpin-projects-'+owner : 'cornerpin-projects', 1);
       r.onupgradeneeded = () => { r.result.createObjectStore('projects', { keyPath: 'id' }); r.result.createObjectStore('files'); };
       r.onsuccess = () => resolve(r.result);
       r.onerror = () => { opening = null; reject(r.error); };
@@ -31,7 +32,7 @@
   }
   async function checklistFiles(county,parcelId) {
     return new Promise((resolve,reject)=>{
-      const request=indexedDB.open('lot-dossier',1);
+      const request=indexedDB.open(owner?'lot-dossier-'+owner:'lot-dossier',1);
       request.onerror=()=>reject(request.error);request.onsuccess=()=>{const d=request.result;if(!d.objectStoreNames.contains('items')){d.close();resolve([]);return;}
         const files=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
         r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))for(const file of c.value.files||[])if(file.blob)files.push({...file,checklistKey:c.key});c.continue();};t.oncomplete=()=>{d.close();resolve(files);};t.onerror=()=>reject(t.error);
@@ -45,5 +46,5 @@
       t.oncomplete=()=>resolve(project);t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
-  root.ProjectStore = { list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };
+  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };
 })(window);

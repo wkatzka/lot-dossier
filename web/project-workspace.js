@@ -16,6 +16,7 @@
     return '<form data-command="' + type + '" data-id="' + esc(id || '') + '">' + (locked ? '<fieldset disabled style="border:0;padding:0">' : '') + content + (locked ? '</fieldset><p class="pw-muted">Submitted response retained. Record acceptance below, or import a new review round if the city requests more changes.</p>' : '<div class="pw-actions"><button class="primary" type="submit">' + esc(title) + '</button></div>') + '</form>';
   };
   const link = (url, title) => /^https?:\/\//i.test(url || '') ? '<a class="pw-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(title) + '</a>' : '';
+  window.CornerpinWorkspaceBusy=()=>busy;
   function message(s) { const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
   async function commit(command, file) { const next = W.apply(project, command); await S.save(next, project.revision, file); project = next; render(); }
   async function collectChecklist(p) {
@@ -73,9 +74,19 @@
   function render() {
     document.body.classList.add('show-project');
     document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · Projects';
-    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + button('projects','Projects') + button('home','Review another property') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(human(project.stage)) + '</strong></p>' : '<h1>Projects</h1>') + '<p class="pw-warning">Saved in this browser only. Clearing browser data removes projects and files. This is not shared team storage.<br><strong>City connection not configured.</strong> No automatic filing, city updates or messages are running.</p>' + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,management,documents,activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + button('cloud-save','Save private cloud copy') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<form data-command="restore-backup"><label>Restore complete project backup<input name="backup" type="file" accept=".json" required></label><button type="submit">Restore backup</button></form><div id="pw-content"></div>');
+    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','Projects') + (project?button('cloud-save','Save to account'):'') + button('home','Review another property') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(human(project.stage)) + '</strong></p>' : '<h1>Projects</h1>') + '<p class="pw-warning">Working changes are saved on this device. Use Save to account to keep a private cloud copy, including files. Guest projects stay separate from account projects.<br><strong>City connection not configured.</strong> No automatic filing, city updates or messages are running.</p>' + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,management,documents,activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + button('cloud-save','Save private cloud copy') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<form data-command="restore-backup"><label>Restore complete project backup<input name="backup" type="file" accept=".json" required></label><button type="submit">Restore backup</button></form><div id="pw-content"></div>');
   }
-  async function list() { project = null; render(); const rows = await S.list(); document.getElementById('pw-content').innerHTML = rows.length ? rows.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>' + esc(p.property.address) + '</h2><p>' + esc(human(p.stage)) + ' · Updated ' + esc(new Date(p.updatedAt).toLocaleString()) + '</p>' + button('open','Open project',p.id) + '</section>').join('') : '<section class="pw-card"><h2>No saved projects yet</h2><p>Generate a site report to start.</p></section>'; const cloud=await window.CloudSync.config(); if(cloud.configured)document.getElementById('pw-content').insertAdjacentHTML('beforeend','<section class="pw-card"><h2>Private cloud storage</h2>'+form('cloud-login',field('email','Account email','','email')+field('password','Password','','password'),'Sign in')+'<div id="cloud-projects"></div></section>'); }
+  async function list() {
+    await window.CornerpinAccount.ready;
+    const owner=S.owner();project=null;render();
+    const rows=await S.list();if(S.owner()!==owner)return;
+    const content=document.getElementById('pw-content');
+    content.innerHTML='<h2>'+(owner?'On this device · your account':'Guest projects · this device only')+'</h2>'+(rows.length?rows.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h3>'+esc(p.property.address)+'</h3><p>'+esc(human(p.stage))+' · Updated '+esc(new Date(p.updatedAt).toLocaleString())+'</p>'+button('open','Open project',p.id)+'</section>').join(''):'<p>No projects saved here yet.</p>');
+    if(!owner){content.insertAdjacentHTML('beforeend','<section class="pw-card"><h2>Keep projects in your account</h2><button type="button" data-account>Sign in or create account</button><p>Guest work remains separate. Export a complete backup before signing in to move it into your account.</p></section>');return;}
+    try { const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;
+      content.insertAdjacentHTML('beforeend','<section class="pw-card"><h2>Saved to your account</h2><p>These are the copies you explicitly saved. Unsaved device changes are not included.</p>'+(cloud.map(p=>'<p>'+esc(p.property.address)+' · Cloud revision '+esc(p.revision)+' '+(rows.some(x=>x.id===p.id)?button('open','Open device copy',p.id):button('cloud-restore','Open cloud project',p.id))+'</p>').join('')||'<p>No cloud copies yet. Open a project and choose Save to account.</p>')+'</section>');
+    }catch(e){message(e.message);}
+  }
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
   async function exportPackage(id) {
     const pkg = project.packages.find(p=>p.id===id); if(!pkg) throw new Error('Package not found.');
@@ -102,7 +113,7 @@
       else if(a==='download-file') {const d=project.documents.find(x=>x.id===id), blob=await S.file(id);if(!blob)throw new Error('File not available in this browser.');download(d.name,blob);}
       else if(a==='export-package') await exportPackage(id);
       else if(a==='cloud-save') {await window.CloudSync.push(project);message('Private cloud copy saved with document checksums.');}
-      else if(a==='cloud-restore') {project=await window.CloudSync.pull(id);tab='overview';render();}
+      else if(a==='cloud-restore') {project=await window.CloudSync.pull(id);capture=Promise.resolve(project);tab='overview';render();}
       else if(a==='export-backup') download('cornerpin-full-backup.json',JSON.stringify(await window.ProjectBackup.pack(project,S.file)),'application/json');
       else if(a==='export-record') download('cornerpin-project-record.json',JSON.stringify(project,null,2),'application/json');
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
@@ -115,9 +126,8 @@
       const data=new FormData(f), command=Object.fromEntries(data);command.type=f.dataset.command;command.id=f.dataset.id;
       command.documentIds=data.getAll('documentIds').filter(Boolean);command.reviewed=data.has('reviewed');command.confirmed=data.has('confirmed');
       if(command.type==='review_round') command.items=W.splitComments(command.originalText);
-      if(command.type==='cloud-login') {await window.CloudSync.login(command.email,command.password);f.reset();const rows=await window.CloudSync.list();document.getElementById('cloud-projects').innerHTML=rows.map(p=>'<p>'+esc(p.property.address)+' '+button('cloud-restore','Restore cloud project',p.id)+'</p>').join('')||'<p>No cloud projects yet.</p>';
-      } else if(command.type==='restore-backup') {
-        const file=data.get('backup');if(!file||file.size>150*1024*1024)throw Error('Choose a backup below 150 MB');const backup=await window.ProjectBackup.unpack(JSON.parse(await file.text()));project=await S.restore(backup.project,backup.files);tab='overview';render();
+      if(command.type==='restore-backup') {
+        const file=data.get('backup');if(!file||file.size>150*1024*1024)throw Error('Choose a backup below 150 MB');const backup=await window.ProjectBackup.unpack(JSON.parse(await file.text()));project=await S.restore(backup.project,backup.files);capture=Promise.resolve(project);tab='overview';render();
       } else if(command.type==='research') {
         await commit(window.ResearchWorkspace.command(project,data));
       } else if(command.type==='upload') {
@@ -129,10 +139,11 @@
       message('Saved in this browser. No information was sent to the city or a project contact.');
     } catch(err) {message(err.message);submit.disabled=false;} finally {busy=false;}
   });
+  window.addEventListener('cornerpin:account-changed',()=>{project=null;capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {
     const report=JSON.parse(JSON.stringify(e.detail));
     capture=capture.catch(()=>{}).then(async()=>{
-      const rows=await S.list(), key=report.parcel.county+'|'+report.parcel.id, old=rows.find(p=>p.propertyKey===key);
+      await window.CornerpinAccount.ready;const rows=await S.list(), key=report.parcel.county+'|'+report.parcel.id, old=rows.find(p=>p.propertyKey===key);
       const next=old?W.apply(old,{type:'sync_report',report}):W.create(report);
       await S.save(next,old?old.revision:null);return retainPublicSources(await collectChecklist(next));
     });

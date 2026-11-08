@@ -9,6 +9,9 @@ create table if not exists public.cornerpin_projects (
   check ((record->>'revision')::integer = revision)
 );
 alter table public.cornerpin_projects enable row level security;
+revoke all on public.cornerpin_projects from anon;
+grant select, insert, update on public.cornerpin_projects to authenticated;
+create index if not exists cornerpin_projects_owner_idx on public.cornerpin_projects(owner_id);
 create policy "read own projects" on public.cornerpin_projects for select to authenticated using (owner_id = auth.uid());
 create policy "insert own projects" on public.cornerpin_projects for insert to authenticated with check (owner_id = auth.uid());
 create policy "update own projects" on public.cornerpin_projects for update to authenticated using (owner_id = auth.uid()) with check (owner_id = auth.uid());

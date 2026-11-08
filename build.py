@@ -11,6 +11,7 @@ project-specific strings or embedded images.
 import argparse
 import json
 import os
+import subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 WEB = os.path.join(ROOT, "web")
@@ -69,7 +70,9 @@ def build(api_base, inline_assets=False):
     sales = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "sales.json"))
     results = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "development-v2.json"))
     data["weberValue"] = {"records": sales["records"], "metrics": {k: results[k]["metrics"] for k in ("rollingDevelopment", "flaggedTransactionSensitivity")}}
+    sdk = subprocess.check_output(["node", "scripts/bundle-auth.js"], cwd=ROOT, text=True)
     scripts = "\n".join([
+        "<script>" + sdk.replace("</script", "<\\/script") + "</script>",
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
         "<script>\n" + read(ROOT, "node_modules", "@turf", "turf", "turf.min.js") + "\n</script>",
@@ -86,7 +89,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
         "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
-        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
+        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")
