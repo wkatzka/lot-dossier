@@ -11,5 +11,6 @@ await assert.rejects(()=>C.signup('x@example.invalid','irrelevant'),/delivery/);
 const p={id:'cp-test',revision:1,documents:[]};await C.push(p);assert.equal(remote.revision,1);await C.push(p);remote={...p,revision:2};await assert.rejects(()=>C.push({...p,revision:3}),/another device/);
 event('TOKEN_REFRESHED',{...session,access_token:'refreshed-token'});await C.list();assert.equal(requests.at(-1).opt.headers.Authorization,'Bearer refreshed-token');
 await C.logout();assert.equal(owner,null);assert.equal(C.signedIn(),false);await assert.rejects(()=>C.list(),/Sign in/);assert(events.some(e=>e.type==='cornerpin:account-changed'));
-console.log('Session refresh, account ownership, sign-out, email readiness, initial cloud save and stale-device rejection passed.');
+(await C.config()).pilotSignup=true;sdk.auth.signUp=async()=>({data:{session,user:session.user}});await C.signup('pilot@example.invalid','synthetic-password');assert.equal(C.signedIn(),true);await assert.rejects(()=>C.recover('pilot@example.invalid'),/delivery/);await C.logout();
+console.log('Pilot signup, session refresh, account ownership, sign-out, email readiness, initial cloud save and stale-device rejection passed.');
 })();

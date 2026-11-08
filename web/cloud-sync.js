@@ -15,7 +15,7 @@ async function init(){
  })().catch(e=>{starting=null;throw e;});return starting;
 }
 async function login(email,password){await init();if(!client)throw Error('Accounts are unavailable');const {data,error}=await client.auth.signInWithPassword({email:email.trim(),password});if(error)throw Error(error.message);changed(data.session,'SIGNED_IN');return data.user;}
-async function signup(email,password){await init();if(!cfg.emailReady)throw Error('Signup email delivery is being configured. Please try again after setup.');const {data,error}=await client.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:location.origin+'/'}});if(error)throw Error(error.message);return data;}
+async function signup(email,password){await init();if(!cfg.emailReady&&!cfg.pilotSignup)throw Error('Signup email delivery is being configured. Please try again after setup.');const {data,error}=await client.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:location.origin+'/'}});if(error)throw Error(error.message);if(data.session)changed(data.session,'SIGNED_IN');return data;}
 async function recover(email){await init();if(!cfg.emailReady)throw Error('Password-reset email delivery is being configured.');const {error}=await client.auth.resetPasswordForEmail(email.trim(),{redirectTo:location.origin+'/'});if(error)throw Error(error.message);}
 async function password(value){await init();const {error}=await client.auth.updateUser({password:value});if(error)throw Error(error.message);}
 async function logout(){await init();if(client){const {error}=await client.auth.signOut({scope:'local'});if(error)throw Error('Could not sign out; please retry.');}changed(null,'SIGNED_OUT');}
