@@ -17,8 +17,9 @@
     const d = await db();
     return new Promise((resolve, reject) => { const r = d.transaction(store).objectStore(store)[key === undefined ? 'getAll' : 'get'](key); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });
   }
+  function notify(project,account){if(root.dispatchEvent)root.dispatchEvent(new CustomEvent('cornerpin:project-saved',{detail:{id:project.id,owner:account}}));}
   async function save(project, expectedRevision, file) {
-    const d = await db();
+    const account=owner,d = await db();
     return new Promise((resolve, reject) => {
       const t = d.transaction(['projects', 'files'], 'readwrite'), s = t.objectStore('projects'); let conflict;
       const r = s.get(project.id);
@@ -26,7 +27,7 @@
         if ((r.result ? r.result.revision : null) !== expectedRevision) { conflict = new Error('This project changed in another tab. Reopen it before saving.'); t.abort(); return; }
         s.put(project); if (file) t.objectStore('files').put(file.blob, file.id);
       };
-      t.oncomplete = () => resolve(project);
+      t.oncomplete = () => {resolve(project);notify(project,account);};
       t.onabort = t.onerror = () => reject(conflict || t.error || new Error('Project could not be saved. Browser storage may be full.'));
     });
   }
@@ -39,11 +40,11 @@
       };
     });
   }
-  async function restore(project, files) {
-    const d=await db();return new Promise((resolve,reject)=>{
+  async function restore(project, files, options={}) {
+    const account=owner,d=await db();return new Promise((resolve,reject)=>{
       const t=d.transaction(['projects','files'],'readwrite'),ps=t.objectStore('projects');let error;
-      const r=ps.get(project.id);r.onsuccess=()=>{if(r.result){error=new Error('This project already exists. Restore into a different browser to avoid overwriting work.');t.abort();return;}ps.put(project);for(const file of files)t.objectStore('files').put(file.blob,file.id);};
-      t.oncomplete=()=>resolve(project);t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
+      const r=ps.get(project.id);r.onsuccess=()=>{if(r.result && (options.expectedRevision===undefined||r.result.revision!==options.expectedRevision)){error=new Error('This project has local changes. Reopen it before restoring.');t.abort();return;}ps.put(project);for(const file of files)t.objectStore('files').put(file.blob,file.id);};
+      t.oncomplete=()=>{resolve(project);if(!options.cloudRestore)notify(project,account);};t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
   root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };

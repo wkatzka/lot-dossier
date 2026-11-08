@@ -1,4 +1,4 @@
-/* Explicit private-cloud sync. SDK sessions use tab-scoped sessionStorage, never exports. */
+/* Private-cloud snapshot persistence. SDK sessions use tab-scoped sessionStorage, never exports. */
 (function(root){
  'use strict';let session=null,cfg=null,client=null,starting=null;
 async function config(){if(location.protocol==='file:')return {configured:false};if(!cfg){const r=await fetch('/api/projects?action=config');if(!r.ok)throw Error('Account service unavailable');cfg=await r.json();}return cfg;}
@@ -22,8 +22,8 @@ async function logout(){await init();if(client){const {error}=await client.auth.
 function auth(){if(!session)throw Error('Sign in to your Cornerpin account first');return {Authorization:'Bearer '+session.access_token};}
 function assertOwner(owner){if(!owner||session?.user?.id!==owner||root.ProjectStore.owner()!==owner)throw Error('Account changed during transfer; retry.');}
 function baseKey(id){return 'cornerpin-cloud-base:'+session.user.id+':'+id;}
-async function list(){const r=await fetch('/api/projects',{headers:auth()});if(!r.ok)throw Error('Cloud session expired or read failed');return (await r.json()).projects;}
-async function fileRequest(document,method,blob){const c=await config(),path=session.user.id+'/'+document.id+'/'+document.hash;const r=await fetch(c.url+'/storage/v1/object/cornerpin-private/'+path,{method,headers:{apikey:c.key,...auth(),...(method==='POST'?{'Content-Type':'application/octet-stream'}:{})},...(blob?{body:blob}:{})});return r;}
+async function list(){const r=await fetch('/api/projects',{headers:auth(),signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('Cloud session expired or read failed');return (await r.json()).projects;}
+async function fileRequest(document,method,blob){const c=await config(),path=session.user.id+'/'+document.id+'/'+document.hash;const r=await fetch(c.url+'/storage/v1/object/cornerpin-private/'+path,{method,signal:AbortSignal.timeout(60000),headers:{apikey:c.key,...auth(),...(method==='POST'?{'Content-Type':'application/octet-stream'}:{})},...(blob?{body:blob}:{})});return r;}
 async function push(project){
  if(!session||root.ProjectStore.owner()!==session.user.id)throw Error("Sign in and open a project in your account before saving.");
  const owner=session?.user?.id, key=baseKey(project.id), remote=(await list()).find(p=>p.id===project.id), base=localStorage.getItem(key);
@@ -33,11 +33,14 @@ async function push(project){
   assertOwner(owner);const existing=await fileRequest(d,'GET');if(existing.ok){if(await root.ProjectBackup.hash(await existing.arrayBuffer())!==d.hash)throw Error('Cloud document checksum conflict');}else if(existing.status===400||existing.status===404){assertOwner(owner);const saved=await fileRequest(d,'POST',blob);if(!saved.ok)throw Error('Cloud document upload failed');}else throw Error('Cloud document access failed');
  }
  if(session?.user?.id!==owner)throw Error('Account changed during save; retry.');
- const r=await fetch('/api/projects',{method:'POST',headers:{...auth(),'Content-Type':'application/json'},body:JSON.stringify({project,expectedRevision:remote?remote.revision:null})});const d=await r.json();if(!r.ok)throw Error(d.error||'Cloud save failed');localStorage.setItem(key,String(d.project.revision));return d.project;
+ const r=await fetch('/api/projects',{method:'POST',signal:AbortSignal.timeout(20000),headers:{...auth(),'Content-Type':'application/json'},body:JSON.stringify({project,expectedRevision:remote?remote.revision:null})});const d=await r.json();if(!r.ok)throw Error(d.error||'Cloud save failed');localStorage.setItem(key,String(d.project.revision));return d.project;
 }
-async function pull(id){const owner=session?.user?.id;assertOwner(owner);const p=(await list()).find(p=>p.id===id);if(!p)throw Error('Cloud project not found');const files=[];
+async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owner);const p=supplied||(await list()).find(p=>p.id===id);if(!p)throw Error('Cloud project not found');const existing=await root.ProjectStore.get(id),base=baseRevision(id);
+ if(existing){if(existing.revision!==base)throw Error('This device has unsynced changes. They were kept; retry sync or download a backup before reconciling.');if(existing.revision===p.revision)return existing;if(p.revision<existing.revision)throw Error('Cloud copy is older than this device.');}
+ const files=[];
  for(const d of p.documents){assertOwner(owner);const r=await fileRequest(d,'GET');if(!r.ok)throw Error('Cloud file unavailable');const blob=await r.blob();if(await root.ProjectBackup.hash(await blob.arrayBuffer())!==d.hash)throw Error('Cloud file checksum mismatch');files.push({id:d.id,blob});}
- assertOwner(owner);const restored=await root.ProjectStore.restore(p,files);localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
+ assertOwner(owner);const restored=await root.ProjectStore.restore(p,files,{cloudRestore:true,expectedRevision:existing?.revision});localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
 }
-root.CloudSync={config,init,login,signup,recover,password,list,push,pull,logout,user:()=>session?.user||null,signedIn:()=>!!session};
+function baseRevision(id){if(!session)return null;const v=localStorage.getItem(baseKey(id));return v===null?null:Number(v);}
+root.CloudSync={baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,user:()=>session?.user||null,signedIn:()=>!!session};
 })(window);

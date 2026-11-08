@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
-  let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve();
+  let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const human = s => String(s || '').replace(/_/g, ' ');
@@ -16,8 +16,24 @@
     return '<form data-command="' + type + '" data-id="' + esc(id || '') + '">' + (locked ? '<fieldset disabled style="border:0;padding:0">' : '') + content + (locked ? '</fieldset><p class="pw-muted">Submitted response retained. Record acceptance below, or import a new review round if the city requests more changes.</p>' : '<div class="pw-actions"><button class="primary" type="submit">' + esc(title) + '</button></div>') + '</form>';
   };
   const link = (url, title) => /^https?:\/\//i.test(url || '') ? '<a class="pw-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(title) + '</a>' : '';
-  window.CornerpinWorkspaceBusy=()=>busy;
+  window.CornerpinWorkspaceBusy=()=>busy||capturing>0;
   function message(s) { const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
+  function syncLabel(p) {
+    const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
+    return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');
+  }
+  function refreshSyncLabels(){host.querySelectorAll('[data-sync-project]').forEach(async el=>{const owner=S.owner(),p=await S.get(el.dataset.syncProject);if(p&&owner===S.owner()&&el.isConnected)el.innerHTML=syncLabel(p);});}
+  window.addEventListener('cornerpin:sync-state',refreshSyncLabels);
+  async function openSaved(id) {
+    await window.CornerpinAccount.ready;const owner=S.owner();let p=await S.get(id),notice='';
+    if(window.CloudSync.signedIn()){
+      try{const remote=(await window.CloudSync.list()).find(x=>x.id===id);if(S.owner()!==owner)return;
+        if(remote&&(!p||remote.revision>p.revision&&window.CloudSync.baseRevision(id)===p.revision))p=await window.CloudSync.pull(id,remote);
+        else if(remote&&p&&remote.revision!==window.CloudSync.baseRevision(id)&&p.revision!==window.CloudSync.baseRevision(id))notice='This device and your account have different changes. Device work was kept; download a backup before reconciling.';
+      }catch(e){if(!p)throw e;notice='Opened the saved device copy. '+e.message;}
+    }
+    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');project=p;capture=Promise.resolve(p);tab='overview';section='site';render();if(notice)message(notice);window.scrollTo(0,0);
+  }
   async function commit(command, file) { const next = W.apply(project, command); await S.save(next, project.revision, file); project = next; render(); }
   async function collectChecklist(p) {
     for(const file of await S.checklistFiles(p.property.county,p.property.parcelId)){
@@ -69,23 +85,21 @@
     return '<section class="pw-card"><h2>Reviewer correspondence</h2><p>Import actual city feedback. Paste the reviewer text with a blank line between each actionable comment, check the items, then confirm. Attach the original letter under Documents or retain its source link.</p>' + form('review_round', field('department','Review department','Building') + field('sourceDate','Correspondence date','','date') + field('sourceLocator','Page / section reference','') + source() + area('originalText','Reviewer comments — one item per paragraph','') + '<label><input type="checkbox" name="confirmed"> I checked each paragraph against the original correspondence.</label>', 'Import confirmed comments') + p.rounds.map(r => '<details><summary>Review round ' + r.number + ' · ' + esc(r.department) + ' · ' + esc(r.sourceDate) + '</summary><pre>' + esc(r.originalText) + '</pre>' + link(r.url,'Original correspondence') + (r.documentId ? button('download-file','Download original letter',r.documentId) : '') + '</details>').join('') + '</section><section class="pw-card"><h2>Corrections</h2>' + (p.corrections.map(c => '<details><summary>' + esc(c.department + ' · ' + c.text) + ' <span class="pw-status">— ' + esc(human(c.state)) + '</span></summary><p class="pw-muted">' + esc(c.sourceLocator) + '</p>' + (c.state === 'accepted' ? '<p>Acceptance recorded: ' + esc(c.acceptance.note) + '</p>' : form('correction', '<div class="pw-grid">' + field('owner','Responsible person',c.owner) + field('email','Contact email (for draft only)',c.email,'email') + field('dueDate','Due date',c.dueDate,'date') + '</div>' + select('state','Work status',[['received','Received'],['assigned','Assigned'],['revision_received','Revision received'],['response_prepared','Response prepared']].concat(c.state === 'resubmitted' ? [['resubmitted','Resubmitted — awaiting reviewer']] : []),c.state) + area('response','Response to reviewer',c.response) + docs(c.documentIds) + area('noRevisionReason','If no revised document is needed, explain why',c.noRevisionReason), 'Save correction',c.id) + button('draft-assignment','Download assignment email draft',c.id) + (c.state === 'resubmitted' ? '<h3>Record reviewer acceptance</h3>' + form('accept_correction',source() + area('note','Acceptance text / applicable comment reference',''),'Record acceptance',c.id) : '')) + '</details>').join('') || '<p>No reviewer comments imported.</p>') + '</section>' + packagePanel('resubmission') + receiptForm() + '<section class="pw-card"><h2>Permit issuance</h2><p>Record issuance only when you have the actual permit and all tracked corrections have been reconciled.</p>' + form('issuance',field('permitNumber','Issued permit number','') + field('issuedAt','Issue date','','date') + source(),'Record issued permit') + (p.issuance ? '<p>Recorded permit: ' + esc(p.issuance.permitNumber) + ' · ' + esc(p.issuance.issuedAt) + '</p>' : '') + '</section>';
   }
   function documents() {
-    return '<section class="pw-card"><h2>Project documents</h2><p>Files are stored in this browser. Checklist attachments are copied here automatically when the project opens; their checklist status does not approve filing requirements. Uploading a file does not approve a requirement.</p>' + form('upload', '<label>File (maximum 25 MB)<input type="file" name="file" required></label>' + select('role','Document role',[['plan','Building plans'],['supporting','Supporting report / approval'],['review_letter','Reviewer letter'],['receipt','Filing receipt'],['permit','Issued permit']], 'supporting') + select('family','Version of',[['','New document']].concat(project.documents.filter(d => W.latest(project,d)).map(d => [d.family,d.name + ' · next version'])),''), 'Save document') + project.documents.map(d => '<p><strong>' + esc(d.name) + '</strong> · v' + d.version + ' · ' + (W.latest(project,d) ? 'Current' : 'Superseded, retained in history') + ' · ' + esc(d.role) + ' ' + button('download-file','Download',d.id) + '</p>').join('') + '</section>';
+    return '<section class="pw-card"><h2>Project documents</h2><p>Files save with your project. Signed-in changes sync to your account automatically; their checklist status does not approve filing requirements. Uploading a file does not approve a requirement.</p>' + form('upload', '<label>File (maximum 25 MB)<input type="file" name="file" required></label>' + select('role','Document role',[['plan','Building plans'],['supporting','Supporting report / approval'],['review_letter','Reviewer letter'],['receipt','Filing receipt'],['permit','Issued permit']], 'supporting') + select('family','Version of',[['','New document']].concat(project.documents.filter(d => W.latest(project,d)).map(d => [d.family,d.name + ' · next version'])),''), 'Save document') + project.documents.map(d => '<p><strong>' + esc(d.name) + '</strong> · v' + d.version + ' · ' + (W.latest(project,d) ? 'Current' : 'Superseded, retained in history') + ' · ' + esc(d.role) + ' ' + button('download-file','Download',d.id) + '</p>').join('') + '</section>';
   }
   function render() {
     document.body.classList.add('show-project');
-    document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · Projects';
-    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','Projects') + (project?button('cloud-save','Save to account'):'') + button('home','Review another property') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(human(project.stage)) + '</strong></p>' : '<h1>Projects</h1>') + '<p class="pw-warning">Working changes are saved on this device. Use Save to account to keep a private cloud copy, including files. Guest projects stay separate from account projects.<br><strong>City connection not configured.</strong> No automatic filing, city updates or messages are running.</p>' + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,management,documents,activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + button('cloud-save','Save private cloud copy') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<form data-command="restore-backup"><label>Restore complete project backup<input name="backup" type="file" accept=".json" required></label><button type="submit">Restore backup</button></form><div id="pw-content"></div>');
+    document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · My projects';
+    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(human(project.stage)) + '</strong></p>' : '<h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p>Open a saved site to continue where you left off. Public research only reruns when you choose Refresh.</p>') + '<p class="pw-warning"><strong>City connection not configured.</strong> No automatic filing, city updates or messages are running.</p>' + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,management,documents,activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div><details><summary>Import a project backup</summary><form data-command="restore-backup"><label>Complete project backup<input name="backup" type="file" accept=".json" required></label><button type="submit">Import backup</button></form></details>');
   }
   async function list() {
-    await window.CornerpinAccount.ready;
-    const owner=S.owner();project=null;render();
+    await window.CornerpinAccount.ready;const owner=S.owner();project=null;render();
     const rows=await S.list();if(S.owner()!==owner)return;
-    const content=document.getElementById('pw-content');
-    content.innerHTML='<h2>'+(owner?'On this device · your account':'Guest projects · this device only')+'</h2>'+(rows.length?rows.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h3>'+esc(p.property.address)+'</h3><p>'+esc(human(p.stage))+' · Updated '+esc(new Date(p.updatedAt).toLocaleString())+'</p>'+button('open','Open project',p.id)+'</section>').join(''):'<p>No projects saved here yet.</p>');
-    if(!owner){content.insertAdjacentHTML('beforeend','<section class="pw-card"><h2>Keep projects in your account</h2><button type="button" data-account>Sign in or create account</button><p>Guest work remains separate. Export a complete backup before signing in to move it into your account.</p></section>');return;}
-    try { const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;
-      content.insertAdjacentHTML('beforeend','<section class="pw-card"><h2>Saved to your account</h2><p>These are the copies you explicitly saved. Unsaved device changes are not included.</p>'+(cloud.map(p=>'<p>'+esc(p.property.address)+' · Cloud revision '+esc(p.revision)+' '+(rows.some(x=>x.id===p.id)?button('open','Open device copy',p.id):button('cloud-restore','Open cloud project',p.id))+'</p>').join('')||'<p>No cloud copies yet. Open a project and choose Save to account.</p>')+'</section>');
-    }catch(e){message(e.message);}
+    const merged=new Map(rows.map(p=>[p.id,p]));let warning='';
+    if(owner){try{const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;for(const p of cloud)if(!merged.has(p.id))merged.set(p.id,p);}catch(e){warning='Account unavailable. Showing projects saved on this device. '+e.message;}}
+    if(S.owner()!==owner||project)return;
+    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+human(p.stage))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'</div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
+    if(warning)message(warning);
   }
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
   async function exportPackage(id) {
@@ -104,7 +118,7 @@
     try {
       const a=b.dataset.action, id=b.dataset.id;
       if(a==='projects') await list();
-      else if(a==='open') { message('Opening project and retaining public source documents…'); project=await retainPublicSources(await collectChecklist(await S.get(id)));capture=Promise.resolve(project);tab='overview';render(); }
+      else if(a==='open') {message('Opening saved project…');await openSaved(id);}
       else if(a==='tab'||a==='filing'||a==='management') {tab=a==='tab'?id:a;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();}
       else if(a==='refresh-evidence') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:refresh',{detail:project.report}));}
       else if(a==='home') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:home'));}
@@ -112,7 +126,7 @@
       else if(a==='site') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));}
       else if(a==='download-file') {const d=project.documents.find(x=>x.id===id), blob=await S.file(id);if(!blob)throw new Error('File not available in this browser.');download(d.name,blob);}
       else if(a==='export-package') await exportPackage(id);
-      else if(a==='cloud-save') {await window.CloudSync.push(project);message('Private cloud copy saved with document checksums.');}
+      else if(a==='cloud-save') {await window.ProjectSync.enqueue(id||project.id);refreshSyncLabels();}
       else if(a==='cloud-restore') {project=await window.CloudSync.pull(id);capture=Promise.resolve(project);tab='overview';render();}
       else if(a==='export-backup') download('cornerpin-full-backup.json',JSON.stringify(await window.ProjectBackup.pack(project,S.file)),'application/json');
       else if(a==='export-record') download('cornerpin-project-record.json',JSON.stringify(project,null,2),'application/json');
@@ -136,18 +150,18 @@
         const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await file.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join(''), id=W.id();
         await commit({type:'document',document:{id,name:file.name,size:file.size,hash,role:command.role,family:command.family||id}},{id,blob:file});
       } else await commit(command);
-      message('Saved in this browser. No information was sent to the city or a project contact.');
+      message(window.CloudSync.signedIn()?'Changes saved on this device; account sync runs automatically.':'Saved on this device.');
     } catch(err) {message(err.message);submit.disabled=false;} finally {busy=false;}
   });
   window.addEventListener('cornerpin:account-changed',()=>{project=null;capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {
-    const report=JSON.parse(JSON.stringify(e.detail));
+    const report=JSON.parse(JSON.stringify(e.detail));capturing++;
     capture=capture.catch(()=>{}).then(async()=>{
       await window.CornerpinAccount.ready;const rows=await S.list(), key=report.parcel.county+'|'+report.parcel.id, old=rows.find(p=>p.propertyKey===key);
       const next=old?W.apply(old,{type:'sync_report',report}):W.create(report);
       await S.save(next,old?old.revision:null);return retainPublicSources(await collectChecklist(next));
     });
-    capture.catch(err=>{const b=document.getElementById('rv-workflow');b.textContent='Permit workflow · save failed';b.title=err.message;});
+    capture.finally(()=>{capturing--;}).catch(err=>{const b=document.getElementById('rv-workflow');b.textContent='Permit workflow · save failed';b.title=err.message;});
   });
   document.getElementById('rv-workflow').addEventListener('click',async()=>{
     try {project=await capture;if(!project)throw new Error('Generate a site report first.');project=await S.get(project.id);tab='overview';render();window.scrollTo(0,0);}catch(err){render();message(err.message);}

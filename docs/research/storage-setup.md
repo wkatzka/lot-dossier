@@ -7,7 +7,7 @@
 - [x] Owner-only project table and private immutable-file bucket deployed.
 - [x] Account panel: sign-in, signup, email confirmation callback, password recovery/update, sign-out. Pilot signup is enabled without email confirmation by explicit owner approval. Password recovery remains gated until email delivery is configured.
 - [x] Guest and signed-in account device stores separated, including checklist attachments; switching accounts clears the report and plan from view.
-- [x] Explicit **Save to account** includes document checksums; Projects lists private cloud copies for restoration on a different device.
+- [x] Reports, edits and attached files save automatically to signed-in accounts, with checksums and visible sync status. **My projects** merges device/account copies into one card per project; opening a card shows the three-stage overview from its saved snapshot.
 - [x] Live SQL role tests passed for owner reads, cross-user reads/updates, forged owners, file paths, file immutability, stale revisions and anonymous denial. Synthetic rows/users rolled back.
 - [x] Public HTTP checks: Auth enabled with pilot email confirmation disabled; anonymous project read denied; bucket not publicly accessible.
 - [x] Real API signup without confirmation, sign-out/sign-in, production project save, and independent second-session project/file retrieval passed with two synthetic accounts.
@@ -32,6 +32,10 @@ The owner has no domain or email service yet and explicitly approved no-confirma
 
 The official pinned Supabase SDK refreshes sessions. Sessions persist in **sessionStorage** for the browser tab and survive reloads; closing the tab requires signing in again. Tokens are never included in exports. Device data is partitioned by account ID, with the legacy guest database preserved separately. This is application-level separation; someone with direct access to a device's developer tools can still inspect its local databases.
 
-Cloud saves are explicit, not background autosync. A device tracks the cloud revision it last saved/restored and rejects stale remote changes. Restoring never overwrites an existing local project. To move a guest project into an account, export its complete backup as a guest and restore it after signing in. The account does not implicitly claim guest work.
+Cloud saves run automatically after local transactions commit. A per-project queue serializes saves, keeps failures local, and retries on reconnection, sign-in or a Retry save click. The UI distinguishes saving, saved and sync-pending states. A device tracks the cloud revision it last saved/restored and rejects stale remote changes. A newer cloud snapshot may replace a clean device copy with a transactional revision check. Unsynced device changes are never silently overwritten. Opening a project does not rerun public research or retry source-document acquisition; Refresh public evidence explicitly refreshes findings. To move a guest project into an account, export its complete backup as a guest and restore it after signing in. The account does not implicitly claim guest work.
 
 Owner-only, not team sharing. City connection, automatic filing, email reminders and background monitoring remain outside this account activation. Files are immutable; failed uploads may leave private unreferenced objects. No deletion or cleanup is enabled. Free-plan database and file backups need a separate retention strategy before production use.
+
+## Saved-project workflow validation
+
+`node scripts/test-my-projects.js` exercises generated report → automatic account save → one My projects card → three-stage overview → stored site findings; offline edits and reconnect retry; second-device document restoration; explicit refresh only; and newer-cloud versus unsynced-device conflict behavior. Browser preview verified the same list-to-overview navigation with synthetic data. Existing live authentication and private-file API checks remain recorded above.
