@@ -1,4 +1,58 @@
-# Cornerpin land valuation model v1
+# Qualification audit and real public-data backtests — November 7, 2026
+
+The original zero-eligible result conflated research admission, full-feature model support, and production readiness. The corrected pilot audit admits **3 of 17** candidates for retrospective research. **13** have no attributable closing price; **1** includes improvements. The three retained sales are agricultural/development tracts with documented caveats, not certified finished-lot comparables. Public-as-of replay still admits zero because publication timing is unknown. That is a different experiment.
+
+Read [the complete audit](../../docs/research/backtest/valuation-audit.html). Every rejection is in `qualification-audit.json`. The original full-profile Huber model remains available; its feature requirements no longer define whether a sale exists. `eligibleRecords` and `modelReadyRecords` are separate.
+
+## Actual outcome tests, not synthetic accuracy
+
+`public_benchmark.py` implements a separate partial-information nonlinear hedonic estimator using histogram gradient boosting. Missing features remain missing, category mappings and feature inclusion are trained without test outcomes. Prior assessments are predictors; **actual county-recorded prices are the outcomes**. No assessment, asking price or synthetic price is used as a target.
+
+| External Cook County experiment | Holdout sales | Within ±$50,000 | Median absolute error | Mean absolute error |
+|---|---:|---:|---:|---:|
+| 2020, explicit land-sale cohort, tuned on dollar MAE | 196 | 51.0% | $44,981 | $513,837 |
+| 2024, corroborated vacant classification, tuned on dollar MAE | 613 | 25.3% | $144,226 | $241,758 |
+| Same 2024 holdout, selected on earlier ±$50k tuning hit rate | 613 | 28.9% | $120,479 | $248,188 |
+
+The 2024 tolerance policy selects the highest hit-rate candidate using **2022 outcomes only**, with dollar MAE as tie-breaker. It was added after inspecting the initial MAE result in response to the user's dollar-band criterion. Treat it as a reported policy sensitivity, not another independent test sample or a pristine pre-registered validation. No candidate is selected by 2024 error.
+
+The older explicit-LAND dataset has 2,000 eligible observations, but no usable historical acreage in the characteristics table. Its final evaluated test has 196 sales after chronological splits and parcel embargo. The newer cohort has 3,085 eligible observations; 2020 GIS polygons provide historical area for 2,762. WGS84 geodesic area calculations account for polygon holes. Conflicting polygons or absent geometry do not remove transactions; area remains missing. Stable PIN matching does not prove unchanged boundaries. Features also include location, time, historical assessed land, flood-zone and walkability where source-year evidence permits.
+
+2024 split: 742 training (2021), 846 tuning (2022), 697 calibration (2023), 613 test (2024). Train and tuning are refit together after choosing hyperparameters; calibration only sizes uncertainty intervals. Parcel repeats are embargoed between partitions. The 2024 test was a new holdout after the 2020 experiment; the reports preserve both. None demonstrates Utah accuracy or production readiness. Modern blank transaction-type records require sale-year class 100 (the fetch query), prior-year class 100, and zero prior-year building assessment. This is a classification screen, not individual confirmation of the property's condition at closing. Residential-land class 200 was separately checked: only 52 raw transactions over 2015–2024, many multi-parcel/improved; it did not supply an adequate replacement cohort.
+
+## Reproduce
+
+Install `research/valuation/requirements.txt` in your Python environment, then from the repository root:
+
+```sh
+python3 -B research/valuation/prepare_public_input.py
+python3 -B research/valuation/fetch_public_benchmark.py /path/to/public-cache
+python3 -B research/valuation/fetch_public_benchmark.py /path/to/public-cache --modern
+OMP_NUM_THREADS=2 python3 -B research/valuation/public_benchmark.py /path/to/public-cache docs/research/backtest/public-benchmark-result.json
+OMP_NUM_THREADS=2 python3 -B research/valuation/public_benchmark.py /path/to/public-cache docs/research/backtest/public-benchmark-modern-result.json --modern
+OMP_NUM_THREADS=2 python3 -B research/valuation/public_benchmark.py /path/to/public-cache docs/research/backtest/public-benchmark-tolerance-result.json --modern --objective within50000
+OMP_NUM_THREADS=2 python3 -B -m unittest discover -s research/valuation -p 'test*.py'
+python3 -B research/valuation/render_audit.py
+```
+
+The committed input JSON files preserve the feature/target snapshot and each result fingerprints it. Live API reruns may differ after county corrections. The downloader requests no buyer/seller names. Local source caches are outside the public repo; source queries and public dataset IDs are in the downloader. Individual predictions link back to their document-number query. Strict historical publication availability remains unproven: both benchmarks are **retrospective reconstruction**, not public-as-of replay.
+
+Point prediction evaluation no longer requires 20 calibration observations; only interval estimates do. The ±$50,000 calculation is inclusive and absolute, with price-band breakdowns to expose easier low-dollar cases. Tests verify withholding prices, repeated-parcel embargo, no future feature admission, absent optional attributes, actual pilot admission, tolerance boundaries and point testing without intervals.
+
+## Current capability checklist
+
+- [x] Audit all 17 pilot candidates, including every rejection reason.
+- [x] Separate admissible research sales from complete model inputs and public-time availability.
+- [x] Fetch public data and run actual temporal outcome tests with learned multivariate models, baseline comparisons and per-sale evidence.
+- [x] Evaluate the user's ±$50k band; retain failed outcomes and price-band breakdowns.
+- [ ] Reliable ±$50k accuracy: **attempted but unresolved**; current tests do not establish it.
+- [ ] Independent Utah pilot validation: **blocked by local dataset coverage**, with only three conditional historical land observations recovered.
+- [ ] Defensible production pilot value: **blocked by local calibration and validation**. No accuracy claim or automatic estimate is promoted.
+
+Earlier dossier, easement/mineral/pool and permit/storage scope is retained in [the project ledger](../../docs/substantive-dossier-plan.md).
+
+## Original full-profile v1 model reference
+
 
 Research implementation of a multi-attribute residential-land valuation model and its actual chronological evaluation pipeline. This is not the earlier gross-acre diagnostic. No pilot coefficients or market-accuracy claim have been manufactured from that diagnostic.
 
@@ -33,7 +87,7 @@ python3 -B research/valuation/backtest.py docs/research/backtest/hedonic-public-
 
 For subdivision robustness, add `--holdout-subdivisions` to a dataset with subdivision identities. The normal run and this run must be reported separately. Synthetic test fixtures exercise estimation, explanations, intervals, chronology, leakage, support checks and DCF arithmetic. Their accuracy is not market evidence and is not mixed into public-data reports.
 
-## Data contract
+## Full-profile v1 data contract (not the research-admission gate)
 
 Top-level fields: `submarket`, `trainEnd`, `calibrationEnd`, `asOf`, `records`.
 
@@ -48,7 +102,7 @@ The initial implementation deliberately abstains for missing material attributes
 ## Modeling and validation limits
 
 - Huber regression is a candidate estimator, not evidence that its coefficients are valid for this market. It can still fail with omitted variables, selection bias, collinearity or regime changes.
-- Minimum 60 observations per fitted model, at least 80 in the outer training block, at least 10 scored tuning cases with 80% tuning coverage, and 20 scored calibration observations are initial engineering floors. Parameter-count checks can require more. These are not a guarantee of sufficient statistical power or a declaration of industry compliance.
+- Minimum 60 observations per fitted model, at least 80 in the outer training block, at least 10 scored tuning cases with 80% tuning coverage, and 20 scored calibration observations for interval estimation are initial engineering floors. Parameter-count checks can require more. These are not a guarantee of sufficient statistical power or a declaration of industry compliance.
 - Initial comparable limits: 25 km, 1,095 days, at most a factor-of-two model adjustment. These policy values must be examined against actual coverage/error; they are not learned premiums. Market extrapolation over time is bounded by the age window but can still fail in a changing market.
 - Calibration is a finite-sample absolute log-error order statistic at nominal 90% coverage. Temporal market drift violates exchangeability, so measured test coverage must accompany any reported interval; no unconditional 90% guarantee is claimed.
 - No automated production promotion is implemented. The output retains `marketAccuracyEstablished: false` even when research evaluation succeeds; independent review, representative pilot results and declared acceptance tolerances remain required.

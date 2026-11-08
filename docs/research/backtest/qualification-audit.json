@@ -1,0 +1,684 @@
+{
+  "screenedRecords": 17,
+  "modes": {
+    "retrospective": {
+      "eligibleRecords": 3,
+      "records": [
+        {
+          "id": "era-2054436",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "homes-sp7sqjzcrc51p",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_or_invalid_sale_dates",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "movoto-lj7q1my7ofnw",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_or_invalid_sale_dates",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-2053354466",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112185949",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112184530",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112187420",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-12019045",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-102984617",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "redfin-71389620",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "redfin-95595174",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "coldwell-2014601",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "realtor-M96426-02219",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "county-mls-1586757",
+          "eligible": true,
+          "reasons": [],
+          "warnings": [
+            "Subdivision restrictions and usable acreage not independently verified",
+            "arms_length_not_independently_verified",
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {
+            "grossAcres": {
+              "value": 17.26,
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "zoning": {
+              "value": "AV3",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "water": {
+              "value": "well; five irrigation shares",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "power": {
+              "value": "available",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "sewer": {
+              "value": "private",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "terrain": {
+              "value": "flat",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-12-05",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            }
+          }
+        },
+        {
+          "id": "county-mls-1603980",
+          "eligible": true,
+          "reasons": [],
+          "warnings": [
+            "Agricultural/development parcel rather than finished residential lot",
+            "Zoning labels differ between MLS exhibit and county summary",
+            "arms_length_not_independently_verified",
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {
+            "grossAcres": {
+              "value": 10.8,
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "zoning": {
+              "value": "AG in MLS; AV-3 in county summary",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "water": {
+              "value": "culinary available; well; irrigation shares",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "power": {
+              "value": "stubbed",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "sewer": {
+              "value": "septic",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "terrain": {
+              "value": "flat",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-08-19",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            }
+          }
+        },
+        {
+          "id": "county-mls-1519709",
+          "eligible": true,
+          "reasons": [],
+          "warnings": [
+            "Two parcels identified; confirm total sold acreage and conveyance scope",
+            "arms_length_not_independently_verified",
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {
+            "grossAcres": {
+              "value": 5.05,
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "zoning": {
+              "value": "agricultural",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "water": {
+              "value": "certified well",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "power": {
+              "value": "connected",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "sewer": {
+              "value": "septic",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "terrain": {
+              "value": "flat",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-22",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            }
+          }
+        },
+        {
+          "id": "county-mls-1573992",
+          "eligible": false,
+          "reasons": [
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "Exclude from vacant-land baseline: house and other improvements included",
+            "Seller financing requires cash-equivalent review",
+            "Two parcels described; only one tax ID on listing header",
+            "historical_reconstruction_not_public_asof_replay"
+          ],
+          "usableFeatures": {
+            "grossAcres": {
+              "value": 15.1,
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "zoning": {
+              "value": "AV-3; mixed uses noted",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "water": {
+              "value": "connected",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "power": {
+              "value": "connected",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "sewer": {
+              "value": "septic",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            },
+            "improvements": {
+              "value": "home, barns/stalls and outbuildings",
+              "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+              "effectiveAt": "2019-05-31",
+              "availableAt": null,
+              "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+            }
+          }
+        }
+      ],
+      "exclusionCounts": {
+        "missing_closing_price": 13,
+        "missing_property_identity": 13,
+        "not_documented_land_only": 14,
+        "transaction_evidence_missing_or_adverse": 14,
+        "missing_or_invalid_sale_dates": 2
+      }
+    },
+    "public_replay": {
+      "eligibleRecords": 0,
+      "records": [
+        {
+          "id": "era-2054436",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "homes-sp7sqjzcrc51p",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_or_invalid_sale_dates",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "movoto-lj7q1my7ofnw",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_or_invalid_sale_dates",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-2053354466",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112185949",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112184530",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-112187420",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-12019045",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "zillow-102984617",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "redfin-71389620",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "redfin-95595174",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "coldwell-2014601",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "realtor-M96426-02219",
+          "eligible": false,
+          "reasons": [
+            "missing_closing_price",
+            "missing_price_publication_date",
+            "missing_property_identity",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [],
+          "usableFeatures": {}
+        },
+        {
+          "id": "county-mls-1586757",
+          "eligible": false,
+          "reasons": [
+            "missing_price_publication_date"
+          ],
+          "warnings": [
+            "Subdivision restrictions and usable acreage not independently verified",
+            "arms_length_not_independently_verified",
+            "feature_not_admitted:grossAcres",
+            "feature_not_admitted:power",
+            "feature_not_admitted:sewer",
+            "feature_not_admitted:terrain",
+            "feature_not_admitted:water",
+            "feature_not_admitted:zoning"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "county-mls-1603980",
+          "eligible": false,
+          "reasons": [
+            "missing_price_publication_date"
+          ],
+          "warnings": [
+            "Agricultural/development parcel rather than finished residential lot",
+            "Zoning labels differ between MLS exhibit and county summary",
+            "arms_length_not_independently_verified",
+            "feature_not_admitted:grossAcres",
+            "feature_not_admitted:power",
+            "feature_not_admitted:sewer",
+            "feature_not_admitted:terrain",
+            "feature_not_admitted:water",
+            "feature_not_admitted:zoning"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "county-mls-1519709",
+          "eligible": false,
+          "reasons": [
+            "missing_price_publication_date"
+          ],
+          "warnings": [
+            "Two parcels identified; confirm total sold acreage and conveyance scope",
+            "arms_length_not_independently_verified",
+            "feature_not_admitted:grossAcres",
+            "feature_not_admitted:power",
+            "feature_not_admitted:sewer",
+            "feature_not_admitted:terrain",
+            "feature_not_admitted:water",
+            "feature_not_admitted:zoning"
+          ],
+          "usableFeatures": {}
+        },
+        {
+          "id": "county-mls-1573992",
+          "eligible": false,
+          "reasons": [
+            "missing_price_publication_date",
+            "not_documented_land_only",
+            "transaction_evidence_missing_or_adverse"
+          ],
+          "warnings": [
+            "Exclude from vacant-land baseline: house and other improvements included",
+            "Seller financing requires cash-equivalent review",
+            "Two parcels described; only one tax ID on listing header",
+            "feature_not_admitted:grossAcres",
+            "feature_not_admitted:improvements",
+            "feature_not_admitted:power",
+            "feature_not_admitted:sewer",
+            "feature_not_admitted:water",
+            "feature_not_admitted:zoning"
+          ],
+          "usableFeatures": {}
+        }
+      ],
+      "exclusionCounts": {
+        "missing_closing_price": 13,
+        "missing_price_publication_date": 17,
+        "missing_property_identity": 13,
+        "not_documented_land_only": 14,
+        "transaction_evidence_missing_or_adverse": 14,
+        "missing_or_invalid_sale_dates": 2
+      }
+    }
+  },
+  "pilotModelStatus": "insufficient_training_sample; not zero eligible records",
+  "productionReady": false
+}

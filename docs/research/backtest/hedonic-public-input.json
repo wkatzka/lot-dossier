@@ -1,8 +1,8 @@
 {
   "submarket": "Ogden Valley residential land",
   "asOf": "2026-11-07",
-  "trainEnd": "2020-12-31",
-  "calibrationEnd": "2023-12-31",
+  "trainEnd": "2019-08-31",
+  "calibrationEnd": "2019-09-30",
   "records": [
     {
       "id": "era-2054436",
@@ -10,7 +10,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2025-09-22",
       "saleDate": "2025-09-22",
       "availableAt": null,
@@ -20,7 +20,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "homes-sp7sqjzcrc51p",
@@ -28,7 +28,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": null,
       "saleDate": null,
       "availableAt": null,
@@ -38,7 +38,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "movoto-lj7q1my7ofnw",
@@ -46,7 +46,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": null,
       "saleDate": null,
       "availableAt": null,
@@ -56,7 +56,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-2053354466",
@@ -64,7 +64,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2025-09-18",
       "saleDate": "2025-09-18",
       "availableAt": null,
@@ -72,17 +72,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 6.2,
-          "source": "https://www.zillow.com/homedetails/1628-S-Toliver-Ln-Huntsville-UT-84317/2053354466_zpid/",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-112185949",
@@ -90,7 +82,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2024-12-06",
       "saleDate": "2024-12-06",
       "availableAt": null,
@@ -98,17 +90,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 1.09,
-          "source": "https://www.zillow.com/homedetails/4964-E-Whispering-Pines-Ln-Eden-UT-84310/112185949_zpid/",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-112184530",
@@ -116,7 +100,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2020-06-15",
       "saleDate": "2020-06-15",
       "availableAt": null,
@@ -124,17 +108,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 2.74,
-          "source": "https://www.zillow.com/homedetails/13403-E-Oak-Canyon-Way-Huntsville-UT-84317/112184530_zpid/",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-112187420",
@@ -142,7 +118,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2021-01-08",
       "saleDate": "2021-01-08",
       "availableAt": null,
@@ -152,7 +128,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-12019045",
@@ -160,7 +136,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2010-04-02",
       "saleDate": "2010-04-02",
       "availableAt": null,
@@ -170,7 +146,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "zillow-102984617",
@@ -178,7 +154,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2015-05-14",
       "saleDate": "2015-05-14",
       "availableAt": null,
@@ -188,7 +164,7 @@
       "transactionConditions": "unverified",
       "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "redfin-71389620",
@@ -196,7 +172,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2024-06-28",
       "saleDate": "2024-06-28",
       "availableAt": null,
@@ -204,17 +180,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 0.58,
-          "source": "https://www.redfin.com/UT/Eden/5630-E-Highland-View-Ct-84310/home/71389620",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "redfin-95595174",
@@ -222,7 +190,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2022-11-02",
       "saleDate": "2022-11-02",
       "availableAt": null,
@@ -230,17 +198,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 0.41,
-          "source": "https://www.redfin.com/UT/Eden/4032-N-Elk-Ridge-Trl-84310/home/95595174",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "coldwell-2014601",
@@ -248,7 +208,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2024-07-31",
       "saleDate": "2024-07-31",
       "availableAt": null,
@@ -256,17 +216,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 1.02,
-          "source": "https://www.coldwellbankerhomes.com/ut/eden/1207-n-eden-view-ln-41/pid_60785898/",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "realtor-M96426-02219",
@@ -274,7 +226,7 @@
       "propertyKey": null,
       "parcelIds": [],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "unverified_land",
       "valuationDate": "2026-06-16",
       "saleDate": "2026-06-16",
       "availableAt": null,
@@ -282,17 +234,9 @@
       "priceType": "unavailable",
       "priceVerified": false,
       "transactionConditions": "unverified",
-      "features": {
-        "grossAcres": {
-          "value": 3.75,
-          "source": "https://www.realtor.com/realestateandhomes-detail/73-N-River-View-Rd_Huntsville_UT_84317_M96426-02219",
-          "effectiveAt": null,
-          "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
-        }
-      },
+      "features": {},
       "historicalEvidence": null,
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": []
     },
     {
       "id": "county-mls-1586757",
@@ -302,35 +246,56 @@
         "21-104-0002"
       ],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "agricultural_development_land",
       "valuationDate": "2019-12-05",
       "saleDate": "2019-12-05",
       "availableAt": null,
       "price": 835000,
       "priceType": "closed_price",
       "priceVerified": true,
-      "transactionConditions": "unverified",
+      "transactionConditions": "reported_market",
       "features": {
         "grossAcres": {
           "value": 17.26,
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-12-05",
           "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "zoning": {
+          "value": "AV3",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-12-05",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "water": {
           "value": "well; five irrigation shares",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-12-05",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "power": {
+          "value": "available",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-12-05",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "sewer": {
           "value": "private",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-12-05",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "terrain": {
+          "value": "flat",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-12-05",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         }
       },
       "historicalEvidence": {
@@ -365,7 +330,9 @@
         "commercialReuseStatus": "Not established; factual research extract only",
         "pricePerGrossAcre": 48377.75
       },
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": [
+        "Subdivision restrictions and usable acreage not independently verified"
+      ]
     },
     {
       "id": "county-mls-1603980",
@@ -375,35 +342,56 @@
         "22-022-0187"
       ],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "agricultural_development_land",
       "valuationDate": "2019-08-19",
       "saleDate": "2019-08-19",
       "availableAt": null,
       "price": 947500,
       "priceType": "closed_price",
       "priceVerified": true,
-      "transactionConditions": "unverified",
+      "transactionConditions": "reported_market",
       "features": {
         "grossAcres": {
           "value": 10.8,
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-08-19",
           "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "zoning": {
+          "value": "AG in MLS; AV-3 in county summary",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-08-19",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "water": {
           "value": "culinary available; well; irrigation shares",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-08-19",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "power": {
+          "value": "stubbed",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-08-19",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "sewer": {
           "value": "septic",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-08-19",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "terrain": {
+          "value": "flat",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-08-19",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         }
       },
       "historicalEvidence": {
@@ -439,7 +427,10 @@
         "commercialReuseStatus": "Not established; factual research extract only",
         "pricePerGrossAcre": 87731.48
       },
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": [
+        "Zoning labels differ between MLS exhibit and county summary",
+        "Agricultural/development parcel rather than finished residential lot"
+      ]
     },
     {
       "id": "county-mls-1519709",
@@ -450,35 +441,56 @@
         "22-010-0023"
       ],
       "submarket": "Ogden Valley residential land",
-      "propertyType": "unverified_residential_land",
+      "propertyType": "agricultural_development_land",
       "valuationDate": "2019-05-22",
       "saleDate": "2019-05-22",
       "availableAt": null,
       "price": 330000,
       "priceType": "closed_price",
       "priceVerified": true,
-      "transactionConditions": "unverified",
+      "transactionConditions": "reported_market",
       "features": {
         "grossAcres": {
           "value": 5.05,
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-22",
           "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "zoning": {
+          "value": "agricultural",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-22",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "water": {
           "value": "certified well",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-22",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "power": {
+          "value": "connected",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-22",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "sewer": {
           "value": "septic",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-22",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "terrain": {
+          "value": "flat",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-22",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         }
       },
       "historicalEvidence": {
@@ -514,7 +526,9 @@
         "commercialReuseStatus": "Not established; factual research extract only",
         "pricePerGrossAcre": 65346.53
       },
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": [
+        "Two parcels identified; confirm total sold acreage and conveyance scope"
+      ]
     },
     {
       "id": "county-mls-1573992",
@@ -531,28 +545,49 @@
       "price": 750000,
       "priceType": "closed_price",
       "priceVerified": true,
-      "transactionConditions": "unverified",
+      "transactionConditions": "seller_financing",
       "features": {
         "grossAcres": {
           "value": 15.1,
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-31",
           "availableAt": null,
-          "note": "Reported gross area; historical validity date not independently established."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "zoning": {
+          "value": "AV-3; mixed uses noted",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-31",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "water": {
           "value": "connected",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-31",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "power": {
+          "value": "connected",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-31",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         },
         "sewer": {
           "value": "septic",
           "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
-          "effectiveAt": null,
+          "effectiveAt": "2019-05-31",
           "availableAt": null,
-          "note": "Preserved reported description; historical applicability requires reconciliation."
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
+        },
+        "improvements": {
+          "value": "home, barns/stalls and outbuildings",
+          "source": "https://www.webercountyutah.gov/commission/documents/uploads/G1Froerer%20Right%20of%20Way.pdf",
+          "effectiveAt": "2019-05-31",
+          "availableAt": null,
+          "evidenceBasis": "Listing-era characteristics in sold report printed 2020-01-21"
         }
       },
       "historicalEvidence": {
@@ -589,8 +624,12 @@
         "commercialReuseStatus": "Not established; factual research extract only",
         "pricePerGrossAcre": 49668.87
       },
-      "note": "Unresolved feature evidence remains empty; gross acreage is not a buildable-area measurement."
+      "reviewFlags": [
+        "Exclude from vacant-land baseline: house and other improvements included",
+        "Two parcels described; only one tax ID on listing header",
+        "Seller financing requires cash-equivalent review"
+      ]
     }
   ],
-  "purpose": "Run the full hedonic-comparable evidence gate on public candidates; missing dates/features are not inferred."
+  "purpose": "Research admission and model support are separate; three observations cannot fit a multivariate estimator."
 }
