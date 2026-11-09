@@ -1,4 +1,16 @@
-# City Inspect applicant connection — inspected 2026-11-09
+# City Inspect applicant connection — updated 2026-11-09
+
+## Authorized draft mapping update
+
+The user authorized starting and saving an application, but not submitting it. One draft was reused to inspect all 38 types in the Building Permits module and restored to Single Family Dwelling afterward. The draft was saved and its summary verified. No documents were uploaded, fees acknowledged, payments made, certifications completed or applications submitted. Private draft references and account values are excluded from this repository.
+
+`data/permits/ogden-valley-cityinspect.json` contains the observed field labels, HTML constraints, option values and attachment checklists. Property, professional, building-detail and attachment pages were inspected for every type. Mechanical and Demolition displayed no attachment fields; that is not proof of exemption. Conditional branches, upload limits and final submission validation remain unverified. Other modules (Planning & Zoning, Excavation, Business License and Code Enforcement) are not mapped.
+
+Cornerpin now provides a type-specific answer sheet under Permit filing. Suggestions retain their basis; user answers are saved separately by application type and marked for review after a site refresh. Construction valuation is never filled from land value; actual setbacks, approvals and credentials are never fabricated. Personal initials and acknowledgments must be completed directly in the portal. No connector submits or monitors applications.
+
+Remaining connection gates: vendor integration guidance; a permitted submission/status transport; real reviewer correspondence and status fixtures; scheduled sync with authentication, retries, deduplication and receipt verification. The existing account login and draft mapping do not satisfy those gates.
+
+## Earlier read-only inspection (superseded by draft mapping above)
 
 ## Scope and outcome
 

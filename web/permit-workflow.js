@@ -71,6 +71,10 @@
       }
       case 'evidence':
         p.evidence=E.apply(p.evidence||E.discover(p.report),a.action,now); invalidate(p); event(p,a.type,'Research evidence or calculation updated.',now); break;
+      case 'city_application': {
+        const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
+        p.application.cityInspect=C.update(p,a); invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
+      }
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
         invalidate(p); event(p, a.type, 'Application details updated.', now); break;

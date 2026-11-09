@@ -64,3 +64,6 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 #project-workspace .pw-project-grid>.pw-card{display:flex;flex-direction:column;margin:0}
 #project-workspace .pw-project-grid>.pw-card>button:last-child{margin-top:auto;align-self:flex-start}
 #project-workspace .pw-sync{color:#dfc49d;font-size:.9rem}
+#project-workspace .city-field { margin: 1.5rem 0 2.5rem; padding: 0.5rem 0; }
+#project-workspace .city-field h3 { margin-bottom: 0.35rem; }
+#project-workspace .city-field textarea { min-height: 4rem; }

@@ -69,6 +69,7 @@ def build(api_base, inline_assets=False):
     with open(os.path.join(ROOT, "config", "records.json")) as fh:
         records = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     data = {"costs": costs, "apiBase": api_base, "apiVersion": h.hexdigest()[:10], "records": records}
+    data["cityInspect"] = json.loads(read(ROOT, "data", "permits", "ogden-valley-cityinspect.json"))
     sales = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "sales.json"))
     results = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "development-v2.json"))
     data["weberValue"] = {"records": sales["records"], "metrics": {k: results[k]["metrics"] for k in ("rollingDevelopment", "flaggedTransactionSensitivity")}}
@@ -89,7 +90,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
-        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
+        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
         "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
