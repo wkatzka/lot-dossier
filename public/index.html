@@ -643,25 +643,18 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 @media(max-width:1000px){#project-frame .project-header{flex-wrap:wrap}#project-frame .project-toolbar{justify-content:flex-start}}
 @media(max-width:640px){#project-frame .project-header{justify-content:flex-start;margin-bottom:24px}#project-frame .project-toolbar button{padding:10px 12px}}
 #pw-message.is-analyzing{padding:0;background:transparent;border:0;border-radius:0;position:relative;top:auto;margin:0 0 24px}
-.analysis-progress{position:relative;display:flex;align-items:center;gap:22px;overflow:hidden;padding:25px 28px;border:1px solid #ffffff29;border-radius:12px;background:linear-gradient(110deg,#191715f5,#151515ed);box-shadow:0 12px 32px #0002}
+.analysis-progress{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;align-items:stretch;box-sizing:border-box;width:min(100%,420px);aspect-ratio:1;padding:clamp(40px,7vw,64px);border:0;border-radius:0;background:#111;overflow:hidden}
+.analysis-frame-art{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 .analysis-inline:empty{display:none}
-.analysis-inline:not(:empty){margin-top:18px;color:#f0eee4}
+.analysis-inline:not(:empty){margin-top:24px;color:#f0eee4}
 .analysis-inline.is-analyzing{padding:0;border:0;background:none}
-.analysis-mark{display:block;flex:0 0 64px;width:64px;height:72px;overflow:visible}
-.analysis-frame{fill:none;stroke:#f0eee4;stroke-width:2.3;stroke-linecap:square}
-.analysis-pin-head,.analysis-pin-stem{fill:#ff7137}
-.analysis-pin-travel{animation:analysis-pin-travel 7s linear infinite}
-.analysis-pin-lift{animation:analysis-pin-lift 7s ease-in-out infinite}
-.analysis-pin-stem{transform-origin:16px 24px;animation:analysis-pin-stem 7s ease-in-out infinite;transform:scaleY(0)}
-@keyframes analysis-pin-travel{0%,8%{transform:translate(0,0)}21%{transform:translate(40px,0)}34%{transform:translate(40px,40px)}47%{transform:translate(0,40px)}60%,100%{transform:translate(0,0)}}
-@keyframes analysis-pin-lift{0%,63%,80%,92%,100%{transform:translateY(0)}71%,74%{transform:translateY(-13px)}85%{transform:translateY(-4px)}}
-@keyframes analysis-pin-stem{0%,63%,80%,92%,100%{transform:scaleY(0)}71%,74%{transform:scaleY(1)}85%{transform:scaleY(.3)}}
-.analysis-copy{flex:1;min-width:0}.analysis-eyebrow{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#e0c5a1;margin-bottom:7px}
-.analysis-line{font-size:18px;line-height:1.5;font-weight:500;color:#f7f6f0}.analysis-dots{display:inline-flex;width:22px;margin-left:2px}.analysis-dots i{font-style:normal;opacity:0;animation:analysis-dot 1.8s steps(1,end) infinite}.analysis-dots i:nth-child(2){animation-delay:.3s}.analysis-dots i:nth-child(3){animation-delay:.6s}
+.analysis-copy{min-width:0}.analysis-eyebrow{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#e0c5a1;margin-bottom:7px}
+.analysis-line{font-size:18px;line-height:1.5;font-weight:500;color:#f7f6f0}.analysis-dots{position:absolute;display:inline-flex;width:22px;margin-left:2px}.analysis-dots i{font-style:normal;opacity:0;animation:analysis-dot 1.8s steps(1,end) infinite}.analysis-dots i:nth-child(2){animation-delay:.3s}.analysis-dots i:nth-child(3){animation-delay:.6s}
 #project-workspace .analysis-copy p{font-size:12px;line-height:1.6;color:#aaa69f;margin:6px 0 0}.analysis-time{font:12px 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;color:#bdb8af;white-space:nowrap}
 @keyframes analysis-dot{0%,67%,100%{opacity:0}17%,66%{opacity:1}}
-@media(max-width:640px){.analysis-progress{padding:20px 18px;gap:16px;flex-wrap:wrap}.analysis-line{font-size:16px}.analysis-time{margin-left:50px}.analysis-mark{flex-basis:54px;width:54px;height:60px}}
-@media(prefers-reduced-motion:reduce){.analysis-dots i,.analysis-pin-travel,.analysis-pin-lift,.analysis-pin-stem{animation:none!important}.analysis-dots i{opacity:1}.analysis-pin-stem{transform:scaleY(0)}}
+@media(max-width:640px){.analysis-progress{padding:14%;}.analysis-line{font-size:16px}}
+.analysis-time{display:block;margin-top:24px}
+@media(prefers-reduced-motion:reduce){.analysis-frame-art{visibility:hidden}.analysis-progress{background-image:linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb);background-size:80% 2px,2px 80%,80% 2px,2px 80%;background-position:6.25% 6.25%,6.25% 6.25%,93.75% 93.75%,93.75% 93.75%;background-repeat:no-repeat}.analysis-progress::before{content:'';position:absolute;left:calc(6.25% - 6px);top:calc(6.25% - 6px);width:12px;height:12px;border-radius:50%;background:#fb7136}}
 .analysis-dots i{animation-name:analysis-dot-one;animation-delay:0s}
 .analysis-dots i:nth-child(2){animation-name:analysis-dot-two;animation-delay:0s}
 .analysis-dots i:nth-child(3){animation-name:analysis-dot-three;animation-delay:0s}
@@ -5570,7 +5563,7 @@ const phrases={
 };
 function phrase(kind,seconds){const rows=phrases[kind]||phrases.plans;return rows.filter(r=>r[0]<=seconds).at(-1)[1];}
 function create(doc,clock=()=>Date.now(),schedule=setInterval,cancel=clearInterval){let timer=null,started=0,kind='plans',target='';
- function paint(){const el=doc.getElementById(target);if(!el)return;const secs=Math.floor((clock()-started)/1000);if(!el.querySelector('.analysis-progress')){el.classList.add('is-analyzing');el.removeAttribute('role');el.removeAttribute('aria-live');el.innerHTML='<div class="analysis-progress"><svg class="analysis-mark" viewBox="0 0 72 80" aria-hidden="true"><path class="analysis-frame" d="M16 64 V24 H47 M56 33 V64 H25"/><g class="analysis-pin-travel"><g class="analysis-pin-lift"><path class="analysis-pin-stem" d="M12 24 L16 37 L20 24 Z"/><circle class="analysis-pin-head" cx="16" cy="24" r="5.5"/></g></g></svg><div class="analysis-copy"><span class="analysis-eyebrow">Plan analysis</span><div class="analysis-line"><span class="analysis-phrase" role="status" aria-live="polite"></span><span class="analysis-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div><p>Reading your document for potential answers. Findings will be ready to review when analysis finishes.</p></div><span class="analysis-time" aria-hidden="true"></span></div>';}
+ function paint(){const el=doc.getElementById(target);if(!el)return;const secs=Math.floor((clock()-started)/1000);if(!el.querySelector('.analysis-progress')){el.classList.add('is-analyzing');el.removeAttribute('role');el.removeAttribute('aria-live');el.innerHTML='<div class="analysis-progress"><img class="analysis-frame-art" src="assets/cornerpin-analysis.svg" alt="" aria-hidden="true"><div class="analysis-copy"><span class="analysis-eyebrow">Plan analysis</span><div class="analysis-line"><span class="analysis-phrase" role="status" aria-live="polite"></span><span class="analysis-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div><p>Reading your document for potential answers. Findings will be ready to review when analysis finishes.</p></div><span class="analysis-time" aria-hidden="true"></span></div>';}
  const text=el.querySelector('.analysis-phrase'),value=phrase(kind,secs);if(text.textContent!==value)text.textContent=value;el.querySelector('.analysis-time').textContent=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0')+' elapsed';
  }
  function stop(){if(timer!==null)cancel(timer);timer=null;const el=doc.getElementById(target);if(el){el.classList.remove('is-analyzing');if(el.querySelector('.analysis-progress'))el.textContent='';el.setAttribute('role','status');el.setAttribute('aria-live','polite');}}
