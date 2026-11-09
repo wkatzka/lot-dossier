@@ -487,7 +487,7 @@
         var watch = zone === 'FB' || /^(CV|DRR)/.test(zone || '');
         var kb = ctx.facts.kb, zs = kb && kb.zones && kb.zones[zone], out = [];
         if (zs) {
-          ctx.facts.zone_std = { zone: zone, front: zs.front, side: zs.sideTotal ? zs.sideTotal / 2 : zs.side, rear: zs.rear, height: zs.height, coverage: null };
+          ctx.facts.zone_std = { zone: zone, front: zs.front, side: zs.side, totalSide: zs.sideTotal || null, source: kb.code, sourceSection: zs.cite, rear: zs.rear, height: zs.height, coverage: null };
           out.push(F('land', 'Zoning', 'ok', zone + ' ' + zs.name + ': ' + zs.front + "' front, " + zs.side + "' side" + (zs.sideTotal ? ' (' + zs.sideTotal + "' both sides)" : '') + ', ' + zs.rear + "' rear" + (zs.height ? ', ' + zs.height + "' max height" : ''),
             'Base standards from the ' + ctx.facts.jurisdiction + ' Land Use Code (' + zs.cite + '): minimum lot ' + zs.area + ', ' + zs.width + "' minimum width. No lot-coverage cap for the main house in this zone. (as of " + kb.asOf + ')',
             ctx.facts.jurisdiction + ' Land Use Code', kb.code));
@@ -1315,7 +1315,7 @@
     var sb = plat.setbacks;
     if (sb || std) {
       var front = sb ? sb.front : std.front, side = sb ? sb.side : std.side, rear = sb ? sb.rear : std.rear, street = sb ? sb.streetSide : std.streetSide;
-      ctx.facts.zone_std = { zone: sb ? 'plat' : 'development standards', front: front, side: side, rear: rear, street: street || null,
+      ctx.facts.zone_std = { zone: sb ? 'plat' : 'development standards', source: sb ? sb.url : std.doc.url, sourceSection: sb ? 'Plat setback note' : 'Development standards', front: front, side: side, rear: rear, street: street || null,
         height: std && std.heightMax || (ctx.facts.zone_std || {}).height || null, coverage: std && std.coverageMax ? std.coverageMax / 100 : null };
       replaceFinding(ctx, 'land', 'Plat setbacks', F('land', 'Plat setbacks', 'ok',
         'Setbacks for this lot: ' + front + "' front, " + side + "' side" + (street ? ', ' + street + "' street side on corners" : '') + ', ' + rear + "' rear",

@@ -223,5 +223,5 @@
     return out;
   }
 
-  root.PlanReader = { read: read, extract: extract };
+  root.PlanReader = { read: read, extract: extract, loadPdfJs: loadPdfJs };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -12,11 +12,12 @@ const assert=require('node:assert/strict'),crypto=require('node:crypto'),{PDFDoc
   if(options.method==='POST'){if(objects.has(url))return Response.json({error:'Duplicate'},{status:409});objects.set(url,options.body);return Response.json({});}
   return objects.has(url)?new Response(objects.get(url)):Response.json({error:'not found'},{status:404});
  };
- async function call(token='valid'){let status,body;await handler({method:'POST',query:{action:'permit-extraction'},headers:{authorization:'Bearer '+token},body:{projectId:record.id,documentId:doc.id}},{setHeader(){},set statusCode(v){status=v;},end(v){body=JSON.parse(v);}});return {status,body};}
+ async function call(token='valid',action='permit-extraction'){let status,body;await handler({method:'POST',query:{action},headers:{authorization:'Bearer '+token},body:{projectId:record.id,documentId:doc.id}},{setHeader(){},set statusCode(v){status=v;},end(v){body=JSON.parse(v);}});return {status,body};}
  try{
   assert.equal((await call('bad')).status,401);assert.equal(modelCalls,0);owns=false;assert.equal((await call()).status,404);owns=true;
   const first=await call();assert.equal(first.status,200,JSON.stringify(first.body));assert.equal(modelCalls,1);assert.equal(first.body.facts.length,2);assert.equal(first.body.rejected.length,1);
   const second=await call();assert.equal(second.body.cacheHit,true);assert.equal(modelCalls,1);assert.deepEqual(second.body.facts,first.body.facts);
+  const G=require('../lib/plan-measurement-reader'),oldRun=G.run;let geometryCalls=0;G.run=async()=>{geometryCalls++;return{version:G.VERSION,documentId:doc.id,documentHash:doc.hash,measurements:[],issues:['No placement geometry'],reviewedPages:[1],usage:{}};};try{assert.equal((await call('bad','plan-measurements')).status,401);const geometry=await call('valid','plan-measurements');assert.equal(geometry.status,200);assert.equal(geometryCalls,1);assert.equal((await call('valid','plan-measurements')).body.cacheHit,true);assert.equal(geometryCalls,1);}finally{G.run=oldRun;}
   const base=[...objects.keys()].find(x=>x.includes('_claude-budget/')).replace(/0\.json$/,'');for(let i=0;i<20;i++)objects.set(base+i+'.json','{}');for(const k of [...objects.keys()])if(k.includes('_claude-results'))objects.delete(k);
   assert.equal((await call()).status,429);assert.equal(modelCalls,1);
   console.log('PASS: authenticated PDF-to-field API, owner isolation, direct-first parsing, citation rejection, persistent cache and distributed budget cap.');

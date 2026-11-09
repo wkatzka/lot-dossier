@@ -78,6 +78,20 @@
         p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
         invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now);break;
       }
+      case 'measurement_candidates': {
+        const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);required(d&&latest(p,d),'Choose the current document version.');required(Array.isArray(x.measurements)&&x.measurements.length<=40,'Invalid geometry response.');p.application.measurementReads=(p.application.measurementReads||[]).filter(r=>r.documentId!==d.id).concat([clone(x)]);event(p,a.type,'Drawing geometry candidates saved; not accepted as application answers.',now);break;
+      }
+      case 'plan_measurement': {
+        const M=typeof module!=='undefined'&&module.exports?require('./plan-measurements'):root.PlanMeasurements,m=clone(a.measurement);required(M.current(p,m),'Measurement source is superseded or missing.');required(clean(a.reviewer)&&clean(m.basis),'Record reviewer and measurement basis.');const calculation=M.calculate(m);required(a.confirmed,'Confirm the complete field boundary, calibration and exclusions.');
+        const saved={...m,id:m.id||id(),calculation,reviewer:clean(a.reviewer),reviewedAt:now,reviewed:true};p.application.measurements=(p.application.measurements||[]).filter(x=>x.id!==saved.id).concat([saved]);
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication,type=a.permitType||'1',row=C.rows(p,type).find(r=>r.name===m.field&&r.section==='building');required(row,'This field is absent from the selected permit.');
+        const basis='Reviewed drawing measurement: '+m.filename+', page '+m.page+'; '+m.basis+'. '+calculation.method+'; '+calculation.scale.checks+' independent dimension checks. Coordinate/scale sensitivity ±'+calculation.sensitivity+' '+calculation.unit+' (not a confidence interval). Reviewer: '+saved.reviewer+'. '+calculation.limitation;
+        p.application.cityInspect=C.update(p,{permitType:type,fieldKey:row.key,value:String(calculation.value),basis});p.application.cityInspect.answers[type][row.key].measurementId=saved.id;
+        for(const v of Object.values(p.application.valuations||{}))v.stale=true;invalidate(p);event(p,a.type,'Reviewed '+m.field+' measurement used in permit '+type+'. Printed conflicts remain in source history.',now);break;
+      }
+      case 'setback_rule': {
+        required(['left','right'].includes(a.side)&&['interior-side','street-side'].includes(a.classification),'Identify the side and boundary classification.');required(a.confirmed&&clean(a.orientation)&&clean(a.source)&&clean(a.reviewer),'Confirm frontage, controlling source and reviewer.');required(String(a.feet??'').trim()!==''&&Number.isFinite(Number(a.feet))&&Number(a.feet)>=0&&Number(a.feet)<=1000,'Enter the sourced minimum in feet.');const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication,type=a.permitType||'1',row=C.rows(p,type).find(r=>r.name===a.side+'_set_back');required(row,'Setback field absent.');p.application.cityInspect=C.update(p,{permitType:type,fieldKey:row.key,value:String(Number(a.feet)),basis:'Reviewed '+a.classification+' minimum; '+a.orientation+'. Controlling source: '+a.source+'. Reviewer: '+a.reviewer+'. This is not an actual proposed distance.'});invalidate(p);event(p,a.type,'Side setback rule classified and reviewed.',now);break;
+      }
       case 'team_profile': {
         const A=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
         required(A.roles[a.role]&&a.confirmed,'Confirm the team member and project role.');
