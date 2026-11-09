@@ -9,7 +9,9 @@
 - [x] Reuse explicitly extracted primary contact facts across matching application fields.
 - [x] Retain field-specific extraction gaps and show them in the permit progress report and field guidance.
 - [x] Name the user-facing assistant CornerpinAI; keep provider disclosure and server credential names accurate.
-- [ ] Verify the new results in the live signed-in account after deployment.
+- [x] Verify real-project before/after values using the private saved-project export and actual model output: 26 to 35 answers, with no completed team profiles.
+- [x] Retrieve the plan-listed design firm’s public office email only after matching its printed firm name and phone.
+- [ ] Verify the new results in the live signed-in account after deployment: blocked because the browser tool returns `browser.user is unavailable`. The exported-project validation does not modify the live account.
 
 ## Evidence contract
 
