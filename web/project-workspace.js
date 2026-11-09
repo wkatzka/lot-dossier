@@ -68,8 +68,7 @@
   function projectFrame(active) {
     document.body.classList.toggle('project-frame-active',!!project);
     if(!project)return;
-    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><span class="wordmark">'+document.querySelector('#home .wordmark').innerHTML+'</span><div class="project-global"><button data-account>Account</button><button data-frame="projects">My projects</button><button data-frame="home">Review another property</button></div></header><div class="project-toolbar"><button data-frame="overview">Project overview</button><button data-frame="filing">Permit filing</button><button data-frame="plans">Building plans</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button></div><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
-    frame.querySelector('[data-account]').textContent=window.CloudSync.signedIn()?'Account':'Sign in';
+    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="projects" aria-label="Cornerpin — My projects">'+document.querySelector('#home .wordmark').innerHTML+'</button><div class="project-toolbar"><button data-frame="filing">Permit filing</button><button data-frame="overview">Project overview</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button><button class="project-new" data-frame="home">Review another property</button></div></header><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
     frame.querySelector('h1').textContent=project.property.address;
     const attrs=project.report.parcel?.attrs||{};frame.querySelector('.project-identity p').textContent=[attrs.PARCEL_CITY,project.property.county+' County','Parcel '+project.property.parcelId,attrs.PARCEL_ACRES?attrs.PARCEL_ACRES+' acres':''].filter(Boolean).join(' · ');
     const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Evidence & restrictions'],['valuation','Lot economics'],['placement','Pool layout'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
@@ -85,8 +84,7 @@
     if(action==='site'){section='site';tab='site';document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');return;}
     if(action==='download'){const previousTab=tab,previousSection=section;window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));document.getElementById('rv-save').click();tab=previousTab;section=previousSection;if(tab!=='site')render();return;}
     if(action==='print'){window.print();return;}
-    tab=action==='plans'?'overview':action;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();
-    if(action==='plans')host.querySelector('form[data-command="upload-plans"] input[name="file"]')?.scrollIntoView({block:'center'});
+    tab=action;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();
   }catch(err){message(err.message);}});
   window.addEventListener('cornerpin:report-visible',()=>{if(project){section='site';tab='site';projectFrame('site');}});
   function stageNavigation() {

@@ -127,3 +127,12 @@ body.project-frame-active #rv .hero2{margin-top:0}
 body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-body>.wrap>h1,body.project-frame-active #rv-body>.wrap>.meta{display:none}
 @media screen{#project-workspace{max-width:1200px;margin:0 auto;padding-left:28px;padding-right:28px}#rv{text-shadow:none}.report-picker{border:0}#rv .topnav{border-bottom:0}}
 @media(max-width:640px){#project-workspace{padding-left:18px;padding-right:18px}}
+
+/* Distinguish project actions from the rounded section navigation. */
+#project-frame .project-header{flex-wrap:nowrap;margin-bottom:32px}
+#project-frame .project-toolbar{justify-content:flex-end;gap:8px;margin:0}
+#project-frame .project-toolbar button{border-radius:9px;padding:13px 16px}
+#project-frame .project-toolbar .project-new{background:#f0eee4;color:#222;border-color:#f0eee4}
+#project-frame button.project-brand{flex-shrink:0;padding:0;border:0;background:transparent;min-height:44px;border-radius:0}
+@media(max-width:1000px){#project-frame .project-header{flex-wrap:wrap}#project-frame .project-toolbar{justify-content:flex-start}}
+@media(max-width:640px){#project-frame .project-header{justify-content:flex-start;margin-bottom:24px}#project-frame .project-toolbar button{padding:10px 12px}}
