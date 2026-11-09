@@ -71,10 +71,17 @@
       }
       case 'evidence':
         p.evidence=E.apply(p.evidence||E.discover(p.report),a.action,now); invalidate(p); event(p,a.type,'Research evidence or calculation updated.',now); break;
+      case 'public_owner': {
+        const x=a.record;
+        required(x&&String(x.parcel)===String(p.report.parcel.id)&&x.name&&/^https:\/\/(?:www\.)?webercountyutah\.gov\/parcelsearch\/ownership-info\.php\?id=\d+$/.test(x.source),'Owner record must match this parcel and the county source.');
+        p.report.facts.ownerRecord=clone(x);event(p,a.type,'Retrieved county owner mailing record for permit suggestions.',now);break;
+      }
       case 'document_extraction': {
         const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);
         required(d&&latest(p,d),'The source document changed; extract the current version.');
         required(Array.isArray(x.facts)&&x.facts.length<=200,'Invalid extraction result');
+        const PF=typeof module!=='undefined'&&module.exports?require('./permit-facts'):window.PermitFacts;
+        x.facts=PF.retainConflicts(x.facts,(p.application.documentExtractions||[]).filter(y=>y.documentId===d.id&&y.documentHash===d.hash&&(y.permitType||'1')===(x.permitType||'1')).flatMap(y=>y.facts||[]));
         p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
         invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now);break;
       }

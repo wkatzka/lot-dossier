@@ -15,6 +15,8 @@ module.exports = async (req, res) => {
   if (county !== 'Weber') return send(res, 200, { county, parcel, supported: false, note: 'Recorded plats are only read for Weber County so far.' });
   try {
     const rec = await parcelRecord(parcel);
+    const ownerRecord=rec.ownerRecord?{...rec.ownerRecord,parcel,source:rec.url,retrievedAt:new Date().toISOString()}:null;
+    if(q.record==='1')return send(res,200,{county,parcel,supported:true,ownerRecord},86400);
     // Prior-parcel metadata can reveal instruments and older plats that predate the current subdivision.
     // This is one generation of discovery, never a complete title search or a lot-number match across plats.
     const parentIds = (rec.priorParcels || []).slice(0, 8);
@@ -40,7 +42,7 @@ module.exports = async (req, res) => {
         }));
       } catch (e) { ocr.push({ sheet: s.sheet, url: s.url, error: String(e.message || e) }); }
     }
-    send(res, 200, { county, parcel, supported: true, parcelPage: rec.url, subdivision: rec.subdivision, references: rec.references,
+    send(res, 200, { county, parcel, supported: true, ownerRecord, parcelPage: rec.url, subdivision: rec.subdivision, references: rec.references,
       priorParcels: rec.priorParcels, history, legal: rec.legal, lot: rec.lot, plats: rec.plats, ocr, plat, ms: Date.now() - t0 }, 30 * 86400);
   } catch (e) {
     send(res, 502, { error: String(e.message || e), ms: Date.now() - t0 });

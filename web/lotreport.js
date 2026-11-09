@@ -1472,6 +1472,7 @@
       if (L && L.easements.length) bits.push(L.easements.join(', '));
       if (L && L.mentions.length) bits.push(L.mentions.map(function (x) { return x.toLowerCase(); }).join(', ') + ' detected near the lot label');
       var lotNo = (L && L.lot) || rec.lot;
+      ctx.facts.ownerRecord = rec.ownerRecord || null;
       ctx.facts.parcelDoc = { lot: lotNo, legal: rec.legal || null, platAddress: L && L.platAddress, acres: L && L.acres, easements: (L && L.easements) || [] };
       out.push(F('land', 'Lot on the recorded plat', 'verify', 'Lot ' + lotNo + (bits.length ? ': ' + bits.join('; ') : ''),
         (rec.legal ? 'Legal description: ' + rec.legal + ' ' : '') +

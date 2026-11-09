@@ -1,7 +1,7 @@
 /* Shared evidence-backed extraction. No model is needed for explicit schedules. */
 (function(root){
 'use strict';
-const version='permit-facts-2';
+const version='permit-facts-3';
 const fields={
  engineer_record:{label:'Engineer of record name',unit:'text',re:'(?:ENGINEER OF RECORD|STRUCTURAL ENGINEER)'},
  engineer_record_email:{label:'Engineer of record email',unit:'text',re:'(?:ENGINEER OF RECORD|STRUCTURAL ENGINEER) EMAIL'},
@@ -36,7 +36,7 @@ Object.assign(fields,{
  garages:{label:'Number of garages, NOT parking spaces',unit:'count'},
  max_occupancy:{label:'Explicit design occupant load, not bedroom count',unit:'count'}
 });
-for(const [prefix,title]of [['design_professional','Design professional'],['builder','Appointed builder'],['electrical','Appointed electrical contractor'],['mechanical','Appointed mechanical contractor'],['plumbing','Appointed plumbing contractor']])for(const key of ['name','contact','phone','email','address','city','state','zip','license']){
+for(const [prefix,title]of [['owner','Explicitly identified property owner (not merely the client or project sponsor)'],['contact','Explicitly designated application contact'],['design_professional','Design professional'],['builder','Appointed builder'],['electrical','Appointed electrical contractor'],['mechanical','Appointed mechanical contractor'],['plumbing','Appointed plumbing contractor']])for(const key of ['name','contact','phone','email','address','city','state','zip','license']){
  const field=prefix==='design_professional'&&key==='name'?prefix:prefix+'_'+key;
  if(!fields[field])fields[field]={label:title+' '+key+' explicitly printed in project title block or team schedule; do not infer appointment from a product manufacturer',unit:'text'};
 }
@@ -74,7 +74,7 @@ function validateModel(items,pages,document,requested,{visual=false}={}){
   const item={...raw};if(typeof item.value==='string'&&/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(item.value.trim()))item.value=item.value.replace(/,/g,'');
   const p=pages.find(p=>(p.n||p.page)===item.page),f=fields[item.field];
   const counted=visual&&item.derivation==='counted',parts=Array.isArray(item.components)?item.components:[];
-  const countOK=counted&&['bedrooms','bathrooms','stories'].includes(item.field)&&parts.length>0&&parts.length<=100&&parts.every(c=>pages.some(p=>(p.n||p.page)===c.page)&&typeof c.label==='string'&&c.label.length>=3&&typeof c.region==='string'&&c.region.length>=5&&typeof c.identity==='string'&&c.identity.trim()&&[1,...(item.field==='bathrooms'?[0.5]:[])].includes(c.weight))&&new Set(parts.map(c=>norm(c.identity))).size===parts.length&&Math.abs(parts.reduce((n,c)=>n+c.weight,0)-Number(item.value))<0.001;
+  const countOK=counted&&['bedrooms','bathrooms','stories','num_units','num_buildings','garages'].includes(item.field)&&parts.length>0&&parts.length<=100&&parts.every(c=>pages.some(p=>(p.n||p.page)===c.page)&&typeof c.label==='string'&&c.label.length>=3&&typeof c.region==='string'&&c.region.length>=5&&typeof c.identity==='string'&&c.identity.trim()&&[1,...(item.field==='bathrooms'?[0.5]:[])].includes(c.weight))&&new Set(parts.map(c=>norm(c.identity))).size===parts.length&&Math.abs(parts.reduce((n,c)=>n+c.weight,0)-Number(item.value))<0.001;
   let reason='';
   if(!requested.includes(item.field)||!f)reason='Field was not requested';
   else if(!valid(item.field,item.value,item.unit))reason='Invalid value or unit';
@@ -88,11 +88,24 @@ function validateModel(items,pages,document,requested,{visual=false}={}){
  }
  return {facts:reconcile(accepted),rejected};
 }
+function retainConflicts(facts,previous){
+ // A model omitting an earlier conflicting reading is not evidence that the discrepancy was resolved.
+ const retained=(previous||[]).filter(f=>f.conflict||f.sourceConflict);
+ return reconcile([...facts,...retained.filter(f=>!facts.some(x=>x.field===f.field&&norm(x.value)===norm(f.value)&&x.page===f.page))]);
+}
+function validateAudit(items,pages,requested){
+ const states=['not_found','ambiguous','conflicting','requires_measurement','requires_assignment','requires_decision'];
+ return (Array.isArray(items)?items:[]).filter(x=>requested.includes(x.field)&&fields[x.field]&&states.includes(x.status)&&typeof x.reason==='string'&&x.reason.trim()&&Array.isArray(x.pages)&&x.pages.every(n=>pages.some(p=>(p.n||p.page)===n))).map(x=>({field:x.field,status:x.status,reason:x.reason.slice(0,1200),pages:[...new Set(x.pages)]}));
+}
+function auditFor(p,name,typeId='1'){
+ const current=(p.application?.documentExtractions||[]).filter(r=>((r.permitType||'1')===typeId||(r.permitType==='project'&&typeId==='1'))&&p.documents?.some(d=>d.id===r.documentId&&d.hash===r.documentHash&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)));
+ return current.flatMap(r=>(r.audit||[]).filter(x=>x.field===name).map(x=>({...x,filename:r.filename}))).at(-1)||null;
+}
 function available(p,typeId='1'){
  const plan=p.report?.plan||{},results=(p.application?.documentExtractions||[]).filter(r=>((r.permitType||'1')===typeId||(r.permitType==='project'&&typeId==='1'))),hasReadPlan=results.some(r=>r.filename===plan.filename),all=typeId==='1'&&!hasReadPlan&&(!plan.filename||!p.documents?.some(d=>d.role==='plan')||p.documents.some(d=>d.role==='plan'&&d.name===plan.filename&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)))?[...(plan.permitFacts||[])]:[];
  for(const result of results){const d=p.documents?.find(d=>d.id===result.documentId&&d.hash===result.documentHash);if(d&&!p.documents.some(x=>x.family===d.family&&x.version>d.version))all.push(...result.facts);}
  return reconcile(all);
 }
 function selected(p,name,typeId='1'){const list=available(p,typeId).filter(x=>x.field===name);return list.length&&!list.some(x=>x.conflict)?list[0]:null;}
-const api={version,fields,extract,validateModel,reconcile,available,selected};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PermitFacts=api;
+const api={version,fields,extract,validateModel,reconcile,available,selected,retainConflicts,validateAudit,auditFor};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PermitFacts=api;
 })(typeof window!=='undefined'?window:globalThis);
