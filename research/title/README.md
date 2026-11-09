@@ -50,3 +50,11 @@ Live verification found POST timeouts on the BLM NLSDB host; bounded GET queries
 The patent includes SE Section 27 and a mineral-land exception with an express coal/iron qualification. The railroad deed contains a conditional railroad corridor and fencing obligation. The canal contract preserves existing third-party rights without establishing their owners. None proves current parcel applicability, complete releases, or current mineral ownership. Related contracts never satisfy missing executed-deed requests.
 
 Matching uses section and aliquot, not customer address or surnames. Findings are reusable for other intersecting parcels. Other sections without reviewed originals remain uncovered; this is not a statewide completed title search. Cached readings avoid repeat OCR. Historic county-book copies and selected surveyor packets are complementary sources, not complete modern-record coverage.
+
+### Transfer/reference tracing
+
+`lib/title-links.js` resolves county/book/page references within mapped aliquot scope. Similar names and descriptions are only candidate links. A release requires reviewed originals for both instruments, an explicit reference, matching interest, entire-interest scope, verified authority, and a valid date no later than the search cutoff. Mortgage releases, partial releases and annual-application withdrawals cannot extinguish a different restriction. Completeness remains false without a full dated search.
+
+New visual readings extend the historical sequence: an early Burnett conveyance candidate, 1976 annual-application records retaining the canal exception, a 1977 UDOT order and a 1979 final condemnation order. The latter concerns two highway strips, not a release. Each strip is screened separately; the second fails the strict closure threshold and is not artificially closed. These observations are reusable by geography and retain exact source hashes.
+
+The public UDOT ROW parcel inventory is queried statewide, retaining acquisition and sale references. Its published coverage is incomplete; empty intersections are not clearance. The pilot and project-reference live queries returned zero features. No original UDOT condemnation image was recovered through those queries.

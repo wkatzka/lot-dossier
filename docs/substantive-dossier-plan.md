@@ -231,3 +231,12 @@ Existing account storage, My projects, plans, valuation research, pool scenarios
 - [ ] **Attempted but unresolved:** complete easement applicability, alignment, amendments and release reconciliation. Conditional railroad terms and existing-rights exceptions require intervening evidence.
 - [ ] **Attempted but unresolved:** current mineral ownership. The patent is located; interpretation of its mineral-land exclusion and subsequent private transfers/severances remain outstanding.
 - [ ] **Blocked by remaining source coverage:** complete later executed instruments and current chain. The FamilySearch catalog covers historical books through 1956; the county canal packet supplies selected later records, not a complete modern index/image service. No automated FamilySearch production integration or commercial reuse authorization is claimed.
+
+### Generalizable later-transfer work — 2026-11-09
+
+- [x] County/book/page relationship engine with explicit-reference versus candidate-link distinction; tests reject wrong-interest, partial, undated, future and non-original releases.
+- [x] Visually read 1903 conveyance candidate, two 1976 annual-application records, 1977 highway order and 1979 final condemnation. Retain the canal exception instead of misclassifying application withdrawal as a release.
+- [x] Screen highway components independently against the requested parcel; retain the second component's closure error rather than forcing closure.
+- [x] Add statewide UDOT public ROW inventory acquisition/disposal metadata with explicit incomplete-coverage treatment.
+- [ ] **Attempted but unresolved:** complete transfer chain, railroad alignment/release and mineral severances. No reviewed original release obtained; annual applications and condemnation do not supply one.
+- [ ] **Blocked this session:** signed-in FamilySearch browser control fails with `browser.user is unavailable` when binding either existing record or catalog tabs. Native Codex app control is disallowed. Downloaded county scans and public APIs remain usable; new signed-in original-image retrieval is not claimed.

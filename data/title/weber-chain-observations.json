@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "documents": [
+    {
+      "id": "weber-45-5-index",
+      "county": "Weber",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "reference": {
+        "county": "Weber",
+        "book": "45",
+        "page": "5"
+      },
+      "evidenceLevel": "abstract",
+      "reviewed": false,
+      "interest": "surface_conveyance",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/00H%20002.tif",
+        "sha256": "8baacc6cbb82661b006dc8eff860fbc50475eb80645f4975182c374643e4f8e1",
+        "pages": "Abstract H page 78, row 25"
+      },
+      "summary": "Visually read index row: William Burnett and wife Sarah J. Burnett to Courtney A. Burnett; warranty deed, Book 45 page 5, filed October 7, 1903. Description begins at the quarter corner common to Sections 27 and 34. Several distances resemble the later Carver tract, but faint digits and the original deed remain unverified.",
+      "references": [
+        {
+          "target": {
+            "county": "Weber",
+            "book": "1031",
+            "page": "100"
+          },
+          "relation": "description_similarity",
+          "basis": "candidate_only_not_proven_continuity"
+        }
+      ]
+    },
+    {
+      "county": "Weber",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "evidenceLevel": "abstract",
+      "reviewed": false,
+      "id": "entry-661291",
+      "reference": {
+        "county": "Weber",
+        "book": "1120",
+        "page": "644"
+      },
+      "effectiveDate": "1976-03-30",
+      "interest": "surface_record",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20013.tif",
+        "sha256": "5abae22b2987a9dcc5fc1fd9b01eeadd4f2483805c8b39b00452b34536f1943d",
+        "pages": "107 013.tif rows 22\u201323"
+      },
+      "summary": "Withdrawal of annual application by Ileen Carver Cragun and Daisy Carver Tucker. The index still expressly excepts 1.48 acres in the Ogden Valley Canal, Book 751 page 397. This is not indexed as a release of the canal interest. Its printed east distance differs from other descriptions and is not silently corrected.",
+      "references": [
+        {
+          "target": {
+            "county": "Weber",
+            "book": "751",
+            "page": "397"
+          },
+          "relation": "exception",
+          "basis": "explicit_record_reference"
+        }
+      ]
+    },
+    {
+      "county": "Weber",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "evidenceLevel": "abstract",
+      "reviewed": false,
+      "id": "entry-661292",
+      "reference": {
+        "county": "Weber",
+        "book": "1120",
+        "page": "645"
+      },
+      "effectiveDate": "1976-02-26",
+      "interest": "surface_record",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20013.tif",
+        "sha256": "5abae22b2987a9dcc5fc1fd9b01eeadd4f2483805c8b39b00452b34536f1943d",
+        "pages": "107 013.tif rows 24\u201325"
+      },
+      "summary": "Annual application by Daisy C. Tucker and Ileen C. Cragun, filed March 30, 1976. Description begins 33 feet east of the quarter corner, states 29.13 acres and retains the 1.48-acre canal exception. Printed calls differ from the older tract; this application is not a conveyance or release.",
+      "references": [
+        {
+          "target": {
+            "county": "Weber",
+            "book": "751",
+            "page": "397"
+          },
+          "relation": "exception",
+          "basis": "explicit_record_reference"
+        }
+      ]
+    },
+    {
+      "county": "Weber",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "evidenceLevel": "abstract",
+      "reviewed": false,
+      "id": "entry-708086",
+      "reference": {
+        "county": "Weber",
+        "book": "1193",
+        "page": "40"
+      },
+      "effectiveDate": "1977-08-01",
+      "interest": "highway_acquisition",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20020.tif",
+        "sha256": "c23212f8fbfa1594297c20c016cddb24b6b470a81560a6c4e8eb3712dd98a740",
+        "pages": "107 020.tif rows 1\u20137"
+      },
+      "summary": "Court order indexed from Ileen Carver Cragun et al. to Utah Department of Transportation, filed August 12, 1977. Project 0569, parcel 0569:6:C: two highway strips on the west line of SWSE Section 27, totaling 1.10 acres, of which 0.65 acre was occupied by the existing county road. The strips lie on opposite sides of the canal.",
+      "references": []
+    },
+    {
+      "county": "Weber",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "evidenceLevel": "abstract",
+      "reviewed": false,
+      "id": "entry-794651",
+      "reference": {
+        "county": "Weber",
+        "book": "1331",
+        "page": "308"
+      },
+      "effectiveDate": "1979-10-25",
+      "interest": "highway_acquisition",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20025.tif",
+        "sha256": "662ad1b9e4f6f5a4689ba48c400ee83e6253b0851af8a56ce5c0ad283f114410",
+        "pages": "107 025.tif rows 20\u201326"
+      },
+      "summary": "Final Order of Condemnation indexed from Ileen Carver Cragun by Court to Utah Department of Transportation, filed November 1, 1979. Project 0569, parcel 0569:6:C, repeats the two highway-strip descriptions and states land taken in fee. It is an acquisition, not a release of the canal or railroad reservation.",
+      "references": [
+        {
+          "target": {
+            "county": "Weber",
+            "book": "1193",
+            "page": "40"
+          },
+          "relation": "same_project_parcel",
+          "basis": "same_project_and_parcel_identifier_not_express_book_reference"
+        }
+      ],
+      "geometryDefinitions": [
+        {
+          "kind": "tract",
+          "anchorId": "71234-2546",
+          "tie": [],
+          "calls": [
+            {
+              "ns": "N",
+              "degrees": 0.36666666666666664,
+              "ew": "W",
+              "feet": 300
+            },
+            {
+              "ns": "N",
+              "degrees": 85.9,
+              "ew": "E",
+              "feet": 44.09
+            },
+            {
+              "ns": "S",
+              "degrees": 0.36666666666666664,
+              "ew": "E",
+              "feet": 302.9
+            },
+            {
+              "ns": "N",
+              "degrees": 90,
+              "ew": "W",
+              "feet": 44
+            }
+          ]
+        },
+        {
+          "kind": "tract",
+          "anchorId": "71234-2546",
+          "tie": [
+            {
+              "ns": "N",
+              "degrees": 0.36666666666666664,
+              "ew": "W",
+              "feet": 355.2
+            }
+          ],
+          "calls": [
+            {
+              "ns": "N",
+              "degrees": 0.36666666666666664,
+              "ew": "W",
+              "feet": 795.2
+            },
+            {
+              "ns": "S",
+              "degrees": 89.68333333333334,
+              "ew": "E",
+              "feet": 44
+            },
+            {
+              "ns": "S",
+              "degrees": 0.36666666666666664,
+              "ew": "E",
+              "feet": 792.3
+            },
+            {
+              "ns": "S",
+              "degrees": 85.9,
+              "ew": "W",
+              "feet": 44.09
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
