@@ -77,7 +77,7 @@ def build(api_base, inline_assets=False):
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
         "<script>\n" + read(ROOT, "node_modules", "@turf", "turf", "turf.min.js") + "\n</script>",
         "<script>\n" + read(ROOT, "node_modules", "proj4", "dist", "proj4.js") + "\n</script>",
-        "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
+        "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "survey-boundary.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
         "<script>\n" + read(WEB, "land-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "weber-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",

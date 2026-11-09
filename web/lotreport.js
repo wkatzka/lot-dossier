@@ -1994,7 +1994,7 @@
       if(!response.ok)throw new Error('Public research HTTP '+response.status);data=await response.json();if(data.error)throw new Error(data.error);
     } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
     ctx.facts.publicResearch=data;
-    (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);});
+    (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);doc.boundaryCheck=root.SurveyBoundary.compare(doc,ctx.parcel,ctx.facts.parcelDoc||{});});
     var federal=data.federal||{}, records=federal.features||[], history=data.history||{}, out=[];
     out.push(F('minerals','Federal mineral-estate screen',records.length?'watch':'verify',federal.status==='retrieved'?(records.length+' intersecting BLM mineral record(s)'):'Federal mineral source unavailable',
       records.map(function(x){var a=x.attributes;return 'Record '+a.OBJECTID+': patent '+(a.Patent_NR||'not supplied')+', serial '+(a.Serial_NR||'not supplied')+', all minerals '+(a.ALL_MIN||'unspecified')+', oil/gas '+(a.Oil_Gas||'unspecified')+', coal '+(a.Coal||'unspecified')+'.';}).join(' ')+' '+(federal.error||'Intersections include possible boundary touches. Public mapping is discovery evidence; original patents/reservations and later private transfers remain unverified.'),'BLM Utah Federal Minerals Estate',federal.source));

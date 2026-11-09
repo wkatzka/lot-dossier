@@ -73,6 +73,13 @@ function evaluate(input){
   const inside=!!inset&&!outside;
   checks.push({component:component.name,check:'Boundary and setback',passed:inside,clearanceM:setback+tolerance});
   if(!inside)conflicts.push(component.name+': outside boundary clearance or crosses a hole');
+  for(const candidate of input.additionalBoundaries||[]){
+   const alternative=valid(T.feature(candidate.geometry)),candidateInset=T.buffer(alternative,-(setback+tolerance),{units:'meters',steps:32});
+   const passes=!!candidateInset&&!T.difference(T.featureCollection([shape,candidateInset]));
+   checks.push({component:component.name,check:candidate.name,passed:passes,source:candidate.source,clearanceM:setback+tolerance});
+   if(!passes)conflicts.push(component.name+': outside '+candidate.name);
+   if(!candidate.reviewed||!candidate.sourceAccuracyEstablished)unknown.push(candidate.name+': source accuracy and legal applicability unverified');
+  }
   shapes.push(component);
   for(const obstacle of input.obstacles||[]){
    if(!obstacle.geometry){unknown.push(obstacle.name+': restriction location unresolved');continue;}
