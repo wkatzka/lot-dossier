@@ -80,7 +80,7 @@
     pages.forEach(function (p) {
       var t = p.text, m;
       // Areas: "RESIDENCE = 4658 SF", "LIVING AREA: 3,200 SQ FT", "GARAGE = 1237 SF"
-      var re = /(RESIDENCE|HOUSE|LIVING(?: AREA)?|MAIN FLOOR|FIRST FLOOR|1ST FLOOR|CONDITIONED|HEATED|FINISHED|DWELLING|HOME)[A-Z \/]*?\s*[=:]\s*([\d,]{3,6})\s*(?:SF|S\.F\.|SQ\.?\s?FT)/g;
+      var re = /(RESIDENCE|HOUSE|LIVING(?: AREA)?|CONDITIONED|HEATED|DWELLING|HOME)[A-Z \/]*?\s*[=:]\s*([\d,]{3,6})\s*(?:SF|S\.F\.|SQ\.?\s?FT)/g;
       while ((m = re.exec(t))) { set('residence_sf', +m[2].replace(/,/g, ''), p); }
       if ((m = /GARAGE[A-Z \/]*?\s*[=:]\s*([\d,]{3,5})\s*(?:SF|S\.F\.|SQ\.?\s?FT)/.exec(t))) set('garage_sf', +m[1].replace(/,/g, ''), p);
       if ((m = /GROUND SNOW LOAD[^\n\d]{0,20}(\d{2,3})\s*PSF/.exec(t))) set('ground_snow_load_psf', +m[1], p);
@@ -213,6 +213,7 @@
       if (hits.length >= 6) { out.sheetIndex = where(p); return; }
       hits.forEach(function (sd) { if ((out.sheets[sd[0]] || []).length < 3) (out.sheets[sd[0]] = out.sheets[sd[0]] || []).push(where(p)); });
     });
+    out.permitFacts = root.PermitFacts ? root.PermitFacts.extract(pages,{name:filename}) : [];
     out.found = Object.keys(out.fields).length;
     return out;
   }

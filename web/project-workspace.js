@@ -122,7 +122,27 @@
     busy=true;
     try {
       const a=b.dataset.action, id=b.dataset.id;
-      if(a==='read-originals') {
+      if(a==='extract-permit-local'||a==='extract-permit-claude') {
+        const documentId=host.querySelector('#city-source-doc')?.value;
+        if(!host.querySelector('#city-source-scope')?.checked)throw Error('Confirm that the document describes the proposed work for this permit type.');
+        const permitType=project.application.cityInspect?.typeId;
+        await saveCityPage();const d=project.documents.find(x=>x.id===documentId);if(!d)throw Error('Choose a PDF first.');
+        message(a==='extract-permit-local'?'Reading explicit plan schedules…':'Reading remaining document facts with Claude…');
+        let result;
+        if(a==='extract-permit-local'){
+          const blob=await S.file(d.id);if(!blob)throw Error('Document is unavailable on this device.');
+          const read=await window.PlanReader.read(new File([blob],d.name,{type:'application/pdf'}));
+          result={documentId:d.id,documentHash:d.hash,filename:d.name,method:'Direct extraction',facts:(read.permitFacts||[]).map(f=>({...f,documentId:d.id,documentHash:d.hash})),at:new Date().toISOString(),notice:read.textChars<50?'No readable text; scanned pages need visual review.':''};
+        }else{
+          if(!window.CloudSync.signedIn())throw Error('Sign in to use Claude. Read without AI works on this device.');
+          await window.ProjectSync.enqueue(project.id);
+          if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for this project and its document to finish syncing, then retry.');
+          const response=await fetch('/api/permit-extraction',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:d.id}),signal:AbortSignal.timeout(180000)});
+          result=await response.json();if(!response.ok)throw Error(result.error||'Document extraction failed');
+        }
+        result.permitType=permitType;await commit({type:'document_extraction',result});message(result.facts.length+' candidate facts found. Review citations and scope before filing.');
+      }
+      else if(a==='read-originals') {
         const next=JSON.parse(JSON.stringify(project)),manifest=next.report.facts.publicResearch?.titleResearch?.acquisition;
         if(!manifest)throw Error('Refresh public research to discover document sources.');
         message('Reading public originals sequentially. This run saves up to 20 pages; remaining cursors are retained.');

@@ -87,7 +87,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "pool-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "mineral-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
-        "<script>\n" + read(WEB, "planreader.js") + "\n</script>",
+        "<script>\n" + read(WEB, "permit-facts.js") + "\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
         "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",

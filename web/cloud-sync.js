@@ -42,5 +42,5 @@ async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owne
  assertOwner(owner);const restored=await root.ProjectStore.restore(p,files,{cloudRestore:true,expectedRevision:existing?.revision});localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
 }
 function baseRevision(id){if(!session)return null;const v=localStorage.getItem(baseKey(id));return v===null?null:Number(v);}
-root.CloudSync={baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,user:()=>session?.user||null,signedIn:()=>!!session};
+root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,user:()=>session?.user||null,signedIn:()=>!!session};
 })(window);

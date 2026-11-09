@@ -89,7 +89,7 @@
     var n = function (k) { var v = parseFloat($(k).value); return isNaN(v) ? null : v; };
     var v = function (k) { return $(k).value || null; };
     var x = mode === 'upload' ? extracted : null;
-    var plan = { name: x ? x.filename : 'Plan details', filename: x ? x.filename : null,
+    var plan = { permitFacts: x ? x.permitFacts || [] : [], name: x ? x.filename : 'Plan details', filename: x ? x.filename : null,
       footprint: { residence_sf: n('residence_sf'), garage_sf: n('garage_sf'), width_ft: n('width_ft'), depth_ft: n('depth_ft') },
       bedrooms: n('bedrooms'), stories: n('stories'), foundation: v('foundation'), height_ft: n('height_ft'), fuel: v('fuel'), fireplace: v('fireplace'), cladding: v('cladding'),
       energy: x ? x.energy || null : null, energySrc: x && x.src ? x.src.energy || null : null,
@@ -501,7 +501,7 @@
     extracted = last.plan ? Object.assign({}, last.plan, {
       filename: last.plan.filename || last.plan.name,
       fields: Object.assign({}, last.plan, last.plan.footprint || {}, last.plan.structural || {}),
-      src: Object.assign({}, last.plan.src || {}, { energy: last.plan.energySrc })
+      permitFacts: last.plan.permitFacts || [], src: Object.assign({}, last.plan.src || {}, { energy: last.plan.energySrc })
     }) : null;
     fillFields(extracted); setMode(extracted ? 'upload' : 'none');
     showReport();

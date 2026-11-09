@@ -71,6 +71,13 @@
       }
       case 'evidence':
         p.evidence=E.apply(p.evidence||E.discover(p.report),a.action,now); invalidate(p); event(p,a.type,'Research evidence or calculation updated.',now); break;
+      case 'document_extraction': {
+        const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);
+        required(d&&latest(p,d),'The source document changed; extract the current version.');
+        required(Array.isArray(x.facts)&&x.facts.length<=200,'Invalid extraction result');
+        p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
+        invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' evidence-backed candidates; review required.',now);break;
+      }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
         p.application.cityInspect=C.update(p,a); invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
