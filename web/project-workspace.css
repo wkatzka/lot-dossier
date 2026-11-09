@@ -67,3 +67,18 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 #project-workspace .city-field { margin: 1.5rem 0 2.5rem; padding: 0.5rem 0; }
 #project-workspace .city-field h3 { margin-bottom: 0.35rem; }
 #project-workspace .city-field textarea { min-height: 4rem; }
+#project-workspace .city-pages{margin:24px 0;gap:10px}
+#project-workspace .city-pages [aria-current=step]{background:#eeeadd;color:#18251e}
+#project-workspace .city-application fieldset{border:0;padding:0;margin:24px 0}
+#project-workspace .city-application legend{font-size:1.25rem;font-weight:700;margin-bottom:20px}
+#project-workspace .city-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 32px}
+#project-workspace .city-field{margin:0;padding:0;min-width:0}
+#project-workspace .city-field>label{font-weight:600;margin:0 0 8px}
+#project-workspace .city-wide{grid-column:1/-1}
+#project-workspace .city-note{font-size:.82rem;color:#cccfc5;line-height:1.5;margin-top:10px}
+#project-workspace .city-note p{margin:5px 0 0}
+#project-workspace .city-answer-state{color:#e3c79c}
+#project-workspace .city-field input[readonly]{opacity:.8}
+#project-workspace .city-field input:disabled{opacity:.65}
+@media(max-width:700px){#project-workspace .city-fields{grid-template-columns:1fr}}
+#project-workspace .city-pages button[aria-current=step]:hover,#project-workspace .city-pages button[aria-current=step]:focus{background:#eeeadd;color:#18251e}

@@ -9,8 +9,14 @@
   const locked=f=>f.type==='file'||f.type==='checkbox'||f.name==='permit_type'||/^other\d+$/.test(f.name);
   function candidate(p,t,section,f){
     const r=p.report||{},a=r.parcel?.attrs||{},fx=r.facts||{},pl=r.plan||{},app=p.application||{};
-    let value='',basis='Enter information for this application scope.';
-    const sourced={property_address:a.PARCEL_ADD,tax_id:r.parcel?.id,subdivision:a.SUBDIV_NAME,lot_no:fx.parcelDoc?.lot,zone:fx.zone,latitude:r.parcel?.cx,longitude:r.parcel?.cy};
+    const help={application_date:'Date of this application. Use the city’s required date format when filing.',nickname:'A short name that identifies this proposed project.',phase:'Recorded subdivision phase; use the plat or legal description, not the construction phase.',notify_contact:'Choose whether this contact should receive inspection emails.',owner_builder:'Choose the displayed name (Builder or Owner). This is not an owner-builder certification.',is_corner:'Whether the parcel is a corner lot. Confirm street frontage because street-side setbacks may apply.',num_units:'Number of dwelling or occupancy units included in this application.',num_buildings:'Number of buildings included in this application.',bedrooms:'Bedrooms in the proposed work; reconcile with the final plan and septic capacity if applicable.',stories:'Number of proposed stories; confirm against the submitted floor plans.',construction_material:'Construction material or system specified in the plans.',max_occupancy:'Design occupant load for the proposed use, established from the applicable code and plans.'};
+    let value='',basis=help[f.name]||'Enter information for this application scope.';
+    if(/license$/.test(f.name))basis='License number for the contractor doing this work. Verify the license is current and covers the trade.';
+    if(/phone|email/.test(f.name)&&f.name!=='notify_contact')basis='Current contact information for the person or company named in this section. Confirm they are the intended contact.';
+    if(/^(main_floor|second_floor|third_floor|fourth_floor|basement|unfin_basement|patio|garage_footage|other_footage)$/.test(f.name))basis='Area for this part of the proposed work, from the plans. Confirm the city’s units and separate finished, unfinished and garage areas; total house area cannot replace a floor area.';
+    if(/^(engineer_record|design_professional|builder_name|electrical_name|mechanical_name|plumbing_name)$/.test(f.name))basis='Person or company responsible for this role on this project. Confirm the appointment and required credentials.';
+
+    const sourced={property_address:a.PARCEL_ADD,tax_id:r.parcel?.id,subdivision:a.SUBDIV_NAME,lot_no:fx.parcelDoc?.lot,zone:fx.zone,latitude:r.parcel?.cy,longitude:r.parcel?.cx};
     if(section==='primary'&&Object.hasOwn(sourced,f.name)){value=sourced[f.name]??'';basis='Saved site report: parcel / jurisdiction records. Confirm against the city form.';}
     const manual={ownername:app.owner,buildername:app.contractor,builder_name:app.contractor,description:app.description};
     if(Object.hasOwn(manual,f.name)){value=manual[f.name]??'';basis='Saved application details; confirm identity and scope.';}
@@ -27,6 +33,10 @@
     if(f.name==='area')basis='The portal does not state units here. Confirm units before entering a value.';
     if(f.type==='file')basis='Provide the applicable document through the city portal. Existing project files are not automatically certified as satisfying this requirement.';
     if(/^other\d+$/.test(f.name)||f.type==='checkbox')basis='Complete personally in the city portal after reading the full statement. Cornerpin does not provide initials or acknowledgments.';
+    if(section==='building'&&t.value==='1'&&['front_set_back','rear_set_back'].includes(f.name)){
+      const side=f.name==='front_set_back'?'front':'rear',minimum=fx.zone_std?.[side];
+      if(minimum!=null&&Number.isFinite(Number(minimum))&&Number(minimum)>=0){value=minimum;basis='Saved zoning/development standards: minimum '+side+' setback in feet. Confirm the applicable frontage and controlling plat or amendments. This is not the actual proposed distance.';}
+    }
     return {value:String(value??''),basis};
   }
   function rows(p,id){
@@ -34,13 +44,19 @@
     const t=getType(id);if(!t)return [];
     return Object.entries(t.sections).flatMap(([section,keys])=>keys.map(key=>{
       const f=catalog.fields[key],rowId=section+'.'+key,c=candidate(p,t,section,f),saved=p.application.cityInspect?.answers?.[t.value]?.[rowId];
-      return {...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,
+      return {...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
         status:saved?(saved.siteVersion===p.siteVersion?'User supplied · review before filing':'Site refreshed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
     }));
   }
   function update(p,a){
     if(!supported(p))throw Error('Exact form mapping is currently available for Ogden Valley City Building Permits only.');
     const t=getType(a.permitType);if(!t)throw Error('Choose a mapped permit type.');
+    if(a.entries){
+      if(!Array.isArray(a.entries)||a.entries.length>200)throw Error('Invalid application fields.');
+      let next={...p,application:{...p.application,cityInspect:update(p,{permitType:a.permitType})}};
+      for(const entry of a.entries) next.application.cityInspect=update(next,{...entry,permitType:a.permitType});
+      return next.application.cityInspect;
+    }
     const state=JSON.parse(JSON.stringify(p.application.cityInspect||{answers:{}}));state.typeId=t.value;state.schemaDate=catalog.observedAt;
     state.answers=state.answers||{};
     if(a.fieldKey){
@@ -60,29 +76,43 @@
     const id=p.application.cityInspect?.typeId,t=getType(id);if(!supported(p)||!t)throw Error('Choose and save an application type first.');
     return ['CORNERPIN — APPLICATION ANSWER SHEET — NOT SUBMITTED',t.label+' · '+catalog.jurisdiction,p.property.address,'Form observed '+catalog.observedAt+' · '+catalog.source,'Review all answers in the current portal. Conditional rules and final submission validation may differ.',''].concat(rows(p,id).map(r=>titles[r.section]+' / '+r.label+' ['+r.name+']\n'+(r.value===''?'[UNANSWERED]':r.options?.find(o=>o.value===r.value)?.label||r.value)+'\n'+r.status+'\nBasis: '+r.basis+'\n')).join('\n');
   }
-  function render(p){
-    if(!supported(p))return '<section class="pw-card"><h2>City application answers</h2><p>Exact field mapping is currently available for Ogden Valley City Building Permits. Other jurisdictions need their own form mapping.</p></section>';
-    const id=p.application.cityInspect?.typeId||'',t=getType(id),rs=rows(p,id);
-    const groups=[...new Set(catalog.types.map(x=>x.group))];
-    let html='<section class="pw-card"><h2>City application answers</h2><p>Choose from all 38 application types in the city’s Building Permits module. Answers save with this project; nothing is sent to the city.</p><form data-command="city_application"><label>Application type<select name="permitType" required><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select></label><button type="submit">Open application fields</button></form>';
-    if(t){
-      html+='<p>Form checked '+catalog.observedAt+'. Suggestions need review. Blank fields are not claims of exemption. Final city validation and conditional requirements have not been fully tested.</p><button type="button" data-action="city-download">Download saved answer sheet</button>';
-      for(const [section,title] of Object.entries(titles)){
-        const list=rs.filter(r=>r.section===section);
-        html+='<details><summary>'+title+' · '+list.length+' fields</summary>';
-        if(section==='attachments')html+='<p>Check applicability in the portal. Asterisks below reproduce visible required markers, not a complete determination of what your project requires. Keep supporting files under Documents.</p>';
-        if(!list.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
-        html+=list.map(r=>{
-          const current=esc(r.value),required=r.required||r.markedRequired;
-          let out='<div class="city-field"><h3>'+esc(r.label)+(required?' *':'')+'</h3><p class="pw-muted">'+esc(r.status)+'</p>';
-          if(r.locked)return out+'<p>'+esc(r.name==='permit_type'?t.label:r.basis)+'</p></div>';
-          out+='<form data-command="city_application"><input type="hidden" name="permitType" value="'+id+'"><input type="hidden" name="fieldKey" value="'+r.key+'"><label>Answer';
-          out+=r.options?'<select name="value"><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>':'<textarea name="value" maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
-          return out+'</label><label>Source / basis<textarea name="basis">'+esc(r.basis)+'</textarea></label><div class="pw-actions"><button type="submit">Save answer</button><button type="submit" name="reset" value="yes">Use suggestion</button><button type="button" data-action="city-copy" data-id="'+r.key+'">Copy saved answer</button></div></form></div>';
-        }).join('');html+='</details>';
-      }
+  function formCommand(p,data){
+    const permitType=data.get('permitType'),list=rows(p,permitType),entries=[];
+    for(const r of list){
+      if(r.locked||!data.has('answer:'+r.key))continue;
+      const value=String(data.get('answer:'+r.key)??'').trim();
+      if(value===r.value)continue;
+      entries.push({fieldKey:r.key,value,basis:'User-entered application answer. Confirm against the supporting plans or records before filing.'});
     }
-    return html+'<p><a href="'+catalog.source+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p></section>';
+    return {type:'city_application',permitType,entries};
   }
-  const api={catalog,supported,rows,update,sheet,render};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
+  function render(p,page='primary'){
+    if(!supported(p))return '<section class="pw-card"><h2>City application</h2><p>Exact field mapping is currently available for Ogden Valley City Building Permits. Other jurisdictions need their own form mapping.</p></section>';
+    const id=p.application.cityInspect?.typeId||'',t=getType(id),rs=rows(p,id);
+    if(!titles[page])page='primary';
+    const groups=[...new Set(catalog.types.map(x=>x.group))];
+    let html='<section class="pw-card city-application"><h2>City application</h2><p>CityInspect’s field labels, choices and page order, with your site information filled in. This is your Cornerpin draft; nothing is sent to the city.</p><label for="city-permit-type">Permit type</label><select id="city-permit-type" data-city-type><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select>';
+    if(t){
+      html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>'<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'">'+(i+1)+'. '+titles[key]+'</button>').join('')+'</nav><p class="pw-muted">Autofilled answers include their basis below. Empty fields need information. * = required marker observed in the city form.</p>';
+      const list=rs.filter(r=>r.section===page);
+      html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields">';
+      if(!list.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
+      html+=list.map(r=>{
+        const inputId='city-'+r.key,name='answer:'+r.key,current=esc(r.value),required=r.required||r.markedRequired;
+        let out='<div class="city-field'+(r.type==='textarea'||r.type==='file'?' city-wide':'')+'"><label for="'+inputId+'">'+esc(r.label)+(required?' *':'')+'</label>';
+        const attrs=' id="'+inputId+'" name="'+name+'" aria-describedby="'+inputId+'-note"';
+        if(r.name==='permit_type')out+='<input'+attrs+' value="'+esc(t.label)+'" readonly>';
+        else if(r.type==='file')out+='<input'+attrs+' type="file" disabled><p><button type="button" data-action="tab" data-id="documents">Manage project documents</button></p>';
+        else if(r.locked)out+='<input'+attrs+' value="" disabled placeholder="Complete in CityInspect">';
+        else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
+        else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
+        else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
+        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state">'+esc(r.status)+'</span><p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p></div></div>';
+      }).join('');
+      const pages=Object.keys(titles),next=pages[pages.indexOf(page)+1];
+      html+='</div></fieldset><div class="pw-actions"><button type="submit">Save page</button>'+(next?'<button type="submit" data-city-next="'+next+'">Save & continue →</button>':'')+'<button type="button" data-action="city-download">Save & download answers</button></div><p class="city-save-state" role="status">Changes save when you save, change application pages or select another permit type.</p></form>';
+    }
+    return html+'<p class="pw-muted">Form inspected '+catalog.observedAt+'. Layout is adapted for Cornerpin; conditional requirements and final city validation may differ. Signatures, acknowledgments and uploads are completed in CityInspect.</p><p><a href="'+catalog.source+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p></section>';
+  }
+  const api={catalog,supported,rows,update,sheet,render,formCommand};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
 })(typeof window!=='undefined'?window:globalThis);

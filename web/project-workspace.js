@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
+  let cityPage='primary';
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -35,6 +36,10 @@
     if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');project=p;capture=Promise.resolve(p);tab='overview';section='site';render();if(notice)message(notice);window.scrollTo(0,0);
   }
   async function commit(command, file) { const next = W.apply(project, command); await S.save(next, project.revision, file); project = next; render(); }
+  async function saveCityPage() {
+    const f=host.querySelector('form[data-command=city_application_page]');
+    if(f){const command=window.CityApplication.formCommand(project,new FormData(f));if(command.entries.length)await commit(command);}
+  }
   async function collectChecklist(p) {
     for(const file of await S.checklistFiles(p.property.county,p.property.parcelId)){
       const hash=await window.ProjectBackup.hash(await file.blob.arrayBuffer());if(p.documents.some(d=>d.hash===hash))continue;
@@ -69,7 +74,7 @@
   }
   function filing() {
     const p = project;
-    return (window.CityApplication?window.CityApplication.render(p):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section><section class="pw-card"><h2>Filing requirements</h2><p>Site-review suggestions are not filing approvals. Record the current evidence and who reviewed each requirement. A waiver needs a documented basis.</p>' + p.requirements.map(r => '<details><summary>' + esc(r.title) + ' <span class="pw-status">— ' + esc(human(r.state)) + (r.required ? '' : ' · optional') + '</span></summary><p>' + esc(r.detail || r.source || '') + '</p>' + form('requirement', select('state','Review status',[['reviewed','Reviewed against evidence'],['waived','Not applicable / waived with reason'],['needs_review','Needs review']],r.state) + field('reviewer','Reviewed by',r.reviewer) + area('note','Review basis / waiver reason',r.note) + docs(r.documentIds) + field('url','Source HTTPS link',r.evidenceUrl || r.sourceUrl,'url'), 'Save requirement review',r.id) + '</details>').join('') + '</section>' + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + window.CornerpinReportViews.packet((p.report.facts || {}).packet) + '</div></details></section>' + packagePanel('initial') + receiptForm();
+    return (window.CityApplication?window.CityApplication.render(p,cityPage):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section><section class="pw-card"><h2>Filing requirements</h2><p>Site-review suggestions are not filing approvals. Record the current evidence and who reviewed each requirement. A waiver needs a documented basis.</p>' + p.requirements.map(r => '<details><summary>' + esc(r.title) + ' <span class="pw-status">— ' + esc(human(r.state)) + (r.required ? '' : ' · optional') + '</span></summary><p>' + esc(r.detail || r.source || '') + '</p>' + form('requirement', select('state','Review status',[['reviewed','Reviewed against evidence'],['waived','Not applicable / waived with reason'],['needs_review','Needs review']],r.state) + field('reviewer','Reviewed by',r.reviewer) + area('note','Review basis / waiver reason',r.note) + docs(r.documentIds) + field('url','Source HTTPS link',r.evidenceUrl || r.sourceUrl,'url'), 'Save requirement review',r.id) + '</details>').join('') + '</section>' + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + window.CornerpinReportViews.packet((p.report.facts || {}).packet) + '</div></details></section>' + packagePanel('initial') + receiptForm();
   }
   function packagePanel(kind) {
     const p = project, blockers = W.blockers(p,kind), pkg = W.currentPackage(p,kind);
@@ -130,15 +135,16 @@
         next.revision=revision+1;next.updatedAt=new Date().toISOString();
         await S.save(next,revision);project=next;render();
       }
-      else if(a==='projects') await list();
+      else if(a==='projects') {await saveCityPage();await list();}
       else if(a==='open') {message('Opening saved project…');await openSaved(id);}
-      else if(a==='tab'||a==='filing'||a==='management') {tab=a==='tab'?id:a;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();}
+      else if(a==='tab'||a==='filing'||a==='management') {await saveCityPage();tab=a==='tab'?id:a;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();}
       else if(a==='refresh-evidence') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:refresh',{detail:project.report}));}
       else if(a==='home') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:home'));}
       else if(a==='close') {document.body.classList.remove('show-project');if(project)window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));}
       else if(a==='site') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));}
       else if(a==='download-file') {const d=project.documents.find(x=>x.id===id), blob=await S.file(id);if(!blob)throw new Error('File not available in this browser.');download(d.name,blob);}
-      else if(a==='city-download') download('cornerpin-city-answers.txt',window.CityApplication.sheet(project),'text/plain');
+      else if(a==='city-page') {await saveCityPage();cityPage=id;render();}
+      else if(a==='city-download') {await saveCityPage();download('cornerpin-city-answers.txt',window.CityApplication.sheet(project),'text/plain');}
       else if(a==='city-copy') {const row=window.CityApplication.rows(project,project.application.cityInspect?.typeId).find(r=>r.key===id);if(!row||!row.value)throw Error('No saved or suggested answer to copy.');await navigator.clipboard.writeText(row.value);message('Saved answer copied. Save any edits before copying.');}
       else if(a==='export-package') await exportPackage(id);
       else if(a==='cloud-save') {await window.ProjectSync.enqueue(id||project.id);refreshSyncLabels();}
@@ -148,12 +154,21 @@
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
     } catch(err) {message(err.message);} finally {busy=false;}
   });
+  host.addEventListener('change',async e=>{
+    if(!e.target.matches('[data-city-type]')||busy)return;
+    const permitType=e.target.value;if(!permitType){render();return;}busy=true;
+    try{await saveCityPage();cityPage='primary';await commit({type:'city_application',permitType});}catch(err){render();message(err.message);}finally{busy=false;}
+  });
   host.addEventListener('submit', async e => {
     const f=e.target.closest('form[data-command]'); if(!f)return;e.preventDefault();if(busy)return;busy=true;
     const submit=f.querySelector('[type=submit]');submit.disabled=true;
     try {
       const data=new FormData(f);if(e.submitter?.name==='reset')data.set('reset','yes');if(e.submitter?.dataset.poolSearch)data.set('mode','placement-search');const command=Object.fromEntries(data);command.type=f.dataset.command;command.id=f.dataset.id;
       command.documentIds=data.getAll('documentIds').filter(Boolean);command.reviewed=data.has('reviewed');command.confirmed=data.has('confirmed');
+      if(command.type==='city_application_page'){
+        await commit(window.CityApplication.formCommand(project,data));if(e.submitter?.dataset.cityNext){cityPage=e.submitter.dataset.cityNext;render();}
+        message('Application page saved. Nothing sent to CityInspect.');return;
+      }
       if(command.type==='review_round') command.items=W.splitComments(command.originalText);
       if(command.type==='restore-backup') {
         const file=data.get('backup');if(!file||file.size>150*1024*1024)throw Error('Choose a backup below 150 MB');const backup=await window.ProjectBackup.unpack(JSON.parse(await file.text()));project=await S.restore(backup.project,backup.files);capture=Promise.resolve(project);tab='overview';render();
