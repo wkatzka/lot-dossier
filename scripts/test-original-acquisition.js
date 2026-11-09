@@ -4,6 +4,8 @@ const url='https://www.webercountyutah.gov/mounts/surveyorimages/test.pdf';
 (async()=>{
  assert(D.allowed(url));for(const u of ['https://evil.example/a.pdf',url+'?redirect=x',url+'#page=1','https://www.webercountyutah.gov/login.php','https://www.webercountyutah.gov/mounts/surveyorimages/../../secret.pdf'])assert(!D.allowed(u));
  const loc={township:6,northSouth:'n',range:2,eastWest:'w',section:12};
+ assert(D.sectionMatch({township:'5N/6N',range:'1W\\2W',section:'11/12 & 13'},loc));
+ assert(!D.sectionMatch({township:'6N',range:'2W',section:'1E'},loc));
  const records=[{recordNumber:'12',name:'Unrelated surname',township:'6N',range:'2W',section:'12',url},{recordNumber:'99',name:'Same surname',township:'7N',range:'1E',section:'27',url:url.replace('test','other')}];
  const a=D.inventory({historical:{plss:{locations:[loc]}},history:{records:[]},title:{originalRequests:[{entry:'123456',source:'https://example.com'}]}},records);
  assert.equal(a.documents.length,1);assert.equal(a.documents[0].label,'Filed survey 12 · Unrelated surname');assert.equal(a.requests[0].state,'original_access_unresolved');assert.equal(a.inventoryComplete,false);
