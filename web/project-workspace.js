@@ -117,7 +117,20 @@
     busy=true;
     try {
       const a=b.dataset.action, id=b.dataset.id;
-      if(a==='projects') await list();
+      if(a==='read-originals') {
+        const next=JSON.parse(JSON.stringify(project)),manifest=next.report.facts.publicResearch?.titleResearch?.acquisition;
+        if(!manifest)throw Error('Refresh public research to discover document sources.');
+        message('Reading public originals sequentially. This run saves up to 20 pages; remaining cursors are retained.');
+        let revision=project.revision;
+        await window.OriginalDocuments.drain(manifest,async(url,page)=>{
+          const response=await fetch((window.LR_DATA.apiBase||'')+'/api/original-document?url='+encodeURIComponent(url)+'&page='+page,{signal:AbortSignal.timeout(110000)});
+          const data=await response.json();if(!response.ok)throw Error(data.error||'Document service unavailable');return data;
+        },{maxPages:20,onProgress:async()=>{}});
+        const finding=(next.report.findings||[]).find(f=>f.item==='Automatic original-document reading');if(finding)finding.headline=manifest.processing.processedDocuments+' of '+manifest.documents.length+' candidate documents processed';
+        next.revision=revision+1;next.updatedAt=new Date().toISOString();
+        await S.save(next,revision);project=next;render();
+      }
+      else if(a==='projects') await list();
       else if(a==='open') {message('Opening saved project…');await openSaved(id);}
       else if(a==='tab'||a==='filing'||a==='management') {tab=a==='tab'?id:a;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();}
       else if(a==='refresh-evidence') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:refresh',{detail:project.report}));}

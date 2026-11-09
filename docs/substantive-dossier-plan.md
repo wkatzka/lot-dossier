@@ -240,3 +240,19 @@ Existing account storage, My projects, plans, valuation research, pool scenarios
 - [x] Add statewide UDOT public ROW inventory acquisition/disposal metadata with explicit incomplete-coverage treatment.
 - [ ] **Attempted but unresolved:** complete transfer chain, railroad alignment/release and mineral severances. No reviewed original release obtained; annual applications and condemnation do not supply one.
 - [ ] **Blocked this session:** signed-in FamilySearch browser control fails with `browser.user is unavailable` when binding either existing record or catalog tabs. Native Codex app control is disallowed. Downloaded county scans and public APIs remain usable; new signed-in original-image retrieval is not claimed.
+
+## Countywide original-document acquisition — 2026-11-09
+
+Retained capability checklist:
+- [x] Discover public originals from any Weber parcel's parent references and mapped PLSS section, without a pilot address or subdivision-name prerequisite.
+- [x] Download allowed county PDF/TIFF sources, reject login/error responses and off-host redirects, retain content hashes and page citations.
+- [x] Read full scanned pages with sequential local OCR, including PDF pages whose sparse text layer omits the drawing. Preserve confidence and review requirements.
+- [x] Extract entry, book/page and explicit WCS survey references. Resolve WCS references against the official filed-survey index and queue linked originals; never substitute an abstract for an original deed.
+- [x] Integrate source readings and outstanding exact-instrument requests into the saved dossier; expose a resumable reading action in Evidence & restrictions.
+- [x] Bound CPU, transfers, page counts and saved evidence size. Initial dossiers process up to six pages; subsequent workspace runs process up to twenty. The serial CLI can process larger batches and checkpoints after each result. Server-instance caches are temporary, not durable shared storage.
+- [ ] Complete automatic access to every deed, reservation, release and amendment: **attempted but blocked by missing verified image-access endpoint/credentials and automated-use terms**. County subscription is an abstract service, not demonstrated image/API access. The document order path is asynchronous and paid. No orders or subscriptions purchased.
+- [ ] Complete mineral ownership and easement reconciliation: **attempted but unresolved**; missing originals, handwriting, legal-description matching and intervening releases still matter. Nearby survey discovery and successful OCR are not legal clearance.
+
+Validation: all 24 existing/new script suites; live official inventory of 8,494 filed surveys; independent sources 8493 (T6N R2E), 8492 (T6N R2W), 8491 (T6N R1W). Survey 8492's sparse text yielded 617 characters; full-page OCR yielded 8,848 and entry 3004817, visually confirmed on the public drawing. OCR confidence 59; not promoted to verified legal findings. Geographic test inputs came from survey-index locations; these checks do not establish complete title retrieval for three parcels.
+
+Access audit: https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php lists $150/quarter; https://www.webercountyutah.gov/forms/document/ lists $1/page, 3–5 business days and a $2 credit-card fee. https://www.webercountyutah.gov/Recorder_Surveyor/fee.php/1000 also lists recorded-document CD delivery through Data Image, without a published price or API contract. No public countywide original-image API was verified. FamilySearch viewing access is not an established unattended commercial ingestion interface.

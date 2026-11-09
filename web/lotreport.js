@@ -1994,6 +1994,10 @@
       if(!response.ok)throw new Error('Public research HTTP '+response.status);data=await response.json();if(data.error)throw new Error(data.error);
     } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
     ctx.facts.publicResearch=data;
+    if(data.titleResearch?.acquisition&&root.OriginalDocuments){
+      await root.OriginalDocuments.drain(data.titleResearch.acquisition,async function(url,page){return apiGet('/api/original-document?url='+encodeURIComponent(url)+'&page='+page,110000);},{maxPages:6});
+    }
+
     (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);doc.boundaryCheck=root.SurveyBoundary.compare(doc,ctx.parcel,ctx.facts.parcelDoc||{});});
     var federal=data.federal||{}, records=federal.features||[], history=data.history||{}, out=[];
     var transport=data.transportation;
@@ -2001,6 +2005,14 @@
     var title=data.titleResearch;
     if(title){
       var cv=title.coverage;
+      var aq=title.acquisition;
+      if(aq){
+        out.push(F('easements','Automatic original-document reading','verify',(aq.processing?.processedDocuments||0)+' of '+aq.documents.length+' candidate documents processed',aq.scope+' '+aq.requests.length+' exact instrument requests remain unresolved. Full page processing does not establish legibility, current legal effect or title completeness.','Weber County recorded sources','https://www.webercountyutah.gov/Recorder_Surveyor/index.php'));
+        aq.documents.forEach(function(d){out.push(F('easements','Public original '+d.id,'verify',d.label,(d.pages||[]).length+' of '+(d.totalPages||'unknown')+' pages processed. '+d.matchBasis.join('; ')+'. '+(d.error||'Applicability and handwritten clauses require review.'),'Original document',d.url));
+          (d.pages||[]).forEach(function(p){p.claims.filter(function(c){return ['minerals','duration','uses'].includes(c.category);}).slice(0,8).forEach(function(c,i){out.push(F(c.category==='minerals'?'minerals':'easements','Original '+d.id+' page '+p.page+' candidate '+i,'verify','Source passage · '+c.category,c.excerpt+' — Machine-extracted candidate; scope, negation and lot applicability unverified.',d.label+' page '+p.page,d.url+'#page='+p.page));});});
+        });
+      }
+
       out.push(F('easements','Historical abstract reading','verify',cv.machineReadSheets+' of '+cv.discoveredSheets+' parcel-section sheets machine-read',cv.visuallyCheckedEntries+' entries visually checked; '+cv.fullyVerifiedSheets+' complete sheets verified. '+cv.unsegmentedSheets+' sheets lack reliable entry-row segmentation. '+title.limitation,'County historical abstracts',data.historicAbstracts?.source));
       (title.transferTrace?.nodes||[]).filter(function(d){return d.interest==='highway_acquisition'||(d.references||[]).some(function(r){return r.relation==='exception';});}).forEach(function(d){out.push(F('easements','Later indexed record '+d.id,'verify','Later recorded action',d.summary,'County abstract '+d.source.pages,d.source.url));});
       (title.originalEvidence||[]).forEach(function(d){d.findings.forEach(function(f,i){out.push(F(f.category,'Original record '+d.id+' · '+(i+1),'verify',d.kind,f.text+' '+d.reviewScope+' Current legal applicability remains unresolved.',d.reference,d.sources[0].url));});});

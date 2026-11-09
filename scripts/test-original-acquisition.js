@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const D=require('../lib/original-discovery'),R=require('../lib/original-reader'),{drain}=require('../web/original-documents');
+const url='https://www.webercountyutah.gov/mounts/surveyorimages/test.pdf';
+(async()=>{
+ assert(D.allowed(url));for(const u of ['https://evil.example/a.pdf',url+'?redirect=x',url+'#page=1','https://www.webercountyutah.gov/login.php','https://www.webercountyutah.gov/mounts/surveyorimages/../../secret.pdf'])assert(!D.allowed(u));
+ const loc={township:6,northSouth:'n',range:2,eastWest:'w',section:12};
+ const records=[{recordNumber:'12',name:'Unrelated surname',township:'6N',range:'2W',section:'12',url},{recordNumber:'99',name:'Same surname',township:'7N',range:'1E',section:'27',url:url.replace('test','other')}];
+ const a=D.inventory({historical:{plss:{locations:[loc]}},history:{records:[]},title:{originalRequests:[{entry:'123456',source:'https://example.com'}]}},records);
+ assert.equal(a.documents.length,1);assert.equal(a.documents[0].label,'Filed survey 12 · Unrelated surname');assert.equal(a.requests[0].state,'original_access_unresolved');assert.equal(a.inventoryComplete,false);
+ await assert.rejects(()=>R.download(url,async()=>new Response('<html>Login</html>')),/login/);
+ await assert.rejects(()=>R.download(url,async()=>new Response(null,{status:302,headers:{location:'http://127.0.0.1/a.pdf'}})),/redirect/);
+ await assert.rejects(()=>R.download(url,async()=>new Response('x',{headers:{'content-length':40e6}})),/30 MB/);
+ let loads=0,reads=0;const opts={load:async()=>{loads++;return {bytes:Buffer.from('%PDF-fixture'),sha256:'a'.repeat(64),url,time:Date.now()};},process:async()=>{reads++;return {pages:[{page:1,text:'fixture'}],totalPages:1,nextPage:null};}};
+ await R.read(url,1,opts);const cached=await R.read(url,1,opts);assert.equal(loads,1);assert.equal(reads,1);assert(cached.cacheHit);
+ const page=(n,total=3)=>({sha256:'b'.repeat(64),totalPages:total,pages:[{page:n,text:'',references:[{entry:'987654'}]}],nextPage:n<total?n+1:null});
+ await drain(a,async(u,n)=>page(n),{maxPages:1});assert.equal(a.documents[0].nextPage,2);assert.equal(a.processing.pendingDocuments,1);
+ await drain(a,async(u,n)=>page(n));assert.equal(a.documents[0].pages.length,3);assert.equal(a.processing.processedDocuments,1);assert.equal(a.requests.filter(r=>r.entry==='987654').length,1);
+ const broken={documents:[{url}],requests:[]};await drain(broken,async()=>({...page(1),nextPage:9}));assert.equal(broken.documents[0].state,'reading_failed');assert.equal(broken.documents[0].pages.length,0);
+ const linked={documents:[{id:'root',url,label:'Root',state:'queued'}],requests:[]};
+ await drain(linked,async(u,n)=>({...page(n,1),pages:[{page:1,references:u===url?[{surveyNumber:'42',url:url.replace('test','linked'),label:'Linked survey'}]:[]}]}));
+ assert.equal(linked.documents.length,2);assert.equal(linked.processing.processedDocuments,2);
+ const changed={documents:[{id:'old',url,pages:[{page:1}],sha256:'c'.repeat(64),nextPage:2}],requests:[{key:'entry:old',discoveredByDoc:'old'}]};
+ await drain(changed,async(u,n)=>page(n));assert.equal(changed.documents[0].pages.length,3);assert.equal(changed.requests.some(x=>x.key==='entry:old'),false);
+ console.log('Original acquisition passed: geographic discovery without names, source/redirect/size validation, content cache, page reconciliation, resume, deduplication and unresolved originals.');
+})().catch(e=>{console.error(e);process.exitCode=1});
