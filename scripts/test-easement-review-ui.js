@@ -15,7 +15,7 @@ assert.match(html, /Complete for the retrieved inventory/);
 assert.match(html, /1 of 1 linked sheets processed/);
 assert.match(html, /Partial evidence/);
 assert.match(html, /Blocked: title evidence/);
-assert.match(html, /Not started: survey reconciliation/);
+assert.match(html, /Unresolved: survey reconciliation/);
 assert.equal((html.match(/Completion criterion:/g)||[]).length,5);
 assert.match(html,/&lt;script&gt;/);
 assert.doesNotMatch(html,/<script>bad/);

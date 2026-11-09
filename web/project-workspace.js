@@ -137,7 +137,7 @@
     const f=e.target.closest('form[data-command]'); if(!f)return;e.preventDefault();if(busy)return;busy=true;
     const submit=f.querySelector('[type=submit]');submit.disabled=true;
     try {
-      const data=new FormData(f), command=Object.fromEntries(data);command.type=f.dataset.command;command.id=f.dataset.id;
+      const data=new FormData(f);if(e.submitter?.dataset.poolSearch)data.set('mode','placement-search');const command=Object.fromEntries(data);command.type=f.dataset.command;command.id=f.dataset.id;
       command.documentIds=data.getAll('documentIds').filter(Boolean);command.reviewed=data.has('reviewed');command.confirmed=data.has('confirmed');
       if(command.type==='review_round') command.items=W.splitComments(command.originalText);
       if(command.type==='restore-backup') {

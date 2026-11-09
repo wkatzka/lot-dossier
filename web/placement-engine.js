@@ -17,6 +17,38 @@ function rectangle(origin,x,y,width,length,rotation=0){
  const rad=rotation*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),pr=projection(origin);
  const ring=[[-width/2,-length/2],[width/2,-length/2],[width/2,length/2],[-width/2,length/2],[-width/2,-length/2]].map(([a,b])=>P(pr,'EPSG:4326',[x+a*cs-b*sn,y+a*sn+b*cs]));return T.polygon([ring]);
 }
+function assembly(origin,{x=0,y=0,width,length,deck=0,rotation=0}={}){
+ if(!Number.isFinite(deck)||deck<0)throw Error('Nonnegative deck width required');
+ const rad=rotation*Math.PI/180,offset=width/2+deck+1.5;
+ return [
+  {name:'Pool waterline',geometry:rectangle(origin,x,y,width,length,rotation)},
+  {name:'Pool and deck envelope',geometry:rectangle(origin,x,y,width+deck*2,length+deck*2,rotation)},
+  {name:'Equipment',geometry:rectangle(origin,x+offset*Math.cos(rad),y+offset*Math.sin(rad),1.22,1.83,rotation)}
+ ];
+}
+// Bounded search of supplied geometry, never a claim that missing constraints are clear.
+function search(input,{origin,dimensions,setbackM,ruleSource,rotations=[0,45,90,135],maxTests=400,limit=3}={}){
+ valid(input.boundary);
+ if(!Number.isInteger(maxTests)||maxTests<4||maxTests>2000||!Number.isInteger(limit)||limit<1||limit>10)throw Error('Invalid search limits');
+ if(!Array.isArray(rotations)||!rotations.length||rotations.length>8||rotations.some(r=>!Number.isFinite(r)))throw Error('Invalid search rotations');
+ const pr=projection(origin),points=input.boundary.geometry.coordinates[0].map(p=>P('EPSG:4326',pr,p));
+ const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+ const n=Math.max(1,Math.floor(Math.sqrt(maxTests/rotations.length))),dx=(xmax-xmin)/n,dy=(ymax-ymin)/n;
+ const candidates=[];let tested=0;const conflicts={};
+ for(let row=0;row<n;row++)for(let col=0;col<n;col++)for(const rotation of rotations){
+  const x=xmin+(col+.5)*dx,y=ymin+(row+.5)*dy;
+  const components=assembly(origin,{...dimensions,x,y,rotation}).map(c=>({...c,setbackM,ruleSource}));
+  const result=evaluate({...input,components});tested++;
+  if(result.conflicts.length){for(const conflict of result.conflicts)conflicts[conflict]=(conflicts[conflict]||0)+1;continue;}
+  candidates.push({x,y,rotation,result,distanceFromCentreM:Math.hypot(x,y)});
+ }
+ candidates.sort((a,b)=>a.distanceFromCentreM-b.distanceFromCentreM||a.rotation-b.rotation);
+ const selected=[];
+ for(const c of candidates){if(selected.every(v=>Math.hypot(v.x-c.x,v.y-c.y)>=Math.max(dimensions.width,dimensions.length)/2)){selected.push(c);if(selected.length>=limit)break;}}
+ return {status:selected.length?'candidates_found':'no_sampled_candidate',tested,passingSamples:candidates.length,candidates:selected,
+  gridSpacingM:{east:dx,north:dy},rotations,conflicts,exhaustive:false,approval:false,
+  limitation:'Sampled positions pass only the supplied geometry checks. Missing restrictions and engineering constraints remain unresolved. No sampled fit does not establish that a pool is impossible. Candidates are ordered by distance from parcel centre, not construction suitability.'};
+}
 function transform(geometry,crs,units){
  if(!['EPSG:4326','EPSG:26912'].includes(crs))throw Error('Unsupported or ambiguous coordinate reference system');
  if((crs==='EPSG:4326'&&units!=='degrees')||(crs==='EPSG:26912'&&units!=='metres'))throw Error('Coordinate units do not match CRS');
@@ -54,5 +86,5 @@ function evaluate(input){
  if(!shapes.length)throw Error('At least one placement component required');
  return {status:conflicts.length?'conflicts':unknown.length?'preliminary':'geometry_checked',precisePlacement:!unknown.length&&!conflicts.length,approval:false,conflicts,unknown:[...new Set(unknown)],checks,components:shapes,method:'Turf topology and geodesic buffers; WGS84 with local transverse-Mercator layout',limitation:'Geometry checks do not establish soil bearing, seasonal groundwater, excavation safety or permit approval.'};
 }
-const api={valid,rectangle,transform,evaluate,projection};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PlacementEngine=api;
+const api={valid,rectangle,assembly,search,transform,evaluate,projection};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PlacementEngine=api;
 })(typeof window!=='undefined'?window:globalThis);

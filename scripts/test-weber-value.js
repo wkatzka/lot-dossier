@@ -20,3 +20,10 @@ const output=root.ResearchWorkspace.render('valuation',{report,evidence:{runs:[]
 assert.match(output,/historical-price reference/);assert.match(output,/3 of 4/);assert.match(output,/0 of 2/);
 assert.match(output,/not independent validation/);assert.match(output,/Residual development scenario/);
 console.log('Weber browser parity, scope, self-sale exclusion and economics rendering passed');
+const diagnostic=V.diagnostics(rows,{...rows[0],parcelIds:['different'],saleDate:'2026-11-09'});
+assert(diagnostic.range&&diagnostic.maxChange>=0);
+assert.equal(diagnostic.confidenceInterval,false);
+assert.equal(diagnostic.independentValidation,false);
+assert.equal(diagnostic.leaveOneOut.length,rows.length);
+assert.match(output,/How sensitive is this property/);
+console.log('Property-specific delete-one sensitivity and honest interval labeling passed');

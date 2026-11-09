@@ -4,7 +4,7 @@ const E=root.EvidenceLedger,V=root.LandValue,G=root.PlacementEngine,T=root.turf,
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number.isFinite(n)?n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}):'Not established';
 const input=(name,label,value='',type='text')=>'<label>'+esc(label)+'<input name="'+name+'" type="'+type+'" step="any" value="'+esc(value)+'"></label>';
-const form=(mode,body)=>'<form data-command="research"><input type="hidden" name="mode" value="'+mode+'">'+body+'<button type="submit" class="primary">Calculate and save scenario</button></form>';
+const form=(mode,body)=>'<form data-command="research"><input type="hidden" name="mode" value="'+mode+'">'+body+'<button type="submit" class="primary">Calculate and save scenario</button>'+(mode==='placement'?'<button type="submit" data-pool-search="true">Find candidate pool positions</button>':'')+'</form>';
 const link=(u,label)=>/^https:\/\//.test(u||'')?'<a target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+esc(label)+'</a>':esc(label);
 function ledger(p){return p.evidence||E.discover(p.report);}
 function vectorPreview(doc){
@@ -31,12 +31,12 @@ function marketReference(p){
  let content;
  try{
   if(!subject.region)throw Error('This parcel is outside the two matched Weber submarkets, or its submarket has not been identified.');
-  const r=root.WeberValue.predict(data.records,subject),m=data.metrics.rollingDevelopment,s=data.metrics.flaggedTransactionSensitivity;
+  const r=root.WeberValue.predict(data.records,subject),stability=root.WeberValue.diagnostics(data.records,subject),m=data.metrics.rollingDevelopment,s=data.metrics.flaggedTransactionSensitivity;
   content='<h3>'+money(r.estimate)+' <small>historical-price reference</small></h3><p>'+esc(subject.region)+' · '+esc(subject.grossAcres)+' acres · '+r.comps.length+' local comparables.</p>'+
    '<p class="pw-warning">Based on 2019–2021 reported sales, with no adjustment to today’s market. This is an experimental land-price reference, not a current appraised value or a ±$50,000 accuracy guarantee.</p>'+
    (r.extrapolated?'<p>The parcel size is outside the acreage range of the local comparables; the size adjustment extrapolates beyond them.</p>':'')+
    '<details><summary>Comparable sales and adjustments</summary><p>Size elasticity: '+r.elasticity.toFixed(3)+'. Estimated from same-submarket, same-category sale pairs across '+r.trainingCount+' research records. Water, access, usable area, entitlements and time adjustments are not calibrated.</p><div style="overflow-x:auto"><table><thead><tr><th>Comparable / source</th><th>Sale date</th><th>Acres</th><th>Reported price</th><th>Size-adjusted price</th></tr></thead><tbody>'+r.comps.map(c=>'<tr><td>'+link(c.source+'#page='+c.page,c.address)+'<br>'+esc((c.flags||[]).join('; '))+'</td><td>'+esc(c.saleDate)+'</td><td>'+esc(c.grossAcres)+'</td><td>'+money(c.price)+'</td><td>'+money(c.adjustedPrice)+'</td></tr>').join('')+'</tbody></table></div><p>County-hosted MLS exhibits; settlement amounts and transaction conditions are not independently verified. The subject parcel’s own sales are excluded.</p></details>'+
-   '<details><summary>How the model performed</summary><p>'+m.within50k+' of '+m.n+' chronological development predictions were within $50,000; average absolute error '+money(m.mae)+'. After excluding atypical transactions: '+s.within50k+' of '+s.n+', average error '+money(s.mae)+'.</p><p>Seven research sales; these outcomes were inspected during model development, so this is not independent validation. Removing one training sale moved one tract estimate from $196,947 to $928,247. No calibrated uncertainty interval is available.</p></details>';
+   '<details><summary>How sensitive is this property’s estimate?</summary><p>Latest comparable: '+esc(stability.newestComparable)+'. Removing one preceding sale at a time changes this property’s historical-price reference to '+(stability.range?money(stability.range[0])+'–'+money(stability.range[1]):'an unavailable estimate')+'. Largest change: '+money(stability.maxChange)+'.</p><p>'+esc(stability.limitation)+'</p></details><details><summary>How the model performed</summary><p>'+m.within50k+' of '+m.n+' chronological development predictions were within $50,000; average absolute error '+money(m.mae)+'. After excluding atypical transactions: '+s.within50k+' of '+s.n+', average error '+money(s.mae)+'.</p><p>Seven research sales; these outcomes were inspected during model development, so this is not independent validation. Removing one training sale moved one tract estimate from $196,947 to $928,247. No calibrated uncertainty interval is available.</p></details>';
  }catch(e){content='<p>'+esc(e.message)+'</p><p>A historical price reference is not available for this parcel. You can still calculate a sourced builder-budget scenario below.</p>';}
  return '<section class="pw-card"><h2>Weber land-price research · Beta</h2>'+content+'</section>';
 }
@@ -49,7 +49,7 @@ function shape(p,values={}){
  const boundary=G.valid(T.polygon(rings)),origin=T.center(boundary).geometry.coordinates;
  const n=(k,d)=>values[k]===undefined?d:Number(values[k]);
  const width=n('width',12)*.3048,length=n('length',24)*.3048,x=n('x',0)*.3048,y=n('y',0)*.3048,rotation=n('rotation',0),deck=n('deck',4)*.3048;
- return {boundary,origin,components:[{name:'Pool waterline',geometry:G.rectangle(origin,x,y,width,length,rotation)},{name:'Pool and deck envelope',geometry:G.rectangle(origin,x,y,width+deck*2,length+deck*2,rotation)},{name:'Equipment',geometry:G.rectangle(origin,x+width/2+deck+1.5,y,1.22,1.83,rotation)}]};
+ return {boundary,origin,components:G.assembly(origin,{x,y,width,length,deck,rotation})};
 }
 function svg(p,values){
  const s=shape(p,values),pr=G.projection(s.origin),rings=s.boundary.geometry.coordinates.map(r=>r.map(c=>P('EPSG:4326',pr,c))),pts=rings.flat(),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),xmin=Math.min(...xs),ymin=Math.min(...ys),w=Math.max(...xs)-xmin,h=Math.max(...ys)-ymin,scale=480/Math.max(w,h),ox=30-xmin*scale,oy=510+ymin*scale;
@@ -72,7 +72,11 @@ function placement(p){
  let preview;try{preview=svg(p,v);}catch(e){preview='<p>'+esc(e.message)+'</p>';}
  return '<section class="pw-card"><h2>Pool placement study</h2><p>The public parcel outline supports a conceptual layout. Exact siting remains unresolved until survey registration, restrictions, service lines, structures, terrain and applicable pool rules are verified. Dimensions below are editable scenario assumptions.</p>'+form('placement','<div class="pw-grid"><div id="placement-drawing">'+preview+'</div><div>'+input('width','Pool width (ft)',v.width??12,'number')+input('length','Pool length (ft)',v.length??24,'number')+input('deck','Deck around pool (ft)',v.deck??4,'number')+input('x','Centre east of parcel centre (ft)',v.x??0,'number')+input('y','Centre north of parcel centre (ft)',v.y??0,'number')+input('rotation','Rotation (degrees)',v.rotation??0,'number')+input('setback','Scenario boundary clearance (ft)',v.setback??(p.report.facts.jurisdiction==='Ogden Valley City'?10:''),'number')+input('ruleSource','Applicable rule source or assumption',v.ruleSource||(p.report.facts.jurisdiction==='Ogden Valley City'?'LUC 108-7-18 minimum only; larger zone setbacks and side/rear location unresolved':''))+input('tolerance','Placement tolerance (ft)',v.tolerance??1,'number')+'<p>Click or drag on the diagram to move the pool centre. Equipment shown as a 4 × 6 ft scenario footprint; clearance and access need verification.</p></div></div>')+'</section>'+runs(l,'placement');
 }
-function runs(l,kind){return l.runs.filter(r=>r.kind===kind).slice().reverse().map(r=>'<section class="pw-card"><h3>'+esc(r.createdAt)+' · '+esc(r.stale?'Stale — recalculate':r.result.status)+'</h3>'+(kind==='valuation'?'<p>Residual land budget: <strong>'+money(r.result.landBudget)+'</strong></p><p>'+esc(r.result.limitation||r.result.missing?.join(', '))+'</p><table><thead><tr><th>Sale change</th><th>Cost change</th><th>Land budget</th></tr></thead><tbody>'+(r.result.sensitivity||[]).map(s=>'<tr><td>'+Math.round(s.saleChange*100)+'%</td><td>'+Math.round(s.costChange*100)+'%</td><td>'+money(s.landBudget)+'</td></tr>').join('')+'</tbody></table>':'<p>'+esc(r.result.limitation)+'</p><ul>'+[...r.result.conflicts,...r.result.unknown].map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul><details><summary>Checks performed</summary>'+r.result.checks.map(c=>'<p>'+esc(c.component+' · '+c.check+': '+(c.passed?'passes supplied geometry':'conflict'))+'</p>').join('')+'</details>')+'</section>').join('');}
+function searchSummary(s){
+ if(!s)return '';
+ return '<h4>Automatic position search</h4><p>'+s.tested+' positions and orientations tested; '+s.passingSamples+' passed the supplied geometry checks. '+esc(s.limitation)+'</p>'+s.candidates.map((c,i)=>'<p>Candidate '+(i+1)+': '+(c.x/.3048).toFixed(1)+' ft east, '+(c.y/.3048).toFixed(1)+' ft north of parcel centre; '+c.rotation+'° rotation. '+esc(c.status)+'.</p>').join('');
+}
+function runs(l,kind){return l.runs.filter(r=>r.kind===kind).slice().reverse().map(r=>'<section class="pw-card"><h3>'+esc(r.createdAt)+' · '+esc(r.stale?'Stale — recalculate':r.result.status)+'</h3>'+(kind==='valuation'?'<p>Residual land budget: <strong>'+money(r.result.landBudget)+'</strong></p><p>'+esc(r.result.limitation||r.result.missing?.join(', '))+'</p><table><thead><tr><th>Sale change</th><th>Cost change</th><th>Land budget</th></tr></thead><tbody>'+(r.result.sensitivity||[]).map(s=>'<tr><td>'+Math.round(s.saleChange*100)+'%</td><td>'+Math.round(s.costChange*100)+'%</td><td>'+money(s.landBudget)+'</td></tr>').join('')+'</tbody></table>':'<p>'+esc(r.result.limitation)+'</p>'+searchSummary(r.result.search)+'<ul>'+[...r.result.conflicts,...r.result.unknown].map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul><details><summary>Checks performed</summary>'+r.result.checks.map(c=>'<p>'+esc(c.component+' · '+c.check+': '+(c.passed?'passes supplied geometry':'conflict'))+'</p>').join('')+'</details>')+'</section>').join('');}
 function command(p,data){
  const values=Object.fromEntries(data),kind=values.mode;let inputs,result;
  if(kind==='instrument'){
@@ -80,19 +84,24 @@ function command(p,data){
   return {type:'evidence',action:{type:'instrument',id:record.id,entry:record.entry,url:values.sourceUrl,hash:doc.hash,pages:Number(values.pages),documentId:doc.id}};
  }else if(kind==='review')return {type:'evidence',action:{type:'review',id:values.record,state:values.state,reviewer:values.reviewer,basis:values.basis,effectiveDate:values.effectiveDate,pages:values.pages.split(',').map(n=>Number(n.trim())),relatedIds:values.relatedIds.split(',').map(x=>x.trim()).filter(Boolean).map(x=>x.startsWith('entry-')?x:'entry-'+x)}};
  else if(kind==='valuation'){inputs=Object.fromEntries(V.required.map(k=>[k,{value:values[k]===''?null:Number(values[k]),basis:values[k+'Basis']} ]));result=V.residual(inputs);if(result.status==='inputs_required')throw Error('Missing sourced inputs: '+result.missing.join(', '));}
- else if(kind==='placement'){
+ else if(kind==='placement'||kind==='placement-search'){
   if(values.setback===''||!values.ruleSource||Number(values.deck)<0)throw Error('Provide a nonnegative scenario clearance, basis and deck width');
   const s=shape(p,values);inputs={form:values,boundary:s.boundary,components:s.components.map(c=>({...c,setbackM:Number(values.setback)*.3048,ruleSource:values.ruleSource})),toleranceM:Number(values.tolerance)*.3048,coverage:{},survey:null,obstacles:[]};
   const publicUtilities=p.report.facts.publicResearch?.surveyUtilities;
   for(const f of publicUtilities?.features||[])if(f.geometry?.rings)inputs.obstacles.push({name:'Public utility area '+(f.attributes.OBJECTID||''),geometry:T.polygon(f.geometry.rings),clearanceM:0,source:publicUtilities.source,reviewed:false});
   for(const record of ledger(p).records)if(!['not_applicable','released'].includes(record.state))inputs.obstacles.push({name:'Recording reference '+record.entry,geometry:null});
-  result=G.evaluate(inputs);
+  if(kind==='placement-search'){
+   const search=G.search(inputs,{origin:s.origin,dimensions:{width:Number(values.width)*.3048,length:Number(values.length)*.3048,deck:Number(values.deck)*.3048},setbackM:Number(values.setback)*.3048,ruleSource:values.ruleSource});
+   if(search.candidates.length){const best=search.candidates[0];inputs.form={...values,mode:'placement',x:String(best.x/.3048),y:String(best.y/.3048),rotation:String(best.rotation)};inputs.components=best.result.components;result=best.result;}
+   else result=G.evaluate(inputs);
+   result.search={...search,candidates:search.candidates.map(c=>({x:c.x,y:c.y,rotation:c.rotation,status:c.result.status,unknown:c.result.unknown}))};
+  }else result=G.evaluate(inputs);
  }else throw Error('Unknown research calculation');
- return {type:'evidence',action:{type:'run',kind,runId:crypto.randomUUID(),inputs,result}};
+ return {type:'evidence',action:{type:'run',kind:kind==='placement-search'?'placement':kind,runId:crypto.randomUUID(),inputs,result}};
 }
 let current=null;
 function render(tab,p){current=p;return ({evidence,valuation,placement})[tab](p);}
-function redraw(){if(!current)return;const f=document.querySelector('form[data-command="research"]');if(!f||f.elements.mode.value!=='placement')return;try{document.getElementById('placement-drawing').innerHTML=svg(current,Object.fromEntries(new FormData(f)));}catch(e){/* Keep last valid preview while editing. */}}
+function redraw(){if(!current)return;const f=document.querySelector('form[data-command="research"]');if(!f||!['placement','placement-search'].includes(f.elements.mode.value))return;try{document.getElementById('placement-drawing').innerHTML=svg(current,Object.fromEntries(new FormData(f)));}catch(e){/* Keep last valid preview while editing. */}}
 document.addEventListener('input',e=>{if(e.target.closest('form[data-command="research"]'))redraw();});
 let dragging=false;
 document.addEventListener('pointerdown',e=>{if(e.target.closest('#placement-preview')){dragging=true;move(e);}});

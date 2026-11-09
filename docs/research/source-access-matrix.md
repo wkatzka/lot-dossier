@@ -21,7 +21,7 @@ This matrix distinguishes a working retrieval from sufficient evidence for a fin
 1. Obtain actual recorded instruments and a sufficiently complete dated search, including parent parcels, amendments/releases and mineral reservations. Current public endpoints expose references, not the required chain.
 2. Recover and verify pilot boundary/constraint geometry from original survey documents with source control and accuracy. Current GIS geometry layers have no pilot coverage; the available PDF is not automatically registered.
 3. Establish a permitted, verified local closed-sale comparison set and independent holdout observations. Public assessor/auction evidence inspected so far is insufficient. No validated market value is released.
-4. Provision private cloud storage/authentication and apply the supplied RLS schema before live cloud access tests. No cloud account/database has been provisioned by this implementation.
+4. Resolved in the subsequent account release: Supabase private storage/authentication provisioned; owner-isolation and cross-device tests passed. Team sharing remains outside current owner-only access.
 5. Configure authorized city portal/API access before automatic filing, monitoring or correspondence can run.
 
 ## Survey follow-up
