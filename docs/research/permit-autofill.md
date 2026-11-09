@@ -27,7 +27,7 @@ Tests cover actual PDF text extraction, authentication and cross-owner rejection
 
 A real 25-page plan benchmark selected seven text pages, used 44,521 input / 664 output tokens ($0.095682), and added zero validated Claude facts beyond the direct parser. One proposed material answer was rejected because its value was absent from its quote. This establishes a measured read cost, not successful full-plan extraction; drawing-heavy plans remain a quality gap.
 
-Drawing-aware extraction: up to 150 PDF pages, 25 MB per source. Claude receives all original pages and up to 6,000 output tokens; the request times out after 240 seconds within the 300-second existing project function. No new serverless function is added. Unreadable handwriting and undimensioned geometry remain unresolved; no claim of certified measurements. The number of pages sent is disclosed. Full-permit accuracy across a representative collection of plans remains unmeasured. Any original approval, signature, contractor decision or engineering measurement must still be obtained from evidence/user input.
+Drawing-aware extraction: up to 150 PDF pages, 25 MB per source. Claude receives all original pages and up to 10,000 output tokens; the request times out after 240 seconds within the 300-second existing project function. No new serverless function is added. Unreadable handwriting and undimensioned geometry remain unresolved; no claim of certified measurements. The number of pages sent is disclosed. Full-permit accuracy across a representative collection of plans remains unmeasured. Any original approval, signature, contractor decision or engineering measurement must still be obtained from evidence/user input.
 
 API reference: https://platform.claude.com/docs/en/build-with-claude/structured-outputs
 
@@ -45,3 +45,22 @@ For another real plan, run `scripts/benchmark-permit-extraction.js` with an expl
 The deployment uses 12 API entrypoints. `build.py` fails before publication if that count exceeds 12. Extraction remains an action of `/api/projects`, with the document handler under `lib/`.
 
 PDF API reference: https://platform.claude.com/docs/en/build-with-claude/pdf-support
+
+
+## Project-level preparation (November 9, 2026)
+
+Capability checklist:
+- [x] Upload/version building plans from the project overview and permit filing; keep originals in existing private account storage.
+- [x] Free direct extraction first, optional original-PDF Claude analysis, source citations, conflicts and superseded-version handling.
+- [x] Recommend multiple observed CityInspect permit scopes from proposed work; preserve separate drafts and answers. Recommendations are not determinations that separate permits are required.
+- [x] Confirm project-team roles once, reuse across fields/types and explicitly import a team profile from another account-owned project.
+- [x] Draft project descriptions and map known property/plan facts; retain manual answers.
+- [x] Match current documents against all 17 upload categories and group remaining application questions.
+- [x] Sourced, reviewed construction-valuation worksheet with scope-specific quantities, decimal rates, and recalculation invalidation when plans change.
+- [x] Public opt-in contractor-registry lookup with explicit limits; no claim of comprehensive license verification.
+
+The expanded private 25-page benchmark returned 16 facts spanning 15 field types: 11 application field types (one unresolved cross-sheet quantity conflict), two document metadata fields and two permit-scope candidates. It consumed 143,921 input / 4,092 output tokens, estimated $0.328762. This is one plan-set benchmark, not representative accuracy. The drawing's concept status is surfaced and the garage scope is explicitly qualified as potentially part of the dwelling permit. No boilerplate pool/deck recommendations were produced. No private plan contents are distributed in the app.
+
+Remaining dependencies: comprehensive DOPL verification uses a CAPTCHA-protected service; the opt-in registry cannot substitute for it. The city’s acceptance of ICC benchmark valuation has not been established. Orientation-specific actual setbacks require supported site geometry; generic minimum setbacks are not mapped to measured left/right setbacks. Required approvals, appointments, signatures, final stamped drawings and unstated design decisions cannot be inferred from the concept plan.
+
+Rate source: https://www.iccsafe.org/wp-content/uploads/BVD-BSJ-AUG2026.pdf (R-3/V-B, U/V-B private garage, unfinished residential basement). Public contractor registry: https://services.commerce.utah.gov/cbr/ (opt-in); comprehensive verification: https://secure.utah.gov/llv/search/index.html.

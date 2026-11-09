@@ -8,6 +8,7 @@ module.exports=async(req,res)=>{
  const token=String(req.headers.authorization||'').replace(/^Bearer /,'');
  try{
   const u=await C.user(token,c);
+  if(req.method==='GET'&&query(req).action==='license-lookup')return send(res,200,await require('../lib/contractor-registry').lookup(String(query(req).license||'')));
   if(req.method==='GET'){
    const r=await fetch(c.url+'/rest/v1/cornerpin_projects?owner_id=eq.'+u.id+'&select=record',{headers:{apikey:c.key,Authorization:'Bearer '+token},signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('Cloud read failed');return send(res,200,{projects:(await r.json()).map(x=>x.record)});
   }

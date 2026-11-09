@@ -54,19 +54,23 @@
   }
   function ftIn(m) { return +m[1] + (+(m[2] || 0)) / 12 + (m[3] ? (+m[3] / +m[4]) / 12 : 0); }
 
-  async function read(file, onProgress) {
+  async function read(file, onProgress, options) {
     var lib = await loadPdfJs();
     var buf = await file.arrayBuffer();
     var doc = await lib.getDocument({ data: buf, isEvalSupported: false }).promise;
     var pages = [];
+    try {
     for (var i = 1; i <= doc.numPages; i++) {
       var page = await doc.getPage(i);
       var tc = await page.getTextContent();
       var pl = pageLines(tc.items);
       pages.push({ n: i, lines: pl.lines, labels: pl.labels, sheet: sheetId(pl.labels), text: pl.lines.join('\n').toUpperCase() });
+      page.cleanup();
       onProgress && onProgress(i, doc.numPages);
     }
+    if(options && options.permitOnly) return {permitFacts: (root.PermitFacts ? root.PermitFacts.extract(pages,{name:file.name}) : []).concat(root.PermitAssistant ? root.PermitAssistant.scopeFacts(pages,{name:file.name}) : [])};
     return extract(pages, file.name);
+    } finally { await doc.destroy(); }
   }
 
   function extract(pages, filename) {
@@ -214,6 +218,7 @@
       hits.forEach(function (sd) { if ((out.sheets[sd[0]] || []).length < 3) (out.sheets[sd[0]] = out.sheets[sd[0]] || []).push(where(p)); });
     });
     out.permitFacts = root.PermitFacts ? root.PermitFacts.extract(pages,{name:filename}) : [];
+    if(root.PermitAssistant)out.permitFacts.push(...root.PermitAssistant.scopeFacts(pages,{name:filename}));
     out.found = Object.keys(out.fields).length;
     return out;
   }

@@ -90,9 +90,9 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "permit-facts.js") + "\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
-        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
+        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-assistant.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
-        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
+        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "permit-prep-ui.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")

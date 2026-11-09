@@ -78,9 +78,26 @@
         p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
         invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now);break;
       }
+      case 'team_profile': {
+        const A=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
+        required(A.roles[a.role]&&a.confirmed,'Confirm the team member and project role.');
+        const profile={};for(const k of A.profileKeys)profile[k]=clean(a[k]).slice(0,500);
+        required(profile.name,'Enter the person or company name.');required(!profile.email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email),'Enter a valid email.');
+        p.application.team=p.application.team||{};p.application.team[a.role]={...profile,confirmedAt:now};
+        if(a.role==='owner')p.application.owner=profile.name;if(a.role==='contact')p.application.applicant=profile.name;if(a.role==='builder')p.application.contractor=profile.name;
+        invalidate(p);event(p,a.type,'Project role confirmed: '+A.roles[a.role]+'. Matching fields now reuse this profile.',now);break;
+      }
+      case 'construction_valuation': {
+        const A=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
+        required(a.confirmed,'Confirm valuation scope and rate sources.');const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;required(C.catalog.types.some(t=>t.value===a.permitType),'Choose a permit type.');
+        const items=A.valuation(a.items);p.application.valuations=p.application.valuations||{};p.application.valuations[a.permitType]={items,total:Math.round(items.reduce((n,x)=>n+x.amount,0)),at:now};invalidate(p);event(p,a.type,'Reviewed construction valuation calculated for selected permit.',now);break;
+      }
+      case 'license_check': {
+        required(p.application.team?.[a.role]&&a.license===p.application.team[a.role].license,'Team license changed; repeat lookup.');p.application.team[a.role].licenseCheck={at:now,summary:clean(a.summary),source:'https://services.commerce.utah.gov/cbr/'};event(p,a.type,'Public registry response retained; not a full license verification.',now);break;
+      }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
-        p.application.cityInspect=C.update(p,a); invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
+        p.application.cityInspect=C.update(p,a);p.application.permitSelections=Array.from(new Set([...(p.application.permitSelections||[]),String(a.permitType)])); invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
       }
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
@@ -90,7 +107,7 @@
         required(!doc(p, a.document.id), 'Document already exists.');
         const d = clone(a.document), family = d.family || d.id;
         d.family = family; d.version = 1 + Math.max(0, ...p.documents.filter(x => x.family === family).map(x => x.version)); d.addedAt = now;
-        p.documents.push(d);
+        p.documents.push(d);if(d.role==='plan'){p.planVersion=(p.planVersion||0)+1;for(const v of Object.values(p.application.valuations||{}))v.stale=true;}
         p.requirements.forEach(r => { if ((r.documentIds || []).some(key => doc(p, key).family === family)) r.state = 'needs_review'; });
         p.corrections.forEach(c => {
           if (c.state !== 'accepted' && (c.documentIds || []).some(key => doc(p, key).family === family)) { c.state = 'revision_received'; c.versionWarning = 'A newer document version exists; prepare the response again.'; }

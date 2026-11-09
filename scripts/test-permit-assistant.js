@@ -1,0 +1,28 @@
+const assert=require('node:assert/strict'),A=require('../web/permit-assistant'),F=require('../web/permit-facts'),C=require('../web/city-application'),W=require('../web/permit-workflow');
+const report={date:'2026-11-09',parcel:{id:'synthetic',county:'Weber',attrs:{PARCEL_ADD:'Synthetic project'}},facts:{jurisdiction:'Ogden Valley City'},findings:[]};let p=W.create(report);
+const doc={id:'cp-plan',name:'Synthetic plans.pdf',hash:'a'.repeat(64),size:5,role:'plan',family:'plans'};p=W.apply(p,{type:'document',document:doc});
+const type=label=>C.catalog.types.find(t=>t.label===label).value;
+const pages=[{n:1,text:'PROPOSED WORK: Single Family Dwelling\nPERMIT SCOPE: Pool\nGeneric notes: Swimming pools require barriers.\nExisting Deck'}];
+const scopes=A.scopeFacts(pages,doc);assert.equal(scopes.length,2);
+const facts=[...scopes,{field:'main_floor',value:2000,unit:'sq_ft',page:1,quote:'MAIN FLOOR: 2000 SF',documentId:doc.id,documentHash:doc.hash},{field:'bedrooms',value:4,unit:'count',page:1,quote:'BEDROOMS: 4',documentId:doc.id,documentHash:doc.hash}];
+p=W.apply(p,{type:'document_extraction',result:{documentId:doc.id,documentHash:doc.hash,filename:doc.name,permitType:'project',facts}});
+assert.deepEqual(A.recommendations(p).map(r=>r.label),['Single Family Dwelling','Pool']);assert(!A.recommendations(p).some(r=>r.label==='Deck'));
+assert.equal(C.rows(p,'1').find(r=>r.name==='main_floor').value,'2000');assert.equal(F.selected(p,'main_floor',type('Pool')),null);
+p=W.apply(p,{type:'city_application',permitType:'1'});p=W.apply(p,{type:'city_application',permitType:type('Pool')});assert.equal(p.application.permitSelections.length,2);
+assert.throws(()=>W.apply(p,{type:'team_profile',role:'builder',name:'Example'}),/Confirm/);
+p=W.apply(p,{type:'team_profile',role:'builder',name:'Example Builder',email:'builder@example.com',phone:'555-0100',license:'12345678-5501',confirmed:true});
+assert.equal(C.rows(p,'1').filter(r=>r.name==='builder_phone').length,2);for(const row of C.rows(p,'1').filter(r=>r.name==='builder_phone'))assert.equal(row.value,'555-0100');
+assert.equal(C.rows(p,type('Pool')).find(r=>r.name==='buildername').value,'Example Builder');
+const main=C.rows(p,'1').find(r=>r.name==='main_floor');p=W.apply(p,{type:'city_application',permitType:'1',fieldKey:main.key,value:'2100',basis:'User reviewed final drawing'});
+assert.equal(C.rows(p,'1').find(r=>r.name==='main_floor').value,'2100');
+p=W.apply(p,{type:'construction_valuation',permitType:'1',confirmed:true,items:[{label:'House',quantity:2000,rate:177.63,source:A.bvd.source}]});assert.equal(p.application.valuations['1'].total,355260);assert.equal(C.rows(p,'1').find(r=>r.name==='builder_valuation').value,'355260');assert.equal(C.rows(p,type('Pool')).find(r=>r.name==='builder_valuation').value,'');
+assert.throws(()=>A.valuation([{label:'x',quantity:2,rate:0,source:'x'}]));
+p=W.apply(p,{type:'document',document:{...doc,id:'cp-plan-new',hash:'b'.repeat(64)}});assert.equal(A.recommendations(p).length,0);assert.equal(C.rows(p,'1').find(r=>r.name==='builder_valuation').value,'');assert.match(C.rows(p,'1').find(r=>r.name==='main_floor').status,/plans changed/);
+const slot=C.rows(p,'1').find(r=>r.name==='files_1[]');assert.equal(A.documentMatches(p,slot).length,1);assert.match(slot.basis,/not approval/);
+assert.equal(A.coverage(C.rows(p,'1')).total,103);
+const html=C.render(p);assert(!html.includes('type="checkbox" checked'));
+console.log('PASS: multi-permit recommendations with no boilerplate matches, project upload facts, scope isolation, team reuse, duplicate contacts, reviewed valuation, revision invalidation, and file-slot readiness.');
+
+const registry=require('../lib/contractor-registry');
+assert.equal(registry.parse('<tr><td>1234</td><td>5678</td></tr>','12345678').matches.length,0);
+assert.equal(registry.parse('<tr><td>Example Builder</td><td>12345678-5501</td></tr>','12345678-5501').matches.length,1);

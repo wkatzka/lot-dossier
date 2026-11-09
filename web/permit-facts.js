@@ -1,7 +1,7 @@
 /* Shared evidence-backed extraction. No model is needed for explicit schedules. */
 (function(root){
 'use strict';
-const version='permit-facts-1';
+const version='permit-facts-2';
 const fields={
  engineer_record:{label:'Engineer of record name',unit:'text',re:'(?:ENGINEER OF RECORD|STRUCTURAL ENGINEER)'},
  engineer_record_email:{label:'Engineer of record email',unit:'text',re:'(?:ENGINEER OF RECORD|STRUCTURAL ENGINEER) EMAIL'},
@@ -25,6 +25,23 @@ const fields={
  left_set_back_default:{label:'Actual proposed left setback (not minimum required)',unit:'ft'},
  right_set_back_default:{label:'Actual proposed right setback (not minimum required)',unit:'ft'}
 };
+// Additional printed project facts; professional appointments still need user confirmation.
+Object.assign(fields,{
+ document_stage:{label:'Explicit document stage such as CONCEPT DRAWINGS NOT FOR CONSTRUCTION, PRELIMINARY, ISSUED FOR PERMIT; do not infer final approval from a stamp',unit:'text'},
+ document_date:{label:'Explicit drawing issue date from title block, not print/export date; preserve printed date',unit:'text'},
+ patio:{label:'Combined deck/patio area explicitly scheduled for proposed work',unit:'sq_ft',re:'(?:DECK/PATIO|PATIO|DECK)(?: AREA)?'},
+ other_footage:{label:'Other area explicitly scheduled separately (not total residence)',unit:'sq_ft'},
+ num_units:{label:'Explicit proposed dwelling unit count',unit:'count',re:'(?:DWELLING )?UNITS'},
+ num_buildings:{label:'Explicit proposed building count',unit:'count',re:'(?:NUMBER OF )?BUILDINGS'},
+ garages:{label:'Number of garages, NOT parking spaces',unit:'count'},
+ max_occupancy:{label:'Explicit design occupant load, not bedroom count',unit:'count'}
+});
+for(const [prefix,title]of [['design_professional','Design professional'],['builder','Appointed builder'],['electrical','Appointed electrical contractor'],['mechanical','Appointed mechanical contractor'],['plumbing','Appointed plumbing contractor']])for(const key of ['name','contact','phone','email','address','city','state','zip','license']){
+ const field=prefix==='design_professional'&&key==='name'?prefix:prefix+'_'+key;
+ if(!fields[field])fields[field]={label:title+' '+key+' explicitly printed in project title block or team schedule; do not infer appointment from a product manufacturer',unit:'text'};
+}
+const catalog=typeof module!=='undefined'&&module.exports?require('../data/permits/ogden-valley-cityinspect.json'):root.LR_DATA?.cityInspect;
+for(const t of catalog?.types||[])fields['scope_'+t.value]={label:'Proposed project scope: '+t.label+'. Return the exact short supporting phrase ONLY if this work is actually proposed in a drawing/title/scope, not generic code notes, an existing feature, room name, or a catalog option. Never infer detached garage from an attached garage, or separate trade permits merely from house systems.',unit:'text'};
 const norm=x=>String(x??'').replace(/\s+/g,' ').trim().toLowerCase();
 function valid(f,value,unit){
  const rule=fields[f];if(!rule||unit!==rule.unit)return false;
@@ -72,7 +89,7 @@ function validateModel(items,pages,document,requested,{visual=false}={}){
  return {facts:reconcile(accepted),rejected};
 }
 function available(p,typeId='1'){
- const plan=p.report?.plan||{},results=(p.application?.documentExtractions||[]).filter(r=>(r.permitType||'1')===typeId),hasReadPlan=results.some(r=>r.filename===plan.filename),all=typeId==='1'&&!hasReadPlan?[...(plan.permitFacts||[])]:[];
+ const plan=p.report?.plan||{},results=(p.application?.documentExtractions||[]).filter(r=>((r.permitType||'1')===typeId||(r.permitType==='project'&&typeId==='1'))),hasReadPlan=results.some(r=>r.filename===plan.filename),all=typeId==='1'&&!hasReadPlan&&(!plan.filename||!p.documents?.some(d=>d.role==='plan')||p.documents.some(d=>d.role==='plan'&&d.name===plan.filename&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)))?[...(plan.permitFacts||[])]:[];
  for(const result of results){const d=p.documents?.find(d=>d.id===result.documentId&&d.hash===result.documentHash);if(d&&!p.documents.some(x=>x.family===d.family&&x.version>d.version))all.push(...result.facts);}
  return reconcile(all);
 }

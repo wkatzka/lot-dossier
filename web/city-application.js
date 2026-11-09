@@ -3,6 +3,7 @@
   'use strict';
   const catalog=typeof module!=='undefined'&&module.exports?require('../data/permits/ogden-valley-cityinspect.json'):(root.LR_DATA||{}).cityInspect;
   const Facts=typeof module!=='undefined'&&module.exports?require('./permit-facts'):root.PermitFacts;
+  const Assistant=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const titles={primary:'Property & application',professionals:'Designers & contractors',building:'Building details',attachments:'Documents & acknowledgments'};
   const supported=p=>p.report?.facts?.jurisdiction===catalog.jurisdiction;
@@ -26,7 +27,7 @@
     if(section==='building'&&f.name==='lot_footage'&&Number(fx.lot_sf)>0){value=Math.round(fx.lot_sf);basis='Calculated lot area from saved site report (square feet); approximate, verify against survey.';}
     if(section==='building'&&t.value==='1'){
       const key={garage_footage:'garage_sf',bedrooms:'bedrooms',stories:'stories'}[f.name];
-      if(key&&(pl[key]??pl.footprint?.[key])!=null){value=pl[key]??pl.footprint?.[key];basis='Uploaded/entered plan: '+key+'. Confirm this is the proposed dwelling. '+(typeof pl.src?.[key]==='string'?pl.src[key]:'');}
+      if(key&&(!pl.filename||!p.documents.some(d=>d.role==='plan')||p.documents.some(d=>d.role==='plan'&&d.name===pl.filename&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)))&&(pl[key]??pl.footprint?.[key])!=null){value=pl[key]??pl.footprint?.[key];basis='Uploaded/entered plan: '+key+'. Confirm this is the proposed dwelling. '+(typeof pl.src?.[key]==='string'?pl.src[key]:'');}
     }
     if(f.name==='builder_valuation')basis='Construction valuation for this permit scope is required. Land market value and assessed value are not construction valuation.';
     if(/_set_back_default$/.test(f.name))basis='Actual proposed distance from the applicable property boundary, from a dimensioned site plan. Zoning minima are not actual setbacks.';
@@ -44,6 +45,8 @@
       if(all.some(x=>x.conflict)){value='';basis='Conflicting or unvalidated document values: '+all.map(x=>x.value+' '+x.unit+' (page '+x.page+')').join('; ')+'. Reconcile the current plans before using this field.';}
       else if(fact){value=fact.value;basis=(fact.method==='claude_visual_extraction'?'Claude drawing suggestion — review visually':fact.method==='claude_extraction'?'Claude suggestion':'Explicit plan text')+' · '+(fact.filename||'Uploaded plan')+', page '+fact.page+(fact.sheet?' / '+fact.sheet:'')+(fact.region?' / '+fact.region:'')+': “'+fact.quote+'” · '+fact.unit+(fact.components?.length?' · Counted components: '+fact.components.map(c=>c.label+' ['+c.identity+'], page '+c.page+', '+c.region+' (weight '+c.weight+')').join('; '):'')+'. Confirm this document applies to the proposed permit work.';}
     }
+    const extra=Assistant?.candidate(p,t,section,f);if(extra&&(value===''||Assistant.profileForField(f.name))){value=extra.value;basis=extra.basis;}
+    const valuation=p.application.valuations?.[t.value];if(f.name==='builder_valuation'&&valuation&&!valuation.stale){value=valuation.total;basis='User-reviewed construction estimate: '+valuation.items.map(x=>x.label+' '+x.quantity+' × $'+x.rate+' = $'+x.amount+' ('+x.source+')').join('; ')+'. Not land value or city-approved valuation.';}
     return {value:String(value??''),basis};
   }
   function rows(p,id){
@@ -52,7 +55,7 @@
     return Object.entries(t.sections).flatMap(([section,keys])=>keys.map(key=>{
       const f=catalog.fields[key],rowId=section+'.'+key,c=candidate(p,t,section,f),saved=p.application.cityInspect?.answers?.[t.value]?.[rowId];
       return {...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
-        status:saved?(saved.siteVersion===p.siteVersion?'User supplied · review before filing':'Site refreshed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
+        status:saved?(saved.siteVersion===p.siteVersion&&(saved.planVersion||0)===(p.planVersion||0)?'User supplied · review before filing':'Site or plans changed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
     }));
   }
   function update(p,a){
@@ -75,7 +78,7 @@
       if(value&&!basis)throw Error('Record the source or basis for this answer.');
       state.answers[t.value]=state.answers[t.value]||{};
       if(a.reset==='yes')delete state.answers[t.value][row.key];
-      else state.answers[t.value][row.key]={value,basis,siteVersion:p.siteVersion};
+      else state.answers[t.value][row.key]={value,basis,siteVersion:p.siteVersion,planVersion:p.planVersion||0};
     }
     return state;
   }
