@@ -951,8 +951,12 @@ const api={compare};if(node)module.exports=api;else root.SurveyBoundary=api;
 async function drain(manifest,fetchPage,{maxPages=100,onProgress=()=>{}}={}){
  let processed=0;
  documents: for(const doc of manifest.documents||[]){
-  if(doc.state==='pages_processed')continue;
-  doc.pages=doc.pages||[];let cursor=doc.nextPage||1,changes=0;
+  doc.pages=doc.pages||[];
+  if(doc.pages.some((p,i)=>p.page!==i+1)||((doc.nextPage||doc.pages.length+1)!==doc.pages.length+1)){
+   doc.state='reading_failed';doc.error='Saved page coverage has a gap; refresh this source before continuing';onProgress(doc);continue;
+  }
+  if(doc.state==='pages_processed'&&doc.pages.length===doc.totalPages&&doc.pages.length>0)continue;
+  let cursor=doc.nextPage||doc.pages.length+1,changes=0;
   while(processed<maxPages){
    try{
     const r=await fetchPage(doc.url,cursor);

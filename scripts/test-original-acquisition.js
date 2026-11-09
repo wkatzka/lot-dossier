@@ -19,6 +19,7 @@ const url='https://www.webercountyutah.gov/mounts/surveyorimages/test.pdf';
  await drain(a,async(u,n)=>page(n),{maxPages:1});assert.equal(a.documents[0].nextPage,2);assert.equal(a.processing.pendingDocuments,1);
  await drain(a,async(u,n)=>page(n));assert.equal(a.documents[0].pages.length,3);assert.equal(a.processing.processedDocuments,1);assert.equal(a.requests.filter(r=>r.entry==='987654').length,1);
  const broken={documents:[{url}],requests:[]};await drain(broken,async()=>({...page(1),nextPage:9}));assert.equal(broken.documents[0].state,'reading_failed');assert.equal(broken.documents[0].pages.length,0);
+ const gap={documents:[{url,pages:[{page:1}],nextPage:4}],requests:[]};await drain(gap,async()=>{throw Error('must not fetch');});assert.match(gap.documents[0].error,/gap/);
  const linked={documents:[{id:'root',url,label:'Root',state:'queued'}],requests:[]};
  await drain(linked,async(u,n)=>({...page(n,1),pages:[{page:1,references:u===url?[{surveyNumber:'42',url:url.replace('test','linked'),label:'Linked survey'}]:[]}]}));
  assert.equal(linked.documents.length,2);assert.equal(linked.processing.processedDocuments,2);
