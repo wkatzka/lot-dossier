@@ -14,7 +14,7 @@ async function drain(manifest,fetchPage,{maxPages=100,onProgress=()=>{}}={}){
     if(doc.sha256&&doc.sha256!==r.sha256){if(++changes>2)throw Error('Source changed repeatedly during reading');manifest.requests=manifest.requests.filter(x=>!x.discoveredByDoc||x.discoveredByDoc!==doc.id);doc.pages=[];doc.nextPage=1;doc.sha256=r.sha256;cursor=1;doc.state='source_changed';continue;}
     if(r.pages.some((p,i)=>p.page!==cursor+i)||r.nextPage!==(cursor+r.pages.length<=r.totalPages?cursor+r.pages.length:null))throw Error('Page coverage does not reconcile');
     if(JSON.stringify(manifest).length+JSON.stringify(r.pages).length>1500000){doc.state='storage_limit';doc.error='Saved evidence budget reached; retain additional readings in a separate research export.';doc.nextPage=cursor;onProgress(doc);break documents;}
-    doc.sha256=r.sha256;doc.totalPages=r.totalPages;doc.retrievedAt=r.retrievedAt;
+    doc.sha256=r.sha256;doc.totalPages=r.totalPages;doc.renderingNotes=(doc.renderingNotes||[]).concat(r.renderingNotes||[]);doc.retrievedAt=r.retrievedAt;
     doc.pages.push(...r.pages);processed+=r.pages.length;doc.nextPage=r.nextPage;delete doc.error;
     for(const page of r.pages)for(const ref of page.references||[]){
      if(ref.surveyNumber){

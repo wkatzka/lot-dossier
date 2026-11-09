@@ -123,7 +123,7 @@
         message('Reading public originals sequentially. This run saves up to 20 pages; remaining cursors are retained.');
         let revision=project.revision;
         await window.OriginalDocuments.drain(manifest,async(url,page)=>{
-          const response=await fetch((window.LR_DATA.apiBase||'')+'/api/original-document?url='+encodeURIComponent(url)+'&page='+page,{signal:AbortSignal.timeout(110000)});
+          const response=await fetch((window.LR_DATA.apiBase||'')+'/api/original-document?url='+encodeURIComponent(url)+'&page='+page+'&v='+encodeURIComponent(window.LR_DATA.apiVersion||''),{signal:AbortSignal.timeout(110000)});
           const data=await response.json();if(!response.ok)throw Error(data.error||'Document service unavailable');return data;
         },{maxPages:20,onProgress:async()=>{}});
         const finding=(next.report.findings||[]).find(f=>f.item==='Automatic original-document reading');if(finding)finding.headline=manifest.processing.processedDocuments+' of '+manifest.documents.length+' candidate documents processed';

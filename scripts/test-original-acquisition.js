@@ -2,6 +2,7 @@ const assert=require('node:assert/strict');
 const D=require('../lib/original-discovery'),R=require('../lib/original-reader'),{drain}=require('../web/original-documents');
 const url='https://www.webercountyutah.gov/mounts/surveyorimages/test.pdf';
 (async()=>{
+ const {reduceMask}=require('../lib/reading-copy');assert.deepEqual([...reduceMask(Buffer.from([255,254]),16,1,0,8).data],[254]);assert.deepEqual([...reduceMask(Buffer.from([0,1]),16,1,1,8).data],[1]);assert.throws(()=>reduceMask(Buffer.from([]),16,1),/dimensions/);
  assert(D.allowed(url));for(const u of ['https://evil.example/a.pdf',url+'?redirect=x',url+'#page=1','https://www.webercountyutah.gov/login.php','https://www.webercountyutah.gov/mounts/surveyorimages/../../secret.pdf'])assert(!D.allowed(u));
  const loc={township:6,northSouth:'n',range:2,eastWest:'w',section:12};
  assert(D.sectionMatch({township:'5N/6N',range:'1W\\2W',section:'11/12 & 13'},loc));
