@@ -11,6 +11,11 @@ function discover(report){
   if(!r.citations.some(c=>JSON.stringify(c)===JSON.stringify(citation)))r.citations.push(citation);
  }
  const research=facts.publicResearch||{};
+ for(const r of research.titleResearch?.records||[]){
+  add(r.entry,{url:r.source.url,hash:r.source.sha256,excerpt:r.summary,scope:'Historical abstract, lines '+r.source.lines+'; original and lot applicability unresolved'},r.kind);
+  const record=records.find(x=>x.entry===r.entry);record.historicalScreen=r.spatial;
+  record.relatedReferenceCandidates=(r.related||[]).map(x=>({...x,state:'index_relationship_only',url:r.source.url}));
+ }
  const discovery=facts.documentDiscovery||{};
  for(const ref of (discovery.record||{}).references||[])add(ref.entry,{url:discovery.record.parcelPage,scope:'subject parcel reference'},ref.label||ref.kind);
  for(const ref of ((discovery.record||{}).plat||{}).entries||[])add(ref.entry,{url:ref.url||discovery.record.parcelPage,scope:'recorded plat reference'},ref.label);

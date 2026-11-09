@@ -10,7 +10,7 @@ function reconcile(events,{scope,asOf,rootEstablished=false,searchComplete=false
  const ordered=events.slice().sort((a,b)=>String(a.effectiveDate).localeCompare(String(b.effectiveDate))),seen=new Set();
  for(const e of ordered){
   if(!e.id||seen.has(e.id)){gaps.push('Duplicate or missing instrument event');continue;}seen.add(e.id);
-  if(!e.reviewed||!e.source?.url||!e.source?.page||!e.source?.hash||e.propertyKey!==scope?.propertyKey||e.commodity!==scope?.commodity||e.depth!==scope?.depth){gaps.push('Unreviewed or incompatible event '+e.id);continue;}
+  if(!e.reviewed||!/^https:\/\//.test(e.source?.url||'')||!Number.isInteger(e.source?.page)||e.source.page<1||!/^[a-f0-9]{64}$/i.test(e.source?.hash||'')||e.source?.originalInstrument!==true||e.propertyKey!==scope?.propertyKey||e.commodity!==scope?.commodity||e.depth!==scope?.depth){gaps.push('Unreviewed, non-original or incompatible event '+e.id);continue;}
   if(!validDate(e.effectiveDate)||e.effectiveDate>asOf){gaps.push('Event outside dated scope '+e.id);continue;}
   const share=e.numerator/e.denominator;if(!Number.isSafeInteger(e.numerator)||!Number.isSafeInteger(e.denominator)||e.denominator<=0||share<=0||share>1){gaps.push('Invalid fractional interest '+e.id);continue;}
   if(!e.to){gaps.push('Missing grantee '+e.id);continue;}

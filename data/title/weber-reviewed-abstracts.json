@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "408079",
+      "book": "750",
+      "page": "449",
+      "recorded": "1963-08-14",
+      "kind": "Quitclaim deed indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/071%20004.tif",
+        "sha256": "6b1d5f1ec9bc826c6c12521b828d5a3c1dcff3f02629ef372c6e15b5d5bed22d",
+        "sheet": "071 004.tif",
+        "lines": "12\u201317",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Indexed canal strip, SW quarter of SE quarter, 55 feet wide: 25 feet on the north/right and 30 feet on the south/left of the centerline, stations 468+88.8 to 480+59.7; stated 1.48 acres.",
+      "aliquots": [
+        "SWSE"
+      ],
+      "geometryDefinition": {
+        "kind": "corridor",
+        "anchorId": "71234-2547",
+        "tie": [
+          {
+            "ns": "N",
+            "degrees": 74.46666666666667,
+            "ew": "W",
+            "feet": 1556.1
+          }
+        ],
+        "calls": [
+          {
+            "ns": "S",
+            "degrees": 85.28333333333333,
+            "ew": "W",
+            "feet": 828.8
+          },
+          {
+            "ns": "S",
+            "degrees": 85.9,
+            "ew": "W",
+            "feet": 342.1
+          }
+        ],
+        "endTie": [
+          {
+            "ns": "N",
+            "degrees": 83.06666666666666,
+            "ew": "W",
+            "feet": 2686.1
+          }
+        ],
+        "leftFeet": 30,
+        "rightFeet": 25
+      },
+      "related": [
+        {
+          "entry": "408769",
+          "basis": "Following row expressly repeats lines 12\u201317"
+        }
+      ]
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "408769",
+      "book": "751",
+      "page": "397",
+      "recorded": "1963-08-26",
+      "kind": "Warranty deed to United States indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/071%20004.tif",
+        "sha256": "6b1d5f1ec9bc826c6c12521b828d5a3c1dcff3f02629ef372c6e15b5d5bed22d",
+        "sheet": "071 004.tif",
+        "lines": "18",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Conveyance to United States of America. The abstract says same description as lines 12\u201317, linking this entry to the preceding canal-strip description. Mineral terms are not reproduced.",
+      "aliquots": [
+        "SWSE"
+      ],
+      "geometryDefinition": {
+        "kind": "corridor",
+        "anchorId": "71234-2547",
+        "tie": [
+          {
+            "ns": "N",
+            "degrees": 74.46666666666667,
+            "ew": "W",
+            "feet": 1556.1
+          }
+        ],
+        "calls": [
+          {
+            "ns": "S",
+            "degrees": 85.28333333333333,
+            "ew": "W",
+            "feet": 828.8
+          },
+          {
+            "ns": "S",
+            "degrees": 85.9,
+            "ew": "W",
+            "feet": 342.1
+          }
+        ],
+        "endTie": [
+          {
+            "ns": "N",
+            "degrees": 83.06666666666666,
+            "ew": "W",
+            "feet": 2686.1
+          }
+        ],
+        "leftFeet": 30,
+        "rightFeet": 25
+      },
+      "related": [
+        {
+          "entry": "408079",
+          "basis": "Explicit same-description reference in abstract"
+        },
+        {
+          "entry": "598189",
+          "basis": "Later indexed exception cites Book 751 page 397"
+        }
+      ]
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "598189",
+      "book": "1031",
+      "page": "100",
+      "recorded": "1973-07-30",
+      "kind": "Warranty deed indexed; canal exception",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20005.tif",
+        "sha256": "98d590a9b68454aa033147cd1cd9875266fb9543f72f83e04c1d279d9006e762",
+        "sheet": "107 005.tif",
+        "lines": "5\u201311",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Indexed 30-acre SE-quarter tract begins at the quarter corner common to sections 27 and 34, then N 1150.3 ft, E 1025.5 ft, S 22\u00b055\u2032 E 322.4 ft, S 853.0 ft, W 1164 ft. Excepts the 1.48-acre canal strip previously conveyed to the United States in Book 751 page 397. The tract calls fail closure and require the original deed before exact parcel matching.",
+      "aliquots": [
+        "SWSE"
+      ],
+      "geometryDefinition": {
+        "kind": "tract",
+        "anchorId": "71234-2546",
+        "tie": [],
+        "calls": [
+          {
+            "ns": "N",
+            "degrees": 0,
+            "ew": "E",
+            "feet": 1150.3
+          },
+          {
+            "ns": "N",
+            "degrees": 90,
+            "ew": "E",
+            "feet": 1025.5
+          },
+          {
+            "ns": "S",
+            "degrees": 22.916666666666668,
+            "ew": "E",
+            "feet": 322.4
+          },
+          {
+            "ns": "S",
+            "degrees": 0,
+            "ew": "E",
+            "feet": 853
+          },
+          {
+            "ns": "N",
+            "degrees": 90,
+            "ew": "W",
+            "feet": 1164
+          }
+        ]
+      },
+      "related": [
+        {
+          "entry": "408769",
+          "basis": "Express Book 751 page 397 exception"
+        }
+      ]
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "599385",
+      "book": "1032",
+      "page": "684",
+      "recorded": "1973-08-15",
+      "kind": "Water pipeline easement indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20005.tif",
+        "sha256": "98d590a9b68454aa033147cd1cd9875266fb9543f72f83e04c1d279d9006e762",
+        "sheet": "107 005.tif",
+        "lines": "13\u201314",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Begins on the quarter-section line 1,367.73 feet south of the north quarter corner; runs southwest to a line 18 feet west of the east line of the west half, north parallel to that line, then returns to the quarter-section line. This abstract describes a strip within the west half, not a restriction on every property in section 27. Original terms, survey alignment and later amendments remain unchecked.",
+      "aliquots": [
+        "NENW",
+        "NWNW",
+        "SENW",
+        "SWNW",
+        "NESW",
+        "NWSW",
+        "SESW",
+        "SWSW"
+      ],
+      "geometryDefinition": null,
+      "related": [],
+      "relativeLocation": "West half of the section, adjoining its east boundary; based on the indexed calls and not a registered survey."
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "599386",
+      "book": "1032",
+      "page": "686",
+      "recorded": "1973-08-15",
+      "kind": "Water pipeline easement indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20005.tif",
+        "sha256": "98d590a9b68454aa033147cd1cd9875266fb9543f72f83e04c1d279d9006e762",
+        "sheet": "107 005.tif",
+        "lines": "15\u201319",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Begins 18.6 chains north of the southeast corner of the southwest quarter; runs southwest to 25 feet west of the east line of the west half, north 720.97 feet, west another 20 feet, then north and northeast back to the quarter-section line. The indexed strip is west of the north-south quarter-section line. This abstract describes a strip within the west half, not a restriction on every property in section 27. Original terms, survey alignment and later amendments remain unchecked.",
+      "aliquots": [
+        "NENW",
+        "NWNW",
+        "SENW",
+        "SWNW",
+        "NESW",
+        "NWSW",
+        "SESW",
+        "SWSW"
+      ],
+      "geometryDefinition": null,
+      "related": [],
+      "relativeLocation": "West half of the section, adjoining its east boundary; based on the indexed calls and not a registered survey."
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "599387",
+      "book": "1032",
+      "page": "688",
+      "recorded": "1973-08-15",
+      "kind": "Water pipeline easement indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20005.tif",
+        "sha256": "98d590a9b68454aa033147cd1cd9875266fb9543f72f83e04c1d279d9006e762",
+        "sheet": "107 005.tif",
+        "lines": "20\u201323",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Begins 2,152.74 feet south of the north quarter corner on the quarter-section line; runs west to the county-road centerline and northwest to 18 feet west of the east line of the west half, north parallel to that line, then northeast back to the quarter-section line. This abstract describes a strip within the west half, not a restriction on every property in section 27. Original terms, survey alignment and later amendments remain unchecked.",
+      "aliquots": [
+        "NENW",
+        "NWNW",
+        "SENW",
+        "SWNW",
+        "NESW",
+        "NWSW",
+        "SESW",
+        "SWSW"
+      ],
+      "geometryDefinition": null,
+      "related": [],
+      "relativeLocation": "West half of the section, adjoining its east boundary; based on the indexed calls and not a registered survey."
+    },
+    {
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "originalInstrument": false,
+      "mineralTermsDetermined": false,
+      "legalApplicability": "unresolved",
+      "entry": "599388",
+      "book": "1032",
+      "page": "690",
+      "recorded": "1973-08-15",
+      "kind": "Water pipeline easement indexed",
+      "source": {
+        "url": "https://webercountyutah.gov/mounts/recorder/Published%20Data/Abstract/Sec%20land/t7n%20r1e/Sec%2027/107%20005.tif",
+        "sha256": "98d590a9b68454aa033147cd1cd9875266fb9543f72f83e04c1d279d9006e762",
+        "sheet": "107 005.tif",
+        "lines": "24\u201326",
+        "verifiedAt": "2026-11-09",
+        "verification": "Targeted visual transcription of the cited abstract rows; not the original instrument"
+      },
+      "summary": "Begins 1,367.73 feet south of the north quarter corner on the quarter-section line; runs southwest to 18 feet west of the east line of the west half, south 147.54 feet parallel to that line, northeast back to it, then north 138.58 feet to the beginning. This abstract describes a strip within the west half, not a restriction on every property in section 27. Original terms, survey alignment and later amendments remain unchecked.",
+      "aliquots": [
+        "NENW",
+        "NWNW",
+        "SENW",
+        "SWNW",
+        "NESW",
+        "NWSW",
+        "SESW",
+        "SWSW"
+      ],
+      "geometryDefinition": null,
+      "related": [],
+      "relativeLocation": "West half of the section, adjoining its east boundary; based on the indexed calls and not a registered survey."
+    }
+  ]
+}

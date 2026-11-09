@@ -1996,6 +1996,14 @@
     ctx.facts.publicResearch=data;
     (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);doc.boundaryCheck=root.SurveyBoundary.compare(doc,ctx.parcel,ctx.facts.parcelDoc||{});});
     var federal=data.federal||{}, records=federal.features||[], history=data.history||{}, out=[];
+    var title=data.titleResearch;
+    if(title){
+      var cv=title.coverage;
+      out.push(F('easements','Historical abstract reading','verify',cv.machineReadSheets+' of '+cv.discoveredSheets+' parcel-section sheets machine-read',cv.visuallyCheckedEntries+' entries visually checked; '+cv.fullyVerifiedSheets+' complete sheets verified. '+cv.unsegmentedSheets+' sheets lack reliable entry-row segmentation. '+title.limitation,'County historical abstracts',data.historicAbstracts?.source));
+      title.records.forEach(function(r){out.push(F('easements','Historical entry '+r.entry,'verify',r.kind,root.TitleResearchView.spatial(r.spatial)+' '+r.summary+' Source: '+r.source.sheet+', lines '+r.source.lines+'. Original Book '+r.book+', page '+r.page+' has not been retrieved.','County abstract',r.source.url));});
+      (title.federalRoot?.cases||[]).forEach(function(c){out.push(F('minerals','Federal grant '+c.serial,'verify',c.report?'Federal report records patent issued '+c.report.patentIssued:'Federal grant case discovered',c.landMatches.map(function(m){return m.description+' ('+m.match.replace(/_/g,' ')+')';}).join('; ')+'. '+c.limitation+(c.report?' '+c.report.limitation:''),'BLM serial register',c.reportSource));});
+      out.push(F('minerals','Historical mineral-title research','verify','Root and subsequent mineral chain remain unresolved',cv.machineReadSheets+' historical sheets have cached machine readings. Abstracts do not reproduce all mineral clauses. '+title.gaps.filter(function(g){return ['patent-root','mineral-chain','current-chain'].includes(g.id);}).map(function(g){return g.detail;}).join(' '),'BLM federal land records','https://glorecords.blm.gov/s/'));
+    }
     out.push(F('minerals','Federal mineral-estate screen',records.length?'watch':'verify',federal.status==='retrieved'?(records.length+' intersecting BLM mineral record(s)'):'Federal mineral source unavailable',
       records.map(function(x){var a=x.attributes;return 'Record '+a.OBJECTID+': patent '+(a.Patent_NR||'not supplied')+', serial '+(a.Serial_NR||'not supplied')+', all minerals '+(a.ALL_MIN||'unspecified')+', oil/gas '+(a.Oil_Gas||'unspecified')+', coal '+(a.Coal||'unspecified')+'.';}).join(' ')+' '+(federal.error||'Intersections include possible boundary touches. Public mapping is discovery evidence; original patents/reservations and later private transfers remain unverified.'),'BLM Utah Federal Minerals Estate',federal.source));
     out.push(F('easements','Parent-parcel record inventory','verify',(history.records||[]).length+' public parcel-history record(s) retrieved',

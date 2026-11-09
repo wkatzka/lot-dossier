@@ -63,6 +63,8 @@ def build(api_base, inline_assets=False):
         for f in sorted(os.listdir(os.path.join(ROOT, d))):
             with open(os.path.join(ROOT, d, f), "rb") as fh:
                 h.update(fh.read())
+    for f in sorted(os.listdir(os.path.join(ROOT, "data", "title"))):
+        h.update(read(ROOT, "data", "title", f).encode())
     h.update(read(WEB, "plat-evidence.js").encode())
     with open(os.path.join(ROOT, "config", "records.json")) as fh:
         records = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
@@ -77,7 +79,7 @@ def build(api_base, inline_assets=False):
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
         "<script>\n" + read(ROOT, "node_modules", "@turf", "turf", "turf.min.js") + "\n</script>",
         "<script>\n" + read(ROOT, "node_modules", "proj4", "dist", "proj4.js") + "\n</script>",
-        "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "survey-boundary.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
+        "<script>\n" + read(WEB, "survey-registration.js") + "\n" + read(WEB, "survey-alignment.js") + "\n" + read(WEB, "survey-boundary.js") + "\n" + read(WEB, "title-research-view.js") + "\n" + read(WEB, "mineral-chain.js") + "\n" + read(WEB, "placement-engine.js") + "\n</script>",
         "<script>\n" + read(WEB, "land-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "weber-value.js") + "\n</script>",
         "<script>\n" + read(WEB, "plat-evidence.js") + "\n</script>",

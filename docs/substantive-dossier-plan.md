@@ -198,3 +198,26 @@ Public access checks: https://frontier.co.weber.ut.us/p/Public/List redirects to
 - [ ] City filing/updates: blocked by authenticated integration access and an authorized real application for end-to-end submission/update testing. No production permit was created. Account storage and saved projects remain implemented.
 
 Validation: synthetic broken-boundary/multi-lot/curve cases, source allowlisting and duplicate handling, statute-vs-section parsing, survey-to-map comparison, additional-boundary placement conflicts, existing geometry/search tests, and live original-document retrieval. Private pilot artifacts remain outside the public repository.
+
+## Historical reading, matching and dossier integration — 2026-11-09
+
+- [x] Retain all 95 original archive images and machine readings; reuse them without repeating bulk OCR. Default ingestion concurrency is one, with a directory lock and native-reading reuse.
+- [x] Resolve the parcel's actual PLSS geography and select its live archive inventory. Pilot: 71 relevant-section sheets, 94 machine entry candidates, 41 sheets without reliable entry segmentation. Seven indexed entries visually checked; zero whole sheets claimed fully verified.
+- [x] Reconstruct the indexed canal strip and check an independent endpoint tie; screen it against the parcel. Detect and retain a separate parent-tract closure discrepancy rather than repairing it silently. These are conditional screening results, not surveyed/legal exclusions.
+- [x] Integrate source hashes, citations, relationships, original-instrument requests, coverage and specific gaps into the dossier and evidence ledger. Available historical geometry enters pool checks with unverified applicability retained.
+- [x] Prevent abstract summaries from satisfying the mineral-chain original-instrument gate. No keyword/GIS absence becomes ownership proof.
+- [x] Test a different real parcel: its own section inventory was selected, with 547 unread sheets and no unrelated cached findings. No heavy OCR launched.
+- [ ] **Attempted but unresolved:** complete transcription and interpretation of historical handwriting/continuations. Machine reading is not full review.
+- [ ] **Blocked by underlying-record access and chain coverage:** complete easement reconciliation, releases/amendments through the present, and private mineral ownership. Exact discovered instrument references are retained; original deed images and the root/subsequent mineral chain were not obtained from the configured public sources.
+- [ ] **Not deployed:** a durable automatic ingestion worker for every previously uncached section. Existing addresses continue through discovery; uncached reading coverage is explicit. This is not an instant nationwide title service.
+
+Existing account storage, My projects, plans, valuation research, pool scenarios, permit preparation and manual permit management remain in scope and are preserved. Automated city filing still depends on a configured city integration. This update does not claim the complete legal dossier objective has been achieved.
+
+### Federal root and easement follow-through
+
+- [x] Added live BLM grant layers (authorized, pending and historical) and conveyed-private-land discovery. Match legal township/range/section and aliquot descriptions independently of generalized case polygons; retain source failures distinctly from zero matches.
+- [x] Retrieved a matching public serial-register report: migrated patent-issued action dated 1884-02-16. Retain targeted transcription with its source, serial/Salesforce identity and reading date. It is not a patent image. The case's `US Rights Reserved: NONE` field does not establish subsequent private mineral ownership.
+- [x] Re-read all four indexed water-pipeline descriptions. They describe strips west of the north-south quarter-section line, unlike the pilot's mapped aliquot. Report descriptive nonoverlap separately from exact geometry and legal clearance.
+- [x] All 22 repository test suites pass, including saved-report → evidence workspace → pool constraint integration and rejection of abstract-only mineral ownership.
+- [ ] **Attempted but unresolved:** obtain and interpret the actual federal patent. The public serial report narrows the root search; the GLO advanced-search embed returned a 404 and anonymous scripted report retrieval did not yield an original. No access restriction was bypassed.
+- [ ] **Blocked by original county-record access / incomplete chain:** legally complete easements and current mineral ownership. This work materially improves evidence and matching but cannot establish omitted terms, releases or later transfers from index summaries.
