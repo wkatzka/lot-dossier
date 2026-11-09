@@ -1995,7 +1995,7 @@
     } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
     ctx.facts.publicResearch=data;
     if(data.titleResearch?.acquisition&&root.OriginalDocuments){
-      await root.OriginalDocuments.drain(data.titleResearch.acquisition,async function(url,page){return apiGet('/api/original-document?url='+encodeURIComponent(url)+'&page='+page,110000);},{maxPages:6});
+      await root.OriginalDocuments.drain(data.titleResearch.acquisition,async function(url,page){return apiGet('/api/original-document?url='+encodeURIComponent(url)+'&page='+page,170000);},{maxPages:6});
     }
 
     (ctx.facts.publicSurveys?.documents||[]).forEach(function(doc){doc.alignment=root.SurveyAlignment.align(doc,data.surveyControl);doc.boundaryCheck=root.SurveyBoundary.compare(doc,ctx.parcel,ctx.facts.parcelDoc||{});});
