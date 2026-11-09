@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
-  let cityPage='primary', reusableProjects=[];
+  let cityPage='primary', reusableProjects=[], analysisTarget='';
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +23,7 @@
     const old=project.report.facts.ownerRecord;if(old&&Date.now()-Date.parse(old.retrievedAt)<86400000)return;
     try{const r=await fetch((window.LR_DATA.apiBase||'')+'/api/parcel-docs?county=Weber&record=1&parcel='+encodeURIComponent(project.report.parcel.id)+'&v='+encodeURIComponent(window.LR_DATA.apiVersion||''),{signal:AbortSignal.timeout(20000)});if(!r.ok)return;const data=await r.json();if(data.ownerRecord)await commit({type:'public_owner',record:data.ownerRecord});}catch(e){/* Plan reading still proceeds when the public county service is unavailable. */}
   }
-  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
+  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById(analysisTarget)||document.getElementById('pw-message'); if (e) e.textContent = s; }
   function syncLabel(p) {
     const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
     return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');
@@ -170,7 +170,9 @@
         if(a!=='analyze-project-plan'&&!host.querySelector('#city-source-scope')?.checked)throw Error('Confirm that the document describes the proposed work for this permit type.');
         const permitType=a==='analyze-project-plan'?'project':project.application.cityInspect?.typeId;
         await saveCityPage();await enrichPublicOwner();const d=project.documents.find(x=>x.id===documentId);if(!d)throw Error('Choose a PDF first.');
-        window.AnalysisProgress.start('pw-message',a==='extract-permit-local'?'local':'plans');
+        analysisTarget=a==='analyze-project-plan'?'plan-analysis-'+documentId:'permit-analysis-status';
+        const topMessage=document.getElementById('pw-message');if(topMessage)topMessage.textContent='';
+        window.AnalysisProgress.start(analysisTarget,a==='extract-permit-local'?'local':'plans');
         let result;
         if(a==='extract-permit-local'){
           const blob=await S.file(d.id);if(!blob)throw Error('Document is unavailable on this device.');
@@ -216,7 +218,7 @@
       else if(a==='export-backup') download('cornerpin-full-backup.json',JSON.stringify(await window.ProjectBackup.pack(project,S.file)),'application/json');
       else if(a==='export-record') download('cornerpin-project-record.json',JSON.stringify(project,null,2),'application/json');
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
-    } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();busy=false;}
+    } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();analysisTarget='';busy=false;}
   });
   host.addEventListener('change',async e=>{
     if(e.target.matches('form[data-command=setback_rule] select[name=classification]')){const form=e.target.closest('form'),s=project.report.facts.zone_std||{};form.elements.feet.value=(e.target.value==='street-side'?s.street:s.side)??'';form.elements.confirmed.checked=false;return;}
@@ -248,7 +250,7 @@
         if(command.type==='upload-plans'){try{message("Plans saved. Reading printed facts…");const parsed=await window.PlanReader.read(file,(page,total)=>message("Reading plan page "+page+" of "+total+"…"),{permitOnly:true});await commit({type:'document_extraction',result:{documentId:id,documentHash:hash,filename:file.name,permitType:'project',method:'Direct extraction',facts:(parsed.permitFacts||[]).map(f=>({...f,documentId:id,documentHash:hash})),at:new Date().toISOString()}});message('Plans saved. Explicit facts are available; Analyze plans with CornerpinAI reads drawings and recommends permit scopes.');}catch(err){message('Plans saved; direct reading failed: '+err.message+'. Try Analyze plans with CornerpinAI.');}return;}
       } else await commit(command);
       message('');
-    } catch(err) {message(err.message);submit.disabled=false;} finally {window.AnalysisProgress.stop();busy=false;}
+    } catch(err) {message(err.message);submit.disabled=false;} finally {window.AnalysisProgress.stop();analysisTarget='';busy=false;}
   });
   window.addEventListener('cornerpin:account-changed',()=>{project=null;reusableProjects=[];capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {
