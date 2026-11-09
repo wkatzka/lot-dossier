@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),{JSDOM}=require
 const pause=()=>new Promise(r=>setTimeout(r,5));async function until(f){for(let i=0;i<300;i++){if(await f())return;await pause();}throw Error('UI did not reach expected state');}
 (async()=>{
  const dom=new JSDOM('<div id="home"><span class="wordmark">Cornerpin</span></div><button id="home-projects">My projects</button><button id="rv-workflow"></button><div id="rv-body"></div>',{url:'https://example.test',runScripts:'outside-only'}),w=dom.window,d=w.document;
- let scrolledDraft=false;w.HTMLElement.prototype.scrollIntoView=function(){if(this.matches('.city-application'))scrolledDraft=true;};
+ let scrolledDraft=false;w.HTMLElement.prototype.scrollIntoView=function(){if(this.matches('.permit-draft-page'))scrolledDraft=true;};
  w.indexedDB=new IDBFactory();w.structuredClone=structuredClone;w.scrollTo=()=>{};w.LR_DATA={cityInspect:require('../data/permits/ogden-valley-cityinspect.json')};
  w.CloudSync={signedIn:()=>false};w.CornerpinAccount={ready:Promise.resolve()};w.ProjectSync={status:()=>({state:'guest'})};w.CornerpinReportViews={packet:()=>''};w.ResearchWorkspace={render:()=>''};
  for(const name of ['evidence-ledger','permit-facts','permit-assistant','city-application','permit-workflow','project-store','permit-prep-ui','analysis-progress','project-workspace'])w.eval(fs.readFileSync('web/'+name+'.js','utf8'));
@@ -18,13 +18,14 @@ const pause=()=>new Promise(r=>setTimeout(r,5));async function until(f){for(let 
  const saved=await w.ProjectStore.get(p.id);assert.equal(saved.application.cityInspect.answers['2'][key].value,'Proposed pool');
  d.getElementById('city-'+key).value='House revised';d.querySelector('button[data-city-next]').click();await until(()=>d.querySelector('[aria-current=step]')?.dataset.id==='professionals');assert.equal((await w.ProjectStore.get(p.id)).application.cityInspect.answers['1'][key].value,'House revised');
  assert.match(w.CityApplication.sheet(await w.ProjectStore.get(p.id)),/House revised/);
- assert(d.querySelector('form[data-command=upload-plans]'));
+ assert(d.querySelector('.permit-draft-page'));assert(!d.querySelector('form[data-command=upload-plans]'));
+ d.querySelector('[data-action=permit-hub]').click();await until(()=>d.querySelector('form[data-command=upload-plans]'));assert(!d.querySelector('.city-application'));
  const team=d.querySelector('form[data-command=team_profile][data-unused]')||Array.from(d.querySelectorAll('form[data-command=team_profile]')).find(f=>f.elements.role.value==='builder');
  team.elements.name.value='Example Builder';team.elements.phone.value='555-0100';team.elements.confirmed.checked=true;team.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));
  await until(async()=>!!(await w.ProjectStore.get(p.id)).application.team?.builder);
- assert.equal(w.CityApplication.rows(await w.ProjectStore.get(p.id),'1').find(r=>r.name==='buildername').value,'Example Builder');
- assert.equal(d.querySelector('input[name=rate_0]').step,'any');
+ assert.equal(w.CityApplication.rows(await w.ProjectStore.get(p.id),'1').find(r=>r.name==='buildername').value,'Example Builder');const progress=w.PermitPrepUI.progress(await w.ProjectStore.get(p.id),'1');assert.equal(progress.total,progress.filled+progress.missing);assert.equal(progress.filled,progress.supplied+progress.suggested+progress.stale);assert(progress.supplied>0);
+
  // Reopening a prepared draft must reveal the actual form and retain saved answers.
- const openDraft=d.querySelector('[data-action="prepare-permit"][data-id="1"]');assert(openDraft);openDraft.click();await until(()=>scrolledDraft);assert.equal(d.activeElement,d.querySelector('.city-application h2'));assert.equal(d.querySelector('[data-city-type]').value,'1');assert.equal(d.getElementById('city-'+key).value,'House revised');
+ const openDraft=d.querySelector('[data-action="prepare-permit"][data-id="1"]');assert(openDraft);scrolledDraft=false;openDraft.click();await until(()=>scrolledDraft);assert.equal(d.activeElement,d.querySelector('.permit-draft-page h2'));assert.equal(d.querySelector('[data-city-type]').value,'1');assert.equal(d.getElementById('city-'+key).value,'House revised');assert.equal(d.querySelector('input[name=rate_0]').step,'any');assert(d.querySelector('.permit-progress progress'));
  console.log('PASS: selecting a type loads its form; edits persist across page/type changes; save-and-continue and export include the latest answers.');dom.window.close();
 })().catch(e=>{console.error(e);process.exitCode=1;});
