@@ -18,7 +18,7 @@
   };
   const link = (url, title) => /^https?:\/\//i.test(url || '') ? '<a class="pw-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(title) + '</a>' : '';
   window.CornerpinWorkspaceBusy=()=>busy||capturing>0;
-  function message(s) { const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
+  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
   function syncLabel(p) {
     const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
     return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');
@@ -148,7 +148,7 @@
     busy=true;
     try {
       const a=b.dataset.action, id=b.dataset.id;
-      if(a==='measure-plan'){await saveCityPage();const d=project.documents.find(d=>d.id===id);await window.MeasurementWorkbench.open(project,d,{save:commit,file:S.file});} else if(a==='suggest-measurements'){await saveCityPage();if(!window.CloudSync.signedIn())throw Error('Sign in to suggest boundaries with Claude. Manual calibrated measurement works without AI.');await window.ProjectSync.enqueue(project.id);if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for the plans to sync, then retry.');message('Reading drawing geometry with Claude. Candidates need calibration and boundary review…');const response=await fetch('/api/projects?action=plan-measurements',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:id}),signal:AbortSignal.timeout(300000)});const result=await response.json();if(!response.ok)throw Error(result.error||'Geometry analysis failed');await commit({type:'measurement_candidates',result});message(result.measurements.length ? result.measurements.length+' boundary candidates saved. Open Measure plans to review their calibration and geometry.' : 'No reliable boundary candidates found. Open Measure plans to trace the drawing with calibrated dimensions.');} else if(a==='prepare-permit') {await saveCityPage();await commit({type:'city_application',permitType:id});tab='filing';section='filing';cityPage='primary';render();}
+      if(a==='measure-plan'){await saveCityPage();const d=project.documents.find(d=>d.id===id);await window.MeasurementWorkbench.open(project,d,{save:commit,file:S.file});} else if(a==='suggest-measurements'){await saveCityPage();if(!window.CloudSync.signedIn())throw Error('Sign in to suggest boundaries with Claude. Manual calibrated measurement works without AI.');await window.ProjectSync.enqueue(project.id);if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for the plans to sync, then retry.');window.AnalysisProgress.start('pw-message','geometry');const response=await fetch('/api/projects?action=plan-measurements',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:id}),signal:AbortSignal.timeout(300000)});const result=await response.json();if(!response.ok)throw Error(result.error||'Geometry analysis failed');await commit({type:'measurement_candidates',result});message(result.measurements.length ? result.measurements.length+' boundary candidates saved. Open Measure plans to review their calibration and geometry.' : 'No reliable boundary candidates found. Open Measure plans to trace the drawing with calibrated dimensions.');} else if(a==='prepare-permit') {await saveCityPage();await commit({type:'city_application',permitType:id});tab='filing';section='filing';cityPage='primary';render();}
       else if(a==='reuse-team') {
         const owner=S.owner();const local=await S.list();const remote=window.CloudSync.signedIn()?await window.CloudSync.list():[];if(owner!==S.owner())return;
         reusableProjects=[...new Map([...local,...remote].filter(x=>x.id!==project.id).map(x=>[x.id,x])).values()];
@@ -164,7 +164,7 @@
         if(a!=='analyze-project-plan'&&!host.querySelector('#city-source-scope')?.checked)throw Error('Confirm that the document describes the proposed work for this permit type.');
         const permitType=a==='analyze-project-plan'?'project':project.application.cityInspect?.typeId;
         await saveCityPage();const d=project.documents.find(x=>x.id===documentId);if(!d)throw Error('Choose a PDF first.');
-        message(a==='extract-permit-local'?'Reading explicit plan schedules…':'Reading remaining document facts with Claude…');
+        window.AnalysisProgress.start('pw-message',a==='extract-permit-local'?'local':'plans');
         let result;
         if(a==='extract-permit-local'){
           const blob=await S.file(d.id);if(!blob)throw Error('Document is unavailable on this device.');
@@ -209,7 +209,7 @@
       else if(a==='export-backup') download('cornerpin-full-backup.json',JSON.stringify(await window.ProjectBackup.pack(project,S.file)),'application/json');
       else if(a==='export-record') download('cornerpin-project-record.json',JSON.stringify(project,null,2),'application/json');
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
-    } catch(err) {message(err.message);} finally {busy=false;}
+    } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();busy=false;}
   });
   host.addEventListener('change',async e=>{
     if(e.target.matches('form[data-command=setback_rule] select[name=classification]')){const form=e.target.closest('form'),s=project.report.facts.zone_std||{};form.elements.feet.value=(e.target.value==='street-side'?s.street:s.side)??'';form.elements.confirmed.checked=false;return;}
@@ -241,7 +241,7 @@
         if(command.type==='upload-plans'){try{message("Plans saved. Reading printed facts…");const parsed=await window.PlanReader.read(file,(page,total)=>message("Reading plan page "+page+" of "+total+"…"),{permitOnly:true});await commit({type:'document_extraction',result:{documentId:id,documentHash:hash,filename:file.name,permitType:'project',method:'Direct extraction',facts:(parsed.permitFacts||[]).map(f=>({...f,documentId:id,documentHash:hash})),at:new Date().toISOString()}});message('Plans saved. Explicit facts are available; Analyze plans with Claude reads drawings and recommends permit scopes.');}catch(err){message('Plans saved; direct reading failed: '+err.message+'. Try Analyze plans with Claude.');}return;}
       } else await commit(command);
       message('');
-    } catch(err) {message(err.message);submit.disabled=false;} finally {busy=false;}
+    } catch(err) {message(err.message);submit.disabled=false;} finally {window.AnalysisProgress.stop();busy=false;}
   });
   window.addEventListener('cornerpin:account-changed',()=>{project=null;reusableProjects=[];capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {

@@ -642,6 +642,27 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 #project-frame button.project-brand{flex-shrink:0;padding:0;border:0;background:transparent;min-height:44px;border-radius:0}
 @media(max-width:1000px){#project-frame .project-header{flex-wrap:wrap}#project-frame .project-toolbar{justify-content:flex-start}}
 @media(max-width:640px){#project-frame .project-header{justify-content:flex-start;margin-bottom:24px}#project-frame .project-toolbar button{padding:10px 12px}}
+#pw-message.is-analyzing{padding:0;background:transparent;border:0;border-radius:0;position:relative;top:auto;margin:0 0 24px}
+.analysis-progress{position:relative;display:flex;align-items:center;gap:22px;overflow:hidden;padding:25px 28px;border:1px solid #ffffff29;border-radius:12px;background:linear-gradient(110deg,#191715f5,#151515ed);box-shadow:0 12px 32px #0002}
+.analysis-mark{position:relative;flex:0 0 34px;width:34px;height:34px;border:2px solid #f0eee4;border-top-color:transparent}
+.analysis-mark:before{content:'';position:absolute;top:-2px;left:-2px;width:26px;border-top:2px solid #f0eee4}
+.analysis-mark i{position:absolute;left:-6px;top:-6px;width:10px;height:10px;border-radius:50%;background:#ff7137;animation:analysis-pin 2.4s ease-in-out infinite}
+.analysis-copy{flex:1;min-width:0}.analysis-eyebrow{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#e0c5a1;margin-bottom:7px}
+.analysis-line{font-size:18px;line-height:1.5;font-weight:500;color:#f7f6f0}.analysis-dots{display:inline-flex;width:22px;margin-left:2px}.analysis-dots i{font-style:normal;opacity:0;animation:analysis-dot 1.8s steps(1,end) infinite}.analysis-dots i:nth-child(2){animation-delay:.3s}.analysis-dots i:nth-child(3){animation-delay:.6s}
+#project-workspace .analysis-copy p{font-size:12px;line-height:1.6;color:#aaa69f;margin:6px 0 0}.analysis-time{font:12px 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;color:#bdb8af;white-space:nowrap}
+.analysis-sweep{position:absolute;bottom:0;left:0;width:28%;height:2px;background:linear-gradient(90deg,transparent,#ff7137,transparent);animation:analysis-sweep 3.8s ease-in-out infinite}
+@keyframes analysis-dot{0%,67%,100%{opacity:0}17%,66%{opacity:1}}
+@keyframes analysis-pin{0%,100%{box-shadow:0 0 0 0 #ff713733}50%{box-shadow:0 0 0 7px #ff713700}}
+@keyframes analysis-sweep{0%{transform:translateX(-100%)}100%{transform:translateX(460%)}}
+@media(max-width:640px){.analysis-progress{padding:20px 18px;gap:16px;flex-wrap:wrap}.analysis-line{font-size:16px}.analysis-time{margin-left:50px}.analysis-mark{flex-basis:28px;width:28px;height:28px}}
+@media(prefers-reduced-motion:reduce){.analysis-dots i,.analysis-mark i,.analysis-sweep{animation:none}.analysis-dots i{opacity:1}.analysis-sweep{display:none}}
+.analysis-dots i{animation-name:analysis-dot-one;animation-delay:0s}
+.analysis-dots i:nth-child(2){animation-name:analysis-dot-two;animation-delay:0s}
+.analysis-dots i:nth-child(3){animation-name:analysis-dot-three;animation-delay:0s}
+@keyframes analysis-dot-one{0%,24%{opacity:0}25%,100%{opacity:1}}
+@keyframes analysis-dot-two{0%,49%{opacity:0}50%,100%{opacity:1}}
+@keyframes analysis-dot-three{0%,74%{opacity:0}75%,100%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.analysis-dots i{animation:none;opacity:1}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -5494,6 +5515,24 @@ async function open(p,d,{save,file}){
 root.MeasurementWorkbench={panel,open};
 })(window);
 
+/* Indeterminate analysis feedback: phrases describe search scope, not verified milestones. */
+(function(root){'use strict';
+const phrases={
+ plans:[[0,'Reading the uploaded plans'],[12,'Looking for dimensions and area schedules'],[30,'Looking for construction notes and specifications'],[52,'Looking for details relevant to the permit'],[80,'Reading drawings and source references']],
+ geometry:[[0,'Reading the drawing geometry'],[12,'Looking for printed dimensions and scale'],[30,'Looking for floor boundaries and exclusions'],[55,'Looking for property lines and building placement'],[85,'Reading geometry and source references']],
+ local:[[0,'Reading printed plan text'],[10,'Looking for labeled quantities and schedules'],[30,'Reading explicit facts and source references']]
+};
+function phrase(kind,seconds){const rows=phrases[kind]||phrases.plans;return rows.filter(r=>r[0]<=seconds).at(-1)[1];}
+function create(doc,clock=()=>Date.now(),schedule=setInterval,cancel=clearInterval){let timer=null,started=0,kind='plans',target='';
+ function paint(){const el=doc.getElementById(target);if(!el)return;const secs=Math.floor((clock()-started)/1000);if(!el.querySelector('.analysis-progress')){el.classList.add('is-analyzing');el.removeAttribute('role');el.removeAttribute('aria-live');el.innerHTML='<div class="analysis-progress"><span class="analysis-mark" aria-hidden="true"><i></i></span><div class="analysis-copy"><span class="analysis-eyebrow">Plan analysis</span><div class="analysis-line"><span class="analysis-phrase" role="status" aria-live="polite"></span><span class="analysis-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div><p>Reading your document for potential answers. Findings will be ready to review when analysis finishes.</p></div><span class="analysis-time" aria-hidden="true"></span><span class="analysis-sweep" aria-hidden="true"></span></div>';}
+ const text=el.querySelector('.analysis-phrase'),value=phrase(kind,secs);if(text.textContent!==value)text.textContent=value;el.querySelector('.analysis-time').textContent=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0')+' elapsed';
+ }
+ function stop(){if(timer!==null)cancel(timer);timer=null;const el=doc.getElementById(target);if(el){el.classList.remove('is-analyzing');if(el.querySelector('.analysis-progress'))el.textContent='';el.setAttribute('role','status');el.setAttribute('aria-live','polite');}}
+ return{start(id,type='plans'){stop();target=id;kind=type;started=clock();paint();timer=schedule(paint,1000);},stop,paint};
+}
+if(typeof module!=='undefined'&&module.exports)module.exports={phrase,create};else{root.AnalysisProgress=create(document);root.addEventListener('cornerpin:account-changed',()=>root.AnalysisProgress.stop());}
+})(typeof window!=='undefined'?window:globalThis);
+
 (function () {
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
@@ -5514,7 +5553,7 @@ root.MeasurementWorkbench={panel,open};
   };
   const link = (url, title) => /^https?:\/\//i.test(url || '') ? '<a class="pw-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(title) + '</a>' : '';
   window.CornerpinWorkspaceBusy=()=>busy||capturing>0;
-  function message(s) { const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
+  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById('pw-message'); if (e) e.textContent = s; }
   function syncLabel(p) {
     const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
     return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');
@@ -5644,7 +5683,7 @@ root.MeasurementWorkbench={panel,open};
     busy=true;
     try {
       const a=b.dataset.action, id=b.dataset.id;
-      if(a==='measure-plan'){await saveCityPage();const d=project.documents.find(d=>d.id===id);await window.MeasurementWorkbench.open(project,d,{save:commit,file:S.file});} else if(a==='suggest-measurements'){await saveCityPage();if(!window.CloudSync.signedIn())throw Error('Sign in to suggest boundaries with Claude. Manual calibrated measurement works without AI.');await window.ProjectSync.enqueue(project.id);if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for the plans to sync, then retry.');message('Reading drawing geometry with Claude. Candidates need calibration and boundary review…');const response=await fetch('/api/projects?action=plan-measurements',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:id}),signal:AbortSignal.timeout(300000)});const result=await response.json();if(!response.ok)throw Error(result.error||'Geometry analysis failed');await commit({type:'measurement_candidates',result});message(result.measurements.length ? result.measurements.length+' boundary candidates saved. Open Measure plans to review their calibration and geometry.' : 'No reliable boundary candidates found. Open Measure plans to trace the drawing with calibrated dimensions.');} else if(a==='prepare-permit') {await saveCityPage();await commit({type:'city_application',permitType:id});tab='filing';section='filing';cityPage='primary';render();}
+      if(a==='measure-plan'){await saveCityPage();const d=project.documents.find(d=>d.id===id);await window.MeasurementWorkbench.open(project,d,{save:commit,file:S.file});} else if(a==='suggest-measurements'){await saveCityPage();if(!window.CloudSync.signedIn())throw Error('Sign in to suggest boundaries with Claude. Manual calibrated measurement works without AI.');await window.ProjectSync.enqueue(project.id);if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for the plans to sync, then retry.');window.AnalysisProgress.start('pw-message','geometry');const response=await fetch('/api/projects?action=plan-measurements',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:id}),signal:AbortSignal.timeout(300000)});const result=await response.json();if(!response.ok)throw Error(result.error||'Geometry analysis failed');await commit({type:'measurement_candidates',result});message(result.measurements.length ? result.measurements.length+' boundary candidates saved. Open Measure plans to review their calibration and geometry.' : 'No reliable boundary candidates found. Open Measure plans to trace the drawing with calibrated dimensions.');} else if(a==='prepare-permit') {await saveCityPage();await commit({type:'city_application',permitType:id});tab='filing';section='filing';cityPage='primary';render();}
       else if(a==='reuse-team') {
         const owner=S.owner();const local=await S.list();const remote=window.CloudSync.signedIn()?await window.CloudSync.list():[];if(owner!==S.owner())return;
         reusableProjects=[...new Map([...local,...remote].filter(x=>x.id!==project.id).map(x=>[x.id,x])).values()];
@@ -5660,7 +5699,7 @@ root.MeasurementWorkbench={panel,open};
         if(a!=='analyze-project-plan'&&!host.querySelector('#city-source-scope')?.checked)throw Error('Confirm that the document describes the proposed work for this permit type.');
         const permitType=a==='analyze-project-plan'?'project':project.application.cityInspect?.typeId;
         await saveCityPage();const d=project.documents.find(x=>x.id===documentId);if(!d)throw Error('Choose a PDF first.');
-        message(a==='extract-permit-local'?'Reading explicit plan schedules…':'Reading remaining document facts with Claude…');
+        window.AnalysisProgress.start('pw-message',a==='extract-permit-local'?'local':'plans');
         let result;
         if(a==='extract-permit-local'){
           const blob=await S.file(d.id);if(!blob)throw Error('Document is unavailable on this device.');
@@ -5705,7 +5744,7 @@ root.MeasurementWorkbench={panel,open};
       else if(a==='export-backup') download('cornerpin-full-backup.json',JSON.stringify(await window.ProjectBackup.pack(project,S.file)),'application/json');
       else if(a==='export-record') download('cornerpin-project-record.json',JSON.stringify(project,null,2),'application/json');
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
-    } catch(err) {message(err.message);} finally {busy=false;}
+    } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();busy=false;}
   });
   host.addEventListener('change',async e=>{
     if(e.target.matches('form[data-command=setback_rule] select[name=classification]')){const form=e.target.closest('form'),s=project.report.facts.zone_std||{};form.elements.feet.value=(e.target.value==='street-side'?s.street:s.side)??'';form.elements.confirmed.checked=false;return;}
@@ -5737,7 +5776,7 @@ root.MeasurementWorkbench={panel,open};
         if(command.type==='upload-plans'){try{message("Plans saved. Reading printed facts…");const parsed=await window.PlanReader.read(file,(page,total)=>message("Reading plan page "+page+" of "+total+"…"),{permitOnly:true});await commit({type:'document_extraction',result:{documentId:id,documentHash:hash,filename:file.name,permitType:'project',method:'Direct extraction',facts:(parsed.permitFacts||[]).map(f=>({...f,documentId:id,documentHash:hash})),at:new Date().toISOString()}});message('Plans saved. Explicit facts are available; Analyze plans with Claude reads drawings and recommends permit scopes.');}catch(err){message('Plans saved; direct reading failed: '+err.message+'. Try Analyze plans with Claude.');}return;}
       } else await commit(command);
       message('');
-    } catch(err) {message(err.message);submit.disabled=false;} finally {busy=false;}
+    } catch(err) {message(err.message);submit.disabled=false;} finally {window.AnalysisProgress.stop();busy=false;}
   });
   window.addEventListener('cornerpin:account-changed',()=>{project=null;reusableProjects=[];capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {

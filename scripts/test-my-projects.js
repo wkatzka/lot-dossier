@@ -12,7 +12,7 @@ function device(){
   if(url.startsWith('https://db.supabase.co/storage/')){if(opt.method==='POST'){files.set(url,opt.body);return Response.json({});}return files.has(url)?new Response(files.get(url)):new Response('',{status:404});}
   throw Error('Unexpected public research request: '+url);
  };
- for(const file of ['evidence-ledger','permit-workflow','project-backup','project-store','cloud-sync','project-sync'])w.eval(fs.readFileSync('web/'+file+'.js','utf8'));
+ for(const file of ['evidence-ledger','permit-workflow','project-backup','project-store','cloud-sync','project-sync','analysis-progress'])w.eval(fs.readFileSync('web/'+file+'.js','utf8'));
  w.CornerpinAccount={ready:w.CloudSync.init()};w.CornerpinReportViews={packet:()=>''};w.ResearchWorkspace={render:()=>''};w.eval(fs.readFileSync('web/project-workspace.js','utf8'));
  return {w,dom};
 }

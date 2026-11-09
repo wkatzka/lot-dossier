@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),P=require('../web/analysis-progress');
+assert.equal(P.phrase('plans',11),'Reading the uploaded plans');
+assert.equal(P.phrase('plans',12),'Looking for dimensions and area schedules');
+assert.equal(P.phrase('plans',29),'Looking for dimensions and area schedules');
+assert.equal(P.phrase('geometry',55),'Looking for property lines and building placement');
+assert.equal(P.phrase('plans',600),'Reading drawings and source references');
+let now=0,tick,clears=0,markup='',text='',phrase={textContent:''},elapsed={textContent:''};
+const el={classList:{add(){},remove(){}},removeAttribute(){},setAttribute(){},set innerHTML(v){markup=v},set textContent(v){text=v;markup=''},querySelector(q){return !markup?null:q==='.analysis-phrase'?phrase:q==='.analysis-time'?elapsed:{}}};
+const p=P.create({getElementById:()=>el},()=>now,fn=>(tick=fn,1),()=>clears++);
+p.start('status');assert.match(markup,/aria-live="polite"/);now=31000;tick();assert.equal(phrase.textContent,'Looking for construction notes and specifications');assert.equal(elapsed.textContent,'0:31 elapsed');p.stop();assert.equal(clears,1);assert.equal(markup,'');p.start('status','geometry');assert.equal(phrase.textContent,'Reading the drawing geometry');p.stop();assert.equal(clears,2);
+console.log('PASS: paced phrases, elapsed time, restart and terminal cleanup');
