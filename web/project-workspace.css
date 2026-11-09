@@ -96,3 +96,34 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 .report-section-nav{margin:0 0 32px;align-items:center}
 .report-section-nav .report-chip[aria-current="page"]{background:#f0eee3;border-color:#f0eee3;color:#222;cursor:default}
 @media print{.report-section-nav{display:none}}
+
+/* Persistent project frame: identical navigation, gutters and type across sections. */
+#project-frame{display:none}
+body.project-frame-active #project-frame{display:block;max-width:1200px;margin:0 auto;padding:24px 28px 0;color:#f7f6f0;font-family:'DM Sans',sans-serif}
+#project-frame .project-header{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+#project-frame .wordmark{color:#f7f6f0}
+#project-frame .project-global,#project-frame .project-toolbar,#project-frame nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px}
+#project-frame .project-toolbar{margin:24px 0 20px}
+#project-frame nav{margin:0 0 28px;min-height:46px}
+#project-frame nav[hidden]{display:none}
+#project-frame button{appearance:none;border:1px solid rgba(245,244,238,.4);border-radius:999px;padding:11px 17px;font:600 14px 'DM Sans',sans-serif;color:#f7f6f0;background:#151515d9;cursor:pointer;text-shadow:none;box-shadow:none;min-height:44px}
+#project-frame button:hover{border-color:#ff7137;background:#30251f}
+#project-frame button[aria-current=page],#project-frame button[aria-pressed=true]{color:#222;background:#f0eee4;border-color:#f0eee4}
+#project-frame button:focus-visible{outline:3px solid #ff7137;outline-offset:3px}
+#project-frame h1{font:600 clamp(28px,3vw,42px)/1.18 Manrope,Arial,sans-serif;letter-spacing:-.04em;margin:22px 0 14px;overflow-wrap:anywhere}
+#project-frame .project-identity p{color:#e3e2da;margin:0;line-height:1.6}
+body.project-frame-active #rv .topnav,body.project-frame-active #rv .report-section-nav,body.project-frame-active #rv .report-heading{display:none}
+body.project-frame-active #project-workspace>header,body.project-frame-active #project-workspace>h1,body.project-frame-active #project-workspace>p,body.project-frame-active #project-workspace>.pw-actions,body.project-frame-active #project-workspace>h2,body.project-frame-active #project-workspace>nav{display:none}
+body.project-frame-active #project-workspace{max-width:1200px;margin:0 auto;padding:28px 28px 64px;min-height:65vh}
+body.project-frame-active #rv{padding-top:0}
+body.project-frame-active #rv .wrap{padding-top:28px}
+body.project-frame-active #rv .hero2{margin-top:0}
+#project-workspace button,.report-chip{font-size:14px;min-height:44px;text-shadow:none}
+.report-chips{justify-content:center}
+.report-chip[aria-selected=true]{background:#f0eee4;border-color:#f0eee4;color:#222;text-shadow:none}
+#project-workspace .pw-card h2{font-family:Manrope,Arial,sans-serif}
+@media(max-width:640px){body.project-frame-active #project-frame{padding:18px 18px 0}body.project-frame-active #project-workspace{padding:24px 18px 48px}#project-frame .project-header{justify-content:center}#project-frame .project-global{gap:6px}#project-frame button{font-size:12px;padding:10px 12px}#project-frame .project-toolbar{gap:6px;margin:18px 0}#project-frame nav{gap:8px}#project-frame h1{font-size:30px}}
+@media print{body.project-frame-active #project-frame{display:block;color:#111;padding:0}#project-frame .project-header,#project-frame .project-toolbar,#project-frame nav{display:none!important}#project-frame .project-identity p{color:#333}}
+body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-body>.wrap>h1,body.project-frame-active #rv-body>.wrap>.meta{display:none}
+@media screen{#project-workspace{max-width:1200px;margin:0 auto;padding-left:28px;padding-right:28px}#rv{text-shadow:none}.report-picker{border:0}#rv .topnav{border-bottom:0}}
+@media(max-width:640px){#project-workspace{padding-left:18px;padding-right:18px}}

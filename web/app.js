@@ -506,20 +506,25 @@
     fillFields(extracted); setMode(extracted ? 'upload' : 'none');
     showReport();
   });
+  var renderedReportKey = '';
   function showReport(fromHistory) {
+    var nextReportKey=JSON.stringify(last), reuse=renderedReportKey===nextReportKey && $('rv-body').children.length;
+    if(!reuse){
+    renderedReportKey=nextReportKey;
     $('rv-body').innerHTML = reportHTML(last, null, false);
     if (window.ReportCategories) window.ReportCategories.mount($('rv-body'));
+    }
     document.body.classList.add('show-report');
     $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
     document.body.classList.remove('chk-only');
     loadChecklist();
     document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
-    window.scrollTo(0, 0);
-    drawMap(last.parcel.rings);
+    if(!reuse){window.scrollTo(0, 0);drawMap(last.parcel.rings);}
+    window.dispatchEvent(new CustomEvent('cornerpin:report-visible'));
     if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
   }
   function showHome(fromHistory) {
-    document.body.classList.remove('show-project');
+    document.body.classList.remove('show-project','project-frame-active');
     document.body.classList.remove('show-report');
     document.title = 'Cornerpin';
     if (!fromHistory) try { history.pushState({}, '', location.pathname); } catch (e) {}

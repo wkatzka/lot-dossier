@@ -37,6 +37,7 @@
   }
   async function commit(command, file) { const next = W.apply(project, command); await S.save(next, project.revision, file); project = next; render(); }
   async function saveCityPage() {
+    if(!document.body.classList.contains('show-project'))return;
     const f=host.querySelector('form[data-command=city_application_page]');
     if(f){const command=window.CityApplication.formCommand(project,new FormData(f));if(command.entries.length)await commit(command);}
   }
@@ -62,6 +63,32 @@
       }catch(e){const next=JSON.parse(JSON.stringify(p));next.revision++;next.events.push({id:W.id(),at:new Date().toISOString(),type:'source_retention_failed',text:'Survey '+source.recordNumber+': '+e.message});await S.save(next,p.revision);p=next;}
     }return p;
   }
+  // One persistent project frame shared by the report and workflow views.
+  const frame=document.createElement('section');frame.id='project-frame';document.body.insertBefore(frame,document.getElementById('rv'));
+  function projectFrame(active) {
+    document.body.classList.toggle('project-frame-active',!!project);
+    if(!project)return;
+    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><span class="wordmark">'+document.querySelector('#home .wordmark').innerHTML+'</span><div class="project-global"><button data-account>Account</button><button data-frame="projects">My projects</button><button data-frame="home">Review another property</button></div></header><div class="project-toolbar"><button data-frame="overview">Project overview</button><button data-frame="filing">Permit filing</button><button data-frame="plans">Building plans</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button></div><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
+    frame.querySelector('[data-account]').textContent=window.CloudSync.signedIn()?'Account':'Sign in';
+    frame.querySelector('h1').textContent=project.property.address;
+    const attrs=project.report.parcel?.attrs||{};frame.querySelector('.project-identity p').textContent=[attrs.PARCEL_CITY,project.property.county+' County','Parcel '+project.property.parcelId,attrs.PARCEL_ACRES?attrs.PARCEL_ACRES+' acres':''].filter(Boolean).join(' · ');
+    const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Evidence & restrictions'],['valuation','Lot economics'],['placement','Pool layout'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
+    const nav=frame.querySelector('nav'),key=items.map(i=>i[0]).join('|');
+    if(nav.dataset.items!==key){nav.innerHTML=items.map(([id,label])=>'<button data-frame="'+id+'">'+label+'</button>').join('');nav.dataset.items=key;}
+    nav.hidden=!items.length;
+    nav.querySelectorAll('button').forEach(b=>{if(b.dataset.frame===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+    frame.querySelector('[data-frame="overview"]').setAttribute('aria-pressed',String(active==='overview'));
+  }
+  frame.addEventListener('click',async e=>{const b=e.target.closest('[data-frame]');if(!b)return;try{const action=b.dataset.frame;await saveCityPage();
+    if(action==='projects'){await list();return;}
+    if(action==='home'){window.dispatchEvent(new CustomEvent('cornerpin:home'));return;}
+    if(action==='site'){section='site';tab='site';document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');return;}
+    if(action==='download'){const previousTab=tab,previousSection=section;window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));document.getElementById('rv-save').click();tab=previousTab;section=previousSection;if(tab!=='site')render();return;}
+    if(action==='print'){window.print();return;}
+    tab=action==='plans'?'overview':action;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();
+    if(action==='plans')host.querySelector('form[data-command="upload-plans"] input[name="file"]')?.scrollIntoView({block:'center'});
+  }catch(err){message(err.message);}});
+  window.addEventListener('cornerpin:report-visible',()=>{if(project){section='site';tab='site';projectFrame('site');}});
   function stageNavigation() {
     if(tab==='overview')return '';
     const items=section==='site'?['site','evidence','valuation','placement','documents','activity']:[section,'documents','activity'];
@@ -94,6 +121,7 @@
   }
   function render() {
     document.body.classList.add('show-project');
+    projectFrame(tab);
     document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · My projects';
     host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(human(project.stage)) + '</strong></p>' : '<h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p>Open a saved site to continue where you left off. Public research only reruns when you choose Refresh.</p>') + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,management,documents,activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div>');
   }
