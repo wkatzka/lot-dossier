@@ -1,12 +1,18 @@
 <svg viewBox="0 0 1024 1024" width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
-  <path fill="#111111" d="M0 0H1024V1024H0Z" />
+  <!-- Eight seconds: rest .5s; four straight 1.5s legs; rest .5s;
+       lift .25s; settle .25s; rest .5s. Only the marker moves. -->
+  <path fill="#111111" d="M0 0H1024V1024H0Z"/>
   <g id="survey-frame" fill="none" stroke="#dbdbdb" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter">
-    <path d="M64 880V64H880" />
-    <path d="M960 144V960H144" />
+    <path d="M64 880V64H880"/>
+    <path d="M960 144V960H144"/>
   </g>
-  <g id="orange-marker">
-<animateTransform attributeName="transform" type="translate" values="64 64;64 64;960 64;960 960;64 960;64 64;64 64" keyTimes="0;.06;.25;.44;.63;.82;1" dur="8s" repeatCount="indefinite"/>
-<g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -20;0 0;0 0" keyTimes="0;.84;.90;.97;1" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1" dur="8s" repeatCount="indefinite"/>
-<path d="M-9 6 L0 24 L9 6Z" fill="#fb7136" opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.84;.90;.97;1" dur="8s" repeatCount="indefinite"/></path>
-<circle r="16" fill="#fb7136"/></g></g>
+  <g id="orange-marker" transform="translate(64 64)">
+    <animateTransform attributeName="transform" type="translate"
+      values="64 64;64 64;960 64;960 960;64 960;64 64;64 64;64 32;64 64;64 64"
+      keyTimes="0;.0625;.25;.4375;.625;.8125;.875;.90625;.9375;1"
+      calcMode="spline"
+      keySplines="0 0 1 1;0 0 1 1;0 0 1 1;0 0 1 1;0 0 1 1;0 0 1 1;.4 0 .2 1;.4 0 .2 1;0 0 1 1"
+      dur="8s" repeatCount="indefinite"/>
+    <circle r="16" fill="#fb7136"/>
+  </g>
 </svg>
