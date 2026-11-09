@@ -42,3 +42,11 @@ A retained public serial-register transcription is attached only by exact serial
 The four visually transcribed pipeline entries now retain their west-half descriptive scope. Different aliquots are a screening distinction, not a release or a complete interpretation of the missing original instruments.
 
 Live verification found POST timeouts on the BLM NLSDB host; bounded GET queries succeeded for the same geometry. The adapter uses GET for reasonably sized BLM requests. Previously retrieved public case metadata can survive a source outage only when its legal aliquot matches the requested geography; dates and refresh failure remain visible. A successful empty response is never overridden by the cache. All four BLM layers subsequently returned successfully in the live pilot check.
+
+### Original images recovered, 2026-11-09
+
+`data/title/weber-original-evidence.json` retains three source-image readings independently of abstract entries: Book N 383–386, Patent No. 26 in Book 1 168–173, and the Surveyor's canal acquisition contract/drawing (Entry 391705). Each has source links, hashes, reviewed page scope and remaining gaps. Images are linked, not redistributed. FamilySearch sign-in enabled research access; unattended commercial ingestion/reuse permission has not been established.
+
+The patent includes SE Section 27 and a mineral-land exception with an express coal/iron qualification. The railroad deed contains a conditional railroad corridor and fencing obligation. The canal contract preserves existing third-party rights without establishing their owners. None proves current parcel applicability, complete releases, or current mineral ownership. Related contracts never satisfy missing executed-deed requests.
+
+Matching uses section and aliquot, not customer address or surnames. Findings are reusable for other intersecting parcels. Other sections without reviewed originals remain uncovered; this is not a statewide completed title search. Cached readings avoid repeat OCR. Historic county-book copies and selected surveyor packets are complementary sources, not complete modern-record coverage.

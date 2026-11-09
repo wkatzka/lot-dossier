@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-09",
+  "documents": [
+    {
+      "id": "weber-N-383",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "NESE",
+        "NWSE",
+        "SESE",
+        "SWSE"
+      ],
+      "reference": "Deeds Book N, pages 383\u2013386",
+      "kind": "Railroad conveyance",
+      "instrumentDate": "1881-06-24",
+      "originalInstrument": true,
+      "reviewScope": "Beginning on page 383, operative clauses on 384\u2013385 and closing acknowledgment on 386 visually inspected. Faint handwriting is not represented as a certified full transcription.",
+      "completeInstrumentReview": false,
+      "sources": [
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C335-59PR-5",
+          "pages": "384\u2013385 (image 535)",
+          "sha256": "83f22d07c336a1da64b2443df41753a05cad45145e2b997dc39290a8d992eaac"
+        },
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C335-59G6-M",
+          "pages": "383 (image 534; deed starts below the preceding acknowledgment)",
+          "sha256": "3e430087102c44f620ff7d5000212be94e07ecf64efe2c089235025000a12ddd"
+        },
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C335-59G6-W",
+          "pages": "386 (image 536; deed ends above the following indenture)",
+          "sha256": "5887a1f7b5ce878b3e80092c6fbdde05f9bb5c4cd08a46cf5cef7331e9549b1d"
+        }
+      ],
+      "summary": "Union Pacific Railway Company conveys the southeast quarter of Section 27, Township 7 North, Range 1 East, stated 160 acres, to William Burnett. The original clarifies the surname read ambiguously in the abstract.",
+      "findings": [
+        {
+          "category": "easements",
+          "text": "Reserves land within 100 feet on either side of the railroad centerline as then constructed, if any such land lies in the conveyance, plus greater width necessary for cuts, embankments, ditches and protection works. This is conditional; no railroad alignment or overlap with the current parcel is established."
+        },
+        {
+          "category": "easements",
+          "text": "Requires a lawful fence along adjoining railroad land when required by law or the company, if the conveyed premises adjoin that road."
+        },
+        {
+          "category": "minerals",
+          "text": "No express mineral reservation was identified in the visually read operative clauses on pages 384\u2013385. This limited observation is not a complete instrument review or a conclusion about later mineral ownership."
+        }
+      ],
+      "gaps": [
+        "Independent verification of faint handwriting; no certified full transcription",
+        "Interpretation of the located federal patent and subsequent conveyance/severance chain",
+        "Historic railroad alignment and any later releases"
+      ],
+      "recorded": "1882-03-08"
+    },
+    {
+      "id": "weber-391705",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "SWSE"
+      ],
+      "reference": "Entry 391705 \u00b7 Book 727, pages 570\u2013574 \u00b7 contract 14-06-400-2693",
+      "kind": "Canal land purchase contract and acquisition drawing",
+      "instrumentDate": "1962-09-27",
+      "recorded": "1962-11-26",
+      "originalInstrument": true,
+      "completeInstrumentReview": false,
+      "reviewScope": "County-hosted scans: PDF pages 256\u2013259 visually read. The packet does not reproduce every recorded page or the later deed.",
+      "relatedEntries": [
+        "408079",
+        "408769"
+      ],
+      "sources": [
+        {
+          "url": "https://www.webercountyutah.gov/mounts/surveyorimages/Published%20Data/Canals/Ogden%20Valley%20Canal/OgdenValley_ROW.pdf#page=256",
+          "pages": "PDF 256\u2013259; operative terms 257; drawing 258; recording endorsement 259",
+          "sha256": "8028538e64f2e3d551f92894b445e9929540f1e549fec49cba0813384e257dd5"
+        }
+      ],
+      "summary": "Courtney A. Carver, formerly known as Courtney A. Burnett, contracts with the United States for OVC-23: a 1.48-acre, 55-foot-wide canal strip in SWSE Section 27. The drawing and legal description corroborate the corridor indexed in the later conveyances.",
+      "findings": [
+        {
+          "category": "easements",
+          "text": "The strip extends 25 feet north/right and 30 feet south/left of the centerline from station 468+88.8 to 480+59.7. Its two courses are S85\u00b017\u2032W 828.8 feet and S85\u00b054\u2032W 342.1 feet."
+        },
+        {
+          "category": "minerals",
+          "text": "Article 3a excepts coal or mineral rights already reserved to or outstanding in third parties as of the contract date. It does not name those parties, quantify interests or establish that a specific mineral severance existed."
+        },
+        {
+          "category": "easements",
+          "text": "Article 3a also excepts existing rights-of-way for roads, railroads, telephone/transmission lines, ditches, conduits and pipelines. These must be independently identified; this general exception is not an exhaustive list."
+        },
+        {
+          "category": "easements",
+          "text": "Article 3b assigns the United States provision of drainage crossings at stations 471+88 and 476+60, a farm-road crossing at 474+00, and operation and maintenance of structures across the canal."
+        }
+      ],
+      "gaps": [
+        "Missing pages of the recorded contract; visible packet is not all of Book 727 pages 570\u2013574",
+        "Later executed conveyance in Book 751 page 397 and quitclaim in Book 750 page 449",
+        "Identity and chain of any excepted third-party mineral rights",
+        "Later amendments, releases and current applicability"
+      ]
+    },
+    {
+      "id": "weber-patent-26",
+      "location": {
+        "township": 7,
+        "northSouth": "n",
+        "range": 1,
+        "eastWest": "e",
+        "section": 27
+      },
+      "aliquots": [
+        "NESE",
+        "NWSE",
+        "SESE",
+        "SWSE"
+      ],
+      "reference": "Patent No. 26 \u00b7 Book 1, pages 168\u2013173",
+      "kind": "Federal patent (county-recorded copy)",
+      "instrumentDate": "1884-02-16",
+      "recorded": "1889-08-20",
+      "originalInstrument": true,
+      "completeInstrumentReview": false,
+      "patentTermsLocated": true,
+      "reviewScope": "All three image spreads inspected. The SE Section 27 schedule and operative exclusion were visually checked; other tracts in the multi-tract schedule were not exhaustively transcribed. The preceding patent ending at the top of page 168 is a separate instrument.",
+      "sources": [
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C33J-3Q1R-G",
+          "pages": "168\u2013169; image 130",
+          "sha256": "6c0869fd4b70f7b940243825fd51f4a3726acc3fe8d5e5df49663363cdfbd687"
+        },
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C33J-3Q1Y-3",
+          "pages": "170\u2013171; image 131",
+          "sha256": "252255ab41bac41c975f7268ce32dcaac417f1442eabde1fa5e7fba2e4a66783"
+        },
+        {
+          "url": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-C33J-37MQ-T",
+          "pages": "172\u2013173; image 132",
+          "sha256": "2eb82e67312f307ec566aa1762eae525e2511d9cd0474e615d2452a659da45ee"
+        }
+      ],
+      "summary": "United States patent to Union Pacific Railway Company includes the southeast quarter of Section 27, Township 7 North, Range 1 East, stated 160 acres. The handwritten abstract reference is page 168, not 268.",
+      "findings": [
+        {
+          "category": "minerals",
+          "text": "Page 173 excludes all mineral lands found in the described tracts, but expressly states that the exclusion does not include coal and iron lands. This historical land-classification exception is not a determination that the United States currently owns all minerals beneath a particular parcel."
+        },
+        {
+          "category": "minerals",
+          "text": "Pages 170\u2013171 place the southeast quarter of Section 27 under Township Seven, Range One, north of the baseline and east of the Salt Lake Principal Meridian. This supports geographic matching, not a complete chain to a modern parcel."
+        }
+      ],
+      "gaps": [
+        "Application of the historical mineral-land exception to the particular land",
+        "Intervening private conveyances, reservations, severances, releases and current ownership",
+        "Full transcription of all other tracts in this multi-tract patent"
+      ]
+    }
+  ]
+}

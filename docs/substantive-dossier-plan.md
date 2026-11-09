@@ -221,3 +221,13 @@ Existing account storage, My projects, plans, valuation research, pool scenarios
 - [x] All 22 repository test suites pass, including saved-report → evidence workspace → pool constraint integration and rejection of abstract-only mineral ownership.
 - [ ] **Attempted but unresolved:** obtain and interpret the actual federal patent. The public serial report narrows the root search; the GLO advanced-search embed returned a 404 and anonymous scripted report retrieval did not yield an original. No access restriction was bypassed.
 - [ ] **Blocked by original county-record access / incomplete chain:** legally complete easements and current mineral ownership. This work materially improves evidence and matching but cannot establish omitted terms, releases or later transfers from index summaries.
+
+### Original-source follow-through — 2026-11-09 (supersedes earlier missing-patent status)
+
+- [x] Public-source access: signed-in FamilySearch historical deed images and county-hosted canal acquisition packet retrieved.
+- [x] Handwriting: visually inspect patent schedule/terms, railroad deed pages and canal contract/drawing; correct page 168 and deed recording year 1882. Retain source-image hashes and exact scope.
+- [x] Integrate geographically matched original-document findings into dossier categories and saved evidence workspace. Keep related contracts separate from missing executed deeds.
+- [x] Test unrelated geography, source integrity, saved snapshots, escaped text, patent-aware gaps and prevention of false title clearance.
+- [ ] **Attempted but unresolved:** complete easement applicability, alignment, amendments and release reconciliation. Conditional railroad terms and existing-rights exceptions require intervening evidence.
+- [ ] **Attempted but unresolved:** current mineral ownership. The patent is located; interpretation of its mineral-land exclusion and subsequent private transfers/severances remain outstanding.
+- [ ] **Blocked by remaining source coverage:** complete later executed instruments and current chain. The FamilySearch catalog covers historical books through 1956; the county canal packet supplies selected later records, not a complete modern index/image service. No automated FamilySearch production integration or commercial reuse authorization is claimed.
