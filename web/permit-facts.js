@@ -36,7 +36,7 @@ function valid(f,value,unit){
 }
 function reconcile(facts){
  const groups={};for(const f of facts){if(!fields[f.field]||!valid(f.field,f.value,f.unit))continue;(groups[f.field]??=[]).push(f);}
- return Object.values(groups).flatMap(g=>{const conflict=new Set(g.map(f=>norm(f.value))).size>1;return g.map(f=>({...f,conflict,review:'needs_review'}));});
+ return Object.values(groups).flatMap(g=>{const conflict=new Set(g.map(f=>norm(f.value))).size>1||g.some(f=>f.sourceConflict);return g.map(f=>({...f,conflict,review:'needs_review'}));});
 }
 function extract(pages,document={}){
  const found=[];
@@ -51,19 +51,23 @@ function extract(pages,document={}){
   }
  }}return reconcile(found);
 }
-function validateModel(items,pages,document,requested){
+function validateModel(items,pages,document,requested,{visual=false}={}){
  const accepted=[],rejected=[];
- for(const item of Array.isArray(items)?items:[]){
+ for(const raw of Array.isArray(items)?items:[]){
+  const item={...raw};if(typeof item.value==='string'&&/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(item.value.trim()))item.value=item.value.replace(/,/g,'');
   const p=pages.find(p=>(p.n||p.page)===item.page),f=fields[item.field];
+  const counted=visual&&item.derivation==='counted',parts=Array.isArray(item.components)?item.components:[];
+  const countOK=counted&&['bedrooms','bathrooms','stories'].includes(item.field)&&parts.length>0&&parts.length<=100&&parts.every(c=>pages.some(p=>(p.n||p.page)===c.page)&&typeof c.label==='string'&&c.label.length>=3&&typeof c.region==='string'&&c.region.length>=5&&typeof c.identity==='string'&&c.identity.trim()&&[1,...(item.field==='bathrooms'?[0.5]:[])].includes(c.weight))&&new Set(parts.map(c=>norm(c.identity))).size===parts.length&&Math.abs(parts.reduce((n,c)=>n+c.weight,0)-Number(item.value))<0.001;
   let reason='';
   if(!requested.includes(item.field)||!f)reason='Field was not requested';
   else if(!valid(item.field,item.value,item.unit))reason='Invalid value or unit';
-  else if(!p||!item.quote||norm(item.quote).length<8||!norm(p.text).includes(norm(item.quote)))reason='Quotation does not occur on the cited page';
+  else if(counted&&!countOK)reason='Drawing count lacks unique located components or correct arithmetic';
+  else if(!p||!item.quote||norm(item.quote).length<8||(!norm(p.text).includes(norm(item.quote))&&(!visual||typeof item.region!=='string'||item.region.trim().length<5)))reason='Quotation does not occur on the cited page';
   else if(/_set_back_default$/.test(item.field)&&(!/\b(actual|proposed)\b/i.test(item.quote)||/\b(minimum|required)\b/i.test(item.quote)))reason='Setback quotation does not establish an actual proposed distance';
-  else if(f.unit!=='text'&&!norm(item.quote).replace(/,/g,'').match(new RegExp('(^|[^0-9.])'+String(Number(item.value)).replace('.','\\.')+'([^0-9.]|$)')))reason='Value is not supported by the quoted text';
+  else if(!counted&&f.unit!=='text'&&!norm(item.quote).replace(/,/g,'').match(new RegExp('(^|[^0-9.])'+String(Number(item.value)).replace('.','\\.')+'([^0-9.]|$)')))reason='Value is not supported by the quoted text';
   else if(f.unit==='text'&&!norm(item.quote).includes(norm(item.value)))reason='Text value is absent from the quoted text';
   if(reason){rejected.push({field:item.field,reason});continue;}
-  accepted.push({field:item.field,value:f.unit==='text'?item.value:Number(item.value),unit:item.unit,page:item.page,quote:item.quote,method:'claude_extraction',documentId:document.id,documentHash:document.hash,filename:document.name,review:'needs_review'});
+  accepted.push({field:item.field,value:f.unit==='text'?item.value:Number(item.value),unit:item.unit,page:item.page,quote:item.quote,derivation:counted?'counted':'printed',components:counted?parts:[],method:visual?'claude_visual_extraction':'claude_extraction',region:item.region||null,evidenceCheck:!counted&&norm(p.text).includes(norm(item.quote))?'text_matched':'visual_review_required',documentId:document.id,documentHash:document.hash,filename:document.name,review:'needs_review'});
  }
  return {facts:reconcile(accepted),rejected};
 }

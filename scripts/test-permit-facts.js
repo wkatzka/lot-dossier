@@ -11,3 +11,18 @@ assert(F.reconcile([...facts,{...facts[0],value:2000}]).filter(f=>f.field==='mai
 assert.notEqual(X.cacheKey(d,'model1'),X.cacheKey(d,'model2'));assert.notEqual(X.cacheKey(d,'model1'),X.cacheKey({...d,hash:'changed'},'model1'));
 assert.equal(X.selectPages([{n:1,text:'x'.repeat(10000)},...pages]).length,2);
 (async()=>{await assert.rejects(()=>X.runClaude(pages,d,['main_floor'],{key:'test',request:async()=>({ok:true,json:async()=>({stop_reason:'max_tokens'})})}),/finish/);console.log('PASS: direct schedules, units, fabricated citations rejected, plan footprint mapping, scope isolation, superseded-document invalidation, cache keys and incomplete model responses.');})().catch(e=>{console.error(e);process.exitCode=1;});
+// A drawing-derived count must retain every located component and correct arithmetic.
+const roomPages=[{n:1,text:''},{n:2,text:''}],parts=[{page:1,label:'BEDROOM 1',region:'upper left',identity:'room 101',weight:1},{page:2,label:'BEDROOM 2',region:'lower right',identity:'room 201',weight:1}];
+const counted={field:'bedrooms',value:'2',unit:'count',page:1,quote:'BEDROOM 1 and BEDROOM 2',region:'floor plans',derivation:'counted',components:parts};
+assert.equal(F.validateModel([counted],roomPages,d,['bedrooms'],{visual:true}).facts[0].evidenceCheck,'visual_review_required');
+assert.equal(F.validateModel([{...counted,value:'3'}],roomPages,d,['bedrooms'],{visual:true}).facts.length,0);
+assert.equal(F.validateModel([{...counted,components:[parts[0],parts[0]]}],roomPages,d,['bedrooms'],{visual:true}).facts.length,0);
+assert.equal(F.validateModel([{...counted,components:[parts[0],{...parts[1],page:99}]}],roomPages,d,['bedrooms'],{visual:true}).facts.length,0);
+assert.equal(F.validateModel([counted],roomPages,d,['bedrooms']).facts.length,0);
+const scanned={field:'main_floor',value:'1200',unit:'sq_ft',page:2,quote:'MAIN FLOOR 1200 SF',region:'upper right area schedule',derivation:'printed',components:[]};
+assert.equal(F.validateModel([scanned],roomPages,d,['main_floor'],{visual:true}).facts.length,1);
+assert.equal(F.validateModel([{...scanned,value:'2000'}],roomPages,d,['main_floor'],{visual:true}).facts.length,0);
+
+
+assert.equal(F.validateModel([{...scanned,value:'1,200'}],roomPages,d,['main_floor'],{visual:true}).facts[0].value,1200);
+assert(F.reconcile([{...facts[0],sourceConflict:true}])[0].conflict);

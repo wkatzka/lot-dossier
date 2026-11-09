@@ -116,6 +116,11 @@ def write(path, html):
 
 
 if __name__ == "__main__":
+    # Hobby currently permits 12 functions; reuse existing routes before adding one.
+    from pathlib import Path
+    functions = list((Path(ROOT) / "api").rglob("*.js"))
+    if len(functions) > 12:
+        raise SystemExit(f"Vercel function limit exceeded: {len(functions)}/12. Consolidate API handlers.")
     ap = argparse.ArgumentParser()
     ap.add_argument("--api", help="deployed base URL for the emailable single-file build")
     a = ap.parse_args()

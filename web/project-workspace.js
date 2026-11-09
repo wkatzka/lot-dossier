@@ -137,7 +137,7 @@
           if(!window.CloudSync.signedIn())throw Error('Sign in to use Claude. Read without AI works on this device.');
           await window.ProjectSync.enqueue(project.id);
           if(window.ProjectSync.status(project).state!=='saved')throw Error('Wait for this project and its document to finish syncing, then retry.');
-          const response=await fetch('/api/projects?action=permit-extraction',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:d.id}),signal:AbortSignal.timeout(180000)});
+          const response=await fetch('/api/projects?action=permit-extraction',{method:'POST',headers:{...window.CloudSync.auth(),'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,documentId:d.id}),signal:AbortSignal.timeout(300000)});
           result=await response.json();if(!response.ok)throw Error(result.error||'Document extraction failed');
         }
         result.permitType=permitType;await commit({type:'document_extraction',result});message(result.facts.length+' candidate facts found. Review citations and scope before filing.');
