@@ -1,4 +1,4 @@
-const assert=require('node:assert/strict'),crypto=require('node:crypto'),{PDFDocument}=require('pdf-lib'),handler=require('../api/permit-extraction');
+const assert=require('node:assert/strict'),crypto=require('node:crypto'),{PDFDocument}=require('pdf-lib'),handler=require('../api/projects');
 (async()=>{
  const pdf=await PDFDocument.create();pdf.addPage().drawText('MAIN FLOOR: 1850 SF\nProposed actual front setback: 35 FT',{x:50,y:700});const bytes=Buffer.from(await pdf.save()),hash=crypto.createHash('sha256').update(bytes).digest('hex');
  const owner='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',doc={id:'cp-test-doc',hash,name:'Synthetic.pdf',family:'plan',version:1},record={id:'cp-test-project',documents:[doc]},objects=new Map();let modelCalls=0,owns=true;
@@ -12,7 +12,7 @@ const assert=require('node:assert/strict'),crypto=require('node:crypto'),{PDFDoc
   if(options.method==='POST'){if(objects.has(url))return Response.json({error:'Duplicate'},{status:409});objects.set(url,options.body);return Response.json({});}
   return objects.has(url)?new Response(objects.get(url)):Response.json({error:'not found'},{status:404});
  };
- async function call(token='valid'){let status,body;await handler({method:'POST',headers:{authorization:'Bearer '+token},body:{projectId:record.id,documentId:doc.id}},{setHeader(){},set statusCode(v){status=v;},end(v){body=JSON.parse(v);}});return {status,body};}
+ async function call(token='valid'){let status,body;await handler({method:'POST',query:{action:'permit-extraction'},headers:{authorization:'Bearer '+token},body:{projectId:record.id,documentId:doc.id}},{setHeader(){},set statusCode(v){status=v;},end(v){body=JSON.parse(v);}});return {status,body};}
  try{
   assert.equal((await call('bad')).status,401);assert.equal(modelCalls,0);owns=false;assert.equal((await call()).status,404);owns=true;
   const first=await call();assert.equal(first.status,200,JSON.stringify(first.body));assert.equal(modelCalls,1);assert.equal(first.body.facts.length,2);assert.equal(first.body.rejected.length,1);
