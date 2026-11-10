@@ -196,3 +196,6 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 #project-frame .project-title-row button{flex-shrink:0;border-radius:9px}
 @media(max-width:640px){#project-frame .project-title-row{flex-wrap:wrap;gap:14px}#project-frame .project-title-row button{font-size:13px}}
 @media print{#project-frame .project-title-row button{display:none!important}}
+
+#project-workspace form[data-command="upload-plans"]{margin-top:22px}
+#project-workspace form[data-command="upload-plans"]>button{margin-top:18px}

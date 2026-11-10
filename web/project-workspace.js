@@ -237,8 +237,8 @@
   host.addEventListener('change',async e=>{
     if(e.target.matches('.pw-backup-input')){
       const file=e.target.files?.[0],label=e.target.closest('label'),form=e.target.closest('form');
-      label.querySelector('.pw-backup-name').textContent=file?file.name:'Choose backup';
-      label.querySelector('.pw-backup-hint').textContent=file?'Click to choose a different file':'JSON file · up to 150 MB';
+      label.querySelector('.pw-backup-name').textContent=file?file.name:(label.dataset.emptyLabel||'Choose backup');
+      label.querySelector('.pw-backup-hint').textContent=file?'Click to choose a different file':(label.dataset.emptyHint||'JSON file · up to 150 MB');
       label.classList.toggle('has-file',!!file);form.querySelector('[type=submit]').disabled=!file;return;
     }
 
