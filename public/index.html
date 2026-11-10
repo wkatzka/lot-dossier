@@ -1932,7 +1932,8 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
       var opts = places.slice(0, 12).map(function (f) { return f.attributes.FullAdd + ', ' + (f.attributes.City ? title(f.attributes.City) + ' ' : '') + f.attributes.ZipCode + ' (' + FIPS[f.attributes.CountyID] + ' County)'; });
       throw ambiguous('"' + query + '" matches ' + places.length + ' places in Utah. Add the city or ZIP code, for example "' + opts[0].replace(/ \(.*$/, '') + '".', opts);
     }
-    if (pts.length && (a.zip || a.city)) throw Object.assign(new Error('"' + query + '" exists in Utah, but not in ' + (a.zip || a.city) + '. Check the city or ZIP code'), { notFound: true });
+    // A postal label mismatch is not proof that the address is absent. County situs
+    // records can corroborate the address within the requested ZIP's county.
 
     // 2. Fallback for brand-new lots not yet in the address points: county parcel addresses, limited to the hinted county
     //    (from the ZIP/city) when there is one, and never silently picking one of several matches.
@@ -1953,14 +1954,23 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     for (var k = 0; k < counties.length; k += 8) {
       var res = await Promise.all(counties.slice(k, k + 8).map(async function (cn) {
         var feats = await arcgisQuery(lirUrl(cn), { where: "PARCEL_ADD LIKE '" + a.number + " %'", outFields: 'PARCEL_ID,PARCEL_ADD,PARCEL_CITY' }).catch(function () { return []; });
-        return feats.filter(function (f2) { var ad = String(f2.attributes.PARCEL_ADD || '').toUpperCase(); return a.words.every(function (w) { return ad.indexOf(w) >= 0; }) && (!a.pre || ad.indexOf(' ' + a.pre + ' ') >= 0); })
+        return feats.filter(function (f2) {
+          var ad = String(f2.attributes.PARCEL_ADD || '').replace(/\s+(APT|UNIT|STE|SUITE|#|BLDG|LOT|SP|TRLR)\b.*$/i, '');
+          try { var pa = parseStreet(ad); return pa.number === a.number && pa.name === a.name &&
+            (!a.pre || pa.pre === a.pre) && (!a.suf || pa.suf === a.suf) && (!a.type || pa.type === a.type); }
+          catch (e) { return false; }
+        })
           .map(function (f2) { return { county: cn, id: f2.attributes.PARCEL_ID, add: f2.attributes.PARCEL_ADD, city: f2.attributes.PARCEL_CITY }; });
       }));
       hits = hits.concat([].concat.apply([], res));
     }
-    if (hits.length === 1) return findByParcel(hits[0].id, hits[0].county);
+    if (hits.length === 1) {
+      var matched = await findByParcel(hits[0].id, hits[0].county);
+      if (pts.length && (a.zip || a.city)) matched.addressMatchNote = 'Address confirmed from the county parcel situs record. The statewide address-point postal label differs from the supplied city or ZIP; it was not used to reject this county-confirmed match.';
+      return matched;
+    }
     if (hits.length > 1) throw ambiguous('"' + query + '" matches ' + hits.length + ' parcels. Add the city or ZIP code, or enter the parcel ID.',
-      hits.slice(0, 12).map(function (h) { return h.add + ', ' + (h.city || '') + ' (' + h.county + ' County, parcel ' + h.id + ')'; }));
+      hits.slice(0, 12).map(function (h) { return {label:h.add + ', ' + (h.city || '') + ' (' + h.county + ' County, parcel ' + h.id + ')',query:h.id+' '+h.county+' County'}; }));
     // A county street-range geocode is only a discovery hint, never proof of a lot's identity.
     // Vacant lots may have no situs address at all; require a parcel-ID confirmation.
     if (counties.length === 1 && counties[0] === 'Weber') {
@@ -1982,6 +1992,7 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
       if (nearby.length && nearby.length <= 12) throw ambiguous('This address is missing from parcel records. These parcels are near an approximate street location—not confirmed address matches. Compare the parcel ID with your listing or deed, then select it and generate the dossier.',
         nearby.map(function(f){var v=f.attributes;return {label:'Parcel '+v.PARCEL_ID+' · '+v.PARCEL_ACRES+' acres'+(v.SUBDIV_NAME?' · '+v.SUBDIV_NAME:'')+(v.PARCEL_ADD?' · '+v.PARCEL_ADD:''),query:v.PARCEL_ID+' Weber County'};}));
     }
+    if (pts.length && (a.zip || a.city)) throw Object.assign(new Error('The statewide address record has a different city or ZIP, and no matching county parcel address could be confirmed for \"' + query + '\"'), {notFound:true});
     throw Object.assign(new Error('No parcel found for "' + query + '"'), { notFound: true });
   }
 
@@ -2020,7 +2031,7 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     if (a.SUBDIV_NAME) bits.push('subdivision: ' + a.SUBDIV_NAME);
     var status = 'ok', extra = '';
     if (a.BLDG_SQFT || a.BUILT_YR) { status = 'watch'; extra = ' Assessor shows an existing structure (' + a.BLDG_SQFT + ' sq ft, built ' + a.BUILT_YR + '): demolition or remodel may apply.'; }
-    return [F('land', 'Parcel', status, 'Parcel ' + ctx.parcel.id + ', ' + (a.PARCEL_ADD || 'no situs address'), bits.join('; ') + '.' + extra,
+    return [F('land', 'Parcel', status, 'Parcel ' + ctx.parcel.id + ', ' + (a.PARCEL_ADD || 'no situs address'), bits.join('; ') + '.' + extra + (ctx.parcel.addressMatchNote ? ' ' + ctx.parcel.addressMatchNote : ''),
       'UGRC statewide parcels (LIR)', a.ASSESSOR_SRC)];
   };
 
