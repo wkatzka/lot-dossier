@@ -10,7 +10,7 @@
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
   const globalNav=document.createElement('nav');globalNav.id='cornerpin-global-nav';globalNav.setAttribute('aria-label','Account and projects');
-  globalNav.innerHTML='<div><button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button><button type="button" data-global="projects">My projects</button><button type="button" data-global="new">New project</button></div>';
+  globalNav.innerHTML='<div><button type="button" class="global-brand wordmark" data-global="new" aria-label="Cornerpin home">'+document.querySelector('#home .wordmark').innerHTML+'</button><button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button><button type="button" data-global="projects">My projects</button><button type="button" data-global="new">New project</button></div>';
   document.body.prepend(globalNav);
   globalNav.addEventListener('click',async e=>{
     const action=e.target.closest('[data-global]')?.dataset.global;if(!action)return;
@@ -87,10 +87,10 @@
     rememberView(active);
     document.body.classList.toggle('project-frame-active',!!project);
     if(!project)return;
-    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="overview" aria-label="Cornerpin — Project overview">'+document.querySelector('#home .wordmark').innerHTML+'</button><button type="button" data-frame="overview">← Project home</button></header><nav aria-label="Project sections"></nav><div class="project-identity"><div class="project-title-row"><h1></h1><button type="button" data-frame="download">Download report</button></div><p></p></div>';
+    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button type="button" data-frame="overview">← Project home</button></header><nav aria-label="Project sections"></nav><div class="project-identity"><div class="project-title-row"><h1></h1><button type="button" data-frame="download">Download report</button></div><p></p></div>';
     frame.querySelector('h1').textContent=project.property.address;
     const attrs=project.report.parcel?.attrs||{};frame.querySelector('.project-identity p').textContent=[attrs.PARCEL_CITY,project.property.county+' County','Parcel '+project.property.parcelId,attrs.PARCEL_ACRES?attrs.PARCEL_ACRES+' acres':''].filter(Boolean).join(' · ');
-    const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Record review'],['valuation','Valuation workbench'],['placement','Pool placement'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
+    const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Record review'],['valuation','Valuation workbench'],['placement','Pool placement'],['filing','Permit preparation'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
     const nav=frame.querySelector('nav'),key=items.map(i=>i[0]).join('|');
     if(nav.dataset.items!==key){nav.innerHTML=items.map(([id,label])=>'<button data-frame="'+id+'">'+label+'</button>').join('');nav.dataset.items=key;}
     nav.hidden=!items.length;nav.setAttribute('aria-label',section==='site'?'Site review tools':'Project tools');

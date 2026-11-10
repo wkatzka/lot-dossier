@@ -551,8 +551,8 @@
         (a.ENDYEAR && a.ENDYEAR < 2020 ? ' This service-area map dates from ' + a.ENDYEAR + '; newer subdivisions are sometimes served by a different system under their development approval, so check the plat notes.' : ''),
         'Utah Division of Water Rights: water service areas', a.WRLINK, ctx.cost('culinary_connection'), 'Request a will-serve letter and fee/share cost from ' + a.WRNAME + '.'));
     } else {
-      out.push(F('water', 'Culinary water', 'flag', 'No public water system mapped',
-        'Plan on a private well, which needs an approved water right (an existing right moved by change application, or a new appropriation if the basin is open). Ogden Valley and many mountain basins restrict new appropriations.',
+      out.push(F('water', 'Culinary water', 'verify', 'No public water system mapped; supply unverified',
+        'The service-area dataset does not establish whether this lot has an existing connection, a private or mutual system, or needs a well. Confirm the source and service entitlement before selecting a water-supply design.',
         'Utah Division of Water Rights: water service areas', 'https://www.waterrights.utah.gov/', ctx.cost('well'), 'Have a water rights consultant confirm a source before closing.'));
     }
     var sec = await area(ctx, UGRC + '/Utah_DNR_Secondary_Water_Systems/FeatureServer/0');
@@ -939,8 +939,8 @@
         var rft = route ? route.m * FT_PER_M : null, use = rft || hft;
         ctx.facts.hydrant_ft = use;
         var rule = 'For one- and two-family homes the fire code allows up to 600 ft from a hydrant on the fire access road, measured along the route a crew would lay hose to every part of the house (IFC 507.5.1, Exception 1; the fire district can require more). ';
-        if (hft == null) out.push(F('access', 'Fire hydrant', 'flag', 'No mapped hydrant within 6,500 ft',
-          'Without a hydrant, the fire code generally requires residential sprinklers or on-site water storage for firefighting.', 'Weber County GIS: fire hydrants', null, ctx.cost('fire_sprinklers')));
+        if (hft == null) out.push(F('access', 'Fire hydrant', 'verify', 'No mapped hydrant within 6,500 ft; fire-water supply unverified',
+          'No hydrant was returned by the county dataset. This does not prove that none exists or determine the required fire-protection design. Verify hydrants, available flow and any approved alternative water supply with the fire authority.', 'Weber County GIS: fire hydrants', null, ctx.cost('fire_sprinklers')));
         else out.push(F('access', 'Fire hydrant', use <= 600 ? 'ok' : 'watch',
           rft ? 'Nearest hydrant about ' + fmt(rft) + ' ft by road to the middle of the lot' : 'Nearest mapped hydrant about ' + fmt(hft) + ' ft from the lot center (straight line)',
           rule + (rft ? 'Measured along mapped roads from the hydrant to the lot frontage, then to the lot center (' + fmt(route.straight * FT_PER_M) + ' ft straight-line). Where the house sits on the lot changes this. ' : 'No road route could be traced, so this is straight-line and the real hose route is longer. ') +
@@ -2124,6 +2124,8 @@
 
   function reviewFindings(findings) {
     return (findings||[]).map(function(original){var f=Object.assign({},original);
+      if(f.item==='Culinary water'&&/^No public water system mapped/.test(f.headline)){f.status='verify';f.headline='No public water system mapped; supply unverified';f.detail='No service area was returned by this dataset. An existing connection or private/mutual supply may still serve the lot. Verify the source and service entitlement; a well requirement has not been established.';}
+      if(f.item==='Fire hydrant'&&/^No mapped hydrant within/.test(f.headline)){f.status='verify';f.detail='No hydrant was returned by the county dataset. Verify hydrant availability, flow and any approved alternative supply with the fire authority; missing map coverage is not proof that no fire-water supply exists.';}
       if(f.item==='Flood zone'&&/Zone .*D.*minimal flood hazard/.test(f.headline)){f.status='verify';f.headline=f.headline.replace(': minimal flood hazard',': flood hazard partly undetermined');f.detail='Interpretation corrected: FEMA Zone D is undetermined hazard, not minimal risk. Check the effective panel and Zone X subtype before siting improvements. Source data has not been refreshed.';}
       if(f.item==='Internet'&&/No wired broadband reported; wireless and satellite only/.test(f.headline)){f.status='verify';f.headline='No wired broadband in this dataset; service availability unverified';}
       if(f.item==='Drinking-water source protection'&&/Septic systems are not allowed|allows septic/.test(f.detail)){f.detail='Interpretation corrected: mapped source-protection overlap may restrict onsite wastewater. Confirm the zone boundary, source type and current applicable rules. This map alone does not establish a lot-specific septic prohibition or approval.';}

@@ -496,3 +496,8 @@ dialog#plan-dialog{color:var(--ink);background:var(--panel);border:1px solid var
 
 /* Completed retrieval is green; it does not mean the findings are clear. */
 #home li.done .ic{background-color:#339864}
+
+.priority-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:1px solid currentColor;border-radius:6px;padding:2px 7px;vertical-align:middle;margin-right:5px;white-space:nowrap}
+.priority-status:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.priority-flag{color:var(--flag)}.priority-watch{color:var(--watch)}.priority-verify{color:var(--verify)}
+#rv .priority-key{font-size:13px;color:var(--muted);line-height:1.6}

@@ -1,0 +1,6 @@
+const assert=require('node:assert/strict'),A=require('../web/permit-assistant'),fs=require('node:fs'),vm=require('node:vm');
+const p={property:{county:'Weber'},report:{facts:{septic:{required:true}},findings:[{item:'Culinary water',status:'flag',headline:'No public water system mapped'},{item:'Fire hydrant',status:'flag',headline:'No mapped hydrant within 6,500 ft'},{item:'Sewer vs. septic',headline:'Septic likely required; soils rated very limited for absorption fields'}]}};
+let r=A.siteRecommendations(p);assert.deepEqual(r.map(x=>x.id),['well','septic']);assert(r.every(x=>x.state==='Conditional'&&x.url.startsWith('https://')));assert.match(r[0].condition,/does not require a well/);
+p.report.facts.culinary='Existing mutual water supply';assert(!A.siteRecommendations(p).some(x=>x.id==='well'));p.report.facts.sewer='Confirmed sewer';assert.equal(A.siteRecommendations(p).length,0);
+const c={console};vm.createContext(c);vm.runInContext(fs.readFileSync('web/lotreport.js','utf8'),c);const reviewed=c.LotReport.reviewFindings(p.report.findings);assert.equal(reviewed[0].status,'verify');assert.equal(reviewed[1].status,'verify');
+console.log('PASS: conditional well/septic agency routes, suppress with known service, missing-map evidence is verification not confirmed absence');

@@ -204,3 +204,11 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 #rv .category-status{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:9px;flex:none;background:var(--ok)}
 #rv .category-status.s-flag{background:var(--flag)}#rv .category-status.s-watch{background:var(--watch)}#rv .category-status.s-verify{background:var(--verify)}
 .site-documents blockquote{border-left:2px solid #dfc8a6;padding-left:16px;margin-left:0;color:#e3e2da}.site-documents article{margin:20px 0}
+
+@media screen{
+#cornerpin-global-nav>div{align-items:center;flex-wrap:wrap}
+#cornerpin-global-nav button.global-brand{margin-right:auto;padding:0;border:0;background:transparent;border-radius:0}
+#home nav.top>.wordmark,#project-workspace>header>.wordmark,#project-frame .project-brand{display:none!important}
+#project-frame .project-header{justify-content:flex-start;margin-bottom:24px}
+}
+@media screen and (max-width:640px){#cornerpin-global-nav button.global-brand{flex-basis:100%;justify-content:center;margin:0 0 8px}}
