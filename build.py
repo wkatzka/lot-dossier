@@ -38,7 +38,7 @@ def build(api_base, inline_assets=False):
     html = html.replace("/*STYLES*/", css, 1)
     if "leaflet.min.css" not in html:
         html = html.replace("</head>", '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">\n</head>', 1)
-    html = html.replace("<body>\n", '<body>\n<div id="home">\n', 1)
+    html = html.replace("<body>\n", '<body>\n<div id="cp-restore" role="status" aria-live="polite">Opening your workspace…</div>\n<div id="home">\n', 1)
     costs = {k: v for k, v in json.loads(read(ROOT, "config", "cost_assumptions.json")).items() if not k.startswith("_")}
     report_view = """</div>
 <div id="rv">

@@ -2,7 +2,7 @@
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
   // History state survives reload and is scoped to this tab and account.
-  const initialView=history.state?.cornerpinView;
+  const initialView=window.CornerpinInitialView||history.state?.cornerpinView;
   const viewTabs=['overview','site','evidence','valuation','placement','filing','draft','management','documents','activity'];
   function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage}},'');}catch(e){/* Storage-disabled previews still work. */}}
 
@@ -305,6 +305,6 @@
     if(!initialView||initialView.owner!==S.owner())return;
     try{if(initialView.id)await openSaved(initialView.id,initialView);else await list();}
     catch(err){await list();message('Could not reopen the last project. '+err.message);}
-  }).catch(()=>{});
+  }).catch(()=>{}).finally(()=>{document.documentElement.classList.remove('cp-restoring');delete window.CornerpinInitialView;});
   document.getElementById('home-projects').addEventListener('click',()=>list().catch(err=>message(err.message)));
 })();
