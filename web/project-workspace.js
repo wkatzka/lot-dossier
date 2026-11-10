@@ -9,6 +9,14 @@
   let cityPage='primary', reusableProjects=[], analysisTarget='';
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
+  const globalNav=document.createElement('nav');globalNav.id='cornerpin-global-nav';globalNav.setAttribute('aria-label','Account and projects');
+  globalNav.innerHTML='<div><button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button><button type="button" data-global="projects">My projects</button><button type="button" data-global="new">New project</button></div>';
+  document.body.prepend(globalNav);
+  globalNav.addEventListener('click',async e=>{
+    const action=e.target.closest('[data-global]')?.dataset.global;if(!action)return;
+    if(window.CornerpinWorkspaceBusy()||document.getElementById('go').disabled)return;
+    try{await saveCityPage();if(action==='projects')await list();else window.dispatchEvent(new CustomEvent('cornerpin:home'));window.scrollTo(0,0);}catch(err){message(err.message);}
+  });
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const human = s => String(s || '').replace(/_/g, ' ');
   const button = (action, text, id) => '<button type="button" data-action="' + action + '" data-id="' + esc(id || '') + '">' + esc(text) + '</button>';

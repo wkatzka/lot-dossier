@@ -178,3 +178,15 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 .pw-backup-icon{font-size:28px;color:#dfc8a6;flex-shrink:0;line-height:1}
 .pw-backup-copy{display:flex;flex-direction:column;gap:6px;min-width:0}.pw-backup-name{font-size:15px;font-weight:600;overflow-wrap:anywhere}.pw-backup-hint{font-size:12px;line-height:1.5;color:#c4c1b9}
 #project-workspace .pw-import-card button:disabled{opacity:.45;cursor:default}
+
+/* One global navigation row appears on every view and scrolls normally. */
+@media screen{
+#cornerpin-global-nav{position:relative;margin:0;background:transparent;font-family:'DM Sans',sans-serif}
+#cornerpin-global-nav>div{max-width:1200px;margin:0 auto;box-sizing:border-box;padding:14px 28px;display:flex;justify-content:flex-end;gap:10px}
+#cornerpin-global-nav button{appearance:none;white-space:nowrap;min-height:44px;border:1px solid rgba(245,244,238,.4);border-radius:999px;padding:11px 18px;font:600 14px 'DM Sans',sans-serif;color:#f7f6f0;background:rgba(21,21,21,.35);cursor:pointer}
+#cornerpin-global-nav button:hover{border-color:#dfc8a6;background:rgba(255,255,255,.09)}
+#cornerpin-global-nav button:focus-visible{outline:3px solid #ff7137;outline-offset:3px}
+#home nav.top [data-account],#home-projects,#project-workspace>header>.pw-actions,#project-frame .project-new{display:none!important}
+}
+@media screen and (max-width:640px){ #cornerpin-global-nav>div{padding:12px 18px;gap:7px;justify-content:center}#cornerpin-global-nav button{font-size:12px;padding:10px 13px}}
+@media print{#cornerpin-global-nav{display:none!important}}
