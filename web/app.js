@@ -520,8 +520,8 @@
     loadChecklist();
     document.title = 'Cornerpin · ' + (last.parcel.attrs.PARCEL_ADD || last.parcel.id);
     if(!reuse){window.scrollTo(0, 0);drawMap(last.parcel.rings);}
-    window.dispatchEvent(new CustomEvent('cornerpin:report-visible'));
     if (!fromHistory) try { history.pushState({ report: true }, '', '#report'); } catch (e) {}
+    window.dispatchEvent(new CustomEvent('cornerpin:report-visible'));
   }
   function showHome(fromHistory) {
     document.body.classList.remove('show-project','project-frame-active');

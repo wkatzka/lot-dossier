@@ -1,6 +1,11 @@
 (function () {
   'use strict';
   const W = window.PermitWorkflow, S = window.ProjectStore;
+  // History state survives reload and is scoped to this tab and account.
+  const initialView=history.state?.cornerpinView;
+  const viewTabs=['overview','site','evidence','valuation','placement','filing','draft','management','documents','activity'];
+  function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage}},'');}catch(e){/* Storage-disabled previews still work. */}}
+
   let cityPage='primary', reusableProjects=[], analysisTarget='';
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
@@ -30,7 +35,7 @@
   }
   function refreshSyncLabels(){host.querySelectorAll('[data-sync-project]').forEach(async el=>{const owner=S.owner(),p=await S.get(el.dataset.syncProject);if(p&&owner===S.owner()&&el.isConnected)el.innerHTML=syncLabel(p);});}
   window.addEventListener('cornerpin:sync-state',refreshSyncLabels);
-  async function openSaved(id) {
+  async function openSaved(id,view) {
     await window.CornerpinAccount.ready;const owner=S.owner();let p=await S.get(id),notice='';
     if(window.CloudSync.signedIn()){
       try{const remote=(await window.CloudSync.list()).find(x=>x.id===id);if(S.owner()!==owner)return;
@@ -38,7 +43,7 @@
         else if(remote&&p&&remote.revision!==window.CloudSync.baseRevision(id)&&p.revision!==window.CloudSync.baseRevision(id))notice='This device and your account have different changes. Device work was kept; download a backup before reconciling.';
       }catch(e){if(!p)throw e;notice='Opened the saved device copy. '+e.message;}
     }
-    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');project=p;capture=Promise.resolve(p);tab='overview';section='site';render();if(notice)message(notice);window.scrollTo(0,0);
+    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');project=p;capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
   }
   async function commit(command, file) { const next = W.apply(project, command); await S.save(next, project.revision, file); project = next; render(); }
   async function saveCityPage() {
@@ -71,6 +76,7 @@
   // One persistent project frame shared by the report and workflow views.
   const frame=document.createElement('section');frame.id='project-frame';document.body.insertBefore(frame,document.getElementById('rv'));
   function projectFrame(active) {
+    rememberView(active);
     document.body.classList.toggle('project-frame-active',!!project);
     if(!project)return;
     if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="projects" aria-label="Cornerpin — My projects">'+document.querySelector('#home .wordmark').innerHTML+'</button><div class="project-toolbar"><button data-frame="filing">Permit filing</button><button data-frame="overview">Project overview</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button><button class="project-new" data-frame="home">Review another property</button></div></header><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
@@ -135,7 +141,7 @@
     const merged=new Map(rows.map(p=>[p.id,p]));let warning='';
     if(owner){try{const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;for(const p of cloud)if(!merged.has(p.id))merged.set(p.id,p);}catch(e){warning='Account unavailable. Showing projects saved on this device. '+e.message;}}
     if(S.owner()!==owner||project)return;
-    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+human(p.stage))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'<section class="pw-card pw-import-card"><h2>Import a project</h2><p>Bring a saved Cornerpin project and its files into your workspace.</p><form data-command="restore-backup"><label>Project backup<input name="backup" type="file" accept=".json" required></label><button type="submit">Import project</button></form></section></div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
+    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+human(p.stage))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'<section class="pw-card pw-import-card"><h2>Import a project</h2><p>Bring a saved Cornerpin project and its files into your workspace.</p><form data-command="restore-backup"><label class="pw-backup-picker"><input class="pw-backup-input" name="backup" type="file" accept=".json,application/json" required aria-label="Choose project backup"><span class="pw-backup-icon" aria-hidden="true">↥</span><span class="pw-backup-copy"><span class="pw-backup-name">Choose backup</span><span class="pw-backup-hint">JSON file · up to 150 MB</span></span></label><button type="submit" disabled>Import project</button></form></section></div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
     if(warning)message(warning);
   }
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
@@ -221,6 +227,13 @@
     } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();analysisTarget='';busy=false;}
   });
   host.addEventListener('change',async e=>{
+    if(e.target.matches('.pw-backup-input')){
+      const file=e.target.files?.[0],label=e.target.closest('label'),form=e.target.closest('form');
+      label.querySelector('.pw-backup-name').textContent=file?file.name:'Choose backup';
+      label.querySelector('.pw-backup-hint').textContent=file?'Click to choose a different file':'JSON file · up to 150 MB';
+      label.classList.toggle('has-file',!!file);form.querySelector('[type=submit]').disabled=!file;return;
+    }
+
     if(e.target.matches('form[data-command=setback_rule] select[name=classification]')){const form=e.target.closest('form'),s=project.report.facts.zone_std||{};form.elements.feet.value=(e.target.value==='street-side'?s.street:s.side)??'';form.elements.confirmed.checked=false;return;}
     if(!e.target.matches('[data-city-type]')||busy)return;
     const permitType=e.target.value;if(!permitType){render();return;}busy=true;
@@ -280,5 +293,10 @@
     });
     capture.catch(err=>{const b=document.getElementById('rv-workflow');b.textContent='Permit workflow · file save failed';b.title=err.message;});
   });
+  window.CornerpinAccount.ready.then(async()=>{
+    if(!initialView||initialView.owner!==S.owner())return;
+    try{if(initialView.id)await openSaved(initialView.id,initialView);else await list();}
+    catch(err){await list();message('Could not reopen the last project. '+err.message);}
+  }).catch(()=>{});
   document.getElementById('home-projects').addEventListener('click',()=>list().catch(err=>message(err.message)));
 })();
