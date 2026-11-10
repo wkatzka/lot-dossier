@@ -48,7 +48,7 @@ body.show-project #project-workspace{display:block}body.show-project #home,body.
 
 /* Enlarged parcel-corner mark: interrupted frame and orange survey pin. */
 #project-workspace .pw-stages{gap:28px;margin-top:30px}
-#project-workspace .pw-stages>.pw-card,#project-workspace .pw-project-grid>.pw-card{position:relative;display:flex;flex-direction:column;border:0;border-radius:0;padding:32px;margin:0;background-color:rgba(17,17,17,.88);background-image:linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb);background-size:calc(100% - 30px) 2px,2px calc(100% - 30px),calc(100% - 30px) 2px,2px calc(100% - 30px);background-position:top left,top left,bottom right,bottom right;background-repeat:no-repeat}
+#project-workspace .pw-stages>.pw-card,#project-workspace .pw-project-grid>.pw-card{position:relative;display:flex;flex-direction:column;border:0;border-radius:0;padding:32px;margin:0;background-color:rgba(17,17,17,.44);background-image:linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb),linear-gradient(#dbdbdb,#dbdbdb);background-size:calc(100% - 30px) 2px,2px calc(100% - 30px),calc(100% - 30px) 2px,2px calc(100% - 30px);background-position:top left,top left,bottom right,bottom right;background-repeat:no-repeat}
 #project-workspace .pw-stages>.pw-card::before,#project-workspace .pw-project-grid>.pw-card::before{content:"";position:absolute;top:-6px;left:-6px;width:14px;height:14px;border-radius:50%;background:#fb7136}
 #project-workspace .pw-stages h2{margin:0 0 20px}
 #project-workspace .pw-stages p:first-of-type{flex:1;margin-top:0}
