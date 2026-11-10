@@ -697,6 +697,12 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 @media screen and (max-width:640px){ #cornerpin-global-nav>div{padding:12px 18px;gap:7px;justify-content:center}#cornerpin-global-nav button{font-size:12px;padding:10px 13px}}
 @media print{#cornerpin-global-nav{display:none!important}}
 
+#project-frame .project-title-row{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:22px 0 14px}
+#project-frame .project-title-row h1{margin:0;min-width:0}
+#project-frame .project-title-row button{flex-shrink:0;border-radius:9px}
+@media(max-width:640px){#project-frame .project-title-row{flex-wrap:wrap;gap:14px}#project-frame .project-title-row button{font-size:13px}}
+@media print{#project-frame .project-title-row button{display:none!important}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -5685,7 +5691,7 @@ if(typeof module!=='undefined'&&module.exports)module.exports={phrase,create};el
     rememberView(active);
     document.body.classList.toggle('project-frame-active',!!project);
     if(!project)return;
-    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="projects" aria-label="Cornerpin — My projects">'+document.querySelector('#home .wordmark').innerHTML+'</button><div class="project-toolbar"><button data-frame="filing">Permit filing</button><button data-frame="overview">Project overview</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button><button class="project-new" data-frame="home">Review another property</button></div></header><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
+    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="overview" aria-label="Cornerpin — Project overview">'+document.querySelector('#home .wordmark').innerHTML+'</button></header><nav aria-label="Project sections"></nav><div class="project-identity"><div class="project-title-row"><h1></h1><button type="button" data-frame="download">Download report</button></div><p></p></div>';
     frame.querySelector('h1').textContent=project.property.address;
     const attrs=project.report.parcel?.attrs||{};frame.querySelector('.project-identity p').textContent=[attrs.PARCEL_CITY,project.property.county+' County','Parcel '+project.property.parcelId,attrs.PARCEL_ACRES?attrs.PARCEL_ACRES+' acres':''].filter(Boolean).join(' · ');
     const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Evidence & restrictions'],['valuation','Lot economics'],['placement','Pool layout'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
@@ -5693,7 +5699,7 @@ if(typeof module!=='undefined'&&module.exports)module.exports={phrase,create};el
     if(nav.dataset.items!==key){nav.innerHTML=items.map(([id,label])=>'<button data-frame="'+id+'">'+label+'</button>').join('');nav.dataset.items=key;}
     nav.hidden=!items.length;
     nav.querySelectorAll('button').forEach(b=>{if(b.dataset.frame===(active==='draft'?'filing':active))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    frame.querySelector('[data-frame="overview"]').setAttribute('aria-pressed',String(active==='overview'));
+
   }
   frame.addEventListener('click',async e=>{const b=e.target.closest('[data-frame]');if(!b)return;try{const action=b.dataset.frame;await saveCityPage();
     if(action==='projects'){await list();return;}

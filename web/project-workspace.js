@@ -87,7 +87,7 @@
     rememberView(active);
     document.body.classList.toggle('project-frame-active',!!project);
     if(!project)return;
-    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="projects" aria-label="Cornerpin — My projects">'+document.querySelector('#home .wordmark').innerHTML+'</button><div class="project-toolbar"><button data-frame="filing">Permit filing</button><button data-frame="overview">Project overview</button><button data-frame="print">Print</button><button data-frame="download">Download site report</button><button class="project-new" data-frame="home">Review another property</button></div></header><nav aria-label="Project sections"></nav><div class="project-identity"><h1></h1><p></p></div>';
+    if(!frame.firstChild)frame.innerHTML='<header class="project-header"><button class="project-brand wordmark" data-frame="overview" aria-label="Cornerpin — Project overview">'+document.querySelector('#home .wordmark').innerHTML+'</button></header><nav aria-label="Project sections"></nav><div class="project-identity"><div class="project-title-row"><h1></h1><button type="button" data-frame="download">Download report</button></div><p></p></div>';
     frame.querySelector('h1').textContent=project.property.address;
     const attrs=project.report.parcel?.attrs||{};frame.querySelector('.project-identity p').textContent=[attrs.PARCEL_CITY,project.property.county+' County','Parcel '+project.property.parcelId,attrs.PARCEL_ACRES?attrs.PARCEL_ACRES+' acres':''].filter(Boolean).join(' · ');
     const items=active==='overview'?[]:section==='site'?[['site','Site report'],['evidence','Evidence & restrictions'],['valuation','Lot economics'],['placement','Pool layout'],['documents','Documents'],['activity','Activity']]:[[section,section==='filing'?'Permit filing':'Permit management'],['documents','Documents'],['activity','Activity']];
@@ -95,7 +95,7 @@
     if(nav.dataset.items!==key){nav.innerHTML=items.map(([id,label])=>'<button data-frame="'+id+'">'+label+'</button>').join('');nav.dataset.items=key;}
     nav.hidden=!items.length;
     nav.querySelectorAll('button').forEach(b=>{if(b.dataset.frame===(active==='draft'?'filing':active))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    frame.querySelector('[data-frame="overview"]').setAttribute('aria-pressed',String(active==='overview'));
+
   }
   frame.addEventListener('click',async e=>{const b=e.target.closest('[data-frame]');if(!b)return;try{const action=b.dataset.frame;await saveCityPage();
     if(action==='projects'){await list();return;}

@@ -190,3 +190,9 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 }
 @media screen and (max-width:640px){ #cornerpin-global-nav>div{padding:12px 18px;gap:7px;justify-content:center}#cornerpin-global-nav button{font-size:12px;padding:10px 13px}}
 @media print{#cornerpin-global-nav{display:none!important}}
+
+#project-frame .project-title-row{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:22px 0 14px}
+#project-frame .project-title-row h1{margin:0;min-width:0}
+#project-frame .project-title-row button{flex-shrink:0;border-radius:9px}
+@media(max-width:640px){#project-frame .project-title-row{flex-wrap:wrap;gap:14px}#project-frame .project-title-row button{font-size:13px}}
+@media print{#project-frame .project-title-row button{display:none!important}}
