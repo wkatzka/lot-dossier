@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const {budgetedRequest,reservation,usageCost}=require('../lib/ai-budget');
+const url='https://api.anthropic.com/v1/messages';
+const options={body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:16000,messages:[]})};
+(async()=>{
+ assert.equal(reservation(JSON.parse(options.body)),2257152);
+ assert.throws(()=>reservation({model:'unknown',max_tokens:16000}));
+ assert.equal(usageCost({input_tokens:100000,output_tokens:5000}),250000);
+ assert.throws(()=>usageCost({input_tokens:-1,output_tokens:1}));
+ let calls=[],paid=0;
+ const account=async(...args)=>{calls.push(args);return {allowed:true};};
+ const request=async()=>{paid++;return new Response(JSON.stringify({usage:{input_tokens:100000,output_tokens:5000}}));};
+ await budgetedRequest({request,account})(url,options);
+ assert.equal(paid,1);assert.equal(calls[0][0],'reserve');assert.equal(calls[1][0],'settle');assert.equal(calls[1][2],250000);assert.equal(calls[0][1],calls[1][1]);
+ await assert.rejects(budgetedRequest({request,account:async()=>({allowed:false})})(url,options),e=>e.status===429);assert.equal(paid,1);
+ await assert.rejects(budgetedRequest({request,account:async()=>{throw Error('database offline');}})(url,options));assert.equal(paid,1);
+ calls=[];await assert.rejects(budgetedRequest({account,request:async()=>{throw Error('timeout');}})(url,options));assert.equal(calls.length,1);
+ calls=[];await budgetedRequest({account,request:async()=>new Response('{}',{status:400})})(url,options);assert.equal(calls[1][2],0);
+ calls=[];await budgetedRequest({account,request:async()=>new Response('{}',{status:500})})(url,options);assert.equal(calls.length,1);
+ calls=[];await budgetedRequest({account,request:async()=>new Response(JSON.stringify({stop_reason:'max_tokens',usage:{input_tokens:20,output_tokens:16000}}))})(url,options);assert.equal(calls[1][2],160040);
+ const source=require('node:fs').readFileSync(require('node:path').join(__dirname,'../lib/permit-extraction-handler.js'),'utf8');
+ assert.equal((source.match(/request:budgetedRequest\(\)/g)||[]).length,2);
+ assert.ok(source.indexOf('cacheHit:true')<source.indexOf('request:budgetedRequest()'));
+ console.log('PASS: budget pricing, both call paths, cache ordering, denial, fail-closed, timeouts, HTTP errors, and truncated responses');
+})().catch(e=>{console.error(e);process.exit(1);});

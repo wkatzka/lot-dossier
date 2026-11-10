@@ -108,3 +108,29 @@ These tools do not establish a complete easement inventory, private mineral titl
 Optional owner-only cloud sync is implemented but requires provisioning and live authorization testing described in [storage setup](docs/research/storage-setup.md). Browser storage remains the default. Automatic city filing and review monitoring are not connected.
 
 Run the deterministic checks with `for f in scripts/test-*.js; do node "$f" || exit; done`, then `python3 build.py --api https://lot-dossier-assistant.vercel.app`. Live source tests are opt-in; synthetic tests validate arithmetic and failure behavior, not market accuracy or title completeness.
+
+### Daily AI spend guard
+
+Cornerpin's two paid analysis paths use `lib/ai-budget.js` and the atomic ledger in
+`db/ai-budget.sql`. The global cap is $5 per calendar day in America/New_York,
+shared across users and deployments using this database. Cached analyses bypass
+paid requests. The existing per-account request-count limit also remains active.
+This guard covers Cornerpin's Anthropic Messages calls, not hosting, storage,
+other applications using the same API key, taxes, or unrelated provider charges.
+
+Each call reserves the full supported context/output cost before contacting the
+provider, then settles returned token usage even when the generated answer later
+fails validation. Currently a 16,000-output-token Sonnet 5.5 call reserves $2.257152;
+this deliberately stops new calls early when less than that remains. Timeouts,
+unknown usage and settlement failures retain the reservation through that day.
+Unknown models/configurations and database failures block paid calls. Update the
+pricing allowlist before changing models; do not replace it with estimated token
+counts if a strict spend ceiling is required.
+
+Provision `db/ai-budget.sql` in Cornerpin's Supabase project. Store a single
+`secret_hash` in `cornerpin_private.ai_budget_auth`: SHA-256 of the hex SHA-256 of
+`cornerpin-budget-v1:` followed by the server's Anthropic API key. Provision this
+out of band; never put the key or derived credential in frontend code or logs.
+Rotating the API key requires updating that hash. The RPC validates this
+Cornerpin-specific derived credential before accessing the private ledger;
+ordinary signed-in users cannot alter it. No extra serverless function is used.
