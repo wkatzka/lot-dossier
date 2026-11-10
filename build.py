@@ -104,7 +104,7 @@ def build(api_base, inline_assets=False):
     html = html.replace('</head>', '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,' + favicon + '">\n</head>', 1)
     if inline_assets:
         animation = base64.b64encode(read(ROOT, "public", "assets", "cornerpin-analysis.svg").encode()).decode()
-        html = html.replace("assets/cornerpin-analysis.svg?v=2", "data:image/svg+xml;base64," + animation)
+        html = html.replace("assets/cornerpin-analysis.svg?v=3", "data:image/svg+xml;base64," + animation)
     low = html.lower()
     for b in BANNED:
         assert b not in low, "found %r in build output" % b
