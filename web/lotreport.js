@@ -184,7 +184,7 @@
     '49045': 'Tooele', '49047': 'Uintah', '49049': 'Utah', '49051': 'Wasatch', '49053': 'Washington', '49055': 'Wayne', '49057': 'Weber' };
   Object.keys(FIPS).forEach(function (k) { FIPS_BY_NAME[FIPS[k].toUpperCase()] = k; });
 
-  function looksLikeParcel(t) { return /^[0-9]{2}[- ]?[0-9]{3}[- ]?[0-9]{3,4}$|^[0-9]{8,10}$/.test(String(t).trim()); }
+  function looksLikeParcel(t) { return /^[0-9]{2}[- ]?[0-9]{3}[- ]?[0-9]{3,4}$|^[0-9]{8,10}$/.test(String(t).trim().replace(/[ ,]+[A-Za-z ]+ COUNTY$/i, '')); }
 
   var DIRS = { N: 'N', S: 'S', E: 'E', W: 'W', NORTH: 'N', SOUTH: 'S', EAST: 'E', WEST: 'W' };
   var TYPES = { RD: 'RD', ROAD: 'RD', DR: 'DR', DRIVE: 'DR', ST: 'ST', STREET: 'ST', LN: 'LN', LANE: 'LN', AVE: 'AVE', AVENUE: 'AVE', AV: 'AVE',
@@ -226,7 +226,11 @@
 
   async function locate(query) {
     query = String(query || '').trim();
+    var countyHint = null;
+    var m = /^(.*?)[ ,]+(\w[\w ]*?) COUNTY$/i.exec(query);
+    if (m && FIPS_BY_NAME[m[2].toUpperCase()]) { countyHint = FIPS[FIPS_BY_NAME[m[2].toUpperCase()]]; query = m[1]; }
     if (looksLikeParcel(query)) {
+      if (countyHint) return findByParcel(query, countyHint);
       // Search every county; parcel-number formats overlap, so ask when more than one county has the ID.
       var all = [];
       for (var j = 0; j < COUNTIES.length; j += 8) {
@@ -235,12 +239,9 @@
       }
       if (!all.length) throw Object.assign(new Error('No parcel ' + query + ' found in Utah county records'), { notFound: true });
       if (all.length > 1) throw ambiguous('Parcel ' + query + ' exists in ' + all.map(function (p) { return p.county; }).join(' and ') + ' counties. Enter the street address instead, or add the county (for example "' + query + ' ' + all[0].county + '").',
-        all.map(function (p) { return p.county; }));
+        all.map(function (p) { return {label: p.county + ' County · parcel ' + p.id, query: p.id + ' ' + p.county + ' County'}; }));
       return all[0];
     }
-    var countyHint = null;
-    var m = /^(.*?)[ ,]+(\w[\w ]*?) COUNTY$/i.exec(query);
-    if (m && FIPS_BY_NAME[m[2].toUpperCase()]) { countyHint = m[2]; query = m[1]; }
 
     var a = parseStreet(query);
     // 1. Statewide address points: the authoritative way to place a Utah address (they carry city, ZIP and county).
@@ -280,14 +281,15 @@
     //    (from the ZIP/city) when there is one, and never silently picking one of several matches.
     var zips = a.zip ? [a.zip] : await zipsForPlace(a.city);
     var counties = countyHint ? [countyHint] : COUNTIES;
-    if (zips.length) {
+    if (zips.length && !countyHint) {
       try {
-        var za = await arcgisQuery(UGRC + '/UtahZipCodeAreas/FeatureServer/0', { where: "ZIP5 IN ('" + zips.join("','") + "')", returnGeometry: true });
-        if (za.length) {
-          var ring = za[0].geometry.rings[0], zx = ring.reduce(function (s2, q) { return s2 + q[0]; }, 0) / ring.length, zy = ring.reduce(function (s2, q) { return s2 + q[1]; }, 0) / ring.length;
-          var cf = await arcgisQuery(UGRC + '/UtahCountyBoundaries/FeatureServer/0', { geometry: { x: zx, y: zy }, outFields: 'NAME' });
-          if (cf.length) counties = [title(cf[0].attributes.NAME)];
-        }
+        // ZIP polygons can extend across mountains and county lines. Their vertex
+        // average is not an address location (Eden's average falls in Cache County).
+        // COUNTYNBR is Utah's alphabetical county code, not the federal FIPS code.
+        var za = await arcgisQuery(UGRC + '/UtahZipCodeAreas/FeatureServer/0', { where: "ZIP5 IN ('" + zips.join("','") + "')", outFields:'COUNTYNBR' });
+        var ordered = COUNTIES.slice().sort(), zipCounties = [];
+        za.forEach(function(z){var cn=ordered[Number(z.attributes.COUNTYNBR)-1];if(cn&&zipCounties.indexOf(cn)<0)zipCounties.push(cn);});
+        if (zipCounties.length) counties = zipCounties;
       } catch (e) {}
     }
     var hits = [];
@@ -302,6 +304,27 @@
     if (hits.length === 1) return findByParcel(hits[0].id, hits[0].county);
     if (hits.length > 1) throw ambiguous('"' + query + '" matches ' + hits.length + ' parcels. Add the city or ZIP code, or enter the parcel ID.',
       hits.slice(0, 12).map(function (h) { return h.add + ', ' + (h.city || '') + ' (' + h.county + ' County, parcel ' + h.id + ')'; }));
+    // A county street-range geocode is only a discovery hint, never proof of a lot's identity.
+    // Vacant lots may have no situs address at all; require a parcel-ID confirmation.
+    if (counties.length === 1 && counties[0] === 'Weber') {
+      var nearby = [];
+      try {
+        var street = [a.number, a.pre, a.name, a.type, a.suf].filter(Boolean).join(' ');
+        var geo = await fetchJSON(WEBER + '/SDE_composite_geocode/GeocodeServer/findAddressCandidates', {form:{f:'json',SingleLine:street,outFields:'*',outSR:4326}});
+        var candidates = (geo.candidates || []).filter(function (c) {
+          var v = c.attributes || {};
+          return c.score >= 95 && v.AddNum === a.number && String(v.StName).toUpperCase() === a.name &&
+            (!a.pre || v.StPreDir === a.pre) && (!a.suf || v.StDir === a.suf) &&
+            (!a.type || v.StType === a.type) && ['PointAddress','StreetAddress'].indexOf(v.Addr_type) >= 0;
+        });
+        // Conflicting locations are not a reliable basis for nearby suggestions.
+        if (candidates.length && candidates.every(function(c){return distPts(c.location.x,c.location.y,candidates[0].location.x,candidates[0].location.y)<10;})) {
+          nearby = await arcgisQuery(lirUrl('Weber'), {geometry:candidates[0].location,distance:60,outFields:'PARCEL_ID,PARCEL_ADD,PARCEL_ACRES,SUBDIV_NAME'});
+        }
+      } catch (e) { nearby = []; }
+      if (nearby.length && nearby.length <= 12) throw ambiguous('This address is missing from parcel records. These parcels are near an approximate street location—not confirmed address matches. Compare the parcel ID with your listing or deed, then select it and generate the dossier.',
+        nearby.map(function(f){var v=f.attributes;return {label:'Parcel '+v.PARCEL_ID+' · '+v.PARCEL_ACRES+' acres'+(v.SUBDIV_NAME?' · '+v.SUBDIV_NAME:'')+(v.PARCEL_ADD?' · '+v.PARCEL_ADD:''),query:v.PARCEL_ID+' Weber County'};}));
+    }
     throw Object.assign(new Error('No parcel found for "' + query + '"'), { notFound: true });
   }
 

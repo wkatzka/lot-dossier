@@ -119,8 +119,8 @@
       // Offer the matches as one-click choices that fill the address field.
       var list = document.createElement('div'); list.className = 'matches';
       options.forEach(function (o) {
-        var b = document.createElement('button'); b.type = 'button'; b.className = 'match'; b.textContent = o;
-        b.addEventListener('click', function () { $('address').value = o.replace(/ \((.*?) County.*$/, ', $1 County').replace(/, parcel .*$/, ''); err.textContent = ''; $('address').focus(); });
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'match'; b.textContent = typeof o === 'string' ? o : o.label;
+        b.addEventListener('click', function () { $('address').value = typeof o === 'object' ? o.query : o.replace(/ \((.*?) County.*$/, ', $1 County').replace(/, parcel .*$/, ''); err.textContent = ''; $('address').focus(); });
         list.appendChild(b);
       });
       err.appendChild(list);
