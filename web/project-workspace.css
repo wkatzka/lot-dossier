@@ -199,3 +199,8 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 
 #project-workspace form[data-command="upload-plans"]{margin-top:22px}
 #project-workspace form[data-command="upload-plans"]>button{margin-top:18px}
+
+#project-frame nav button{border-radius:10px} /* tools, distinct from topic filters */
+#rv .category-status{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:9px;flex:none;background:var(--ok)}
+#rv .category-status.s-flag{background:var(--flag)}#rv .category-status.s-watch{background:var(--watch)}#rv .category-status.s-verify{background:var(--verify)}
+.site-documents blockquote{border-left:2px solid #dfc8a6;padding-left:16px;margin-left:0;color:#e3e2da}.site-documents article{margin:20px 0}

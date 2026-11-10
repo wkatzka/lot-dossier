@@ -635,7 +635,8 @@
     if (ctx.facts.sfha)
       return [F('geo', 'Flood zone', 'flag', 'Part of the lot is in a FEMA Special Flood Hazard Area (' + zones.join(', ') + ')',
         'The house must be elevated or sited outside the floodplain, and flood insurance will be required for financed buyers.', src, 'https://msc.fema.gov/portal/home', ctx.cost('flood_mitigation'))];
-    return [F('geo', 'Flood zone', 'ok', 'FEMA Zone ' + zones.join('/') + ': minimal flood hazard', '', src)];
+    var unknown=zones.indexOf('D')>=0||zones.some(function(z){return !z;});
+    return [F('geo', 'Flood zone', unknown?'verify':'watch', 'FEMA Zone ' + zones.join('/') + (unknown?': flood hazard partly undetermined':': review mapped flood subtype'), 'Zone D means undetermined flood hazard. Zone X can be shaded (moderate hazard) or unshaded (minimal hazard); verify the effective panel and subtype before siting improvements. Absence of a mapped Special Flood Hazard Area is not flood clearance.', src, 'https://msc.fema.gov/portal/home')];
   };
 
   C.check_seismic = async function (ctx) {
@@ -738,7 +739,7 @@
         var za = z[0].attributes, nm = za.FACNAME || za.SourceName || 'public water source';
         var zn = +za.ProtZone, kbz = ctx.facts.kb && ctx.facts.kb.septicZones;
         out.push(F('septic', 'Drinking-water source protection', zn && zn <= 2 ? 'flag' : 'ok', 'Inside protection zone ' + (za.ProtZone || '?') + ' for ' + title(nm),
-          (zn && zn <= 2 ? 'Septic systems are not allowed in this zone. ' : 'Zone ' + zn + ' allows septic. ') + (kbz || 'Health departments add design and setback rules for septic systems inside source protection zones.'),
+          'Mapped source-protection overlap may restrict onsite wastewater disposal. Confirm the zone boundary, source type and current applicable rules before relying on septic feasibility. This map does not establish a permit approval or a lot-specific prohibition. '+(kbz?'The jurisdiction reference flags Zones 1 and 2 for restrictions. ':''),
           'Weber County GIS: groundwater/surface water protection zones'));
       }
     }
@@ -828,10 +829,10 @@
     var wired = list.filter(function (x) { return x.cat === 'wired'; }), other = list.filter(function (x) { return x.cat !== 'wired'; });
     ctx.facts.fiber = fiber.length > 0;
     var caveat = ' Providers report coverage to the FCC by hexagon (about 0.3 sq mi), so a listed provider serves part of the area around the lot, not necessarily this lot. A new lot may not be in the FCC location list until a home is built.';
-    var status = fiber.length ? 'ok' : cable.length ? 'watch' : 'flag';
+    var status = fiber.length ? 'ok' : wired.length ? 'watch' : 'verify';
     var head = fiber.length ? 'Fiber reported nearby: ' + fiber.map(function (x) { return x.name + ' ' + spd(x.down); }).join(', ')
       : cable.length ? 'No fiber reported; cable from ' + cable.map(function (x) { return x.name; }).join(', ')
-      : wired.length ? 'No fiber or cable; best wired option is ' + desc(wired[0]) : 'No wired broadband reported; wireless and satellite only';
+      : wired.length ? 'No fiber or cable; best wired option is ' + desc(wired[0]) : 'No wired broadband in this dataset; service availability unverified';
     out.push(F('utilities', 'Internet', status, head,
       'Wired: ' + (wired.map(desc).join('; ') || 'none') + '. Wireless and satellite: ' + (other.slice(0, 5).map(desc).join('; ') || 'none') + '.' + caveat +
       (fiber.length ? '' : ' Buyers of high-end spec homes expect fiber; a line extension may be negotiable with a provider before closing.'),
@@ -2110,5 +2111,13 @@
     return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
   }
 
-  root.LotReport = { locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
+  function reviewFindings(findings) {
+    return (findings||[]).map(function(original){var f=Object.assign({},original);
+      if(f.item==='Flood zone'&&/Zone .*D.*minimal flood hazard/.test(f.headline)){f.status='verify';f.headline=f.headline.replace(': minimal flood hazard',': flood hazard partly undetermined');f.detail='Interpretation corrected: FEMA Zone D is undetermined hazard, not minimal risk. Check the effective panel and Zone X subtype before siting improvements. Source data has not been refreshed.';}
+      if(f.item==='Internet'&&/No wired broadband reported; wireless and satellite only/.test(f.headline)){f.status='verify';f.headline='No wired broadband in this dataset; service availability unverified';}
+      if(f.item==='Drinking-water source protection'&&/Septic systems are not allowed|allows septic/.test(f.detail)){f.detail='Interpretation corrected: mapped source-protection overlap may restrict onsite wastewater. Confirm the zone boundary, source type and current applicable rules. This map alone does not establish a lot-specific septic prohibition or approval.';}
+      return f;
+    });
+  }
+  root.LotReport = { reviewFindings:reviewFindings, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
 })(typeof window !== 'undefined' ? window : globalThis);

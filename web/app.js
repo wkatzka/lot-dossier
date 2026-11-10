@@ -240,7 +240,8 @@
   })();
   var checklist = {}; // key -> {status, files:[{id,name,size,type,added,blob}]}
   function itemKey(x) { return last.parcel.county + '|' + last.parcel.id + '|' + x.section + '|' + x.item; }
-  function actionable(x) { return x.status !== 'ok'; }
+  function sourceLead(x) { return /^(Historical entry |Later indexed record |Public original |Original .* page .* candidate )/.test(x.item||''); }
+  function actionable(x) { return x.status !== 'ok' && !sourceLead(x); }
 
   /* ---------------- report */
   function rollup(findings) {
@@ -297,8 +298,8 @@
   }
 
   function reportHTML(r, state, saved) {
-    var a = r.parcel.attrs, f = r.findings, plan = r.plan;
-    var count = function (s) { return f.filter(function (x) { return x.status === s; }).length; };
+    var a = r.parcel.attrs, f = LR.reviewFindings(r.findings), plan = r.plan;
+    var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x); }).length; };
     var costs = rollup(f);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
@@ -320,7 +321,7 @@
     var groups = order.map(function (c) {
       var fs = f.filter(function (x) { return x.section === c[0]; }).sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; });
       if (!fs.length) return '';
-      return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.map(row).join('') + '</section>';
+      return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.filter(function(x){return !sourceLead(x);}).map(row).join('') + (fs.some(sourceLead)?'<details class="source-leads"><summary>'+fs.filter(sourceLead).length+' unverified record leads — not confirmed restrictions</summary><p>These references may concern earlier or neighboring land. They are excluded from the concern totals and action checklist until their applicability is established.</p>'+fs.filter(sourceLead).map(row).join('')+'</details>':'') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return x.status === 'flag'; });
     var top = flags.length ? flags.map(function (x) { return '<li><b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
@@ -358,7 +359,7 @@
       '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
       '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>No issue identified</span></div></div>' +
-      checklistSummary(f, state, saved) +
+      (f.some(sourceLead)?'<p class="source-lead-note">'+f.filter(sourceLead).length+' historical/source leads are grouped under their topics, separate from these finding totals.</p>':'')+checklistSummary(f, state, saved) +
       '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +
       '<h2 style="margin-top:18px">Priority findings</h2><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' application items ready or drafted &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
@@ -425,7 +426,7 @@
 
   function refreshSummary() {
     var box = document.querySelector('#rv .chk-sum'); if (!box || !last) return;
-    var tmp = document.createElement('div'); tmp.innerHTML = checklistSummary(last.findings, checklist, false);
+    var tmp = document.createElement('div'); tmp.innerHTML = checklistSummary(LR.reviewFindings(last.findings), checklist, false);
     var only = $('chk-only') && $('chk-only').checked;
     box.replaceWith(tmp.firstChild); if ($('chk-only')) $('chk-only').checked = !!only;
   }

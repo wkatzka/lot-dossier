@@ -111,7 +111,7 @@ Run the deterministic checks with `for f in scripts/test-*.js; do node "$f" || e
 
 ### Daily AI spend guard
 
-Cornerpin's two paid analysis paths use `lib/ai-budget.js` and the atomic ledger in
+Cornerpin's three paid analysis paths use `lib/ai-budget.js` and the atomic ledger in
 `db/ai-budget.sql`. The global cap is $5 per calendar day in America/New_York,
 shared across users and deployments using this database. Cached analyses bypass
 paid requests. The existing per-account request-count limit also remains active.
@@ -134,3 +134,5 @@ out of band; never put the key or derived credential in frontend code or logs.
 Rotating the API key requires updating that hash. The RPC validates this
 Cornerpin-specific derived credential before accessing the private ledger;
 ordinary signed-in users cannot alter it. No extra serverless function is used.
+
+Public-source AI review uses `lib/site-document-reader.js`. Scan all public documents processes current PDFs sequentially, saves each result, and resumes remaining documents after interruption. Cache keys include the document hash and target parcel context. Observations retain page quotes and applicability labels; they never populate proposed-building permit fields. The same global AI budget applies.

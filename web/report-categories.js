@@ -19,7 +19,7 @@
     const next=root.querySelector('.two');
     if(next){Array.from(next.children).forEach((node,i)=>add(i?'costs':'actions',i?'Cost considerations':'Next steps',[node])); next.replaceWith(...Array.from(next.children));}
     const packet=root.querySelector('#packet');if(packet)packet.remove();
-    const picker=document.createElement('section');picker.className='report-picker';picker.innerHTML='<h2>Explore the site report</h2><p>Select a category to view its findings, sources and outstanding items.</p><div class="report-chips" role="tablist" aria-label="Site report categories"></div>';
+    const picker=document.createElement('section');picker.className='report-picker';picker.innerHTML='<h2>Findings by topic</h2><p>Select a topic below. Dots show the highest-priority status: red concern, amber review, blue verification needed, gray no issue identified. Source leads are not confirmed restrictions.</p><div class="report-chips" role="tablist" aria-label="Site report categories"></div>';
     const summary=root.querySelector('.hero2');if(!summary)return;summary.after(picker);
     const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','tabpanel');panel.tabIndex=0;picker.after(panel);
     const chips=picker.querySelector('.report-chips');
@@ -27,7 +27,10 @@
       c.nodes.forEach(n=>panel.appendChild(n));
       const b=document.createElement('button');b.type='button';b.className='report-chip';b.id='category-'+c.key;b.setAttribute('role','tab');b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;
       const count=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.frow').length,0);
-      b.textContent=c.label+(count?' · '+count:'');chips.appendChild(b);c.button=b;
+      b.textContent=c.label+(count?' · '+count:'');
+      const statuses=['flag','watch','verify','ok'],names={flag:'Concern',watch:'Review',verify:'Verification needed',ok:'No issue identified'};
+      const status=statuses.find(s=>c.nodes.some(n=>n.querySelector('.frow.s-'+s)));
+      if(status){const dot=document.createElement('span');dot.className='category-status s-'+status;dot.setAttribute('aria-hidden','true');b.prepend(dot);b.title=names[status];b.setAttribute('aria-label',c.label+' · '+count+' items · '+names[status]);}chips.appendChild(b);c.button=b;
       b.addEventListener('click',()=>select(c));
     });
     function select(current) {

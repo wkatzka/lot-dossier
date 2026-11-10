@@ -19,7 +19,7 @@ const options={body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:16000,m
  calls=[];await budgetedRequest({account,request:async()=>new Response('{}',{status:500})})(url,options);assert.equal(calls.length,1);
  calls=[];await budgetedRequest({account,request:async()=>new Response(JSON.stringify({stop_reason:'max_tokens',usage:{input_tokens:20,output_tokens:16000}}))})(url,options);assert.equal(calls[1][2],160040);
  const source=require('node:fs').readFileSync(require('node:path').join(__dirname,'../lib/permit-extraction-handler.js'),'utf8');
- assert.equal((source.match(/request:budgetedRequest\(\)/g)||[]).length,2);
+ assert.equal((source.match(/request:budgetedRequest\(\)/g)||[]).length,3);
  assert.ok(source.indexOf('cacheHit:true')<source.indexOf('request:budgetedRequest()'));
  console.log('PASS: budget pricing, both call paths, cache ordering, denial, fail-closed, timeouts, HTTP errors, and truncated responses');
 })().catch(e=>{console.error(e);process.exit(1);});
