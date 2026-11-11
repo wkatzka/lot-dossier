@@ -144,3 +144,7 @@ Interactive status totals and priority/plan-conflict findings disclose animated 
 New reports retain separate GIS DEM and EPQS terrain measurements with citations, sample coverage, retrieval time, available EPQS raster metadata, and numerical differences. Both can share 3DEP data; differing sample densities are disclosed. The service is a multi-resolution DEM, not universally 1 m LiDAR. Source failures remain visible. Parcel-record, mapped-boundary and available plat acreages remain separate; mapped seasonal groundwater and nearby boring depths are compared with their differing spatial/temporal scope explicitly stated. Existing saved reports require regeneration to retrieve these new measurements.
 
 Validation: `node scripts/test-concern-navigation.js`, `node scripts/test-terrain-comparison.js`, pool and foundation evidence regression checks; browser fixture tested status → topic → visible section. Live four-point comparison verified against both USGS services (7.6% fitted slope and 6.6 ft relief from each). No new independent local terrain dataset is claimed.
+
+### Concrete light theme
+
+The app uses a fixed pale concrete-gray light palette across home, projects, reports, forms and downloaded reports. The user-supplied survey image appears only in the global masthead, with the Cornerpin lockup left and account/project buttons contained within it. Mobile navigation wraps inside the banner. Browser-checked homepage and project list at desktop and 390 px widths, plus report concern disclosure in the light palette.

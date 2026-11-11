@@ -561,7 +561,7 @@
     var css = Array.prototype.map.call(document.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n');
     var rings = JSON.stringify(last.parcel.rings.map(function (r) { return r.map(function (p) { return [p[1], p[0]]; }); }));
     var nav = document.querySelector('#rv .topnav').outerHTML;
-    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    var doc = '<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>' + esc(document.title) + '</title>' +
       '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">' +
       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><style>' + css + '</style></head>' +

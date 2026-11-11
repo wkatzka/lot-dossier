@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -753,6 +753,72 @@ body.project-frame-active #rv-body>.wrap>.eyebrow,body.project-frame-active #rv-
 @media print{#rv .concern-drawer{display:none}}
 
 #rv .tally-trigger.t-flag{color:var(--flag)}#rv .tally-trigger.t-watch{color:var(--watch)}#rv .tally-trigger.t-verify{color:var(--verify)}#rv .tally-trigger.t-ok{color:var(--ok)}
+
+/* Concrete light theme. The supplied survey image belongs only to the masthead. */
+:root[data-theme=light],html[data-theme=light] #home,html[data-theme=light] #rv,html[data-theme=light] #project-workspace{
+ --bg:#e9e9e5;--bg-2:#dedfda;--panel:#f5f5f1;--ink:#252d30;--muted:#596365;--line:#c5cac6;
+ --brand:#26393e;--brand-ink:#ffffff;--accent:#91502a;--focus:#a7491e;
+ --flag:#a52e27;--watch:#84540b;--verify:#245b89;--ok:#50635a;--desert-image:none;
+ color-scheme:light;color:var(--ink);text-shadow:none;
+}
+html[data-theme=light] body{background:var(--bg);color:var(--ink)}
+html[data-theme=light] body::before{display:none!important;background-image:none!important}
+html[data-theme=light] #home .hero>div:first-child{background:none}
+html[data-theme=light] #home nav.top{display:none}
+html[data-theme=light] #home{padding-top:30px}
+html[data-theme=light] #project-workspace{background:transparent}
+html[data-theme=light] #project-frame{color:var(--ink)}
+html[data-theme=light] #project-frame .project-identity p{color:var(--muted)}
+#cornerpin-global-nav{background:linear-gradient(90deg,rgba(4,17,24,.42),rgba(4,17,24,.08)),url('assets/cornerpin-banner.png') center 54% / cover no-repeat!important;border-bottom:1px solid #aeb7b6;color:#f5f6f3;box-shadow:0 5px 22px #20313818}
+#cornerpin-global-nav>div{min-height:190px;max-width:1440px;padding:34px 48px;gap:12px}
+#cornerpin-global-nav .cornerpin-wordmark{width:245px}
+#cornerpin-global-nav button{background:#0a1e2bc9;border-color:#c6d5db88;color:#fff;backdrop-filter:blur(6px)}
+#cornerpin-global-nav button:hover{background:#17384ae6;border-color:#e89b66}
+#cornerpin-global-nav button.global-brand{color:#fff;background:transparent;backdrop-filter:none;filter:drop-shadow(0 2px 6px #0008)}
+html[data-theme=light] #home input,html[data-theme=light] #home select,html[data-theme=light] #home select option,
+html[data-theme=light] #project-workspace input:not([type=checkbox]),html[data-theme=light] #project-workspace textarea,html[data-theme=light] #project-workspace select,
+html[data-theme=light] .account-dialog input{background:#fafaf7;color:var(--ink);border-color:#aab4b1;color-scheme:light}
+html[data-theme=light] #home input::placeholder{color:#697573}
+html[data-theme=light] #home .btn,html[data-theme=light] #rv .btn{background:var(--brand);color:#fff;border-color:var(--brand)}
+html[data-theme=light] #home .btn:hover,html[data-theme=light] #rv .btn:hover{background:#38535a;color:#fff}
+html[data-theme=light] #home .btn.ghost,html[data-theme=light] #rv .btn.ghost{background:#f5f5f1;color:var(--ink);border-color:#b8c1bd}
+html[data-theme=light] #home .btn.ghost:hover,html[data-theme=light] #rv .btn.ghost:hover{background:#dce3df}
+html[data-theme=light] #home .seg,html[data-theme=light] #home .drop,html[data-theme=light] #home .found,html[data-theme=light] #home .parse .status,html[data-theme=light] #home .chips span{background:#f4f5f0;border-color:var(--line)}
+html[data-theme=light] #home .seg button[aria-pressed=true]{background:var(--brand);color:#fff}
+html[data-theme=light] .source-preview{background:#f4f4ef;border-color:var(--line);border-radius:12px}
+html[data-theme=light] #project-workspace .pw-card,html[data-theme=light] #project-workspace .pw-stages>.pw-card,html[data-theme=light] #project-workspace .pw-project-grid>.pw-card{background:#f3f4ef;border:1px solid var(--line);border-radius:12px;box-shadow:0 5px 16px #26352f06;backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-theme=light] #project-workspace button,html[data-theme=light] #project-workspace .pw-link,html[data-theme=light] #project-frame button,html[data-theme=light] .report-chip{background:#f5f5f1;color:var(--ink);border-color:#aeb9b4}
+html[data-theme=light] #project-workspace button:hover:not(:disabled),html[data-theme=light] #project-workspace .pw-link:hover,html[data-theme=light] #project-frame button:hover,html[data-theme=light] .report-chip:hover{background:#dbe3dd;border-color:#718c81}
+html[data-theme=light] #project-workspace button[aria-selected=true],html[data-theme=light] #project-workspace button.primary,html[data-theme=light] #project-frame button[aria-current=page],html[data-theme=light] #project-frame button[aria-pressed=true],html[data-theme=light] .report-chip[aria-selected=true],html[data-theme=light] .report-chip[aria-current=page]{background:#29463f;color:#fff;border-color:#29463f}
+html[data-theme=light] #project-workspace a{color:#245c70}
+html[data-theme=light] #project-workspace .pw-status{color:#77501f}
+html[data-theme=light] #project-workspace .pw-warning,html[data-theme=light] #pw-message:not(:empty){background:#f9eddb;color:#67411c}
+html[data-theme=light] #project-workspace label.pw-backup-picker{background:#e9ede6;border-color:#98a89c}
+html[data-theme=light] .pw-backup-icon{color:#49685b}
+html[data-theme=light] .pw-backup-hint,html[data-theme=light] .site-documents blockquote{color:var(--muted)}
+html[data-theme=light] #rv .badge,html[data-theme=light] #rv .s-flag .badge,html[data-theme=light] #rv .s-watch .badge,html[data-theme=light] #rv .s-verify .badge,html[data-theme=light] #rv .s-ok .badge{background:#f5f5f1}
+html[data-theme=light] #rv #map{background:#d9dfd8;border-color:var(--line);color:var(--ink)}
+html[data-theme=light] #rv .concern-trigger:hover{color:#8b441c}
+html[data-theme=light] #rv .tally-trigger:hover,html[data-theme=light] #rv .tally-trigger[aria-expanded=true]{background:#dce3dc}
+html[data-theme=light] .account-dialog{background:var(--panel);color:var(--ink);border-color:var(--line)}
+html[data-theme=light] .account-dialog button{background:var(--brand);color:white}
+html[data-theme=light] .account-note,html[data-theme=light] .account-message{color:var(--muted)}
+html[data-theme=light] .analysis-progress{background:#f3f4ef;border-color:var(--line)}
+html[data-theme=light] .analysis-line,html[data-theme=light] .analysis-inline:not(:empty){color:var(--ink)}
+html[data-theme=light] .analysis-eyebrow{color:var(--accent)}
+html[data-theme=light] .analysis-time,html[data-theme=light] #project-workspace .analysis-copy p{color:var(--muted)}
+html[data-theme=light] .permit-progress progress,html[data-theme=light] .permit-progress progress::-webkit-progress-bar{background:#d3dcd5}
+html[data-theme=light] .permit-progress progress::-webkit-progress-value{background:#476e5c}
+html[data-theme=light] .permit-progress progress::-moz-progress-bar{background:#476e5c}
+html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(--bg)}
+@media(max-width:640px){
+ #cornerpin-global-nav>div{min-height:180px;padding:24px 20px;gap:8px;justify-content:flex-start}
+ #cornerpin-global-nav button.global-brand{flex-basis:100%;justify-content:flex-start;margin:0 0 12px}
+ #cornerpin-global-nav .cornerpin-wordmark{width:210px}
+ #cornerpin-global-nav button{font-size:12px;padding:10px 14px}
+ html[data-theme=light] #home{padding-top:18px}
+}
+@media print{html[data-theme=light] body{background:white}#cornerpin-global-nav{display:none!important}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -4804,7 +4870,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     var css = Array.prototype.map.call(document.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n');
     var rings = JSON.stringify(last.parcel.rings.map(function (r) { return r.map(function (p) { return [p[1], p[0]]; }); }));
     var nav = document.querySelector('#rv .topnav').outerHTML;
-    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    var doc = '<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>' + esc(document.title) + '</title>' +
       '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">' +
       '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><style>' + css + '</style></head>' +
