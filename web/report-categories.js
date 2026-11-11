@@ -43,6 +43,31 @@
       const next=e.key==='Home'?0:e.key==='End'?categories.length-1:(index+(e.key==='ArrowRight'?1:-1)+categories.length)%categories.length;
       select(categories[next]);categories[next].button.focus();
     });
+    // Disclosure controls are mounted only in the interactive report.
+    function disclosure(trigger, matches, after) {
+      const drawer=document.createElement('div');drawer.className='concern-drawer';
+      drawer.id='concern-drawer-'+root.querySelectorAll('.concern-drawer').length;
+      const inner=document.createElement('div');drawer.append(inner);
+      const links=document.createElement('div');links.className='report-chips';inner.append(links);
+      matches.forEach(c=>{const link=document.createElement('button');link.type='button';link.className='report-chip';link.textContent=c.label;
+        link.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});links.append(link);});
+      if(!matches.length)links.textContent='No findings in this status.';
+      (after||trigger).after(drawer);drawer.inert=true;
+      trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls',drawer.id);
+      trigger.addEventListener('click',()=>{const open=trigger.getAttribute('aria-expanded')!=='true';
+        root.querySelectorAll('.concern-drawer.is-open').forEach(d=>{d.classList.remove('is-open');d.inert=true;const t=root.querySelector('[aria-controls="'+d.id+'"]');if(t)t.setAttribute('aria-expanded','false');});
+        drawer.classList.toggle('is-open',open);drawer.inert=!open;trigger.setAttribute('aria-expanded',String(open));});
+    }
+    root.querySelectorAll('.tally > div').forEach(tile=>{
+      const status=['flag','watch','verify','ok'].find(s=>tile.classList.contains('t-'+s));
+      const button=document.createElement('button');button.type='button';button.className=tile.className+' tally-trigger';button.innerHTML=tile.innerHTML;tile.replaceWith(button);
+      disclosure(button,categories.filter(c=>c.nodes.some(n=>Array.from(n.querySelectorAll('.frow.s-'+status)).some(row=>!row.closest('.source-leads')))),button.parentElement);
+    });
+    root.querySelectorAll('[data-concern-category]').forEach(item=>{
+      const button=document.createElement('button');button.type='button';button.className='concern-trigger';
+      while(item.firstChild)button.append(item.firstChild);item.append(button);
+      disclosure(button,categories.filter(c=>c.key===item.dataset.concernCategory));
+    });
     if(categories.length)select(categories[0]);
     root.querySelectorAll('a[href="#packet"]').forEach(a=>{a.textContent='Open permit preparation →';});
   }

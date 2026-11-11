@@ -757,42 +757,51 @@
     return out;
   };
 
-  // One batched request to the 1 m 3DEP raster (values in meters). run() starts it early because it's the slowest call.
+  // GIS bare-earth DEM mosaic (variable source resolution; values in meters). run() starts it early because it's the slowest call.
   async function lidarSamples(pts) {
     try {
       var d = await fetchJSON('https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/getSamples', { form: {
         geometry: JSON.stringify({ points: pts.map(function (p) { return [+p[0].toFixed(7), +p[1].toFixed(7)]; }), spatialReference: { wkid: 4326 } }),
         geometryType: 'esriGeometryMultipoint', returnFirstValueOnly: 'true', f: 'json' }, timeout: 60000 });
       return (d.samples || []).filter(function (s) { return s.value !== 'NoData' && s.value != null && s.value !== ''; })
-        .map(function (s) { return [s.location.x, s.location.y, parseFloat(s.value) * FT_PER_M]; });
+        .map(function (s) { return [s.location.x, s.location.y, parseFloat(s.value) * FT_PER_M]; }).filter(function(s){return s.every(Number.isFinite) && s[2]>-1e5;});
     } catch (e) { return []; }
   }
 
+  async function epqsSamples(pts) {
+    return (await Promise.all(pts.map(function(p){
+      return fetchJSON('https://epqs.nationalmap.gov/v1/json',{params:{x:p[0],y:p[1],wkid:4326,units:'Feet',includeDate:'true'},timeout:30000,retries:1})
+        .then(function(r){if(r.value==null || r.value==='' || !Number.isFinite(+r.value) || +r.value<=-1e5)return null;var point=[p[0],p[1],+r.value];point.metadata={resolution:r.resolution,rasterId:r.rasterId,acquisitionDate:(r.attributes||{}).AcquisitionDate};return point;}).catch(function(){return null;});
+    }))).filter(Boolean);
+  }
   C.check_slope = async function (ctx) {
-    var pts = ctx.grid;
-    if (pts.length < 4) return [F('survey', 'Slope', 'verify', 'Lot too small to sample')];
-    var samples = await (ctx.elevation || lidarSamples(pts));
-    if (samples.length < 4) {
-      var sparse = pts.filter(function (_, i) { return i % Math.max(1, Math.floor(pts.length / 24)) === 0; });
-      var got = await Promise.all(sparse.map(function (p) {
-        return fetchJSON('https://epqs.nationalmap.gov/v1/json', { params: { x: p[0], y: p[1], wkid: 4326, units: 'Feet', includeDate: 'false' }, timeout: 30000, retries: 2 })
-          .then(function (r) { return r.value > -1e5 ? [p[0], p[1], +r.value] : null; }).catch(function () { return null; });
-      }));
-      samples = got.filter(Boolean);
+    var pts=ctx.grid;
+    if(pts.length<4)return [F('survey','GIS terrain','verify','Lot too small to sample')];
+    var sparse=pts.filter(function(_,i){return i%Math.max(1,Math.ceil(pts.length/24))===0;});
+    var results=await Promise.all([ctx.elevation||lidarSamples(pts),ctx.elevationComparison||epqsSamples(sparse)]);
+    var definitions=[['USGS 3DEP GIS DEM mosaic','https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer'],['USGS Elevation Point Query Service','https://epqs.nationalmap.gov/v1/docs']];
+    var rows=[],measurements=[];
+    results.forEach(function(samples,i){
+      var source=definitions[i], expected=i?sparse.length:pts.length;
+      if(samples.length<4){rows.push(F('survey','GIS terrain · '+source[0],'verify','Elevation source unavailable or insufficient samples',samples.length+' usable samples of '+expected+' requested. No zero elevation or agreement inferred.',source[0],source[1]));return;}
+      var zs=samples.map(function(p){return p[2];}),lo=Math.min.apply(null,zs),hi=Math.max.apply(null,zs),fit=fitSlope(samples,ctx.lat0);
+      if(!fit.every(Number.isFinite)){rows.push(F('survey','GIS terrain · '+source[0],'verify','Sample geometry cannot support a slope calculation','Usable points are collinear or degenerate; no slope inferred.',source[0],source[1]));return;}
+      var m={source:source[0],url:source[1],samples:samples.length,requested:expected,slope:fit[0],relief:hi-lo,elev:zs.reduce(function(a,b){return a+b;},0)/zs.length,min:lo,max:hi,local:fit[2],points:samples,metadata:samples.map(function(p){return p.metadata;}).filter(Boolean),checkedAt:new Date().toISOString()};measurements.push(m);
+      var status=m.slope<8&&m.local<15?'ok':m.slope<15&&m.local<25?'watch':'flag';
+      rows.push(F('survey','GIS terrain · '+source[0],samples.length<expected?'verify':status,m.slope.toFixed(1)+'% fitted slope · '+m.relief.toFixed(1)+' ft relief',
+        samples.length+' of '+expected+' requested GIS samples. Mean elevation '+m.elev.toFixed(1)+' ft; range '+lo.toFixed(1)+'–'+hi.toFixed(1)+' ft; steepest sampled local slope '+m.local.toFixed(1)+'%; downhill '+compass(fit[1])+'. Resolution varies by underlying DEM. These are computed screening metrics, not survey measurements. '+(m.metadata.length?' Returned source metadata: '+Array.from(new Set(m.metadata.map(function(d){return 'raster '+d.rasterId+', resolution '+d.resolution+' m, acquired '+(d.acquisitionDate||'unknown');}))).join('; ')+'. ':'')+'Both services may share USGS 3DEP source data; agreement is not independent corroboration. Checked '+m.checkedAt+'. Responses may be cached for up to seven days.',source[0],source[1],status==='flag'?ctx.cost('steep_site_work'):null));
+    });
+    ctx.facts.terrainSources=measurements;
+    if(measurements.length){var primary=measurements[0];ctx.facts.slope=primary.slope;ctx.facts.relief=primary.relief;ctx.facts.elev=primary.elev;}
+    if(measurements.length===2){
+      var first=measurements[0],second=measurements[1],paired=[];
+      second.points.forEach(function(p){var q=first.points.find(function(q){return Math.abs(q[0]-p[0])<1e-6&&Math.abs(q[1]-p[1])<1e-6;});if(q)paired.push(Math.abs(p[2]-q[2]));});
+      rows.push(F('survey','Terrain source comparison','verify','Slope difference '+Math.abs(first.slope-second.slope).toFixed(2)+' percentage points · relief difference '+Math.abs(first.relief-second.relief).toFixed(1)+' ft',
+        (paired.length?paired.length+' matching coordinates; mean absolute elevation difference '+(paired.reduce(function(a,b){return a+b;},0)/paired.length).toFixed(2)+' ft; maximum '+Math.max.apply(null,paired).toFixed(2)+' ft. ':'No matching coordinates; pointwise agreement cannot be computed. ')+
+        'See both cited source rows above. Slope and relief use different sample densities; differences can reflect sampling and DEM resolution. No engineering agreement tolerance has been established. Shared underlying data is possible.','USGS GIS DEM / EPQS comparison',definitions[0][1]));
     }
-    if (samples.length < 4) return [F('survey', 'Slope', 'verify', 'Elevation service unavailable')];
-    var zs = samples.map(function (s) { return s[2]; }), lo = Math.min.apply(0, zs), hi = Math.max.apply(0, zs);
-    var fit = fitSlope(samples, ctx.lat0), slope = fit[0], local = fit[2];
-    ctx.facts.slope = slope; ctx.facts.relief = hi - lo; ctx.facts.elev = zs.reduce(function (s, z) { return s + z; }, 0) / zs.length;
-    var status = slope < 8 && local < 15 ? 'ok' : slope < 15 && local < 25 ? 'watch' : 'flag';
-    var detail = samples.length + ' LiDAR elevation samples across the lot. Elevation ' + Math.round(lo) + '-' + Math.round(hi) + ' ft (' + Math.round(hi - lo) +
-      ' ft of relief); overall slope ' + slope.toFixed(1) + '%, falling to the ' + compass(fit[1]) + '; steepest local slope about ' + Math.round(local) + '%.';
-    if (status !== 'ok') detail += ' Steeper ground means more excavation, retaining walls, longer driveways and possibly a walkout design.';
-    return [F('survey', 'Slope (LiDAR)', status, slope.toFixed(1) + '% average slope, ' + Math.round(hi - lo) + ' ft relief', detail,
-      'USGS 3DEP 1 m elevation', 'https://apps.nationalmap.gov/', status === 'flag' ? ctx.cost('steep_site_work') : null),
-      F('survey', 'Boundary & topo survey', 'verify', 'Licensed survey with topography required',
-        'Public LiDAR is good for screening, but permits and the site plan need a stamped boundary and topographic survey.', null, null, ctx.cost('survey_topo'),
-        'Order a boundary + topo survey (often 2-4 weeks).')];
+    rows.push(F('survey','Boundary & topo survey','verify','Licensed survey with topography required','GIS elevation supports screening; permit and placement decisions require a stamped boundary and topographic survey.',null,null,ctx.cost('survey_topo'),'Order a boundary + topo survey.'));
+    return rows;
   };
 
   C.check_utilities = async function (ctx) {
@@ -1697,7 +1706,7 @@
     return segs;
   }
 
-  // Draft site plan: lot lines, setback (buildable) area, house footprint placed toward the street, driveway, LiDAR
+  // Draft site plan: lot lines, setback (buildable) area, house footprint placed toward the street, driveway, GIS elevation
   // contours, distances to lot lines, north arrow and scale. Public data only; a surveyor finalizes it.
   async function sitePlan(ctx) {
     var lat0 = ctx.parcel.cy, F2 = FT_PER_M, toFt = function (q) { var m = toLocal(q[0], q[1], lat0); return [m[0] * F2, m[1] * F2]; };
@@ -1786,7 +1795,7 @@
     var labels = streets.map(function (r) { var e = r.edges[Math.floor(r.edges.length / 2)]; return { at: outside(e, 28), text: Math.round(r.len) + "' " + (r === front ? 'front' : 'street side') + ' (' + streetCase(r.road) + ')' }; })
       .concat(edges.filter(function (e) { return !e.road && e.len > 30; }).map(function (e) { return { at: outside(e, 16), text: Math.round(e.len) + "' " + e.kind }; }));
     var build = [];
-    // LiDAR contours on a regular grid over the lot (<= ~900 samples).
+    // GIS elevation contours on a regular grid over the lot (<= ~900 samples).
     var xs = lot.map(function (p) { return p[0]; }), ys = lot.map(function (p) { return p[1]; });
     var minX = Math.min.apply(0, xs) - 20, maxX = Math.max.apply(0, xs) + 20, minY = Math.min.apply(0, ys) - 20, maxY = Math.max.apply(0, ys) + 20;
     var step = Math.max(12, Math.sqrt((maxX - minX) * (maxY - minY) / 900)), nx = Math.ceil((maxX - minX) / step) + 1, ny = Math.ceil((maxY - minY) / step) + 1;
@@ -1840,7 +1849,7 @@
     // North arrow and scale bar.
     o.push('<g transform="translate(' + (DW - 40) + ',' + (M + 10) + ')"><path d="M0 -14 L7 10 L0 5 L-7 10 Z" fill="#111"/><text y="24" text-anchor="middle" font-weight="bold">N</text></g>');
     var bar = [20, 50, 100, 200, 500].filter(function (v) { return v * s <= 160; }).pop() || 20;
-    o.push('<g transform="translate(' + M + ',' + (H - M - 10) + ')"><rect width="' + (bar * s).toFixed(1) + '" height="5" fill="#111"/><text y="18">' + bar + " ft</text><text x=\"" + ((bar * s) + 8).toFixed(1) + '" y="6">Contours every ' + sp.interval + " ft (USGS 3DEP 1 m LiDAR)</text></g>");
+    o.push('<g transform="translate(' + M + ',' + (H - M - 10) + ')"><rect width="' + (bar * s).toFixed(1) + '" height="5" fill="#111"/><text y="18">' + bar + " ft</text><text x=\"" + ((bar * s) + 8).toFixed(1) + '" y="6">Contours every ' + sp.interval + " ft (USGS 3DEP GIS DEM)</text></g>");
     // Title block.
     o.push('<g transform="translate(' + (DW + 10) + ',' + M + ')"><rect width="' + (W - DW - 10 - M) + '" height="' + (H - 2 * M) + '" fill="#fafafa" stroke="#ccc"/>');
     var ty = 22, line = function (t, b) {
@@ -1854,7 +1863,7 @@
     line('Placement checks setbacks only. Buildability is unverified.');
     info.forEach(function (r) { if (r === '') { ty += 6; return; } line(r); });
     ty += 8;
-    ['Drawn from public data: county parcel boundary,', 'recorded plat setbacks, USGS LiDAR. Not a survey.', 'A licensed surveyor must verify the boundary,', 'easements and topography before submittal.']
+    ['Drawn from public data: county parcel boundary,', 'recorded plat setbacks, USGS GIS elevation. Not a survey.', 'A licensed surveyor must verify the boundary,', 'easements and topography before submittal.']
       .forEach(function (t) { o.push('<text x="12" y="' + ty + '" fill="#b42318" font-size="10">' + e(t) + '</text>'); ty += 13; });
     o.push('</g></svg>');
     return o.join('');
@@ -1920,7 +1929,7 @@
     I({ group: 'Application', title: 'Application data (parcel, legal description, zoning, building data, design loads, valuation)', status: 'ready', who: 'Cornerpin', lead: [0, 0],
       detail: 'Prefilled below from the county record, the recorded plat, the zoning and the plan. Copy it into the permit portal.' });
     I({ group: 'Drawings', title: 'Scaled site plan with existing and proposed contours and distances to property lines', status: sp && !sp.error ? 'drafted' : 'pro', who: 'Surveyor (final)', lead: [10, 20], why: '10-20-909(12)(b)',
-      detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from 1 m LiDAR. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'easements are not mapped and house placement is unverified against them.') : 'Order a boundary and topographic survey.' });
+      detail: sp && !sp.error ? 'Draft below: lot lines, setback area, ' + (sp.house ? 'house placed from the plan dimensions, driveway, distances to lot lines, ' : '') + 'contours from GIS DEM. A surveyor needs to verify the boundary and topography; ' + (sp.house && !sp.fits ? 'as drawn, the house does not fit inside the setbacks.' : 'easements are not mapped and house placement is unverified against them.') : 'Order a boundary and topographic survey.' });
     var sheetRow = function (title, keys, who, why) {
       var got = keys.filter(has), status = !hasPlan ? 'pro' : got.length === keys.length ? 'ready' : got.length ? 'partial' : 'pro';
       I({ group: 'Drawings', title: title, status: status, who: who, lead: status === 'ready' ? [0, 0] : [5, 15], why: why,
@@ -2095,7 +2104,7 @@
     ['check_parcel', 'Parcel boundary & assessor record'], ['weber_assessor', 'County assessor value'], ['check_jurisdiction', 'City / county jurisdiction'], ['check_contacts', 'Building department & city contacts'],
     ['check_zoning', 'Zoning district'], ['check_historic', 'Historic district'], ['check_water', 'Culinary water, irrigation & water rights'], ['check_landslides', 'Mapped landslides'],
     ['check_faults', 'Active faults'], ['check_liquefaction_groundwater', 'Liquefaction & groundwater'], ['check_flood', 'FEMA flood zones'], ['check_districts', 'Service & financing districts'],
-    ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'LiDAR slope & relief'],
+    ['check_seismic', 'Seismic design category'], ['check_boreholes', 'Nearby test borings'], ['check_soils_septic', 'Soils, septic & sewer'], ['check_slope', 'GIS terrain & source comparison'],
     ['check_utilities', 'Power, gas & internet'], ['check_access_fire', 'Road access & wildfire'], ['check_ccr_permits', 'CC&Rs, design review, fees'], ['check_snow', 'Utah ground snow load'], ['check_performance', 'Home performance & restrictions'], ['check_documents', 'Recorded plat & public records'], ['check_ugs_archive', 'State geologic report archive'],
     ['check_public_surveys', 'Public filed surveys'], ['check_public_research', 'Federal minerals, parent parcels & survey geometry'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
@@ -2103,7 +2112,7 @@
   async function run(parcel, plan, costs, onStep, documents) {
     var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: {},
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
-    if (ctx.grid.length >= 4) ctx.elevation = lidarSamples(ctx.grid);
+    if (ctx.grid.length >= 4) {ctx.elevation = lidarSamples(ctx.grid);ctx.elevationComparison=epqsSamples(ctx.grid.filter(function(_,i){return i%Math.max(1,Math.ceil(ctx.grid.length/24))===0;}));}
     var findings = [];
     ctx.findings = findings;
     // Start the slow document lookup now so it runs alongside the map checks (jurisdiction resolves early; refine later).
@@ -2119,6 +2128,16 @@
         findings.push(F('land', STEPS[i][1], 'verify', 'Automated check failed', String(e && e.message || e).slice(0, 300)));
       }
     }
+    var areas=[{name:'Parcel record',value:Number(parcel.attrs.PARCEL_ACRES),url:parcel.attrs.ASSESSOR_SRC||lirUrl(parcel.county),basis:'Published parcel acreage'},
+      {name:'GIS parcel boundary',value:ctx.facts.lot_sf/43560,url:lirUrl(parcel.county),basis:'Calculated from mapped outer boundary; holes and survey accuracy unresolved'},
+      {name:'Recorded plat extraction',value:Number((ctx.facts.parcelDoc||{}).acres),url:'https://webercountyutah.gov/parcelsearch/ownership-info.php?id='+encodeURIComponent(parcel.id),basis:'Machine-read plat acreage; confirm lot attribution against original sheets'}].filter(function(m){return Number.isFinite(m.value)&&m.value>0;});
+    if(Number.isFinite(ctx.facts.water_table_in) && ctx.facts.boreholes && Number.isFinite(ctx.facts.boreholes.gwMin)){
+      findings.push(F('geo','Groundwater source comparison','verify','Mapped seasonal depth '+(ctx.facts.water_table_in/12).toFixed(2)+' ft · nearby boring minimum '+ctx.facts.boreholes.gwMin+' ft',
+        'Absolute difference '+Math.abs(ctx.facts.water_table_in/12-ctx.facts.boreholes.gwMin).toFixed(2)+' ft. USDA SSURGO estimates mapped seasonal groundwater; UGS archives measurements at nearby borings, potentially at different dates and locations. These are not matched site measurements, so agreement or disagreement cannot establish groundwater beneath the proposed building. See the separately cited Soils and Nearby test borings findings.','USDA SSURGO and UGS boring archive','https://borehole.geology.utah.gov/'));
+    }
+    ctx.facts.areaSources=areas;
+    areas.forEach(function(m){findings.push(F('land','Lot area · '+m.name,'verify',m.value.toFixed(4)+' acres ('+Math.round(m.value*43560)+' sq ft)',m.basis+'. Values are retained separately to compare source agreement; no value establishes a surveyed legal area.',m.name,m.url));});
+    if(areas.length>1){var values=areas.map(function(m){return m.value;});findings.push(F('land','Lot area source comparison','verify','Source spread '+((Math.max.apply(null,values)-Math.min.apply(null,values))*43560).toFixed(1)+' sq ft','Compare the individually cited parcel, GIS and available plat measurements above. Parcel records and GIS can share an upstream source; matching values are not independent confirmation.'));}
     return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
   }
 

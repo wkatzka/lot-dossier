@@ -136,3 +136,11 @@ Cornerpin-specific derived credential before accessing the private ledger;
 ordinary signed-in users cannot alter it. No extra serverless function is used.
 
 Public-source AI review uses `lib/site-document-reader.js`. Scan all public documents processes current PDFs sequentially, saves each result, and resumes remaining documents after interruption. Cache keys include the document hash and target parcel context. Observations retain page quotes and applicability labels; they never populate proposed-building permit fields. The same global AI budget applies.
+
+### Concern navigation and source comparisons
+
+Interactive status totals and priority/plan-conflict findings disclose animated topic links. Selecting a link opens and scrolls to that category, with keyboard focus and reduced-motion support. Exported reports retain their static content.
+
+New reports retain separate GIS DEM and EPQS terrain measurements with citations, sample coverage, retrieval time, available EPQS raster metadata, and numerical differences. Both can share 3DEP data; differing sample densities are disclosed. The service is a multi-resolution DEM, not universally 1 m LiDAR. Source failures remain visible. Parcel-record, mapped-boundary and available plat acreages remain separate; mapped seasonal groundwater and nearby boring depths are compared with their differing spatial/temporal scope explicitly stated. Existing saved reports require regeneration to retrieve these new measurements.
+
+Validation: `node scripts/test-concern-navigation.js`, `node scripts/test-terrain-comparison.js`, pool and foundation evidence regression checks; browser fixture tested status → topic → visible section. Live four-point comparison verified against both USGS services (7.6% fitted slope and 6.6 ft relief from each). No new independent local terrain dataset is claimed.

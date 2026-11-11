@@ -1,0 +1,14 @@
+'use strict';
+const {JSDOM}=require('jsdom');const fs=require('fs');const assert=require('node:assert/strict');
+const dom=new JSDOM('<div id="rv"><div class="wrap"><div class="hero2"><div class="tally"><div class="t-flag"><b>1</b><span>Concerns</span></div><div class="t-ok"><b>0</b><span>No issue identified</span></div></div><ul><li data-concern-category="survey">Steep terrain</li></ul></div><section class="group" data-category="land"><article class="frow s-flag source-lead-test"></article></section><section class="group" data-category="survey"><article class="frow s-flag"></article></section></div></div>',{runScripts:'outside-only'});
+const w=dom.window;w.matchMedia=()=>({matches:false});let scrolled=0;w.HTMLElement.prototype.scrollIntoView=function(){scrolled++;};
+w.eval(fs.readFileSync('web/report-categories.js','utf8'));w.ReportCategories.mount(w.document.querySelector('#rv'));
+const root=w.document;const concern=root.querySelector('.t-flag');concern.click();assert.equal(concern.getAttribute('aria-expanded'),'true');
+const drawer=root.getElementById(concern.getAttribute('aria-controls'));assert.equal(drawer.querySelectorAll('button').length,2);
+Array.from(drawer.querySelectorAll('button')).find(b=>b.textContent==='Survey & terrain').click();
+assert.equal(root.querySelector('[data-category="survey"].group').hidden,false);assert.equal(root.querySelector('[data-category="land"].group').hidden,true);assert.equal(scrolled,1);
+root.querySelector('.concern-trigger').click();assert.equal(concern.getAttribute('aria-expanded'),'false');assert.equal(root.querySelectorAll('.is-open').length,1);
+root.querySelector('.concern-trigger').click();assert.equal(root.querySelectorAll('.is-open').length,0);
+root.querySelector('.t-ok').click();assert.match(root.querySelector('.is-open').textContent,/No findings/);
+root.querySelector('#category-survey').dispatchEvent(new w.KeyboardEvent('keydown',{key:'Home',bubbles:true}));assert.equal(root.querySelector('#category-land').getAttribute('aria-selected'),'true');
+console.log('Concern navigation: status → topic → visible section, individual concern, close/reopen, empty status and keyboard passed.');
