@@ -946,6 +946,49 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 @media(min-width:701px){#project-workspace .application-workspace .city-fields{max-height:650px;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}}
 #project-workspace .permit-draft-page>.city-application{background:transparent!important;border:0!important}
 
+/* Findings tables explicitly override the legacy report's numeric table rules. */
+#rv .report-picker .cp-panel-head{padding:18px 20px}
+#rv .report-picker .cp-panel-head h2{font-size:21px;margin:0 0 5px;letter-spacing:-.4px}
+#rv .report-picker .cp-panel-head p{margin:0;font-size:14px;line-height:1.5}
+#rv .topic-filters{padding:14px 20px;gap:16px;align-items:end}
+#rv .topic-filters label:first-child{flex:1;max-width:420px;min-width:240px}
+#rv .topic-filters label{font-size:12px;color:var(--cp-muted);gap:5px}
+#rv .topic-filters input,#rv .topic-filters select{width:100%;font:inherit;font-size:14px;height:42px;min-height:42px;padding:9px 12px}
+#rv .topic-filters label:nth-child(2){width:180px}
+#rv .topic-count{color:var(--cp-muted)}
+#rv .topic-table{table-layout:fixed;width:100%;min-width:760px}
+#rv .topic-table th,#rv .topic-table td{padding:8px 16px;vertical-align:middle;line-height:1.4;text-align:center;white-space:normal;text-transform:none;letter-spacing:normal;font-size:14px;border-bottom:1px solid var(--cp-line);overflow-wrap:normal}
+#rv .topic-table thead th{font-size:12px;font-weight:600;color:var(--cp-muted);padding-top:12px;padding-bottom:12px}
+#rv .topic-table th:first-child{width:24%;text-align:left}
+#rv .topic-table tbody th{font-weight:600;color:var(--cp-ink)}
+#rv .topic-table th:nth-child(2),#rv .topic-table th:nth-child(3),#rv .topic-table th:nth-child(4){width:8%}
+#rv .topic-table th:nth-child(5){width:13%}
+#rv .topic-table th:nth-child(6){width:23%;text-align:left}
+#rv .topic-table td:nth-child(6){text-align:left;color:var(--cp-muted);font-size:13px}
+#rv .topic-table th:last-child{width:16%}
+#rv .topic-table td:last-child{text-align:right}
+#rv .topic-table td.is-zero{color:#727c78}
+#rv .topic-table button{font:inherit;font-size:13px;padding:0;min-height:40px;border:0;background:transparent;color:var(--cp-primary);white-space:nowrap}
+#rv .topic-table tr:has([aria-selected="true"]){background:#edf2ee}
+#rv .topic-table tbody tr:last-child>*{border-bottom:0}
+#rv .status-findings-scroll{max-height:360px;overflow:auto;overscroll-behavior:contain;margin:4px 0 20px;border:1px solid var(--cp-line);border-radius:6px;background:var(--cp-surface)}
+#rv .status-findings-table{table-layout:fixed;width:100%;min-width:380px}
+#rv .status-findings-table th,#rv .status-findings-table td{text-align:left;white-space:normal;vertical-align:top;padding:12px;font-size:13px;line-height:1.5;letter-spacing:normal;text-transform:none;color:var(--cp-ink);border-bottom:1px solid var(--cp-line);overflow-wrap:anywhere}
+#rv .status-findings-table thead th{position:sticky;top:0;background:#edf0eb;font-size:12px;color:var(--cp-muted);font-weight:600;z-index:1}
+#rv .status-findings-table th:first-child{width:32%}
+#rv .status-findings-table th:last-child{width:100px}
+#rv .status-findings-table tbody th{font-weight:600}
+#rv .status-findings-table small{display:block;font-size:11px;font-weight:400;color:var(--cp-muted);margin-bottom:3px}
+#rv .status-findings-table button{background:transparent;border:0;padding:0;min-height:40px;font:inherit;font-size:12px;color:var(--cp-primary);text-decoration:underline;white-space:nowrap}
+#rv .status-findings-scroll>p{padding:12px;margin:0}
+#rv .status-findings-table tr:last-child>*{border-bottom:0}
+#rv .frow{scroll-margin-top:24px}
+@media(max-width:700px){#rv .topic-filters{padding:12px 14px}#rv .topic-filters label:first-child{flex-basis:100%;max-width:none;min-width:0}#rv .topic-table th,#rv .topic-table td{padding-left:12px;padding-right:12px}#rv .status-findings-table th,#rv .status-findings-table td{padding:10px 8px}#rv .status-findings-table th:last-child{width:88px}}
+#rv .topic-resources{display:flex;flex-wrap:wrap;gap:24px;padding:8px 20px;border-top:1px solid var(--cp-line)}
+#rv .topic-resources:empty{display:none}
+#rv .topic-resources button{border:0;background:transparent;padding:0;min-height:40px;font-size:13px;color:var(--cp-primary);text-decoration:underline}
+@media(max-width:700px){#rv .status-findings-table{min-width:0}#rv .status-findings-table th:first-child{width:31%}#rv .status-findings-table th:last-child{width:62px}#rv .status-findings-table button{white-space:normal;font-size:11px;text-align:left}#rv .status-findings-table th,#rv .status-findings-table td{font-size:12px;padding:10px 7px}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -5044,18 +5087,18 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     const picker=document.createElement('section');picker.className='report-picker cp-panel';picker.innerHTML='<div class="cp-panel-head"><h2>Findings by topic</h2><p>Review open questions and compare their sources.</p></div><div class="topic-filters"><label>Search topics or evidence<input type="search" id="topic-search" placeholder="Search topics or evidence…"></label><label>Status<select id="topic-status"><option value="">All statuses</option><option value="flag">Concerns</option><option value="watch">Review</option><option value="verify">Verify</option><option value="ok">No issue identified</option></select></label><span role="status" id="topic-count"></span></div><div class="topic-table-scroll"><table class="topic-table"><thead><tr><th>Topic</th><th>Concerns</th><th>Review</th><th>Verify</th><th>No issue identified</th><th>Evidence</th><th></th></tr></thead><tbody></tbody></table></div>';
     const summary=root.querySelector('.hero2');if(!summary)return;const heading=document.createElement('div');heading.className='cp-page-heading';heading.innerHTML='<div><h2>Site review</h2><p>Public evidence, mapped conditions, and the questions still to resolve.</p></div>';summary.before(heading);summary.after(picker);
     const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','region');panel.tabIndex=-1;picker.after(panel);
-    const chips=picker.querySelector('tbody');
+    const chips=picker.querySelector('tbody');const resources=document.createElement('nav');resources.className='topic-resources';resources.setAttribute('aria-label','Related site information');picker.append(resources);
     categories.forEach(c=>{
       c.nodes.forEach(n=>panel.appendChild(n));
       const rows=c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads'));
       c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.classList.contains('s-'+s)).length]));
       const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';name.textContent=c.label;tr.append(name);
-      for(const status of ['flag','watch','verify','ok']){const td=document.createElement('td');td.className='topic-'+status;td.textContent=c.counts[status];tr.append(td);}
-      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);evidence.textContent=rows.length+' findings'+(leads?' · '+leads+' record leads':'');tr.append(evidence);
-      const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='topic-details';b.id='category-'+c.key;b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;b.textContent='View details';b.setAttribute('aria-label','View '+c.label+' details');td.append(b);tr.append(td);chips.append(tr);c.button=b;c.tableRow=tr;
+      for(const status of ['flag','watch','verify','ok']){const td=document.createElement('td');td.className='topic-'+status;td.textContent=c.counts[status];if(!c.counts[status])td.classList.add('is-zero');tr.append(td);}
+      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);evidence.textContent=rows.length+(rows.length===1?' finding':' findings')+(leads?' · '+leads+' record leads':'');tr.append(evidence);
+      const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='topic-details';b.id='category-'+c.key;b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;b.textContent='View details';b.setAttribute('aria-label','View '+c.label+' details');td.append(b);tr.append(td);c.resource=['contacts','actions','costs'].includes(c.key);if(c.resource){b.textContent=c.label;resources.append(b);}else chips.append(tr);c.button=b;c.tableRow=tr;
       b.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
     });
-    function filter(){const term=picker.querySelector('input').value.toLowerCase(),status=picker.querySelector('select').value;let count=0;categories.forEach(c=>{const match=(!status||c.counts[status]>0)&&(c.label+' '+c.nodes.map(n=>n.textContent).join(' ')).toLowerCase().includes(term);c.tableRow.hidden=!match;if(match)count++;});picker.querySelector('#topic-count').textContent=count+' topics';}
+    function filter(){const term=picker.querySelector('input').value.toLowerCase(),status=picker.querySelector('select').value;let count=0;categories.forEach(c=>{const match=(!status||c.counts[status]>0)&&(c.label+' '+c.nodes.map(n=>n.textContent).join(' ')).toLowerCase().includes(term);c.tableRow.hidden=!match;if(match&&!c.resource)count++;});picker.querySelector('#topic-count').textContent=count+' topics';}
     picker.querySelector('input').addEventListener('input',filter);picker.querySelector('select').addEventListener('change',filter);filter();
     function select(current) {
       categories.forEach(c=>{const active=c===current;c.button.setAttribute('aria-selected',String(active));c.button.tabIndex=0;c.nodes.forEach(n=>n.hidden=!active);});
@@ -5063,19 +5106,27 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     }
     chips.addEventListener('keydown',e=>{
       if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();
-      const index=categories.findIndex(c=>c.button===document.activeElement);
-      const next=e.key==='Home'?0:e.key==='End'?categories.length-1:(index+(e.key==='ArrowRight'?1:-1)+categories.length)%categories.length;
-      select(categories[next]);categories[next].button.focus();
+      const visible=categories.filter(c=>!c.resource&&!c.tableRow.hidden);if(!visible.length)return;const index=visible.findIndex(c=>c.button===document.activeElement);
+      const next=e.key==='Home'?0:e.key==='End'?visible.length-1:(index+(e.key==='ArrowRight'?1:-1)+visible.length)%visible.length;
+      select(visible[next]);visible[next].button.focus();
     });
     // Disclosure controls are mounted only in the interactive report.
-    function disclosure(trigger, matches, after) {
+    function disclosure(trigger, matches, after, status) {
       const drawer=document.createElement('div');drawer.className='concern-drawer';
       drawer.id='concern-drawer-'+root.querySelectorAll('.concern-drawer').length;
       const inner=document.createElement('div');drawer.append(inner);
-      const links=document.createElement('div');links.className='report-chips';inner.append(links);
-      matches.forEach(c=>{const link=document.createElement('button');link.type='button';link.className='report-chip';link.textContent=c.label;
-        link.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});links.append(link);});
-      if(!matches.length)links.textContent='No findings in this status.';
+      const scroll=document.createElement('div');scroll.className='status-findings-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Finding summaries');inner.append(scroll);
+      const table=document.createElement('table');table.className='status-findings-table';table.innerHTML='<thead><tr><th scope="col">Topic / finding</th><th scope="col">Summary</th><th scope="col"><span class="sr-only">Details</span></th></tr></thead><tbody></tbody>';scroll.append(table);
+      const body=table.querySelector('tbody');let count=0;
+      matches.forEach(c=>c.nodes.forEach(n=>Array.from(n.querySelectorAll('.frow')).filter(row=>!row.closest('.source-leads')&&(!status||row.classList.contains('s-'+status))).forEach(row=>{
+        count++;const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';
+        const topic=document.createElement('small');topic.textContent=c.label;name.append(topic);
+        const title=document.createElement('span');title.textContent=row.querySelector('.item')?.textContent||c.label;name.append(title);tr.append(name);
+        const summary=document.createElement('td');summary.textContent=row.querySelector('h4')?.textContent||row.querySelector('p')?.textContent||row.textContent||'Open the finding for available evidence.';tr.append(summary);
+        const action=document.createElement('td'),link=document.createElement('button');link.type='button';link.textContent='View finding';link.setAttribute('aria-label','View '+title.textContent+' in '+c.label);link.dataset.findingTopic=c.key;
+        link.addEventListener('click',()=>{select(c);row.tabIndex=-1;row.focus({preventScroll:true});row.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});action.append(link);tr.append(action);body.append(tr);
+      })));
+      if(!count){scroll.replaceChildren();const empty=document.createElement('p');empty.textContent='No findings in this status.';scroll.append(empty);}
       (after||trigger).after(drawer);drawer.inert=true;
       trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls',drawer.id);
       trigger.addEventListener('click',()=>{const open=trigger.getAttribute('aria-expanded')!=='true';
@@ -5085,7 +5136,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     root.querySelectorAll('.tally > div').forEach(tile=>{
       const status=['flag','watch','verify','ok'].find(s=>tile.classList.contains('t-'+s));
       const button=document.createElement('button');button.type='button';button.className=tile.className+' tally-trigger';button.innerHTML=tile.innerHTML;tile.replaceWith(button);
-      disclosure(button,categories.filter(c=>c.nodes.some(n=>Array.from(n.querySelectorAll('.frow.s-'+status)).some(row=>!row.closest('.source-leads')))),button.parentElement);
+      disclosure(button,categories.filter(c=>c.nodes.some(n=>Array.from(n.querySelectorAll('.frow.s-'+status)).some(row=>!row.closest('.source-leads')))),button.parentElement,status);
     });
     root.querySelectorAll('[data-concern-category]').forEach(item=>{
       const button=document.createElement('button');button.type='button';button.className='concern-trigger';
