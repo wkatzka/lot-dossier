@@ -357,7 +357,7 @@
       '<div class="meta"><span>' + esc((a.PARCEL_CITY || '') + ', UT') + '</span><span>' + esc(legal) + '</span><span>Parcel ' + esc(r.parcel.id) + ' · ' + esc(r.parcel.county) +
       ' County</span><span>' + esc(a.PARCEL_ACRES) + ' acres</span></div>' +
       '<div class="hero2"><div id="map" role="img" aria-label="Aerial map of the parcel boundary"></div><div class="card">' +
-      '<div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
+      '<h2 class="site-summary-title">' + (count('flag') + count('watch') + count('verify')) + ' items need review or verification</h2><div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>No issue identified</span></div></div>' +
       (f.some(sourceLead)?'<p class="source-lead-note">'+f.filter(sourceLead).length+' historical/source leads are grouped under their topics, separate from these finding totals.</p>':'')+checklistSummary(f, state, saved) +
       '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +

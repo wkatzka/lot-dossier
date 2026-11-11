@@ -19,22 +19,24 @@
     const next=root.querySelector('.two');
     if(next){Array.from(next.children).forEach((node,i)=>add(i?'costs':'actions',i?'Cost considerations':'Next steps',[node])); next.replaceWith(...Array.from(next.children));}
     const packet=root.querySelector('#packet');if(packet)packet.remove();
-    const picker=document.createElement('section');picker.className='report-picker';picker.innerHTML='<h2>Findings by topic</h2><p>Select a topic below. Dots show the highest-priority status: red concern, amber review, blue verification needed, gray no issue identified. Source leads are not confirmed restrictions.</p><div class="report-chips" role="tablist" aria-label="Site report categories"></div>';
-    const summary=root.querySelector('.hero2');if(!summary)return;summary.after(picker);
-    const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','tabpanel');panel.tabIndex=0;picker.after(panel);
-    const chips=picker.querySelector('.report-chips');
+    const picker=document.createElement('section');picker.className='report-picker cp-panel';picker.innerHTML='<div class="cp-panel-head"><h2>Findings by topic</h2><p>Review open questions and compare their sources.</p></div><div class="topic-filters"><label>Search topics or evidence<input type="search" id="topic-search" placeholder="Search topics or evidence…"></label><label>Status<select id="topic-status"><option value="">All statuses</option><option value="flag">Concerns</option><option value="watch">Review</option><option value="verify">Verify</option><option value="ok">No issue identified</option></select></label><span role="status" id="topic-count"></span></div><div class="topic-table-scroll"><table class="topic-table"><thead><tr><th>Topic</th><th>Concerns</th><th>Review</th><th>Verify</th><th>No issue identified</th><th>Evidence</th><th></th></tr></thead><tbody></tbody></table></div>';
+    const summary=root.querySelector('.hero2');if(!summary)return;const heading=document.createElement('div');heading.className='cp-page-heading';heading.innerHTML='<div><h2>Site review</h2><p>Public evidence, mapped conditions, and the questions still to resolve.</p></div>';summary.before(heading);summary.after(picker);
+    const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','region');panel.tabIndex=-1;picker.after(panel);
+    const chips=picker.querySelector('tbody');
     categories.forEach(c=>{
       c.nodes.forEach(n=>panel.appendChild(n));
-      const b=document.createElement('button');b.type='button';b.className='report-chip';b.id='category-'+c.key;b.setAttribute('role','tab');b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;
-      const count=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.frow').length,0);
-      b.textContent=c.label+(count?' · '+count:'');
-      const statuses=['flag','watch','verify','ok'],names={flag:'Concern',watch:'Review',verify:'Verification needed',ok:'No issue identified'};
-      const status=statuses.find(s=>c.nodes.some(n=>n.querySelector('.frow.s-'+s)));
-      if(status){const dot=document.createElement('span');dot.className='category-status s-'+status;dot.setAttribute('aria-hidden','true');b.prepend(dot);b.title=names[status];b.setAttribute('aria-label',c.label+' · '+count+' items · '+names[status]);}chips.appendChild(b);c.button=b;
-      b.addEventListener('click',()=>select(c));
+      const rows=c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads'));
+      c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.classList.contains('s-'+s)).length]));
+      const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';name.textContent=c.label;tr.append(name);
+      for(const status of ['flag','watch','verify','ok']){const td=document.createElement('td');td.className='topic-'+status;td.textContent=c.counts[status];tr.append(td);}
+      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);evidence.textContent=rows.length+' findings'+(leads?' · '+leads+' record leads':'');tr.append(evidence);
+      const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='topic-details';b.id='category-'+c.key;b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;b.textContent='View details';b.setAttribute('aria-label','View '+c.label+' details');td.append(b);tr.append(td);chips.append(tr);c.button=b;c.tableRow=tr;
+      b.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
     });
+    function filter(){const term=picker.querySelector('input').value.toLowerCase(),status=picker.querySelector('select').value;let count=0;categories.forEach(c=>{const match=(!status||c.counts[status]>0)&&(c.label+' '+c.nodes.map(n=>n.textContent).join(' ')).toLowerCase().includes(term);c.tableRow.hidden=!match;if(match)count++;});picker.querySelector('#topic-count').textContent=count+' topics';}
+    picker.querySelector('input').addEventListener('input',filter);picker.querySelector('select').addEventListener('change',filter);filter();
     function select(current) {
-      categories.forEach(c=>{const active=c===current;c.button.setAttribute('aria-selected',String(active));c.button.tabIndex=active?0:-1;c.nodes.forEach(n=>n.hidden=!active);});
+      categories.forEach(c=>{const active=c===current;c.button.setAttribute('aria-selected',String(active));c.button.tabIndex=0;c.nodes.forEach(n=>n.hidden=!active);});
       panel.setAttribute('aria-labelledby',current.button.id);
     }
     chips.addEventListener('keydown',e=>{
