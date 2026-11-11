@@ -13,8 +13,8 @@ html[data-theme=light] #home{padding-top:30px}
 html[data-theme=light] #project-workspace{background:transparent}
 html[data-theme=light] #project-frame{color:var(--ink)}
 html[data-theme=light] #project-frame .project-identity p{color:var(--muted)}
-#cornerpin-global-nav{background:linear-gradient(90deg,rgba(4,17,24,.42),rgba(4,17,24,.08)),url('assets/cornerpin-banner.png') center 54% / cover no-repeat!important;border-bottom:1px solid #aeb7b6;color:#f5f6f3;box-shadow:0 5px 22px #20313818}
-#cornerpin-global-nav>div{min-height:190px;max-width:1440px;padding:34px 48px;gap:12px}
+#cornerpin-global-nav{width:calc(100% - 56px);max-width:1144px;margin:24px auto 0;box-sizing:border-box;overflow:hidden;background:linear-gradient(90deg,rgba(4,17,24,.42),rgba(4,17,24,.08)),url('assets/cornerpin-banner.png') center 54% / cover no-repeat!important;border-bottom:1px solid #aeb7b6;color:#f5f6f3;box-shadow:0 5px 22px #20313818}
+#cornerpin-global-nav>div{min-height:190px;max-width:100%;padding:34px 28px;gap:12px}
 #cornerpin-global-nav .cornerpin-wordmark{width:245px}
 #cornerpin-global-nav button{background:#0a1e2bc9;border-color:#c6d5db88;color:#fff;backdrop-filter:blur(6px)}
 #cornerpin-global-nav button:hover{background:#17384ae6;border-color:#e89b66}
@@ -56,6 +56,7 @@ html[data-theme=light] .permit-progress progress::-webkit-progress-value{backgro
 html[data-theme=light] .permit-progress progress::-moz-progress-bar{background:#476e5c}
 html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(--bg)}
 @media(max-width:640px){
+ #cornerpin-global-nav{width:calc(100% - 36px);margin-top:18px}
  #cornerpin-global-nav>div{min-height:180px;padding:24px 20px;gap:8px;justify-content:flex-start}
  #cornerpin-global-nav button.global-brand{flex-basis:100%;justify-content:flex-start;margin:0 0 12px}
  #cornerpin-global-nav .cornerpin-wordmark{width:210px}
