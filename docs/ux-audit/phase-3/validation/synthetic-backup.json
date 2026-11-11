@@ -1,0 +1,260 @@
+{
+  "format": "cornerpin-full-backup",
+  "version": 1,
+  "exportedAt": "2026-11-11T17:56:11.441Z",
+  "project": {
+    "schemaVersion": 1,
+    "id": "phase3-synthetic",
+    "revision": 5,
+    "createdAt": "2026-11-11T12:00:00Z",
+    "updatedAt": "2026-11-11T17:56:11.441Z",
+    "propertyKey": "Example|DEMO-003",
+    "property": {
+      "county": "Example",
+      "parcelId": "DEMO-003",
+      "address": "100 Example Ridge Road"
+    },
+    "siteVersion": 1,
+    "report": {
+      "date": "2026-11-11T12:00:00Z",
+      "parcel": {
+        "county": "Example",
+        "id": "DEMO-003",
+        "attrs": {
+          "PARCEL_ADD": "100 Example Ridge Road",
+          "PARCEL_CITY": "Example City",
+          "PARCEL_ACRES": 1.25
+        },
+        "rings": [],
+        "cx": 0,
+        "cy": 0
+      },
+      "findings": [
+        {
+          "section": "land",
+          "item": "Controlling setback record",
+          "status": "verify",
+          "headline": "Original instrument has not been retrieved.",
+          "detail": "Synthetic validation evidence; confirm applicability before relying on the setback.",
+          "source": "Example record",
+          "url": "https://example.org/record",
+          "next_step": "Retrieve the original record."
+        },
+        {
+          "section": "soil",
+          "item": "Foundation design",
+          "status": "watch",
+          "headline": "Geotechnical review remains open.",
+          "detail": "Synthetic validation case.",
+          "source": "Example report",
+          "url": "https://example.org/report"
+        },
+        {
+          "section": "flood",
+          "item": "Flood mapping",
+          "status": "ok",
+          "headline": "No issue identified in the example screening.",
+          "detail": "Synthetic example only."
+        }
+      ],
+      "facts": {
+        "jurisdiction": "Ogden Valley City",
+        "owner": "Example Owner",
+        "lot_sf": 54450,
+        "zone": "Example residential",
+        "zone_std": {
+          "front": 30,
+          "side": 10,
+          "rear": 30
+        },
+        "packet": {
+          "items": [
+            {
+              "title": "Structural plans",
+              "status": "required"
+            }
+          ],
+          "rows": [],
+          "letters": [],
+          "ready": 0,
+          "needed": 1,
+          "timeline": {
+            "submitLo": "Not assessed",
+            "submitHi": "Not assessed",
+            "critical": [],
+            "issueLo": "Not assessed",
+            "issueHi": "Not assessed"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "schemaVersion": 1,
+      "propertyKey": "Example|DEMO-003",
+      "asOf": "2026-11-11T12:00:00Z",
+      "sources": [],
+      "records": [],
+      "gaps": [
+        "Public parent-parcel history not fully retrieved",
+        "Complete recorded-instrument and amendment/release search is not established"
+      ],
+      "scope": "Public references discovered for this report; not a title commitment or complete abstract",
+      "inventoryComplete": false,
+      "history": [],
+      "runs": []
+    },
+    "application": {
+      "applicant": "Example Reviewer",
+      "owner": "Example Owner",
+      "contractor": "",
+      "description": "Synthetic dwelling for local validation",
+      "jurisdiction": "Ogden Valley City",
+      "portal": "",
+      "reference": "",
+      "cityInspect": {
+        "answers": {},
+        "typeId": "1",
+        "schemaDate": "2026-11-09"
+      },
+      "permitSelections": [
+        "1"
+      ]
+    },
+    "stage": "ready_for_handoff",
+    "requirements": [
+      {
+        "id": "scope",
+        "title": "Confirm current jurisdiction requirements and permit scope",
+        "required": true,
+        "state": "reviewed",
+        "note": "Synthetic test evidence",
+        "documentIds": [],
+        "reviewer": "Example Reviewer",
+        "reviewedAt": "2026-11-11T17:56:11.441Z",
+        "siteVersion": 1,
+        "evidenceUrl": "https://example.org/evidence"
+      },
+      {
+        "id": "requirement-0",
+        "title": "Structural plans",
+        "required": true,
+        "state": "reviewed",
+        "suggestedStatus": "required",
+        "owner": "",
+        "source": "",
+        "sourceUrl": "",
+        "detail": "",
+        "note": "Synthetic test evidence",
+        "documentIds": [],
+        "reviewer": "Example Reviewer",
+        "reviewedAt": "2026-11-11T17:56:11.441Z",
+        "siteVersion": 1,
+        "evidenceUrl": "https://example.org/evidence"
+      }
+    ],
+    "documents": [],
+    "packages": [
+      {
+        "id": "cp-807f31f8-a607-4548-972a-de69a0a22d46",
+        "kind": "initial",
+        "preparedAt": "2026-11-11T17:56:11.441Z",
+        "reviewedBy": "Example Reviewer",
+        "siteVersion": 1,
+        "application": {
+          "applicant": "Example Reviewer",
+          "owner": "Example Owner",
+          "contractor": "",
+          "description": "Synthetic dwelling for local validation",
+          "jurisdiction": "Ogden Valley City",
+          "portal": "",
+          "reference": "",
+          "cityInspect": {
+            "answers": {},
+            "typeId": "1",
+            "schemaDate": "2026-11-09"
+          },
+          "permitSelections": [
+            "1"
+          ]
+        },
+        "fields": [],
+        "requirements": [
+          {
+            "id": "scope",
+            "title": "Confirm current jurisdiction requirements and permit scope",
+            "required": true,
+            "state": "reviewed",
+            "note": "Synthetic test evidence",
+            "documentIds": [],
+            "reviewer": "Example Reviewer",
+            "reviewedAt": "2026-11-11T17:56:11.441Z",
+            "siteVersion": 1,
+            "evidenceUrl": "https://example.org/evidence"
+          },
+          {
+            "id": "requirement-0",
+            "title": "Structural plans",
+            "required": true,
+            "state": "reviewed",
+            "suggestedStatus": "required",
+            "owner": "",
+            "source": "",
+            "sourceUrl": "",
+            "detail": "",
+            "note": "Synthetic test evidence",
+            "documentIds": [],
+            "reviewer": "Example Reviewer",
+            "reviewedAt": "2026-11-11T17:56:11.441Z",
+            "siteVersion": 1,
+            "evidenceUrl": "https://example.org/evidence"
+          }
+        ],
+        "documentIds": [],
+        "responses": [],
+        "stale": false,
+        "receiptId": null
+      }
+    ],
+    "receipts": [],
+    "rounds": [],
+    "corrections": [],
+    "events": [
+      {
+        "id": "cp-dc10d808-0c49-44fb-aae0-d345a4400763",
+        "at": "2026-11-11T17:56:11.436Z",
+        "type": "city_application",
+        "text": "City application answers updated; not submitted.",
+        "provenance": "Recorded in this browser by user"
+      },
+      {
+        "id": "cp-46fd754a-579a-46a4-950b-4e67135d5ba8",
+        "at": "2026-11-11T17:56:11.441Z",
+        "type": "application",
+        "text": "Application details updated.",
+        "provenance": "Recorded in this browser by user"
+      },
+      {
+        "id": "cp-9e5f8a32-06e5-46b3-b83f-f73e66b648d9",
+        "at": "2026-11-11T17:56:11.441Z",
+        "type": "requirement",
+        "text": "Confirm current jurisdiction requirements and permit scope \u00b7 reviewed by Example Reviewer.",
+        "provenance": "Recorded in this browser by user"
+      },
+      {
+        "id": "cp-590d9f55-9de2-4465-8be1-162da95a4708",
+        "at": "2026-11-11T17:56:11.441Z",
+        "type": "requirement",
+        "text": "Structural plans \u00b7 reviewed by Example Reviewer.",
+        "provenance": "Recorded in this browser by user"
+      },
+      {
+        "id": "cp-24134737-ea1f-45d7-9bcf-8c45b4ecf864",
+        "at": "2026-11-11T17:56:11.441Z",
+        "type": "prepare",
+        "text": "Prepared initial package cp-807f31f8-a607-4548-972a-de69a0a22d46. This is not a filing receipt.",
+        "provenance": "Recorded in this browser by user"
+      }
+    ]
+  },
+  "files": []
+}

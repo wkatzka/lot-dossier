@@ -1354,17 +1354,17 @@
     if (rec.plats && rec.plats.length) ctx.facts.platEvidence.bundleUrl = apiBase() + '/api/plat-bundle?county=' + encodeURIComponent(ctx.parcel.county) + '&parcel=' + encodeURIComponent(ctx.parcel.id) + '&v=' + encodeURIComponent((root.LR_DATA || {}).apiVersion || '');
     var platUrl = (rec.plats && rec.plats[0] && rec.plats[0].url) || rec.parcelPage;
 
-    // Setbacks: plat note first (it governs the lot), then the development standards table.
+    // Preserve existing candidate selection, but do not adjudicate source precedence.
     var std = docs.map(function (x) { return x.standards && Object.assign({ doc: x }, x.standards); }).filter(Boolean)[0];
     var sb = plat.setbacks;
     if (sb || std) {
       var front = sb ? sb.front : std.front, side = sb ? sb.side : std.side, rear = sb ? sb.rear : std.rear, street = sb ? sb.streetSide : std.streetSide;
       ctx.facts.zone_std = { zone: sb ? 'plat' : 'development standards', source: sb ? sb.url : std.doc.url, sourceSection: sb ? 'Plat setback note' : 'Development standards', front: front, side: side, rear: rear, street: street || null,
         height: std && std.heightMax || (ctx.facts.zone_std || {}).height || null, coverage: std && std.coverageMax ? std.coverageMax / 100 : null };
-      replaceFinding(ctx, 'land', 'Plat setbacks', F('land', 'Plat setbacks', 'ok',
-        'Setbacks for this lot: ' + front + "' front, " + side + "' side" + (street ? ', ' + street + "' street side on corners" : '') + ', ' + rear + "' rear",
-        (sb ? 'From the setback note on the recorded plat (sheet ' + (sb.sheet || '1') + '), which cites the ' + (sb.basis || 'plat') + (sb.entry ? ' recorded as Entry #' + sb.entry : '') + '. These replace the base zone setbacks.'
-          : 'From the development standards in ' + cite(std.doc) + '. These replace the base zone setbacks.'),
+      replaceFinding(ctx, 'land', 'Plat setbacks', F('land', 'Plat setbacks', 'verify',
+        'Reported setback candidates: ' + front + "' front, " + side + "' side" + (street ? ', ' + street + "' street side on corners" : '') + ', ' + rear + "' rear",
+        (sb ? 'From the setback note on the recorded plat (sheet ' + (sb.sheet || '1') + '), which cites the ' + (sb.basis || 'plat') + (sb.entry ? ' recorded as Entry #' + sb.entry : '') + '. Controlling applicability is unverified. Retrieve cited original instruments and review their scope before relying on these values.'
+          : 'From the development standards in ' + cite(std.doc) + '. Controlling applicability is unverified. Retrieve cited original instruments and review their scope before relying on these values.'),
         sb ? 'Recorded plat ' + (sb.sheet || '') : cite(std.doc), sb ? sb.url : std.doc.url));
     }
     if (std) {
@@ -1377,8 +1377,8 @@
       var u = std.doc.uses;
       if (u && u.adu) bits.push('ADUs ' + ({ P: 'permitted', C: 'conditional', N: 'not allowed' }[u.adu.singleFamily] || u.adu.singleFamily));
       if (u && u.shortTermRental) bits.push('short-term rentals ' + ({ P: 'permitted', C: 'conditional', N: 'not allowed' }[u.shortTermRental.singleFamily] || u.shortTermRental.singleFamily));
-      out.push(F('ccr', 'Development standards', 'ok', sub + ' ' + (std.section === 'single-family' ? 'single-family ' : '') + 'standards: ' + bits.slice(0, 3).join(', '),
-        'From the development standards table in ' + cite(std.doc, std.doc.standardsPage) + ': ' + bits.join('; ') + '. Where these differ from the zone, they govern.',
+      out.push(F('ccr', 'Development standards', 'watch', sub + ' ' + (std.section === 'single-family' ? 'single-family ' : '') + 'standards: ' + bits.slice(0, 3).join(', '),
+        'From the development standards table in ' + cite(std.doc, std.doc.standardsPage) + ': ' + bits.join('; ') + '. Applicability and precedence over zone standards require review of the controlling originals; this table alone does not establish which rule governs.',
         cite(std.doc), std.doc.url));
     }
 
@@ -2143,6 +2143,11 @@
 
   function reviewFindings(findings) {
     return (findings||[]).map(function(original){var f=Object.assign({},original);
+      // Presentation correction for older snapshots; retain saved records and frozen packages unchanged.
+      if(['Plat setbacks','Development standards'].includes(f.item)&&/These replace the base zone setbacks|Where these differ from the zone, they govern/.test(f.detail||'')){
+        f.status=f.item==='Plat setbacks'?'verify':'watch';f.headline=(f.headline||'').replace('Setbacks for this lot:','Reported setback candidates:');
+        f.detail=f.detail.replace(/These replace the base zone setbacks\.|Where these differ from the zone, they govern\./g,'Controlling applicability is unverified. Retrieve cited original instruments and review their scope before relying on these values.');
+      }
       if(f.item==='Culinary water'&&/^No public water system mapped/.test(f.headline)){f.status='verify';f.headline='No public water system mapped; supply unverified';f.detail='No service area was returned by this dataset. An existing connection or private/mutual supply may still serve the lot. Verify the source and service entitlement; a well requirement has not been established.';}
       if(f.item==='Fire hydrant'&&/^No mapped hydrant within/.test(f.headline)){f.status='verify';f.detail='No hydrant was returned by the county dataset. Verify hydrant availability, flow and any approved alternative supply with the fire authority; missing map coverage is not proof that no fire-water supply exists.';}
       if(f.item==='Flood zone'&&/Zone .*D.*minimal flood hazard/.test(f.headline)){f.status='verify';f.headline=f.headline.replace(': minimal flood hazard',': flood hazard partly undetermined');f.detail='Interpretation corrected: FEMA Zone D is undetermined hazard, not minimal risk. Check the effective panel and Zone X subtype before siting improvements. Source data has not been refreshed.';}

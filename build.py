@@ -30,7 +30,11 @@ def read(*p):
 
 def build(api_base, inline_assets=False):
     html = read(WEB, "home.html")
-    css = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + '\n' + read(WEB, "concrete-theme.css")
+    css = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + '\n' + read(WEB, "concrete-theme.css") + "\n" + read(WEB, "design-system.css")
+    # Keep Inter available in saved reports and the optional standalone application too.
+    import base64
+    with open(os.path.join(ROOT, "public", "assets", "fonts", "inter.woff2"), "rb") as fh:
+        css = css.replace("assets/fonts/inter.woff2", "data:font/woff2;base64," + base64.b64encode(fh.read()).decode())
     banner_data = ""
     if inline_assets:  # Only the explicitly supplied masthead image is embedded.
         import base64
@@ -94,7 +98,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
         "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-assistant.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
-        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "site-document-ui.js") + "\n" + read(WEB, "permit-prep-ui.js") + "\n" + read(WEB, "measurement-workbench.js") + "\n" + read(WEB, "analysis-progress.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
+        "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "site-document-ui.js") + "\n" + read(WEB, "permit-prep-ui.js") + "\n" + read(WEB, "measurement-workbench.js") + "\n" + read(WEB, "analysis-progress.js") + "\n" + read(WEB, "project-overview.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])
     html = html.replace("</body>", report_view + read(WEB, "planform.html") + scripts + "\n</body>", 1)
     wordmark = read(ROOT, "public", "assets", "cornerpin-wordmark.svg")

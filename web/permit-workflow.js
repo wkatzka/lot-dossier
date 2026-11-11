@@ -118,7 +118,13 @@
       }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
-        p.application.cityInspect=C.update(p,a);p.application.permitSelections=Array.from(new Set([...(p.application.permitSelections||[]),String(a.permitType)])); invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
+        const selected=(p.application.permitSelections||[]).includes(String(a.permitType)) || p.application.cityInspect?.typeId===String(a.permitType);
+        // Repeating the current selection is a no-op; workspace view state handles opening other existing drafts.
+        if(selected&&p.application.cityInspect?.typeId===String(a.permitType)&&!a.fieldKey&&(a.entries===undefined||(Array.isArray(a.entries)&&a.entries.length===0))) return project;
+        const city=C.update(p,a), selections=Array.from(new Set([...(p.application.permitSelections||[]),String(a.permitType)]));
+        if(JSON.stringify(city)===JSON.stringify(p.application.cityInspect)&&JSON.stringify(selections)===JSON.stringify(p.application.permitSelections)) return project;
+        p.application.cityInspect=city;p.application.permitSelections=selections;
+        invalidate(p); event(p,a.type,'City application answers updated; not submitted.',now); break;
       }
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
