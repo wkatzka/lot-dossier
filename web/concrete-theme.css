@@ -14,11 +14,11 @@ html[data-theme=light] #project-workspace{background:transparent}
 html[data-theme=light] #project-frame{color:var(--ink)}
 html[data-theme=light] #project-frame .project-identity p{color:var(--muted)}
 #cornerpin-global-nav{width:calc(100% - 56px);max-width:1144px;margin:24px auto 0;box-sizing:border-box;overflow:hidden;background:url('assets/cornerpin-banner.png') center 54% / cover no-repeat!important;border-bottom:1px solid #aeb7b6;color:#f5f6f3;box-shadow:0 5px 22px #20313818}
-#cornerpin-global-nav>div{min-height:190px;max-width:100%;padding:34px 28px;gap:12px}
+#cornerpin-global-nav>div{position:relative;min-height:190px;max-width:100%;padding:12px;gap:10px;align-items:flex-start;justify-content:flex-end;flex-wrap:nowrap}
 #cornerpin-global-nav .cornerpin-wordmark{width:245px}
 #cornerpin-global-nav button{background:#102b3bea;border-color:#d5e1e788;color:#fff;backdrop-filter:blur(6px)}
 #cornerpin-global-nav button:hover{background:#17384ae6;border-color:#e89b66}
-#cornerpin-global-nav button.global-brand{color:#fff;background:#102b3b;padding:16px 20px;border:1px solid #d5e1e755;border-radius:10px;max-width:max-content;backdrop-filter:none;filter:none;box-shadow:0 4px 18px #102b3b26}
+#cornerpin-global-nav button.global-brand{position:absolute;left:12px;bottom:12px;margin:0;min-height:0;color:#fff;background:#102b3b;padding:7px 10px;border:1px solid #d5e1e755;border-radius:6px;max-width:max-content;backdrop-filter:none;filter:none;box-shadow:0 4px 18px #102b3b26}
 html[data-theme=light] #home input,html[data-theme=light] #home select,html[data-theme=light] #home select option,
 html[data-theme=light] #project-workspace input:not([type=checkbox]),html[data-theme=light] #project-workspace textarea,html[data-theme=light] #project-workspace select,
 html[data-theme=light] .account-dialog input{background:#fafaf7;color:var(--ink);border-color:#aab4b1;color-scheme:light}
@@ -57,10 +57,10 @@ html[data-theme=light] .permit-progress progress::-moz-progress-bar{background:#
 html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(--bg)}
 @media(max-width:640px){
  #cornerpin-global-nav{width:calc(100% - 36px);margin-top:18px}
- #cornerpin-global-nav>div{min-height:180px;padding:24px 20px;gap:8px;justify-content:flex-start}
- #cornerpin-global-nav button.global-brand{flex-basis:100%;justify-content:flex-start;margin:0 0 12px}
+ #cornerpin-global-nav>div{min-height:180px;padding:12px;gap:6px;justify-content:flex-end}
+ #cornerpin-global-nav button.global-brand{flex-basis:auto;justify-content:flex-start;margin:0;padding:7px 10px}
  #cornerpin-global-nav .cornerpin-wordmark{width:210px}
- #cornerpin-global-nav button{font-size:12px;padding:10px 14px}
+ #cornerpin-global-nav button{font-size:12px;padding:10px 12px}
  html[data-theme=light] #home{padding-top:18px}
 }
 @media print{html[data-theme=light] body{background:white}#cornerpin-global-nav{display:none!important}}
