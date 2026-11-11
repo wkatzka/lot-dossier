@@ -16,9 +16,9 @@ html[data-theme=light] #project-frame .project-identity p{color:var(--muted)}
 #cornerpin-global-nav{width:calc(100% - 56px);max-width:1144px;margin:24px auto 0;box-sizing:border-box;overflow:hidden;background:url('assets/cornerpin-banner.png') center 54% / cover no-repeat!important;border-bottom:1px solid #aeb7b6;color:#f5f6f3;box-shadow:0 5px 22px #20313818}
 #cornerpin-global-nav>div{position:relative;min-height:190px;max-width:100%;padding:12px;gap:10px;align-items:flex-start;justify-content:flex-end;flex-wrap:nowrap}
 #cornerpin-global-nav .cornerpin-wordmark{width:245px}
-#cornerpin-global-nav button{background:#102b3bea;border-color:#d5e1e788;color:#fff;backdrop-filter:blur(6px)}
-#cornerpin-global-nav button:hover{background:#17384ae6;border-color:#e89b66}
-#cornerpin-global-nav button.global-brand{position:absolute;left:12px;bottom:12px;margin:0;min-height:0;color:#fff;background:#102b3b;padding:7px 10px;border:1px solid #d5e1e755;border-radius:6px;max-width:max-content;backdrop-filter:none;filter:none;box-shadow:0 4px 18px #102b3b26}
+#cornerpin-global-nav button{background:linear-gradient(145deg,#ffffff99,#ffffff38);border:1px solid #ffffffb3;color:#26332e;backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);box-shadow:inset 0 1px 0 #ffffffeb,inset 0 -1px 0 #ffffff33,0 4px 14px #22382f1c;text-shadow:0 1px 1px #ffffff80;transition:background .2s,box-shadow .2s,border-color .2s}
+#cornerpin-global-nav button:hover{background:linear-gradient(145deg,#ffffffc4,#ffffff66);border-color:#fff;box-shadow:inset 0 1px 0 #fff,0 5px 18px #22382f26}
+#cornerpin-global-nav button.global-brand{position:absolute;left:12px;bottom:12px;margin:0;min-height:0;color:#fff;background:#707670;padding:3px 5px;border:1px solid #8c928b;border-radius:6px;max-width:max-content;backdrop-filter:none;-webkit-backdrop-filter:none;filter:none;text-shadow:none;box-shadow:inset 0 1px 0 #ffffff20,0 2px 8px #303b301a}
 html[data-theme=light] #home input,html[data-theme=light] #home select,html[data-theme=light] #home select option,
 html[data-theme=light] #project-workspace input:not([type=checkbox]),html[data-theme=light] #project-workspace textarea,html[data-theme=light] #project-workspace select,
 html[data-theme=light] .account-dialog input{background:#fafaf7;color:var(--ink);border-color:#aab4b1;color-scheme:light}
@@ -58,7 +58,7 @@ html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(
 @media(max-width:640px){
  #cornerpin-global-nav{width:calc(100% - 36px);margin-top:18px}
  #cornerpin-global-nav>div{min-height:180px;padding:12px;gap:6px;justify-content:flex-end}
- #cornerpin-global-nav button.global-brand{flex-basis:auto;justify-content:flex-start;margin:0;padding:7px 10px}
+ #cornerpin-global-nav button.global-brand{flex-basis:auto;justify-content:flex-start;margin:0;padding:3px 5px}
  #cornerpin-global-nav .cornerpin-wordmark{width:210px}
  #cornerpin-global-nav button{font-size:12px;padding:10px 12px}
  html[data-theme=light] #home{padding-top:18px}
