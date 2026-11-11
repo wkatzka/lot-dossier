@@ -826,7 +826,7 @@ html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(
  --cp-primary:#29483f;--cp-primary-hover:#203a32;--cp-line:#d1d6cf;--cp-control:#7b8580;
  --cp-verify:#245b89;--cp-verify-bg:#eaf3fa;--cp-review:#84540b;--cp-review-bg:#fff3d6;
  --cp-concern:#a52e27;--cp-concern-bg:#fdedeb;--cp-neutral:#50635a;--cp-neutral-bg:#e8ede8;
- --cp-accent:#e66b35;--cp-logo:#737873;--cp-focus:#245b89;--cp-glass:#eef2f1c7;--cp-glass-hover:#eef2f1e0;--cp-logo-glass:#737873bf;
+ --cp-accent:#e66b35;--cp-logo:#737873;--cp-focus:#245b89;--cp-glass:linear-gradient(145deg,#ffffff52,#eef2f11f);--cp-glass-hover:linear-gradient(145deg,#ffffff73,#eef2f138);--cp-logo-glass:#737873bf;
  --cp-font:Inter,Arial,sans-serif;--cp-title:28px;--cp-section:21px;--cp-card:16px;--cp-body:14px;--cp-meta:14px;
  --cp-radius:8px;--cp-control-radius:6px;--cp-space-1:4px;--cp-space-2:8px;--cp-space-3:12px;--cp-space-4:16px;--cp-space-6:24px;--cp-space-8:32px;
  --cp-shell:1344px;--cp-gutter:32px;
@@ -846,7 +846,7 @@ body.project-frame-active #project-frame{max-width:var(--cp-shell);padding:24px 
 #cornerpin-global-nav{width:calc(100% - var(--cp-gutter)*2);max-width:calc(var(--cp-shell) - var(--cp-gutter)*2);margin:24px auto 0;border:1px solid var(--cp-line);border-radius:9px;box-shadow:none;background-position:center 49%!important;font-family:var(--cp-font)}
 #cornerpin-global-nav>div{min-height:148px;padding:14px 16px;gap:8px;box-sizing:border-box}
 #cornerpin-global-nav .cornerpin-wordmark{width:208px}
-#cornerpin-global-nav button{font:600 14px/1.3 var(--cp-font);min-height:44px;border-radius:var(--cp-control-radius);padding:10px 14px;background:var(--cp-glass);color:var(--cp-ink);border:1px solid var(--cp-input);text-shadow:none;backdrop-filter:blur(18px) saturate(135%);-webkit-backdrop-filter:blur(18px) saturate(135%);box-shadow:inset 0 1px 0 #ffffffa6,0 2px 8px #2732390d}
+#cornerpin-global-nav button{font:600 14px/1.3 var(--cp-font);min-height:44px;border-radius:var(--cp-control-radius);padding:10px 14px;background:var(--cp-glass);color:var(--cp-ink);border:1px solid var(--cp-input);text-shadow:none;backdrop-filter:blur(7px) saturate(145%);-webkit-backdrop-filter:blur(7px) saturate(145%);box-shadow:inset 0 1px 0 #ffffffa6,0 2px 8px #2732390d}
 #cornerpin-global-nav button:hover{background:var(--cp-glass-hover);border-color:var(--cp-control);box-shadow:inset 0 1px 0 #ffffffbf}
 #cornerpin-global-nav button[data-global=new]:not(.global-brand){border:2px solid var(--cp-primary);color:var(--cp-primary)}
 #cornerpin-global-nav button.global-brand{left:18px;bottom:16px;padding:3px 5px;min-height:0;background:var(--cp-logo-glass);border:1px solid #ffffff40;border-radius:4px;backdrop-filter:blur(18px) saturate(75%);-webkit-backdrop-filter:blur(18px) saturate(75%);box-shadow:inset 0 1px 0 #ffffff33,0 2px 8px #2732390d}
@@ -4846,7 +4846,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
       '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +
       '<h2 style="margin-top:18px">Priority findings</h2><p class="priority-key">Red: potential building constraint. Blue: important information to verify. Neither establishes approval or a prohibition.</p><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' source-packet items available or drafted; application review remains &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
-      '<div class="card"><h2>Items to price</h2><details><summary>Unvalidated planning ranges (' + costs.length + ' items)</summary><p>These generic placeholders are not bids or site-specific estimates. They may overlap or represent alternatives; do not add them into a project budget.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></details></div></div>' +
+      '<div class="card"><h2>Cost considerations</h2><p>Unvalidated planning ranges (' + costs.length + ' items)</p><p>These generic placeholders are not bids or site-specific estimates. They may overlap or represent alternatives; do not add them into a project budget.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
       'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
   }
