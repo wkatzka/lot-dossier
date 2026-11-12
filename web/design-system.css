@@ -167,3 +167,11 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 #rv .topic-resources:empty{display:none}
 #rv .topic-resources button{border:0;background:transparent;padding:0;min-height:40px;font-size:13px;color:var(--cp-primary);text-decoration:underline}
 @media(max-width:700px){#rv .status-findings-table{min-width:0}#rv .status-findings-table th:first-child{width:31%}#rv .status-findings-table th:last-child{width:62px}#rv .status-findings-table button{white-space:normal;font-size:11px;text-align:left}#rv .status-findings-table th,#rv .status-findings-table td{font-size:12px;padding:10px 7px}}
+
+/* One document inventory with visible purpose and source access. */
+.document-record{padding:20px 0;border-top:1px solid var(--cp-line)}
+.document-record-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.document-record h3{margin:0 0 8px}.document-record .pw-actions{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.document-claim{border-left:3px solid var(--cp-line);padding:8px 16px;margin:16px 0}.document-claim blockquote{margin:12px 0;color:var(--cp-muted)}
+.document-viewer{width:min(1100px,94vw);max-width:94vw;border:1px solid var(--cp-line);border-radius:10px;background:var(--cp-surface);color:var(--cp-ink);padding:20px}.document-viewer::backdrop{background:#27323970}.document-viewer iframe{width:100%;height:70vh;border:1px solid var(--cp-line)}
+.document-page-controls{display:flex;gap:20px;align-items:center;margin:12px 0}.document-page-controls[hidden]{display:none}.document-page-controls label{display:flex;align-items:center;gap:8px}.document-page-scroll{max-height:65vh;overflow:auto;background:#dfe2dc}.document-page-scroll canvas{display:block;background:white}.document-viewer{max-height:94vh;overflow:auto}
