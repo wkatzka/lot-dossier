@@ -1,0 +1,56 @@
+{
+  "id": "ogden-valley-city-notices-and-agencies",
+  "county": "Weber",
+  "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
+  "startDate": "2026-01-01",
+  "endDate": "2026-11-12",
+  "routes": [
+    "public_notice_attachments",
+    "agency_requirements"
+  ],
+  "terms": [
+    "Ogden Valley",
+    "ordinance",
+    "permit",
+    "approval",
+    "development",
+    "design",
+    "stormwater",
+    "excavation",
+    "104-27",
+    "master planned"
+  ],
+  "noticeTerms": [
+    "Ogden Valley"
+  ],
+  "hosts": [
+    "ogdenvalley.gov",
+    "www.utah.gov"
+  ],
+  "seeds": [
+    {
+      "route": "agency_requirements",
+      "url": "https://ogdenvalley.gov/recorder/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "agency_requirements",
+      "url": "https://ogdenvalley.gov/municipal-code-2/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "agency_requirements",
+      "url": "https://ogdenvalley.gov/engineering/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "agency_requirements",
+      "url": "https://ogdenvalley.gov/stormwater-management-program-ms4/",
+      "mode": "library",
+      "maxDepth": 1
+    }
+  ]
+}
