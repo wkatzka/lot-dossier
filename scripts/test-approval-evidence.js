@@ -20,3 +20,9 @@ assert(!context.window.AreaRulesUI.render(project('224410005')).includes('What t
 const unavailable={window:{}};vm.runInNewContext(fs.readFileSync('web/approval-evidence.js','utf8'),unavailable);assert.equal(unavailable.window.ApprovalEvidence.forProject(project()),null);
 // Public response contains reviewed originals only, never account or saved-project fields.
 const handler=require('../api/public-research');let body='',headers={};handler({method:'GET',query:{format:'approval-evidence'}},{setHeader(k,v){headers[k]=v},end(v){body=v}}).then(()=>{assert.match(headers['Content-Type'],/javascript/);const sandbox={window:{}};vm.runInNewContext(body,sandbox);assert.equal(sandbox.window.ApprovalEvidenceData.cases.length,1);assert(!body.includes('wkatzka'));assert(!body.includes('access_token'));console.log('PASS: exact identity, conflicting originals, unknown timing, evidence-gated readiness, stale review, raw links and public-data boundary');});
+
+const sewerRule=A.rules(project()).find(r=>r.id==='ov-sewer');
+assert.match(sewerRule.trigger,/before Weber County permit issuance/);
+assert.match(sewerRule.trigger,/does not establish Ogden Valley City/);
+assert.equal(sewerRule.stage,'submission','Provider issuance wording must not erase the independently cited city intake requirement');
+assert(require('../lib/approval-evidence-data').cases[0].chain.find(x=>x.id==='sewer-plan').sources.includes('sewerPolicy'));
