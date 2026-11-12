@@ -2,7 +2,7 @@
 (function(root){'use strict';
 const U='https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/', B='https://maps.webercountyutah.gov/arcgis/rest/services/';
 const O=typeof module!=='undefined'&&module.exports?require('./ovc-rules'):root.OVCRules;
-const checked='2026-11-12', version='2026-11-12.2';
+const checked='2026-11-12', version='2026-11-12.3';
 const sources={ov:'https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf',design:'https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf',huntsville:'https://huntsvilleutah.gov/documents/270/Building_checklist_2026_v2.pdf',ogden:'https://engineering.ogdencity.com/188/Permit-Applications',ogdenSite:'https://events.ogdencity.com/DocumentCenter/View/35398/Site-Plan-Review-Application',retreat:'https://retreatwolfcreek.com/',highlands:'https://www.highlandsedenut.com/about-us/',wolf:'https://wolfcreekresortmasterhoa.com/building-home-wolf-creek-resort/',fire:'https://www.weberfiredistrict.com/plan-reviews',health:'https://webermorganhealth.gov/services/environmental-health/water-quality/',udot:'https://connect.udot.utah.gov/business/permits/access-management/',stream:'https://www.waterrights.utah.gov/strmalt/',flood:'https://www.webercountyutah.gov/Engineering/flood_maps.php',storm:'https://deq.utah.gov/dwq/updes-general',air:'https://deq.utah.gov/daq/permit-guide-cleanup-dust-control-open-burn'};
 const definitions=[
  {id:'municipal',name:'Municipal boundaries',url:U+'UtahMunicipalBoundaries/FeatureServer/0',fields:['NAME']},
