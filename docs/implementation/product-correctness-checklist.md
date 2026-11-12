@@ -143,3 +143,11 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - Found PDF wrapper links to PMN 1357583 and 1354221. The discovery engine ignored hyperlink annotations and numeric attachment URLs with no matching title. Fixed PDF annotation extraction, approved-host attachment following and cache refresh when reacquired; existing finished queues are not retroactively claimed reprocessed. Real PDF fixture test verifies that linked work remains pending until processed and off-profile hosts are not fetched.
 - Added July 22 county staff corroboration of separate executed Cobabe/Eagle Crest agreements to the cited evidence chain. It does not authenticate either disputed entry number or supply the executed agreement.
 - Focused approval, rule-dependency, permit-lifecycle, discovery, PDF-link, checkpoint and production-orchestration tests passed. These follow-ups refine existing tasks, not broader product scope. Deployment and full-text/OCR result inspection remain in progress.
+
+
+### Checkpoint 11 — Recovered actual utility evidence; bounded packet search complete
+
+- Completed all 1,464 sparse-page OCR jobs across the 54 acquired packets, with no OCR-job errors remaining. Recorded exact URLs, hashes, pages and hit locations in `cobabe-packet-search-2026-11-12.json`. This closes this bounded pass, not all public search routes.
+- Visually verified signed August 15, 2025 water feasibility covering Phase 1 Lots 1–9, including Lot 4; eight conditions remain material. Visually verified October 2 sewer master-plan design acceptance. Added originals and page locators to the production evidence data and actual water/sewer rule answers. Existing evidence is evaluated before asking for replacement letters. Neither becomes automatic connection or permit clearance.
+- Architectural keyword matches in other developments were checked against agreement titles/parties and excluded. Repeated staff entry 3372667 is not independent recorder authentication. Executed Cobabe agreement, current delegation and exact prerequisite stage remain attempted but unresolved; paid-only custody is unproven.
+- Regression checks cover exact property isolation, conditional water coverage, design-only sewer acceptance and continued readiness blocking. Deployment verification pending for this increment. Tasks 18 and 20 remain open.

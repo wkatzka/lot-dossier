@@ -64,6 +64,9 @@ function rules(p){const map=p.application.areaMap,scope=p.application.ruleScope|
  const disputed=rows.find(r=>r.id==='ov-sensitive-adoption');if(disputed){disputed.stage='verify';disputed.evidenceCheck=true;disputed.blocksSubmission=true;}
  const evidenceCase=E.forProject(p);
  if(evidenceCase){
+  const water=rows.find(r=>r.id==='ov-water'),sewer=rows.find(r=>r.id==='ov-sewer'),waterEvidence=evidenceCase.chain.find(x=>x.id==='water-feasibility'),sewerEvidence=evidenceCase.chain.find(x=>x.id==='sewer-plan');
+  if(water&&waterEvidence){water.authority='Ogden Valley Mutual Water Company / city intake';water.trigger='Existing evidence covers this lot: '+waterEvidence.finding+' '+waterEvidence.missing;water.evidenceIds=['water-feasibility','water'];}
+  if(sewer&&sewerEvidence){sewer.authority='Wolf Creek Water and Sewer Improvement District / city intake';sewer.trigger=sewerEvidence.finding+' '+sewerEvidence.missing;sewer.evidenceIds=['sewer-plan'];}
   for(const r of rows.filter(r=>r.id==='ov-zone-AV-3'||r.id==='ov-dimensions-AV-3')){
    r.title=r.id==='ov-zone-AV-3'?'Base-zone reference · AV-3':'Reconcile base-zone and recorded-plat dimensions';
    r.trigger=evidenceCase.chain.find(x=>x.id==='setbacks').finding+' Resolve the controlling agreement. Base-zone comparison follows: '+r.trigger;
