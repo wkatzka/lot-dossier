@@ -1,6 +1,6 @@
 /* Bounded, restartable worker. State is restored/persisted by the Actions artifact workflow. */
 const fs=require('node:fs'),path=require('node:path');
-const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish');
+const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish'),M=require('../lib/discovery-metadata');
 async function run({root='.discovery-state',minutes=15}={}){
  if(!Number.isFinite(minutes)||minutes<1||minutes>20)throw Error('Worker time must be 1–20 minutes');
  const deadline=Date.now()+minutes*60000, reports=[];
@@ -29,8 +29,8 @@ async function run({root='.discovery-state',minutes=15}={}){
    if(jobs%10===0)console.log(JSON.stringify({profile:active.id,checkpoint:jobs,pending:state.coverage.pending}));
   }while(state.coverage.pending&&Date.now()<profileDeadline);
   if(active.parcelId)P.publish(active,state,'data/title/discovery-index.json');
-  const report={id:active.id,scope:active.scope,checkedAt:state.updatedAt,coverage:state.coverage,
-   legalApplicabilityEstablished:false,documents:state.documents.map(d=>({sha256:d.sha256,urls:d.urls.filter(u=>!/[?&](?:token|X-Amz-)/i.test(u)),pages:d.pages,unreadPages:d.unreadPages||[],applicability:'unverified'}))};
+  const report={id:active.id,scope:active.scope,checkedAt:state.updatedAt,coverage:M.publicCoverage(state.coverage),
+   legalApplicabilityEstablished:false,documents:state.documents.map(d=>({sha256:d.sha256,urls:d.urls.filter(M.stableUrl),pages:d.pages,unreadPages:d.unreadPages||[],applicability:'unverified'}))};
   reports.push(report);console.log(JSON.stringify({profile:active.id,jobs,pending:state.coverage.pending,documents:state.documents.length}));
   if(Date.now()>=deadline)break;
  }

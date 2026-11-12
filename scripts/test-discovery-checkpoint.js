@@ -1,10 +1,11 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{execFileSync}=require('node:child_process');
-const D=require('../lib/record-discovery-engine');
+const D=require('../lib/record-discovery-engine'),M=require('../lib/discovery-metadata');
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'cornerpin-checkpoint-test-'));
 try{
  const profile={id:'public-fixture',scope:'Synthetic public fixture',routes:['library'],hosts:['example.org'],terms:['rule'],seeds:[]};
  const state=D.create(profile),dir=path.join(tmp,'state',profile.id);fs.mkdirSync(dir,{recursive:true});
  const url='https://example.org/public.pdf?signature=SECRET_SIGNATURE&credential=SECRET_CREDENTIAL&token=SECRET_TOKEN&edition=2';
+ assert.equal(M.stableUrl(url),false);assert(!/SECRET_|RAW_/.test(JSON.stringify(M.publicCoverage({routes:[{unresolved:[{id:'x',url,status:'source_error',error:'RAW_ERROR_BODY'}]}]}))));
  const job=D.add(state,{kind:'page',url,route:'library'});Object.assign(job,{status:'source_error',textExcerpt:'RAW_EXTRACT',error:'RAW_ERROR_BODY'});
  state.documents=[{sha256:'a'.repeat(64),kind:'pdf',file:'blobs/'+'a'.repeat(64)+'.pdf',route:'library',urls:[url],pages:1,unreadPages:[],matches:[{page:1,terms:['rule'],snippets:['RAW_EXTRACT']}]}];
  state.queries=[{raw:'RAW_QUERY_BODY'}];state.discarded=[{text:'RAW_DISCARDED_BODY'}];

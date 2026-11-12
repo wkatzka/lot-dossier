@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const root=process.argv[2],out='.discovery-metadata';if(!root||!fs.existsSync(root))process.exit(0);
 const pick=(o,keys)=>Object.fromEntries(keys.filter(k=>o[k]!==undefined).map(k=>[k,o[k]]));
-const safeUrl=u=>{try{const v=new URL(u);for(const k of [...v.searchParams.keys()])if(/token|signature|credential|X-Amz-/i.test(k))v.searchParams.delete(k);return v.href;}catch{return undefined;}};
+const {safeUrl}=require('../lib/discovery-metadata');
 fs.mkdirSync(out,{recursive:true});
 for(const name of fs.readdirSync(root)){
  const dir=path.join(root,name),file=path.join(dir,'manifest.json');if(!fs.existsSync(file))continue;
