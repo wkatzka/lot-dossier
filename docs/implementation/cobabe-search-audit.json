@@ -11862,5 +11862,55 @@
       "status": "complete",
       "checkedAt": "2026-11-12T18:52:54.789Z"
     }
+  ],
+  "followupChecks": [
+    {
+      "id": "manual-state-202871",
+      "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
+      "identifier": "3297522",
+      "result": "Recovered recorded original, PDF pp. 47\u2013106; old dated URL 404; current 2025 boundary index leads to moved file",
+      "sha256": "e24821678e7f9ce1ff72d26746d9c5f09d00ab5a9fe0a82da7cfd9db260fd44f",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    },
+    {
+      "id": "manual-ordinance-index",
+      "url": "https://weber.municipalcodeonline.com/Docs/Read?type=ordinances&page=1&pageSize=20&sort=Date-desc~Number-desc",
+      "identifier": "2025-11",
+      "result": "Four pages, 80 rows; only three 2025 ordinances, none 2025-11. Archive incompleteness prevents no-document conclusion",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    },
+    {
+      "id": "manual-water-29132",
+      "url": "https://waterlink.utah.gov/v1/public/allProjectSoryByWaterSystem.html",
+      "identifier": "30533 / 23867 / 23570",
+      "result": "NEEDS OP entries, no instrument download links in these rows; plan approval separately recorded for tank",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    },
+    {
+      "id": "manual-2784398",
+      "query": "\"Wolf Creek\" \"2784398\"",
+      "url": "https://www.webercountyutah.gov/planning/documents/uploads/2025-OVPC%20July%2022%20Packet_Amended.pdf",
+      "result": "The Exchange proposal references earlier amendments. Existing 2023 agreement attachment is unsigned packet copy; no searchable 3372 reference. Not a recovered executed 2025 Cobabe amendment.",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    },
+    {
+      "id": "manual-2018-density",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/G-2%20%20%20Wolf%20Creek%20Resort%203rd%20Amendment%20Zoning%20Development%20Agreement.pdf",
+      "identifier": "2768159 / 2784398 / 2802028",
+      "result": "2017 applicant request and historical amendment staff packet. Different density action, not current Cobabe ARC or 2025 recording identity.",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    },
+    {
+      "id": "manual-exact-recording-search",
+      "query": "\"Cobabe\" \"3372687\"; \"Cobabe\" \"3372667\"",
+      "result": "Staff packet 1363053 repeats 3372667; no independently identified original for either entry.",
+      "checkedAt": "2026-11-12",
+      "coverageClaim": "bounded check, not exhaustive"
+    }
   ]
 }

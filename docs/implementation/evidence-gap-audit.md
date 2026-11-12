@@ -52,6 +52,8 @@ Limits that prevent an exhaustion claim:
 | Recorded Phase 1 plat reference: **3372687** | [Sheet S1](https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif), note 1 | Recorded plat specifies 20/10/20/20 setbacks and names Cobabe Ranch Owners Association Inc in the dedication. Parties/legal description of entry 3372687 itself have not been inspected. Plat reference does not prove the other number is a typo. |
 | February 2, 2026 city work session | [Minutes p. 2](https://www.utah.gov/pmn/files/1394929.pdf#page=2) | Describes Cobabe vesting under county agreements; not an adjudication of each clause or the missing 14-day reply. |
 
+The July 22, 2025 [The Exchange proposal](https://www.webercountyutah.gov/planning/documents/uploads/2025-OVPC%20July%2022%20Packet_Amended.pdf) also references 2768159, 2802028 and a printed 2018 reference “22917393.” Those references are not authenticated Cobabe amendments, and that printed number is not normalized by guessing. The linked packet repeats the unsigned 2023 planning copy; it does not resolve either disputed 2025 recording.
+
 **Resolution test:** retrieve index rows for both disputed entries: recorded date/time, document title/type, grantor/grantee, legal description/parcel references, page count and related instruments. Then compare the complete matching signed agreement/exhibits, any correction/novation notice and later amendments with the recorded plat. A one-digit difference cannot be resolved by majority vote, date similarity or the unsigned draft. Neither current original's parties or legal description is yet known; the proposal's parties cannot be attributed to either number as fact.
 
 ### What the historical architectural terms actually establish
@@ -84,3 +86,38 @@ Recorded before correction in the signed-in application:
 | Both actual projects: can I submit now? | Proposed work not supplied; no current rule approval decisions. | Cannot infer readiness. A package hold is Cornerpin's evidence/completeness assessment, not an authoritative rejection of city intake. |
 
 Post-change deployment and scenario results are recorded in the final verification addendum. Synthetic scenario tests are not represented as verified property facts or authority decisions.
+
+
+## Final verification addendum
+
+Implementation commit `a4b131e` was published and [Vercel reported success](https://vercel.com/wills-projects-b304447d/lot-dossier-assistant/A7NPxK95ek7qHQ28eTTqmGrNTA8i). The production bundle was independently fetched and compared against the tested rule modules. It serves AreaRules **2026-11-12.9** and reviewed evidence **2026-11-12.3**. This establishes deployed behavior, not legal completeness.
+
+Signed-in browser checks on the actual saved projects:
+
+- **Cobabe 224410004:** displays the recovered recorded predecessor with the state-file raw link; both conflicting 2025 entry numbers remain visible. The current reviewer and timing remain explicitly unresolved. The conditional master-DRB succession rule is explained without assigning Cobabe to that board. The DDW status evidence appears separately from service entitlement. Work type remains “Not yet known”; no fictional proposal or authority decision was saved.
+- **S-1 parcel 201230001:** the later-shoreline-amendment row now reads “Timing needs verification / Evidence chain unresolved / No current decision.” It no longer labels the document reconciliation a confirmed submission prerequisite. The separate submission/issuance/construction explanation is visible.
+
+[Production-code scenario results](production-approval-scenarios.json) contain seven explicitly synthetic examples executed against the served modules, without creating or editing account projects:
+
+| User question / assumed scope | Observed production-code result | Source and limit |
+|---|---|---|
+| Cobabe new home, under one acre disturbed but part of a qualifying common plan: what goes with the application? | Water and wastewater letters/approvals and construction stormwater requirement are submission-stage rows. Architectural reviewer/deadline remain unknown. | City checklist pp. 2–3; exact-lot evidence chain. Common-plan assumption is synthetic, not established for the saved proposal. |
+| S-1 home proposed at 30 ft: is that allowed? | Requires reconciliation of later adopted height amendment; no automated clearance. | September 1 minutes vs older city chapter; full operative amendment/effective date unresolved. |
+| Highlands home: which architectural stage? | Candidate AC approval before issuance, only if applicable; does not claim city rejection at intake. | August 24, 2026 guidelines pp. 14, 19, 78; membership/current applicability require proof. |
+| Retreat home: what follows architectural approval? | Candidate AC approval before permit issuance; separate notice/preconstruction meeting before work. | July 13, 2026 guidelines pp. 19–20; recorded membership and municipal intake treatment unresolved. |
+| Trappers Ridge home: must the board approve before filing? | Candidate written board approval before construction; no supported submission conclusion. | Published 2018 declaration Article 6, printed pp. 23–24; current recording/amendments/membership need verification. |
+| Commercial OVC project: municipal design review? | Design review before issuance. | Chapter 108-1, §108-1-2; private approvals and overlays remain distinct. |
+| Standalone work under one acre, not a common plan: is drainage cleared? | Construction stormwater threshold not triggered; permanent drainage review remains unresolved. | City checklist and MS4 program. One threshold does not clear other drainage obligations. |
+
+Technical checks passed: approval evidence/identity, area-rule triggers and timing, permit lifecycle, instrument-specific access assessment, discovery regression, hosted checkpoint data boundary, production-profile execution, and production build. A test that formerly reviewed only submission-labelled rows was updated to review explicit Cornerpin evidence holds as well, preserving package-readiness validation. No test or user-recorded decision substitutes for an authority approval.
+
+### Remaining checklist, without grouping it into “needs review”
+
+- **Attempted but unresolved — current Cobabe agreement:** recorder index identity for **both 3372687 and 3372667**, followed by the identified executed agreement, exhibits, corrections/novation and subsequent amendments. Paid-service existence is not proof of custody.
+- **Attempted but unresolved — architectural authority/timing:** the instrument applying a declaration to Lot 4, operative review clause, current committee appointment/delegation, and any separate municipal intake stipulation. Historic master succession and before-work clauses are documented conditionally; their application to Cobabe is not established.
+- **Attempted but unresolved — engineering:** February 28, 2022 geologic report; Lot 4 recommendations; improvement guarantee and secondary-water plan/restricted-landscaping covenant referenced by final-plat conditions; current lot service evidence. DDW status alone cannot resolve these.
+- **Attempted but unresolved — operative city conflicts:** adopted Chapter 104-28 exhibits, complete shoreline Ordinance 2026-53, clean adopted forest-height provision, MPDOZ governing text and agreement-specific vesting. The February 2 requested response has not been recovered.
+- **Unfinished implementation:** complete use-table/exception interpretation, legally verified HOA coverage and automatic final impact/approval determinations. Current GIS/scope rules are conditional screening; they do not deliver these capabilities.
+- **Search exhaustion not established:** newly recovered public predecessor demonstrates a prior omission. Missing current originals are not labelled “blocked behind a locked door.” The instrument-by-instrument ledger records the actual coverage and failed routes instead.
+
+The original objective—definitively naming Cobabe's authorized architectural approver and its required permit stage—**is not complete**. The released corrections prevent false certainty and expose a more precise evidence chain; they do not replace that missing substantive answer.

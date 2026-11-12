@@ -1,0 +1,146 @@
+{
+  "checkedAt": "2026-11-12T19:33:13.841Z",
+  "base": "https://lot-dossier-assistant.vercel.app",
+  "areaVersion": "2026-11-12.9",
+  "evidenceVersion": "2026-11-12.3",
+  "results": [
+    {
+      "question": "Cobabe new home",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "ov-water",
+          "stage": "submission",
+          "applicability": "required",
+          "evidenceCheck": false,
+          "trigger": "New dwelling: obtain a lot-specific will-serve letter or approved well permit. Checklist p. 2.",
+          "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+        },
+        {
+          "id": "ov-sewer",
+          "stage": "submission",
+          "applicability": "required",
+          "evidenceCheck": false,
+          "trigger": "New dwelling: obtain a lot-specific sewer will-serve letter or approved septic. Checklist p. 2.",
+          "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+        },
+        {
+          "id": "ov-storm",
+          "stage": "submission",
+          "applicability": "required",
+          "evidenceCheck": false,
+          "trigger": "Checklist pp. 2–3: disturbance of at least one acre, or qualifying common-plan development. Lot acreage is not disturbed acreage.",
+          "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+        },
+        {
+          "id": "cobabe-architectural-chain",
+          "stage": "verify",
+          "applicability": "verify",
+          "evidenceCheck": true,
+          "trigger": "The city’s general single-family checklist does not list a private HOA approval item. That omission is not an exemption from parcel-specific terms. Master declaration §§4.1–4.3 require review before covered work starts, if that declaration applies. No retrieved applicable original establishes whether Cobabe architectural approval precedes submission, issuance or construction.",
+          "url": "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif"
+        }
+      ]
+    },
+    {
+      "question": "S-1 proposed 30 ft home",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "ov-shoreline-amendment",
+          "stage": "verify",
+          "applicability": "required",
+          "evidenceCheck": true,
+          "trigger": "Approved September 1, 2026 council minutes, pp. 3–4, record Ordinance 2026-53 increasing S-1 height from 25 to 35 ft. The linked chapter PDF is older. Obtain the full adopted amendment and effective date; do not rely on its superseded height.",
+          "url": "https://www.utah.gov/pmn/files/1489525.pdf"
+        }
+      ]
+    },
+    {
+      "question": "Highlands home",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "highlands-ac",
+          "stage": "issuance",
+          "applicability": "verify",
+          "evidenceCheck": false,
+          "trigger": "Name candidate only: confirm recorded Highlands membership. The published August 24, 2026 guidelines §4.1 (PDF p. 14) require the final AC letter to obtain a building permit; §4.2.6 (p. 19) places the city permit after plan approval. Page 78 recommends waiting to apply and still names Weber County. This supports a private approval sequence, not proof that Ogden Valley City rejects an application without the letter. Resolve current governing documents and municipal intake separately.",
+          "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/1%20-%202026-08-24%20%20Building%20Guidelines.pdf#page=14"
+        }
+      ]
+    },
+    {
+      "question": "Retreat home",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "retreat-ac",
+          "stage": "issuance",
+          "applicability": "verify",
+          "evidenceCheck": false,
+          "trigger": "Subdivision-name candidate only; establish recorded membership first. July 13, 2026 AC Guidelines §4.2.4 (p. 19) place written AC plan approval before the building-permit step. The October 2023 restated CC&Rs Article V, PDF pp. 19–20, create the owner-appointed committee and require written approval before improvements proceed; they do not establish city submission timing. Resolve the current city filing sequence; this private document is not evidence of a municipal intake rule. Open the public library for the original guidelines, recorded CC&Rs and application forms.",
+          "url": "https://1drv.ms/u/s!As7yYwZ4WJEpgRQxxL0KXsU4kz34?e=8mUbDB"
+        },
+        {
+          "id": "retreat-construction",
+          "stage": "construction",
+          "applicability": "verify",
+          "evidenceCheck": false,
+          "trigger": "For confirmed Retreat members, July 13, 2026 AC Guidelines §§4.2.3–4.2.5 (pp. 19–20) require the notice and AC pre-construction meeting after the permit and before construction. Field changes need prior AC approval; unstarted approvals expire after one year. Municipal permission and private approval are separate.",
+          "url": "https://1drv.ms/u/s!As7yYwZ4WJEpgRQxxL0KXsU4kz34?e=8mUbDB"
+        }
+      ]
+    },
+    {
+      "question": "Trappers home",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "trappers-board",
+          "stage": "construction",
+          "applicability": "verify",
+          "evidenceCheck": false,
+          "trigger": "Subdivision-name candidate only. The published 2018 declaration, Article 6 §§6.3–6.6 (printed pp. 23–24), describes an ACC and requires Board written plan approval before new construction or exterior changes. Verify recording, current amendments and lot membership. This source does not establish approval before municipal permit submission.",
+          "url": "https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+        }
+      ]
+    },
+    {
+      "question": "Commercial OVC",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "ov-design",
+          "stage": "issuance",
+          "applicability": "required",
+          "evidenceCheck": false,
+          "trigger": "§108-1-2 covers commercial, resort, public and specified multifamily uses. A single-family scope alone does not resolve overlays or development agreements.",
+          "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf"
+        }
+      ]
+    },
+    {
+      "question": "Small standalone disturbance",
+      "synthetic": true,
+      "answers": [
+        {
+          "id": "ov-storm",
+          "stage": "submission",
+          "applicability": "not-triggered",
+          "evidenceCheck": false,
+          "trigger": "Checklist pp. 2–3: disturbance of at least one acre, or qualifying common-plan development. Lot acreage is not disturbed acreage.",
+          "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+        },
+        {
+          "id": "ov-post-storm",
+          "stage": "review",
+          "applicability": "verify",
+          "evidenceCheck": false,
+          "trigger": "Resolve applicable drainage design, water-quality form and private-system operations/maintenance plan during development review. The city publishes these separately from construction-stormwater permits; an under-one-acre result does not clear permanent drainage obligations. Confirm the site-specific maintenance agreement and review timing.",
+          "url": "https://ogdenvalley.gov/stormwater-management-program-ms4/"
+        }
+      ]
+    }
+  ]
+}
