@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T23:21:20.736Z",
+  "generatedAt": "2026-11-12T23:23:58.086Z",
   "records": [
     {
       "county": "Weber",
@@ -40,8 +40,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 354,
-            "completed": 353,
+            "jobs": 234,
+            "completed": 233,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -58,8 +58,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 310,
-            "completed": 310,
+            "jobs": 250,
+            "completed": 250,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -67,8 +67,8 @@
           },
           {
             "route": "developer_libraries",
-            "jobs": 45,
-            "completed": 45,
+            "jobs": 43,
+            "completed": 43,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -76,53 +76,12 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 725,
-            "completed": 553,
+            "jobs": 334,
+            "completed": 171,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "6ee97c4a4b3cc946b927",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "5415ed6e94b6f19aec16",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "72dc29c93014f48f7d4e",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "e31aa2a208c907cd3ff3",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "cecd2a6d1ee5331f6bd5",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "c0b2ba439c60e66fb535",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "e427538dc34d81a7f000",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "6708b19af009fcfa9906",
-                "status": "pending",
-                "url": "https://webercountyut.nextrequest.com/"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "public_mirrors_and_archives",
@@ -137,7 +96,7 @@
         "pending": 0,
         "unreadDocuments": 0,
         "documents": 154,
-        "publicRouteChecksComplete": false
+        "publicRouteChecksComplete": true
       },
       "contactFallbackEligible": false,
       "documents": [
