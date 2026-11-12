@@ -39,6 +39,11 @@ const D=require('../lib/record-discovery-engine'),PMN=require('../lib/pmn');
   const result2=await D.run(p,store,{fetch:fixture,readPdf:async()=>[{page:1,text:'Cobabe covenant text requiring review before construction.',needsOCR:false}]});
   assert.equal(result2.documents.length,1);assert.equal(result2.coverage.publicRouteChecksComplete,true);
   await D.run(p,store,{fetch:fixture});assert.equal(fetched,2);
+  const failedStore=require('node:path').join(store,'native-retry');
+  const failedRead=await D.run(p,failedStore,{fetch:fixture,readPdf:async()=>{throw Error('Temporary extraction timeout');}});assert.equal(failedRead.documents.length,1);assert(failedRead.documents[0].readError);assert.equal(failedRead.coverage.publicRouteChecksComplete,false);
+  // Recover legacy checkpoints that incorrectly marked the acquisition complete after extraction failed.
+  failedRead.jobs.find(j=>j.documentHash===failedRead.documents[0].sha256).status='complete';fs.writeFileSync(require('node:path').join(failedStore,'manifest.json'),JSON.stringify(failedRead));
+  const recovered=await D.run(p,failedStore,{retry:true,fetch:fixture,readPdf:async()=>[{page:1,text:'Cobabe covenant text successfully recovered.',needsOCR:false}]});assert.equal(recovered.documents.length,1);assert(!recovered.documents[0].readError);assert.equal(recovered.coverage.publicRouteChecksComplete,true);
   // A hosted checkpoint deliberately omits source bytes and page text; resume by exact content hash.
   const doc=result2.documents[0];doc.unreadPages=[1];
   fs.rmSync(require('node:path').join(store,'blobs'),{recursive:true,force:true});
