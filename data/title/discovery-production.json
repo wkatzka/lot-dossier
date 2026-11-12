@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T23:15:12.331Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43325397994",
+  "updatedAt": "2026-11-12T23:19:43.797Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43327713299",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
@@ -5109,7 +5109,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T23:15:12.082Z",
+      "checkedAt": "2026-11-12T23:19:43.786Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5142,8 +5142,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 314,
-            "completed": 313,
+            "jobs": 334,
+            "completed": 333,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5160,8 +5160,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 290,
-            "completed": 290,
+            "jobs": 300,
+            "completed": 300,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5178,12 +5178,53 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 569,
-            "completed": 405,
+            "jobs": 647,
+            "completed": 475,
             "restricted": 0,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "6ee97c4a4b3cc946b927",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "5415ed6e94b6f19aec16",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "72dc29c93014f48f7d4e",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "e31aa2a208c907cd3ff3",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "cecd2a6d1ee5331f6bd5",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "c0b2ba439c60e66fb535",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "e427538dc34d81a7f000",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              },
+              {
+                "id": "6708b19af009fcfa9906",
+                "status": "pending",
+                "url": "https://webercountyut.nextrequest.com/"
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           },
           {
             "route": "public_mirrors_and_archives",
@@ -5198,7 +5239,7 @@
         "pending": 0,
         "unreadDocuments": 0,
         "documents": 154,
-        "publicRouteChecksComplete": true
+        "publicRouteChecksComplete": false
       },
       "legalApplicabilityEstablished": false,
       "documents": [
