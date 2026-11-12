@@ -8,6 +8,9 @@ function project(city='OGDEN VALLEY'){return {schemaVersion:1,propertyKey:'Weber
  assert.throws(()=>W.apply(p,{type:'rule_review',id:'ov-water',state:'approved',reviewer:'Tester',note:'approved'}),/evidence/);
  p=W.apply(p,{type:'rule_review',id:'ov-water',state:'approved',reviewer:'Tester',note:'Lot-specific letter, no outstanding conditions',url:'https://example.org/approval'});assert(!A.blockers(p).some(x=>x.startsWith('Lot-specific water')));assert(!A.blockers(p).some(x=>x.startsWith('Neighborhood')), 'Private issuance sequence does not itself block municipal submission');
  p.planVersion++;assert(A.blockers(p).some(x=>x.startsWith('Lot-specific water')));
+ const shoreline=project();shoreline.application.areaMap.layers.push({id:'ov-zoning',state:'checked',features:[{name:'S-1',attributes:{ZONE_NAME:'S-1'}}]});
+ const shore=A.rules(shoreline).find(r=>r.id==='ov-shoreline-amendment');assert(shore);assert.equal(shore.stage,'verify');assert(shore.evidenceCheck);assert(A.blockers(shoreline).some(x=>/approval timing is not established/.test(x)));
+ const mpd=project();mpd.application.areaMap.layers.push({id:'ov-zoning',state:'checked',features:[{name:'MPD',attributes:{ZONE_NAME:'MPD'}}]});const mpdRule=A.rules(mpd).find(r=>r.id==='ov-zone-MPD');assert(mpdRule);assert.equal(mpdRule.stage,'verify');assert(mpdRule.evidenceCheck);
  const multi=project();multi.application.areaMap.layers[0].features.push({name:'HUNTSVILLE'});assert(A.rules(multi).some(r=>r.id==='jurisdiction'));assert(!A.rules(multi).some(r=>r.id==='ov-water'));
  const fail=project();fail.application.areaMap.layers[0].state='unavailable';assert(A.blockers(fail).some(x=>x.startsWith('Confirm permitting')));
  const unknown=project('OTHER');assert(A.rules(unknown).some(r=>r.id==='coverage'));

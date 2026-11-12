@@ -15,7 +15,7 @@ for(const r of p.requirements) run({type:'requirement',id:r.id,state:'reviewed',
 assert(W.blockers(p,'initial').includes('Rules for this property have not been checked.'));
 function reviewAreas(){
  run({type:'area_map',snapshot:{version:require('../web/area-rules').version,parcelKey:p.propertyKey,at:'2026-11-12',layers:[{id:'municipal',state:'checked',features:[{name:'Example City'}]}]}});
- for(const r of require('../web/area-rules').rules(p).filter(r=>r.stage==='submission'))run({type:'rule_review',id:r.id,state:'not-applicable',reviewer:'Test reviewer',note:'Synthetic authority correspondence confirms no additional prerequisite',url:'https://example.org/authority-letter'});
+ for(const r of require('../web/area-rules').rules(p).filter(r=>r.stage==='submission'||r.blocksSubmission))run({type:'rule_review',id:r.id,state:'not-applicable',reviewer:'Test reviewer',note:'Synthetic authority correspondence confirms no additional prerequisite',url:'https://example.org/authority-letter'});
 }
 reviewAreas();assert.deepEqual(W.blockers(p,'initial'),[]);
 run({type:'prepare',reviewer:'Reviewer',reviewed:true});

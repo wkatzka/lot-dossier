@@ -98,7 +98,7 @@
         "documents": 153,
         "publicRouteChecksComplete": true
       },
-      "contactFallbackEligible": true,
+      "contactFallbackEligible": false,
       "documents": [
         {
           "sha256": "f047869afa901decb2e73dd1221e77edbb8fcde45a5fa75d9337bfd304476d21",

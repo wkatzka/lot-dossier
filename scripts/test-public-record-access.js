@@ -13,6 +13,11 @@ assert(!m.requests[2].orderUrl);assert.equal(m.inventoryComplete,false);
 const checks=A.ROUTES.map(route=>({route,url:'https://example.org/index',checkedAt:'2026-11-12',basis:'All indexed results reviewed for the exact recording and aliases',status:'searched_no_match',coverageComplete:true}));
 assert.equal(A.assessment(checks).contactFallbackEligible,false); // no evidence of a locked door
 checks[0].status='access_restricted';
+assert.equal(A.assessment(checks).contactFallbackEligible,false); // service restriction is not document custody
+checks.forEach(x=>x.instrumentId='3372687');
+checks[0].holdingsEvidence={instrumentId:'3372667',url:'https://example.org/index',locator:'Entry row'};
+assert.equal(A.assessment(checks).contactFallbackEligible,false); // wrong instrument
+checks[0].holdingsEvidence.instrumentId='3372687';
 assert.equal(A.assessment(checks).contactFallbackEligible,true);
 checks[1].status='error';assert.equal(A.assessment(checks).contactFallbackEligible,false);
 checks[1].status='searched_no_match';checks[1].coverageComplete=false;

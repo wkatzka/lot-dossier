@@ -1,5 +1,7 @@
 # Cobabe and Ogden Valley evidence-chain acceptance
 
+**Correction:** Read [the instrument-level gap audit](evidence-gap-audit.md) first. Completed processing is not demonstrated search exhaustion; service restrictions do not prove custody of missing documents. This report is a processing/deployment record, not acceptance of the original objective.
+
 November 12, 2026. Supersedes earlier local-only status reports. Scope: Ogden Valley prerequisite screening and Weber parcel 224410004, Cobabe Ranch Phase 1 Lot 4. No messages, paid orders, authority submissions or access-control bypasses were performed.
 
 ## Capability checklist
@@ -45,7 +47,7 @@ Additional checks:
 
 ## Specific remaining dependencies
 
-1. **Executed Cobabe agreement/exhibits:** public alternatives did not recover the complete current original or reconcile entry numbers. [Recorder abstract](https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php) requires subscription access; [copy orders](https://www.webercountyutah.gov/forms/document/) are paid. [Frontier](https://frontier.co.weber.ut.us/p/Public/List) requires an account. These are demonstrated access dependencies, not proof that no public copy exists.
+1. **Executed Cobabe agreement/exhibits:** public alternatives did not recover the complete current original or reconcile entry numbers. [Recorder abstract](https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php) requires subscription access; [copy orders](https://www.webercountyutah.gov/forms/document/) are paid. [Frontier](https://frontier.co.weber.ut.us/p/Public/List) requires an account. These are observed service restrictions. Custody of the missing instrument and an unavoidable access dependency have not been demonstrated.
 2. **Reviewer/timing:** applicable declaration/annexation, amendments and current delegation missing. Registry contact is a document/reviewer-identification contact, not a confirmed board. Neither “approval unnecessary” nor “send to master DRB” is asserted.
 3. **City operative text:** full shoreline amendment, sensitive-lands reconciliation and ambiguous forest height unresolved. Relevant rules request evidence review rather than guessed conclusions.
 4. **Project evidence:** surveyed slope/high-water marks, actual impacts, legal access and lot-specific approvals cannot come from GIS proximity. The signed-in project's document groups contain no supporting approval letter or current covenant package.
