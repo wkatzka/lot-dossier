@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T18:59:30.012Z",
+  "generatedAt": "2026-11-12T23:15:12.329Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T18:59:29.995Z",
+      "checkedAt": "2026-11-12T23:15:12.076Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -40,8 +40,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 183,
-            "completed": 182,
+            "jobs": 314,
+            "completed": 313,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -58,8 +58,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 280,
-            "completed": 280,
+            "jobs": 290,
+            "completed": 290,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -76,8 +76,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 491,
-            "completed": 327,
+            "jobs": 569,
+            "completed": 405,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -95,7 +95,7 @@
         ],
         "pending": 0,
         "unreadDocuments": 0,
-        "documents": 153,
+        "documents": 154,
         "publicRouteChecksComplete": true
       },
       "contactFallbackEligible": false,
@@ -846,6 +846,44 @@
           "applicability": "unverified",
           "matchingPages": [
             8
+          ],
+          "route": "adopted_agreements_and_exhibits"
+        },
+        {
+          "sha256": "e24821678e7f9ce1ff72d26746d9c5f09d00ab5a9fe0a82da7cfd9db260fd44f",
+          "urls": [
+            "https://entitiesandboundaries.utah.gov/wp-content/uploads/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf"
+          ],
+          "pages": 110,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            2,
+            8,
+            9,
+            15,
+            18,
+            26,
+            34,
+            38,
+            47,
+            48,
+            49,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            62,
+            66,
+            70,
+            75,
+            92,
+            93,
+            94,
+            95
           ],
           "route": "adopted_agreements_and_exhibits"
         }

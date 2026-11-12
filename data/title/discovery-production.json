@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T18:59:30.014Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43285284973",
+  "updatedAt": "2026-11-12T23:15:12.331Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43325397994",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
@@ -5109,7 +5109,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T18:59:30.003Z",
+      "checkedAt": "2026-11-12T23:15:12.082Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5142,8 +5142,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 183,
-            "completed": 182,
+            "jobs": 314,
+            "completed": 313,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5160,8 +5160,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 280,
-            "completed": 280,
+            "jobs": 290,
+            "completed": 290,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5178,8 +5178,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 491,
-            "completed": 327,
+            "jobs": 569,
+            "completed": 405,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5197,7 +5197,7 @@
         ],
         "pending": 0,
         "unreadDocuments": 0,
-        "documents": 153,
+        "documents": 154,
         "publicRouteChecksComplete": true
       },
       "legalApplicabilityEstablished": false,
@@ -6739,6 +6739,15 @@
             "https://www.webercountyutah.gov/planning/documents/wolfcreek/2002_Wolf_Creek_Zoning_Development_Agreement.pdf"
           ],
           "pages": 19,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e24821678e7f9ce1ff72d26746d9c5f09d00ab5a9fe0a82da7cfd9db260fd44f",
+          "urls": [
+            "https://entitiesandboundaries.utah.gov/wp-content/uploads/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf"
+          ],
+          "pages": 110,
           "unreadPages": [],
           "applicability": "unverified"
         }
