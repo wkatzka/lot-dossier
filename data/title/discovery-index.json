@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T16:46:56.677Z",
+  "generatedAt": "2026-11-12T16:50:18.495Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T16:46:56.673Z",
+      "checkedAt": "2026-11-12T16:50:18.491Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -22,15 +22,10 @@
           },
           {
             "route": "parcel_and_parent_records",
-            "jobs": 26,
-            "completed": 3,
+            "jobs": 27,
+            "completed": 4,
             "restricted": 0,
             "unresolved": [
-              {
-                "id": "87ea9cffe4b3a2c9d9f8",
-                "url": "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif",
-                "status": "queued"
-              },
               {
                 "id": "e552d6250d87ff0dbdc0",
                 "url": "https://webercountyutah.gov/parcelsearch/print-ownership-info.php?id=224410004",
@@ -140,6 +135,10 @@
                 "id": "444f63bb76c99f75ef49",
                 "url": "https://webercountyutah.gov/parcelsearch/print-ownership-info.php?id=220210048",
                 "status": "queued"
+              },
+              {
+                "id": "0bc2a4ac09c9ce43ce02",
+                "status": "queued"
               }
             ],
             "unreviewedLeads": 0,
@@ -148,14 +147,9 @@
           {
             "route": "planning_case_files",
             "jobs": 4,
-            "completed": 1,
+            "completed": 2,
             "restricted": 1,
             "unresolved": [
-              {
-                "id": "f3c2425cc86e204e0cec",
-                "url": "https://frontier.co.weber.ut.us/p/Project/DownloadFile?ProjectDocumentId=114603",
-                "status": "queued"
-              },
               {
                 "id": "cafeab21ff051a19c187",
                 "url": "https://frontier.co.weber.ut.us/p/Public",
@@ -168,19 +162,9 @@
           {
             "route": "adopted_agreements_and_exhibits",
             "jobs": 51,
-            "completed": 2,
+            "completed": 4,
             "restricted": 0,
             "unresolved": [
-              {
-                "id": "63896c23990bcf13a058",
-                "url": "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "1ad76ea765bdec0b4624",
-                "url": "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf",
-                "status": "queued"
-              },
               {
                 "id": "cb66fa0ce45f5a0c27fe",
                 "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/2025/01/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
@@ -188,102 +172,102 @@
               },
               {
                 "id": "a28a4d50ba63aa8cb8a6",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "4367e2d721aff7f822c5",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "1abee3293f7be445ed34",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "74805e1e28214d5578e8",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "51d5c4254d2451ef5663",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "7ae09e61a9560557330f",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "634aff009bbd32b0a279",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a875c6fa49ce71877628",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "cce94c56128657066733",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "bfe72117d38c44d9e676",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "d613fbc637ab6078465e",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a8a2678ac89e59e4dad4",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "d42f1bf392a8477e2d78",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "93f87bf2895ea77754d4",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a709894c1ab2e55bcf67",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "4aafe4b8590bc1df384a",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "9aae5d1bdb6eb5f71d1f",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "5cfb6778290ed51a5ed5",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "ab60a033d9037eea6e9c",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "c70be2910ffe9541485b",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
@@ -419,62 +403,57 @@
           {
             "route": "association_libraries",
             "jobs": 204,
-            "completed": 8,
+            "completed": 9,
             "restricted": 0,
             "unresolved": [
               {
-                "id": "b893f77bc87aa6b0da4c",
-                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf",
-                "status": "queued"
-              },
-              {
                 "id": "9afbb8f7dcc96f5d78c0",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "8d8e4ddb48dfce081f5f",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "cd1fb74719906fc9f583",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "d98861ae592d782c4b39",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "57957e11d34f3dfccf90",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "79b3bd0eae0be02000e8",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "e923fe48af3ee0064b05",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "42cc71334980ebb1213e",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "fe6c8941778d08d8a024",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "602c2de1be92575493ec",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
@@ -1323,82 +1302,82 @@
             "unresolved": [
               {
                 "id": "95871d63eff81405f396",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "077a0cc30e6b605f3e8d",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "eaa79ebdc362faf90bc9",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "f4874d21fd9abcc0379f",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "550a8262a5c7dba5046c",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "b536681de9bf5e9f154a",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "0d519bc85b5fd780ac8b",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "3634d6c8d1ebea461208",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "5469e52d4c1c86466de0",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "6c9ffd1ad5f6ac114c25",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "d44114752100de10c66d",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "77e6cdecf2a94d5dd4ca",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "9cbf50f66d3629afa21f",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "bb1f2d7224c40497f805",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "69f00fe8992d76962ed2",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "314f4734a7857677372b",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               }
             ],
@@ -1436,9 +1415,9 @@
             "complete": false
           }
         ],
-        "pending": 298,
-        "unreadDocuments": 7,
-        "documents": 7,
+        "pending": 294,
+        "unreadDocuments": 8,
+        "documents": 10,
         "publicRouteChecksComplete": false
       },
       "contactFallbackEligible": false,
@@ -1447,6 +1426,7 @@
           "sha256": "f047869afa901decb2e73dd1221e77edbb8fcde45a5fa75d9337bfd304476d21",
           "urls": [
             "https://www.webercountyutah.gov/commission/documents/uploads/5-29-25%20--%20CC%20Staff%20Report%20WATTR%20-%20Cobabe%20DA%20Amendment.pdf",
+            "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf",
             "https://www.webercountyutah.gov/Transparency/commission_meetings.php"
           ],
           "pages": 175,
@@ -1621,6 +1601,32 @@
           "route": "adopted_agreements_and_exhibits"
         },
         {
+          "sha256": "e2c774d46a9c4030ea4fa65e3198c85f7db3891e24df88f4d780384be522dd6f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            2
+          ],
+          "route": "association_libraries"
+        },
+        {
+          "sha256": "e9aa2435bb2cfccbc3351e10eb6ca23c44a7e15ad6843038528fd910f8ddc952",
+          "urls": [
+            "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            2
+          ],
+          "route": "adopted_agreements_and_exhibits"
+        },
+        {
           "sha256": "ee617a9306693b801c90051cec8b8e5d795a7ae5d2c0c6d65d0cb5d49fa63b16",
           "urls": [
             "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif"
@@ -1632,21 +1638,6 @@
             1
           ],
           "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "e2c774d46a9c4030ea4fa65e3198c85f7db3891e24df88f4d780384be522dd6f",
-          "urls": [
-            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf"
-          ],
-          "pages": 2,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            2
-          ],
-          "route": "association_libraries",
           "fromPreviousPass": true,
           "previousCheckedAt": "2026-11-12T16:19:23.042Z"
         },
@@ -1859,22 +1850,6 @@
             "https://www.utah.gov/pmn/files/1325421.pdf"
           ],
           "pages": 3,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            2
-          ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "e9aa2435bb2cfccbc3351e10eb6ca23c44a7e15ad6843038528fd910f8ddc952",
-          "urls": [
-            "https://www.utah.gov/pmn/files/1372723.pdf",
-            "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf"
-          ],
-          "pages": 2,
           "unreadPages": [],
           "applicability": "unverified",
           "matchingPages": [

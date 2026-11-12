@@ -1,141 +1,21 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T16:46:56.678Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43262118757",
+  "updatedAt": "2026-11-12T16:50:18.496Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43262735119",
   "profiles": [
     {
       "id": "ogden-valley-city-public-coverage",
       "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-      "checkedAt": "2026-11-12T16:46:22.123Z",
+      "checkedAt": "2026-11-12T16:50:14.229Z",
       "coverage": {
         "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
         "routes": [
           {
             "route": "adopted_code",
-            "jobs": 152,
-            "completed": 24,
+            "jobs": 161,
+            "completed": 48,
             "restricted": 0,
             "unresolved": [
-              {
-                "id": "2a85419482a27158681b",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-3-Cluster-Subdivisions.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "945caea1b300ed8fd252",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-4-Conditional-Uses.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "00bbdd9f26bfea8be57a",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-22-Natural-Hazard-Areas.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "9ee3cd333c44f265d491",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-20-Forest-Campgrounds.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "8a32a11baf26820611f6",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-16-Outdoor-Lighting.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "12b5d52fbe0a456e80e4",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-15-Single-Family-Dwellings-Standards.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "532d6b0e7da24873597f",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-13-Home-Occupation.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "b50c81043ea4191531f5",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-12-Noncomplying-Structures-Uses-And-Lots.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "3853045fa522532793f5",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-10-Public-Buildings.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "e77b9ed02fde2b96509c",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "3117b074d8c03c291276",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-9-Forest-Zones.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "65d509849c65cd0da52e",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-8-Hillside-Residential-HR-ADOPTED.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "230e2599c99b5dfef20e",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/Chapter-104-28-Ogden-Valley-Sensitive-Lands-Overlay-Zone1-1.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "a44a9e92d7c7161b2b70",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-26-Open-Space-Zone-O-1.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "1cc6a8fd2acd0826cd1e",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-19-Res-Manufactured-1.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "0be3cdaaff3e3dfd4ab6",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-14-Forest-Valley-Zone.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "9a280aa42418bae83b09",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-10-Shoreline-Zone-S-11-2.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "c457d2a90d54f9a98860",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-102-Administration.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "500f49345ae12583a77e",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-3-Residential-Estates-Zones-RE.docx",
-                "status": "queued"
-              },
-              {
-                "id": "ced97eb1bafdde920e4a",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-2-AV3.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "666bf57db592ce3c0696",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-104-1-In-General.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "78b0d4d8e0a9ff26d464",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-101-2_Definitions.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "77cf1ba395aed9d32eda",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-101-1-Creation-Implementation-Amendment-And-Effect.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "17105a45890bd3ce7298",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Zones4-24-2026.pdf",
-                "status": "queued"
-              },
               {
                 "id": "a9b16aac33ff34567620",
                 "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/GeneralPlan-FINAL.pdf",
@@ -561,6 +441,42 @@
               {
                 "id": "6e88194bab993f7c5ee8",
                 "status": "queued"
+              },
+              {
+                "id": "1e0f70c4c7ca97684a42",
+                "status": "queued"
+              },
+              {
+                "id": "af145f89610ca307c9fa",
+                "status": "queued"
+              },
+              {
+                "id": "3f456a9c427815d1a5dc",
+                "status": "queued"
+              },
+              {
+                "id": "fd39c86ac15913fb853c",
+                "status": "queued"
+              },
+              {
+                "id": "60bb2be9f3bbc8870418",
+                "status": "queued"
+              },
+              {
+                "id": "970309eed3f0249fdab6",
+                "status": "queued"
+              },
+              {
+                "id": "4146440da0e6dc9ba589",
+                "status": "queued"
+              },
+              {
+                "id": "eb44cef820697ed562b0",
+                "status": "queued"
+              },
+              {
+                "id": "c771f22fbe68bf96332e",
+                "status": "queued"
               }
             ],
             "unreviewedLeads": 0,
@@ -610,9 +526,9 @@
             "complete": true
           }
         ],
-        "pending": 131,
-        "unreadDocuments": 5,
-        "documents": 16,
+        "pending": 116,
+        "unreadDocuments": 9,
+        "documents": 40,
         "publicRouteChecksComplete": false
       },
       "legalApplicabilityEstablished": false,
@@ -859,13 +775,242 @@
           "pages": 1,
           "unreadPages": [],
           "applicability": "unverified"
+        },
+        {
+          "sha256": "3640824bfe8bbd2648bf0ec7c21582fcb2ab1b0898eb1a796db0a5cc428508f6",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-3-Cluster-Subdivisions.pdf"
+          ],
+          "pages": 15,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8aeee53d1aa2495a26160a9b86b9bb2e347b0915c916444c19710bfa0eac29c5",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-4-Conditional-Uses.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "f03642a5aa8523c5f80f2a6b1abd933eac88efc4befb3ebc7a78daca1a9b05f7",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-22-Natural-Hazard-Areas.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3d49ccf1ca34159ee2bde7d64394cb1a499271b9a90e178de0e6330391246eed",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-20-Forest-Campgrounds.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2f83f52273d43cb9d3d4a7266233aa09a8ee49b28691ee6c97a5610a8929106d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-16-Outdoor-Lighting.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "4edb3513ab775744f5a536108b7058e7aa8df28a17237cf4f45f29ce869938e9",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-15-Single-Family-Dwellings-Standards.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "9e6ec5032e1a7dfa4e19871e259c11b08b07c36cfbc89ec406cbbda2b51ce92c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-13-Home-Occupation.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c106973b7771cde3878c6e8f5b194918b88165fd2fe8c491970207ff090344d4",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-12-Noncomplying-Structures-Uses-And-Lots.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fcfaf22b2a1cbad2b002381849d04ac85af4f5a33df266d86ea6afbacb99de6c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-10-Public-Buildings.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3fd92e92d9f78e93cd0c2126128c27a2ae82e056a705fe199585ca177c71951f",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "9c4c4aa9ac89ef7216522ff38e4187f8dc166970abd457c28bf38769413576c7",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-9-Forest-Zones.pdf"
+          ],
+          "pages": 17,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fc9375e91c12dab42611d397ed70a75b93f8247b7fdff5fddc1a6ea02b3700fb",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-8-Hillside-Residential-HR-ADOPTED.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "f5563815644611938450b6218ba844992f8b4ab5a07a6ee53d52c4448647b343",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/Chapter-104-28-Ogden-Valley-Sensitive-Lands-Overlay-Zone1-1.pdf"
+          ],
+          "pages": 19,
+          "unreadPages": [
+            2,
+            3
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "165ce3f55b8b67b4798e34e8e89056b6814bd2ca4191b536388b6589a7b6c6a6",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-26-Open-Space-Zone-O-1.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "0e5ff54f93872998d894201948830df7a4e2f84163e8477702da6427eacaac60",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-19-Res-Manufactured-1.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c0ee964f2ea70c894339e700bfdb23617635664f37f4cf0dfbdfd7eba39c978e",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-14-Forest-Valley-Zone.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8d118fef898b6ef9d5b3847429f4666ee585fb20760ccce6db70652131cc4c4f",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-10-Shoreline-Zone-S-11-2.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e46a386245d03e29740865243a0dfdf7818228f68fcb5a62f00bc91a7e1e4d8d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-102-Administration.pdf"
+          ],
+          "pages": 17,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b80fee52613a2db7bbc7943f3555d49a698588cd9469b9ba3befe8b2657840d1",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-3-Residential-Estates-Zones-RE.docx"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3e405b0905abe5e8c4f7dbf10d2e36eb7147023ef3be25ba4b2b74ae11386346",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-2-AV3.pdf"
+          ],
+          "pages": 21,
+          "unreadPages": [
+            21
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "51d3aa4c3ce5d6b3e295c7d71a2348643d5a0f2125aae4166e11867a27c12472",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-104-1-In-General.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2aabfef5039211717a2d22a8f0ae3e6badfd0208ad637c9c90395cfd6df989fe",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-101-2_Definitions.pdf"
+          ],
+          "pages": 49,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b6a4e5b25fa183fe752b0d4e79f6d005d01241434aa63fa5d6c64b7eec3de0fc",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-101-1-Creation-Implementation-Amendment-And-Effect.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7081d758087037262e65ee34dd8985fe79d5ba29229362643a4a7904a5baf921",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Zones4-24-2026.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [
+            1
+          ],
+          "applicability": "unverified"
         }
       ]
     },
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T16:46:56.675Z",
+      "checkedAt": "2026-11-12T16:50:18.493Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -880,15 +1025,10 @@
           },
           {
             "route": "parcel_and_parent_records",
-            "jobs": 26,
-            "completed": 3,
+            "jobs": 27,
+            "completed": 4,
             "restricted": 0,
             "unresolved": [
-              {
-                "id": "87ea9cffe4b3a2c9d9f8",
-                "url": "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif",
-                "status": "queued"
-              },
               {
                 "id": "e552d6250d87ff0dbdc0",
                 "url": "https://webercountyutah.gov/parcelsearch/print-ownership-info.php?id=224410004",
@@ -998,6 +1138,10 @@
                 "id": "444f63bb76c99f75ef49",
                 "url": "https://webercountyutah.gov/parcelsearch/print-ownership-info.php?id=220210048",
                 "status": "queued"
+              },
+              {
+                "id": "0bc2a4ac09c9ce43ce02",
+                "status": "queued"
               }
             ],
             "unreviewedLeads": 0,
@@ -1006,14 +1150,9 @@
           {
             "route": "planning_case_files",
             "jobs": 4,
-            "completed": 1,
+            "completed": 2,
             "restricted": 1,
             "unresolved": [
-              {
-                "id": "f3c2425cc86e204e0cec",
-                "url": "https://frontier.co.weber.ut.us/p/Project/DownloadFile?ProjectDocumentId=114603",
-                "status": "queued"
-              },
               {
                 "id": "cafeab21ff051a19c187",
                 "url": "https://frontier.co.weber.ut.us/p/Public",
@@ -1026,19 +1165,9 @@
           {
             "route": "adopted_agreements_and_exhibits",
             "jobs": 51,
-            "completed": 2,
+            "completed": 4,
             "restricted": 0,
             "unresolved": [
-              {
-                "id": "63896c23990bcf13a058",
-                "url": "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf",
-                "status": "queued"
-              },
-              {
-                "id": "1ad76ea765bdec0b4624",
-                "url": "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf",
-                "status": "queued"
-              },
               {
                 "id": "cb66fa0ce45f5a0c27fe",
                 "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/2025/01/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
@@ -1046,102 +1175,102 @@
               },
               {
                 "id": "a28a4d50ba63aa8cb8a6",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "4367e2d721aff7f822c5",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "1abee3293f7be445ed34",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "74805e1e28214d5578e8",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "51d5c4254d2451ef5663",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "7ae09e61a9560557330f",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "634aff009bbd32b0a279",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a875c6fa49ce71877628",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "cce94c56128657066733",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "bfe72117d38c44d9e676",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "d613fbc637ab6078465e",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a8a2678ac89e59e4dad4",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "d42f1bf392a8477e2d78",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "93f87bf2895ea77754d4",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "a709894c1ab2e55bcf67",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "4aafe4b8590bc1df384a",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "9aae5d1bdb6eb5f71d1f",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "5cfb6778290ed51a5ed5",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "ab60a033d9037eea6e9c",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
                 "id": "c70be2910ffe9541485b",
-                "url": "https://ogdenvalley.gov",
+                "url": "https://ogdenvalley.gov/",
                 "status": "queued"
               },
               {
@@ -1277,62 +1406,57 @@
           {
             "route": "association_libraries",
             "jobs": 204,
-            "completed": 8,
+            "completed": 9,
             "restricted": 0,
             "unresolved": [
               {
-                "id": "b893f77bc87aa6b0da4c",
-                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf",
-                "status": "queued"
-              },
-              {
                 "id": "9afbb8f7dcc96f5d78c0",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "8d8e4ddb48dfce081f5f",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "cd1fb74719906fc9f583",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "d98861ae592d782c4b39",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "57957e11d34f3dfccf90",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "79b3bd0eae0be02000e8",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "e923fe48af3ee0064b05",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "42cc71334980ebb1213e",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "fe6c8941778d08d8a024",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
                 "id": "602c2de1be92575493ec",
-                "url": "https://wolfcreekresortmasterhoa.com",
+                "url": "https://wolfcreekresortmasterhoa.com/",
                 "status": "queued"
               },
               {
@@ -2181,82 +2305,82 @@
             "unresolved": [
               {
                 "id": "95871d63eff81405f396",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "077a0cc30e6b605f3e8d",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "eaa79ebdc362faf90bc9",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "f4874d21fd9abcc0379f",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "550a8262a5c7dba5046c",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "b536681de9bf5e9f154a",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "0d519bc85b5fd780ac8b",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "3634d6c8d1ebea461208",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "5469e52d4c1c86466de0",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "6c9ffd1ad5f6ac114c25",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "d44114752100de10c66d",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "77e6cdecf2a94d5dd4ca",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "9cbf50f66d3629afa21f",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "bb1f2d7224c40497f805",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "69f00fe8992d76962ed2",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               },
               {
                 "id": "314f4734a7857677372b",
-                "url": "https://webercountyut.nextrequest.com",
+                "url": "https://webercountyut.nextrequest.com/",
                 "status": "queued"
               }
             ],
@@ -2294,9 +2418,9 @@
             "complete": false
           }
         ],
-        "pending": 298,
-        "unreadDocuments": 7,
-        "documents": 7,
+        "pending": 294,
+        "unreadDocuments": 8,
+        "documents": 10,
         "publicRouteChecksComplete": false
       },
       "legalApplicabilityEstablished": false,
@@ -2490,7 +2614,8 @@
         {
           "sha256": "f047869afa901decb2e73dd1221e77edbb8fcde45a5fa75d9337bfd304476d21",
           "urls": [
-            "https://www.webercountyutah.gov/commission/documents/uploads/5-29-25%20--%20CC%20Staff%20Report%20WATTR%20-%20Cobabe%20DA%20Amendment.pdf"
+            "https://www.webercountyutah.gov/commission/documents/uploads/5-29-25%20--%20CC%20Staff%20Report%20WATTR%20-%20Cobabe%20DA%20Amendment.pdf",
+            "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf"
           ],
           "pages": 175,
           "unreadPages": [
@@ -2521,6 +2646,35 @@
             173,
             174
           ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "ee617a9306693b801c90051cec8b8e5d795a7ae5d2c0c6d65d0cb5d49fa63b16",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [
+            1
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e2c774d46a9c4030ea4fa65e3198c85f7db3891e24df88f4d780384be522dd6f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e9aa2435bb2cfccbc3351e10eb6ca23c44a7e15ad6843038528fd910f8ddc952",
+          "urls": [
+            "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
           "applicability": "unverified"
         }
       ]
