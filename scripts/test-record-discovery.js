@@ -39,6 +39,15 @@ const D=require('../lib/record-discovery-engine'),PMN=require('../lib/pmn');
   const result2=await D.run(p,store,{fetch:fixture,readPdf:async()=>[{page:1,text:'Cobabe covenant text requiring review before construction.',needsOCR:false}]});
   assert.equal(result2.documents.length,1);assert.equal(result2.coverage.publicRouteChecksComplete,true);
   await D.run(p,store,{fetch:fixture});assert.equal(fetched,2);
+  // A hosted checkpoint deliberately omits source bytes and page text; resume by exact content hash.
+  const doc=result2.documents[0];doc.unreadPages=[1];
+  fs.rmSync(require('node:path').join(store,'blobs'),{recursive:true,force:true});
+  fs.rmSync(require('node:path').join(store,'readings'),{recursive:true,force:true});
+  const ocrJob={kind:'ocr',documentHash:doc.sha256,page:1,route:'association_libraries',status:'queued'};
+  await D.processJob(result2,p,ocrJob,store,{fetch:fixture,readPdf:async()=>[{page:1,text:'',needsOCR:true}],ocr:async()=>({pages:[{page:1,text:'Cobabe public covenant',method:'test'}]})});
+  assert.equal(ocrJob.status,'complete');assert.equal(doc.unreadPages.length,0);
+  fs.rmSync(require('node:path').join(store,'blobs'),{recursive:true,force:true});
+  await assert.rejects(()=>D.processJob(result2,p,{...ocrJob,status:'queued'},store,{fetch:async url=>({url,status:200,bytes:Buffer.from('changed document')})}),/unavailable or changed/);
   console.log('Discovery tests passed: exact parcel identity, host boundary, embedded files, complete pagination, honest gaps, document download and resumable ingestion.');
  }finally{fs.rmSync(store,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

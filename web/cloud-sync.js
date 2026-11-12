@@ -22,7 +22,12 @@ async function logout(){await init();if(client){const {error}=await client.auth.
 function auth(){if(!session)throw Error('Sign in to your Cornerpin account first');return {Authorization:'Bearer '+session.access_token};}
 function assertOwner(owner){if(!owner||session?.user?.id!==owner||root.ProjectStore.owner()!==owner)throw Error('Account changed during transfer; retry.');}
 function baseKey(id){return 'cornerpin-cloud-base:'+session.user.id+':'+id;}
-async function list(){const r=await fetch('/api/projects',{headers:auth(),signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('Cloud session expired or read failed');return (await r.json()).projects;}
+async function list(){
+ const headers=auth(),owner=session.user.id,c=await config();assertOwner(owner);
+ // Keep large GIS snapshots on the existing private, RLS-protected storage API.
+ const r=await fetch(c.url+'/rest/v1/cornerpin_projects?owner_id=eq.'+encodeURIComponent(owner)+'&select=record',{headers:{apikey:c.key,...headers},signal:AbortSignal.timeout(30000)});
+ if(!r.ok)throw Error('Cloud session expired or read failed');const rows=await r.json();assertOwner(owner);return rows.map(x=>x.record);
+}
 async function fileRequest(document,method,blob){const c=await config(),path=session.user.id+'/'+document.id+'/'+document.hash;const r=await fetch(c.url+'/storage/v1/object/cornerpin-private/'+path,{method,signal:AbortSignal.timeout(60000),headers:{apikey:c.key,...auth(),...(method==='POST'?{'Content-Type':'application/octet-stream'}:{})},...(blob?{body:blob}:{})});return r;}
 async function push(project){
  if(!session||root.ProjectStore.owner()!==session.user.id)throw Error("Sign in and open a project in your account before saving.");
@@ -33,7 +38,14 @@ async function push(project){
   assertOwner(owner);const existing=await fileRequest(d,'GET');if(existing.ok){if(await root.ProjectBackup.hash(await existing.arrayBuffer())!==d.hash)throw Error('Cloud document checksum conflict');}else if(existing.status===400||existing.status===404){assertOwner(owner);const saved=await fileRequest(d,'POST',blob);if(!saved.ok)throw Error('Cloud document upload failed');}else throw Error('Cloud document access failed');
  }
  if(session?.user?.id!==owner)throw Error('Account changed during save; retry.');
- const r=await fetch('/api/projects',{method:'POST',signal:AbortSignal.timeout(20000),headers:{...auth(),'Content-Type':'application/json'},body:JSON.stringify({project,expectedRevision:remote?remote.revision:null})});const d=await r.json();if(!r.ok)throw Error(d.error||'Cloud save failed');localStorage.setItem(key,String(d.project.revision));return d.project;
+ const c=await config();assertOwner(owner);
+ if(project.schemaVersion!==1||!/^cp-[a-z0-9-]+$/i.test(project.id)||!Number.isInteger(project.revision)||project.revision<0)throw Error('Invalid project record');
+ if(remote&&project.revision<=remote.revision)throw Error('Revision must advance');
+ const filter=remote?'&id=eq.'+encodeURIComponent(project.id)+'&owner_id=eq.'+encodeURIComponent(owner)+'&revision=eq.'+remote.revision:'';
+ const r=await fetch(c.url+'/rest/v1/cornerpin_projects?select=id,revision'+filter,{method:remote?'PATCH':'POST',signal:AbortSignal.timeout(60000),headers:{apikey:c.key,...auth(),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({id:project.id,owner_id:owner,revision:project.revision,record:project,updated_at:new Date().toISOString()})});
+ if(!r.ok)throw Error(r.status===409?'Project conflict; reload before saving':'Cloud save failed (HTTP '+r.status+'). Local changes are retained.');
+ const rows=await r.json();if(rows.length!==1||rows[0].id!==project.id||rows[0].revision!==project.revision)throw Error('Project conflict or access denied');assertOwner(owner);
+ localStorage.setItem(key,String(project.revision));return project;
 }
 async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owner);const p=supplied||(await list()).find(p=>p.id===id);if(!p)throw Error('Cloud project not found');const existing=await root.ProjectStore.get(id),base=baseRevision(id);
  if(existing){if(existing.revision!==base)throw Error('This device has unsynced changes. They were kept; retry sync or download a backup before reconciling.');if(existing.revision===p.revision)return existing;if(p.revision<existing.revision)throw Error('Cloud copy is older than this device.');}
