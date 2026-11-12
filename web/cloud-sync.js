@@ -41,9 +41,10 @@ async function push(project){
  const c=await config();assertOwner(owner);
  if(project.schemaVersion!==1||!/^cp-[a-z0-9-]+$/i.test(project.id)||!Number.isInteger(project.revision)||project.revision<0)throw Error('Invalid project record');
  if(remote&&project.revision<=remote.revision)throw Error('Revision must advance');
+ const cloudProject=project.application?.areaMap&&root.OVCRules?{...project,application:{...project.application,areaMap:root.OVCRules.localizeSnapshot(project.application.areaMap,project.report.parcel.geometry||{rings:project.report.parcel.rings})}}:project;
  const filter=remote?'&id=eq.'+encodeURIComponent(project.id)+'&owner_id=eq.'+encodeURIComponent(owner)+'&revision=eq.'+remote.revision:'';
- const r=await fetch(c.url+'/rest/v1/cornerpin_projects?select=id,revision'+filter,{method:remote?'PATCH':'POST',signal:AbortSignal.timeout(60000),headers:{apikey:c.key,...auth(),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({id:project.id,owner_id:owner,revision:project.revision,record:project,updated_at:new Date().toISOString()})});
- if(!r.ok)throw Error(r.status===409?'Project conflict; reload before saving':'Cloud save failed (HTTP '+r.status+'). Local changes are retained.');
+ const r=await fetch(c.url+'/rest/v1/cornerpin_projects?select=id,revision'+filter,{method:remote?'PATCH':'POST',signal:AbortSignal.timeout(60000),headers:{apikey:c.key,...auth(),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({id:project.id,owner_id:owner,revision:project.revision,record:cloudProject,updated_at:new Date().toISOString()})});
+ if(!r.ok){const error=await r.json().catch(()=>({}));throw Error(r.status===409?'Project conflict; reload before saving':'Cloud save failed (HTTP '+r.status+'): '+(error.message||'Storage service unavailable')+'. Local changes are retained.');}
  const rows=await r.json();if(rows.length!==1||rows[0].id!==project.id||rows[0].revision!==project.revision)throw Error('Project conflict or access denied');assertOwner(owner);
  localStorage.setItem(key,String(project.revision));return project;
 }

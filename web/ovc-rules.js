@@ -94,6 +94,19 @@ function dimensionChecks(name,s){
 function parseGeometry(raw){try{return JSON.parse(raw);}catch{return null;}}
 function feature(g){if(!g)return null;try{if(g.rings)return T.polygon(g.rings);if(g.paths)return T.multiLineString(g.paths);if(Number.isFinite(g.x)&&Number.isFinite(g.y))return T.point([g.x,g.y]);return g.type==='Feature'?g:null;}catch{return null;}}
 function near(g,h){const a=feature(g),b=feature(h);if(!a||!b)return null;try{if(T.booleanIntersects(a,b))return 0;let d=Infinity;const lines=x=>x.geometry.type==='Polygon'?T.polygonToLine(x):x;const la=lines(a),lb=lines(b);T.coordEach(a,c=>{if(/LineString/.test(lb.geometry.type))T.flattenEach(lb,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});T.coordEach(b,c=>{if(/LineString/.test(la.geometry.type))T.flattenEach(la,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});return Number.isFinite(d)?d:null;}catch{return null;}}
+function localizeSnapshot(snapshot,parcelGeometry){
+ if(!snapshot?.layers||!feature(parcelGeometry))return snapshot;
+ let bounds=T.bbox(feature(parcelGeometry));
+ for(const raw of String(snapshot.geometryScope||'').split('|').filter(Boolean)){const f=feature(parseGeometry(raw));if(f){const b=T.bbox(f);bounds=[Math.min(bounds[0],b[0]),Math.min(bounds[1],b[1]),Math.max(bounds[2],b[2]),Math.max(bounds[3],b[3])];}}
+ const margin=.003,bbox=[bounds[0]-margin,bounds[1]-margin,bounds[2]+margin,bounds[3]+margin];
+ return {...snapshot,displayExtent:bbox,geometryNote:'Regional geometry is clipped to the parcel/work vicinity for display; source intersection results, identifiers and attributes are retained. Open GIS source for the full regional boundary.',layers:snapshot.layers.map(l=>({...l,features:l.features.map(f=>{
+  const shape=feature(f.geometry);if(!shape||shape.geometry.type==='Point')return f;
+  try{const clipped=T.bboxClip(shape,bbox).geometry;let geometry;
+   if(clipped.type==='Polygon')geometry={rings:clipped.coordinates};else if(clipped.type==='MultiPolygon')geometry={rings:clipped.coordinates.flat()};else if(clipped.type==='LineString')geometry={paths:[clipped.coordinates]};else if(clipped.type==='MultiLineString')geometry={paths:clipped.coordinates};else return f;
+   return {...f,geometry,displayClipped:true};
+  }catch{return f;}
+ })}))};
+}
 function rows(p,add){const layers=p.application.areaMap?.layers||[],s=p.application.ruleScope||{},get=id=>layers.find(l=>l.id===id),hits=id=>get(id)?.features||[],status=id=>get(id)?.state==='checked',url=k=>S[k]?.url||'https://ogdenvalley.gov/land-use/';
  const rule=(id,title,code,stage,text,app='verify',layer='ov-zoning',authority='Ogden Valley planning / engineering')=>add('ov-'+id,title,authority,stage,text,url(code),app,layer);
  const z=[...new Set(hits('ov-zoning').map(f=>String(f.attributes?.ZONE_NAME||f.name).trim().toUpperCase()))];
@@ -135,5 +148,5 @@ function rows(p,add){const layers=p.application.areaMap?.layers||[],s=p.applicat
  add('stream','Stream alteration authorization','Utah Water Rights / US Army Corps','construction','Written authorization is required before altering natural stream bed/banks. Proposed work is screened against mapped watercourses; field high-water marks, drainage paths and federal jurisdiction need evidence.','https://www.waterrights.utah.gov/strmalt/',s.streamWork==='yes'?'required':s.streamWork==='no'?'not-triggered':'verify','ov-streams');
  add('ov-excavation','City excavation / right-of-way permit','Ogden Valley engineering','construction','City planning provides a separate excavation application. Resolve right-of-way work, utility crossings, road restoration and drainage conditions before excavation.','https://ogdenvalley.gov/planning/',s.rowWork==='yes'?'required':s.rowWork==='no'?'not-triggered':'verify','ov-roads');
 }
-const api={definitions,zones,fields,rows,dimensionChecks,sources:S,near,feature};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.OVCRules=api;
+const api={localizeSnapshot,definitions,zones,fields,rows,dimensionChecks,sources:S,near,feature};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.OVCRules=api;
 })(globalThis);

@@ -37,3 +37,5 @@ assert(O.dimensionChecks('RMH-1-6',{work:'new-home',cornerLot:'yes',lotArea:6500
 console.log('PASS: commercial/resort/industrial/manufactured dimensional conditions and explicit abutment exceptions.');
 
 const adu=project();adu.application.ruleScope.adu='yes';assert.equal(get(adu,'ov-adu-landuse-sequence').stage,'submission');assert.equal(get(adu,'ov-adu-recorded-notice').stage,'issuance');assert.equal(get(adu,'ov-adu-fire').stage,'review');console.log('PASS: ADU application prerequisites, separate reviewer approvals and recorded-notice timing.');
+
+const regional={layers:[{id:'municipal',features:[{name:'Example',attributes:{OBJECTID:7},geometry:{rings:[[[-120,30],[-100,30],[-100,50],[-120,50],[-120,30]]]}}]}]};const compact=O.localizeSnapshot(regional,polygon);assert.equal(compact.layers[0].features[0].attributes.OBJECTID,7);assert(compact.layers[0].features[0].displayClipped);assert.equal(O.near(polygon,compact.layers[0].features[0].geometry),0);assert(compact.displayExtent[2]-compact.displayExtent[0]<.01);console.log('PASS: regional geometry clipping preserves matching identity and local spatial evidence.');
