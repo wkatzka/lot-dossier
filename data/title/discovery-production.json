@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T23:19:43.797Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43327713299",
+  "updatedAt": "2026-11-12T23:21:20.738Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43327939373",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
@@ -5109,7 +5109,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T23:19:43.786Z",
+      "checkedAt": "2026-11-12T23:21:20.723Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5142,8 +5142,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 334,
-            "completed": 333,
+            "jobs": 354,
+            "completed": 353,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5160,8 +5160,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 300,
-            "completed": 300,
+            "jobs": 310,
+            "completed": 310,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5178,8 +5178,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 647,
-            "completed": 475,
+            "jobs": 725,
+            "completed": 553,
             "restricted": 0,
             "unresolved": [
               {

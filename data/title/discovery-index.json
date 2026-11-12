@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T23:19:43.795Z",
+  "generatedAt": "2026-11-12T23:21:20.736Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T23:19:43.779Z",
+      "checkedAt": "2026-11-12T23:21:20.712Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -40,8 +40,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 334,
-            "completed": 333,
+            "jobs": 354,
+            "completed": 353,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -58,8 +58,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 300,
-            "completed": 300,
+            "jobs": 310,
+            "completed": 310,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -76,8 +76,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 647,
-            "completed": 475,
+            "jobs": 725,
+            "completed": 553,
             "restricted": 0,
             "unresolved": [
               {
