@@ -2,6 +2,7 @@
 (function (root) {
   'use strict';
   const E = typeof module !== 'undefined' && module.exports ? require('./evidence-ledger') : root.EvidenceLedger;
+  const A = typeof module !== 'undefined' && module.exports ? require('./area-rules') : root.AreaRules;
   const clone = x => JSON.parse(JSON.stringify(x));
   const required = (x, message) => { if (!x) throw new Error(message); };
   const clean = x => String(x || '').trim();
@@ -33,6 +34,7 @@
   function openCorrections(p) { return p.corrections.filter(c => c.state !== 'accepted'); }
   function blockers(p, kind) {
     const out = [];
+    if (kind !== 'resubmission' && A) out.push(...A.blockers(p));
     if (kind === 'resubmission') {
       if (!p.application.reference) out.push('Application reference is missing.');
       const open = openCorrections(p).filter(c => c.state !== 'resubmitted');
@@ -59,6 +61,25 @@
     const p = clone(project), a = command; now = now || new Date().toISOString();
     required(p.schemaVersion === 1, 'Unsupported project version.');
     switch (a.type) {
+      case 'area_map': {
+        required(a.snapshot?.parcelKey===p.propertyKey && Array.isArray(a.snapshot.layers),'Area matches must belong to this parcel.');
+        p.application.areaMap=clone(a.snapshot);invalidate(p);event(p,a.type,'Refreshed parcel boundary matches; approval decisions require renewed review.',now);break;
+      }
+      case 'rule_scope': {
+        required(['','new-home','addition','commercial','other'].includes(a.work)&&['','under-acre','one-acre'].includes(a.disturbance)&&['','yes','no'].includes(a.commonPlan),'Choose a valid project scope.');
+        p.application.ruleScope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};invalidate(p);event(p,a.type,'Updated approval-rule project triggers.',now);break;
+      }
+      case 'rule_review': {
+        required(p.application.areaMap,'Match the parcel before recording an approval decision.');
+        const rule=A.rules(p).find(r=>r.id===a.id);required(rule,'Unknown approval requirement.');
+        required(['approved','not-applicable','needs-review'].includes(a.state),'Choose a decision.');
+        required(clean(a.reviewer)&&clean(a.note),'Record reviewer and approval conditions or applicability basis.');
+        const d=doc(p,a.documentId);required(a.state==='needs-review'||(/^https:\/\//i.test(a.url||'')||(d&&latest(p,d))),'Attach a current approval/applicability document or HTTPS evidence link.');
+        p.application.ruleReviews=p.application.ruleReviews||{};
+        if(p.application.ruleReviews[a.id]){p.application.ruleReviewHistory=p.application.ruleReviewHistory||[];p.application.ruleReviewHistory.push({id:a.id,...clone(p.application.ruleReviews[a.id])});}
+        p.application.ruleReviews[a.id]={state:a.state,reviewer:clean(a.reviewer),note:clean(a.note),url:clean(a.url),documentId:d?.id||'',at:now,version:A.version,mapAt:p.application.areaMap.at,siteVersion:p.siteVersion,planVersion:p.planVersion,scope:JSON.stringify(p.application.ruleScope||{})};
+        invalidate(p);event(p,a.type,'Recorded '+a.state+' for '+rule.title+'; user-reviewed evidence.',now);break;
+      }
       case 'sync_report': {
         required(a.report.parcel.county + '|' + a.report.parcel.id === p.propertyKey, 'The report belongs to a different property.');
         p.evidence = E.sync(p.evidence, a.report); p.report = clone(a.report); p.siteVersion++;

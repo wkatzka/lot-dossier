@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');const A=require('../web/area-rules'),W=require('../web/permit-workflow');
+function project(city='OGDEN VALLEY'){return {schemaVersion:1,propertyKey:'Weber|test',property:{county:'Weber',parcelId:'test'},report:{parcel:{attrs:{SUBDIV_NAME:'THE RETREAT AT WOLF CREEK'},rings:[[[-111.83,41.3],[-111.829,41.3],[-111.829,41.301],[-111.83,41.3]]]},facts:{},findings:[]},application:{areaMap:{parcelKey:'Weber|test',at:'2026-11-12',layers:[{id:'municipal',state:'checked',features:[{name:city}]}]}},siteVersion:1,planVersion:1,requirements:[],documents:[],packages:[],events:[],corrections:[],receipts:[]};}
+(async()=>{
+ let p=project();assert(A.rules(p).find(r=>r.id==='ov-water').applicability==='verify');p=W.apply(p,{type:'rule_scope',work:'new-home',disturbance:'under-acre',commonPlan:'no'});assert.equal(A.rules(p).find(r=>r.id==='ov-water').applicability,'required');assert.equal(A.rules(p).find(r=>r.id==='ov-storm').applicability,'not-triggered');assert.equal(A.rules(p).find(r=>r.id==='retreat-ac').applicability,'verify');
+ assert.throws(()=>W.apply(p,{type:'rule_review',id:'ov-water',state:'approved',reviewer:'Tester',note:'approved'}),/evidence/);
+ p=W.apply(p,{type:'rule_review',id:'ov-water',state:'approved',reviewer:'Tester',note:'Lot-specific letter, no outstanding conditions',url:'https://example.org/approval'});assert(!A.blockers(p).some(x=>x.startsWith('Lot-specific water')));assert(A.blockers(p).some(x=>x.startsWith('Neighborhood')));
+ p.planVersion++;assert(A.blockers(p).some(x=>x.startsWith('Lot-specific water')));
+ const multi=project();multi.application.areaMap.layers[0].features.push({name:'HUNTSVILLE'});assert(A.rules(multi).some(r=>r.id==='jurisdiction'));assert(!A.rules(multi).some(r=>r.id==='ov-water'));
+ const fail=project();fail.application.areaMap.layers[0].state='unavailable';assert(A.blockers(fail).some(x=>x.startsWith('Confirm permitting')));
+ const unknown=project('OTHER');assert(A.rules(unknown).some(r=>r.id==='coverage'));
+ const empty=project();delete empty.application.areaMap;assert(A.blockers(empty).length);
+ const mock=async url=>({ok:true,json:async()=>url.includes('tax_entities/MapServer?')?{layers:[]}:{features:[],exceededTransferLimit:true}});const snapshot=await A.lookup(empty,mock);assert(snapshot.layers.every(l=>l.state==='unavailable'));assert.equal(snapshot.basis,'Parcel intersection');
+ console.log('PASS: scope triggers, neighborhood candidates, evidence, stale approvals, boundary conflict, unknown coverage and GIS failure');
+ if(process.argv.includes('--live')){const q=project();const s=await A.lookup(q);console.log(JSON.stringify(s.layers.map(l=>({id:l.id,state:l.state,names:l.features.map(f=>f.name),error:l.error})),null,2));assert(s.layers.find(l=>l.id==='municipal').state==='checked');assert(s.layers.find(l=>l.id==='water').state==='checked');}
+})().catch(e=>{console.error(e);process.exitCode=1});

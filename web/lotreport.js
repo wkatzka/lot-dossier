@@ -980,9 +980,9 @@
         "The Utah HOA registry shows the association's registered contact but not its CC&Rs.",
         'County parcel record + Utah HOA registry', parcelPage, null, 'Get the CC&Rs, design guidelines and HOA fees from the title commitment or the HOA contact in the state registry.'));
     } else out.push(F('ccr', 'CC&Rs / HOA', 'verify', 'Not in a platted subdivision per assessor', 'There may still be recorded covenants; check the title report.', 'County parcel record', parcelPage));
-    if (kb && kb.designReview) out.push(F('ccr', 'City design review', 'ok', 'No city design review for single-family homes', kb.designReview + (sub ? ' HOA architectural review may still apply under the CC&Rs.' : ''),
+    if (kb && kb.designReview) out.push(F('ccr', 'City design review', 'verify', 'Check municipal design-review triggers', 'Review the adopted code against use, zoning, overlays and development agreements. Rules & Approvals records the controlling requirement and stage. ' + (sub ? ' HOA architectural review may still apply under the CC&Rs.' : ''),
       ctx.facts.jurisdiction + ' Land Use Code', kb.code));
-    else if (sub) out.push(F('ccr', 'Design review', 'verify', 'HOA architectural review likely', 'Expect an HOA architectural committee review before the permit application.', null, null, null, 'Request design guidelines and review schedule from the HOA/developer.'));
+    else if (sub) out.push(F('ccr', 'Design review', 'verify', 'HOA architectural review likely', 'Confirm recorded membership, the responsible committee and its required approval sequence. Timing varies by governing documents.', null, null, null, 'Request design guidelines and review schedule from the HOA/developer.'));
 
     var juris = ctx.facts.jurisdiction || 'the jurisdiction';
     if (kb) {
@@ -2143,6 +2143,7 @@
 
   function reviewFindings(findings) {
     return (findings||[]).map(function(original){var f=Object.assign({},original);
+      if(f.item==='City design review'&&/No city design review/.test(f.headline||'')){f.status='verify';f.headline='Check municipal design-review triggers';f.detail='Review use, zoning, overlays and development agreements against the current adopted code. Open Rules & Approvals for sourced requirements and timing.';}
       // Presentation correction for older snapshots; retain saved records and frozen packages unchanged.
       if(['Plat setbacks','Development standards'].includes(f.item)&&/These replace the base zone setbacks|Where these differ from the zone, they govern/.test(f.detail||'')){
         f.status=f.item==='Plat setbacks'?'verify':'watch';f.headline=(f.headline||'').replace('Setbacks for this lot:','Reported setback candidates:');

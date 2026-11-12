@@ -176,3 +176,15 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .document-viewer{width:min(1100px,94vw);max-width:94vw;border:1px solid var(--cp-line);border-radius:10px;background:var(--cp-surface);color:var(--cp-ink);padding:20px}.document-viewer::backdrop{background:#27323970}.document-viewer iframe{width:100%;height:70vh;border:1px solid var(--cp-line)}
 .document-page-controls{display:flex;gap:20px;align-items:center;margin:12px 0}.document-page-controls[hidden]{display:none}.document-page-controls label{display:flex;align-items:center;gap:8px}.document-page-scroll{max-height:65vh;overflow:auto;background:#dfe2dc}.document-page-scroll canvas{display:block;background:white}.document-viewer{max-height:94vh;overflow:auto}
 .document-next{margin-top:18px;padding:14px 16px;background:var(--cp-canvas);border-left:3px solid var(--cp-primary)}.document-next h4{margin:0}.investigate-evidence{margin-top:14px}.handoff-guide ol{padding-left:22px}.handoff-guide li{padding:8px 0}.handoff-guide li button{margin:6px 0}
+
+/* Property rule atlas shares the concrete workspace and explicit review controls. */
+.rules-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px}
+#rules-map{height:360px;border-radius:8px;overflow:hidden;background:#dfe3df}
+.rules-layers{display:flex;flex-wrap:wrap;gap:6px}.rules-layers button{font-size:12px;padding:6px 10px}
+.rules-scroll{overflow-x:auto}.rules-table table{width:100%;border-collapse:collapse;font-size:14px}
+.rules-table th,.rules-table td{padding:14px 12px;text-align:left;vertical-align:top;border-bottom:1px solid #d9ded9;text-transform:none;letter-spacing:normal;color:inherit}
+.rules-table th{background:#edf0eb}.rules-table td:first-child{width:32%}.rules-table small{color:#596560}
+#rule-detail:empty{display:none}#rule-detail{padding:24px 0}#rule-detail form{max-width:720px;display:grid;gap:12px}
+.rules-contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+@media(max-width:800px){.rules-layout{grid-template-columns:1fr}#rules-map{height:290px}.rules-table table{min-width:680px}}
+.rules-intro{padding:20px!important}.rules-intro h2{margin:0 0 10px}.rules-intro p{margin:8px 0}.rules-intro .pw-actions{margin:12px 0}

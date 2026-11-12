@@ -12,7 +12,12 @@ run({type:'application',applicant:'Applicant',owner:'Owner',description:'Single-
 run(file('v1'));
 assert(W.blockers(p,'initial').length,'Uploading plans must not approve requirements');
 for(const r of p.requirements) run({type:'requirement',id:r.id,state:'reviewed',reviewer:'Reviewer',note:'Checked current scope and required sheets',documentIds:['v1']});
-assert.deepEqual(W.blockers(p,'initial'),[]);
+assert(W.blockers(p,'initial').includes('Rules for this property have not been checked.'));
+function reviewAreas(){
+ run({type:'area_map',snapshot:{parcelKey:p.propertyKey,at:'2026-11-12',layers:[{id:'municipal',state:'checked',features:[{name:'Example City'}]}]}});
+ for(const r of require('../web/area-rules').rules(p).filter(r=>r.stage==='submission'))run({type:'rule_review',id:r.id,state:'not-applicable',reviewer:'Test reviewer',note:'Synthetic authority correspondence confirms no additional prerequisite',url:'https://example.org/authority-letter'});
+}
+reviewAreas();assert.deepEqual(W.blockers(p,'initial'),[]);
 run({type:'prepare',reviewer:'Reviewer',reviewed:true});
 const first = W.currentPackage(p,'initial');
 run({type:'prepare',reviewer:'Reviewer',reviewed:true});
@@ -22,7 +27,7 @@ assert(p.packages[0].stale);
 assert.deepEqual(p.packages[0].documentIds,['v1'],'Frozen package retains original document versions');
 fails({type:'receipt',reference:'APP-TEST',receivedAt:'2026-11-07',url:'https://example.org/receipt',packageId:first.id},/current package/);
 for(const r of p.requirements) run({type:'requirement',id:r.id,state:'reviewed',reviewer:'Reviewer',note:'Reviewed updated plans',documentIds:['v2']});
-run({type:'prepare',reviewer:'Reviewer',reviewed:true});
+reviewAreas();run({type:'prepare',reviewer:'Reviewer',reviewed:true});
 const receipt={type:'receipt',reference:'APP-TEST',receivedAt:'2026-11-07',url:'https://example.org/receipt',packageId:W.currentPackage(p,'initial').id};
 run(receipt);run(receipt);assert.equal(p.receipts.length,1);assert.equal(p.stage,'submitted');
 fails({type:'prepare',reviewer:'Reviewer',reviewed:true},/already filed/);
