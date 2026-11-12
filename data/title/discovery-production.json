@@ -1,549 +1,8 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T17:27:43.272Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43266007701",
+  "updatedAt": "2026-11-12T17:31:58.645Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43268388460",
   "profiles": [
-    {
-      "id": "ogden-valley-city-public-coverage",
-      "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-      "checkedAt": "2026-11-12T17:17:40.665Z",
-      "coverage": {
-        "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-        "routes": [
-          {
-            "route": "adopted_code",
-            "jobs": 176,
-            "completed": 170,
-            "restricted": 0,
-            "unresolved": [
-              {
-                "id": "eb44cef820697ed562b0",
-                "status": "source_error",
-                "error": "OCR returned no readable page text"
-              },
-              {
-                "id": "c771f22fbe68bf96332e",
-                "status": "source_error",
-                "error": "Page reading exceeded 75 seconds; cursor retained for retry"
-              },
-              {
-                "id": "dab6dbb041cb1ce26a0f",
-                "status": "source_error",
-                "error": "OCR returned no readable page text"
-              },
-              {
-                "id": "b9919e3376a56f651a73",
-                "status": "source_error",
-                "error": "OCR returned no readable page text"
-              },
-              {
-                "id": "459a5c720f882782ebe9",
-                "status": "source_error",
-                "error": "OCR returned no readable page text"
-              },
-              {
-                "id": "e72f4fde46863033d930",
-                "status": "source_error",
-                "error": "OCR returned no readable page text"
-              }
-            ],
-            "unreviewedLeads": 0,
-            "complete": false
-          },
-          {
-            "route": "planning_requirements",
-            "jobs": 27,
-            "completed": 26,
-            "restricted": 0,
-            "unresolved": [
-              {
-                "id": "f434639d409cc0d86463",
-                "status": "queued"
-              }
-            ],
-            "unreviewedLeads": 1,
-            "complete": false
-          },
-          {
-            "route": "neighborhood_libraries",
-            "jobs": 2,
-            "completed": 2,
-            "restricted": 0,
-            "unresolved": [],
-            "unreviewedLeads": 1,
-            "complete": false
-          },
-          {
-            "route": "public_notice_attachments",
-            "jobs": 2,
-            "completed": 2,
-            "restricted": 0,
-            "unresolved": [],
-            "unreviewedLeads": 0,
-            "complete": true
-          }
-        ],
-        "pending": 1,
-        "unreadDocuments": 4,
-        "documents": 49,
-        "publicRouteChecksComplete": false
-      },
-      "legalApplicabilityEstablished": false,
-      "documents": [
-        {
-          "sha256": "feb1a37e103b21d75d48aeb8ace3fe832f5eed5ee71d165f85accd39b00d744e",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/10/2016-Ogden-Valley-Plan-Study.pdf"
-          ],
-          "pages": 191,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "edb8ec4b4762f2f399f65b02f144bae51cfa39b8ad4039f36c3f659c67bc100d",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-104-11-Commercial-Valley-Resort-Receation-CVR-1.pdf"
-          ],
-          "pages": 4,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "eb3832dc9827c039d89c8b8e005f9b67fcd8d5fe89101be274ecf74bfd69d81c",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-108-2-Architectural-Landscape-And-Screening-Design-Standards.pdf"
-          ],
-          "pages": 12,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "b8ada2e56ddc8794b49b62a5da4b19b2b6b2f31f1081d6e6b8b0d575862b5ddc",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-21-Agritourism.pdf"
-          ],
-          "pages": 15,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "5f4cd31a895a19547b318651d55e38081c79575a3d9061ccbc166153f5d25f8d",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-19-Accessory-Dwelling-Units.pdf"
-          ],
-          "pages": 7,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "60df4d7e240e53a8aca6e685f9b3a9fd000244b6142b0218d8f3770d2f225dcf",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-18-Drinking-Water-Source-Protection.pdf"
-          ],
-          "pages": 8,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "5a7391d4370129ef3d68ef3e96689bb5005e5d8f2cd3e9a43d893810cd063c46",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-17-Ogden-Valley-Pathways.pdf"
-          ],
-          "pages": 9,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "5085bd0ddea23238f883bc2f4d3e2faf2c1d26c6ffe9600c9e5001419c34d42b",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-11-Short-Term-Rentals.pdf"
-          ],
-          "pages": 10,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "370e9b810a6cef9a7f6c902ed63362aada11991545850d3a368b1171a06b13e5",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-7-Supplementary-And-Qualifying-Regulations.pdf"
-          ],
-          "pages": 26,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "82c85c7130f828cecb4fdc34144f4ce0e7985c16f770a9a105d1aa0627359515",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Title-106-Subdivisions.pdf"
-          ],
-          "pages": 79,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "8d8261c3e0b1b0592f5038b4ae6f2f2172b9fc94f9c0c134c1756aa7d0585463",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-4-Gravel-Zone-G.pdf"
-          ],
-          "pages": 4,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "edd9621b452d84db34fe206dc7cb2725d056c7dea2ad4026763c76083048596a",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-21-Manufacturing-MV-1.pdf"
-          ],
-          "pages": 17,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "07c4c21651ad8db0e1b937011c74959e10b029e8cfed0c006262fb8cad86eb41",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-20-Commercial-Valley-CV-2.pdf"
-          ],
-          "pages": 24,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "307a5a2400b57f997099c47d3c28cf5096cc5e41a7349846fcd0e5c9b147a273",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-110-Signs.pdf"
-          ],
-          "pages": 26,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "12ef20d85108d018941c19fda72150667b918e3bc5517d5db605120a8969b4a1",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-8-Parking-And-Loading-Space-Vehicle-Traffic-And-Access-Regulations.pdf"
-          ],
-          "pages": 10,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "ee62415258fc902446b5ca7e29b7d1a1f045eb07a247079d25a4bdc328d81de1",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-6-Time-Share.pdf"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "3640824bfe8bbd2648bf0ec7c21582fcb2ab1b0898eb1a796db0a5cc428508f6",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-3-Cluster-Subdivisions.pdf"
-          ],
-          "pages": 15,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "8aeee53d1aa2495a26160a9b86b9bb2e347b0915c916444c19710bfa0eac29c5",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-4-Conditional-Uses.pdf"
-          ],
-          "pages": 9,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "f03642a5aa8523c5f80f2a6b1abd933eac88efc4befb3ebc7a78daca1a9b05f7",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-22-Natural-Hazard-Areas.pdf"
-          ],
-          "pages": 11,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "3d49ccf1ca34159ee2bde7d64394cb1a499271b9a90e178de0e6330391246eed",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-20-Forest-Campgrounds.pdf"
-          ],
-          "pages": 9,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "2f83f52273d43cb9d3d4a7266233aa09a8ee49b28691ee6c97a5610a8929106d",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-16-Outdoor-Lighting.pdf"
-          ],
-          "pages": 11,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "4edb3513ab775744f5a536108b7058e7aa8df28a17237cf4f45f29ce869938e9",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-15-Single-Family-Dwellings-Standards.pdf"
-          ],
-          "pages": 2,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "9e6ec5032e1a7dfa4e19871e259c11b08b07c36cfbc89ec406cbbda2b51ce92c",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-13-Home-Occupation.pdf"
-          ],
-          "pages": 6,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "c106973b7771cde3878c6e8f5b194918b88165fd2fe8c491970207ff090344d4",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-12-Noncomplying-Structures-Uses-And-Lots.pdf"
-          ],
-          "pages": 6,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "fcfaf22b2a1cbad2b002381849d04ac85af4f5a33df266d86ea6afbacb99de6c",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-10-Public-Buildings.pdf"
-          ],
-          "pages": 3,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "3fd92e92d9f78e93cd0c2126128c27a2ae82e056a705fe199585ca177c71951f",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf"
-          ],
-          "pages": 8,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "9c4c4aa9ac89ef7216522ff38e4187f8dc166970abd457c28bf38769413576c7",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-9-Forest-Zones.pdf"
-          ],
-          "pages": 17,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "fc9375e91c12dab42611d397ed70a75b93f8247b7fdff5fddc1a6ea02b3700fb",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-8-Hillside-Residential-HR-ADOPTED.pdf"
-          ],
-          "pages": 11,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "f5563815644611938450b6218ba844992f8b4ab5a07a6ee53d52c4448647b343",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/Chapter-104-28-Ogden-Valley-Sensitive-Lands-Overlay-Zone1-1.pdf"
-          ],
-          "pages": 19,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "165ce3f55b8b67b4798e34e8e89056b6814bd2ca4191b536388b6589a7b6c6a6",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-26-Open-Space-Zone-O-1.pdf"
-          ],
-          "pages": 2,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "0e5ff54f93872998d894201948830df7a4e2f84163e8477702da6427eacaac60",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-19-Res-Manufactured-1.pdf"
-          ],
-          "pages": 3,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "c0ee964f2ea70c894339e700bfdb23617635664f37f4cf0dfbdfd7eba39c978e",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-14-Forest-Valley-Zone.pdf"
-          ],
-          "pages": 11,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "8d118fef898b6ef9d5b3847429f4666ee585fb20760ccce6db70652131cc4c4f",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-10-Shoreline-Zone-S-11-2.pdf"
-          ],
-          "pages": 8,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "e46a386245d03e29740865243a0dfdf7818228f68fcb5a62f00bc91a7e1e4d8d",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-102-Administration.pdf"
-          ],
-          "pages": 17,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "b80fee52613a2db7bbc7943f3555d49a698588cd9469b9ba3befe8b2657840d1",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-3-Residential-Estates-Zones-RE.docx"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "3e405b0905abe5e8c4f7dbf10d2e36eb7147023ef3be25ba4b2b74ae11386346",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-2-AV3.pdf"
-          ],
-          "pages": 21,
-          "unreadPages": [
-            21
-          ],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "51d3aa4c3ce5d6b3e295c7d71a2348643d5a0f2125aae4166e11867a27c12472",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-104-1-In-General.pdf"
-          ],
-          "pages": 4,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "2aabfef5039211717a2d22a8f0ae3e6badfd0208ad637c9c90395cfd6df989fe",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-101-2_Definitions.pdf"
-          ],
-          "pages": 49,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "b6a4e5b25fa183fe752b0d4e79f6d005d01241434aa63fa5d6c64b7eec3de0fc",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-101-1-Creation-Implementation-Amendment-And-Effect.pdf"
-          ],
-          "pages": 8,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "7081d758087037262e65ee34dd8985fe79d5ba29229362643a4a7904a5baf921",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Zones4-24-2026.pdf"
-          ],
-          "pages": 1,
-          "unreadPages": [
-            1
-          ],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "e83ee9816f820d4e4629c3a29bf00011ce5f764ca751c1378aacc2e4e59fe5fc",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/GeneralPlan-FINAL.pdf"
-          ],
-          "pages": 60,
-          "unreadPages": [
-            7,
-            11,
-            26,
-            40
-          ],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
-          ],
-          "pages": 2,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
-          ],
-          "pages": 30,
-          "unreadPages": [
-            30
-          ],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "95623595f8a0002404c04536817693a061e36a1eec06d186eb84d44166adaa85",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/DRAFT-26-8-25-Chapter-104-10-Shoreline-Zone-S-1.docx"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "d6a9aeb85bd1f016341e8130de2dbefef936dbebd23f0266ab4461f951e6dc1c",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/08/ummary_of_ChangesChapter104-10ShorelineS-1.docx"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "5725a190afb4049a3cd2777949d6d661fbb4551c4839ecc5615f03602b2de164",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/07/Shoreline-Summary-of-Changes.pdf"
-          ],
-          "pages": 2,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "cfe930d41f42dc305912b419890d30979e94bb53f206c3aac80dc405feab4254",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/07/Chapter-104-10-Shoreline-Zone-S-1.pdf"
-          ],
-          "pages": 8,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "043a3ead7e7b31c8a457877891f35e68fdfc877c49dd7a369372f38107e21a2c",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-10-Shoreline-Zone-S-11.pdf"
-          ],
-          "pages": 10,
-          "unreadPages": [],
-          "applicability": "unverified"
-        },
-        {
-          "sha256": "7d5004bb95bbd9367011fbdcc62c601638a95cb7738455c39bed91fc059eb065",
-          "urls": [
-            "https://ogdenvalley.gov/wp-content/uploads/2026/04/OrdinanceAmendment_108-1_Design_Review.pdf"
-          ],
-          "pages": 15,
-          "unreadPages": [],
-          "applicability": "unverified"
-        }
-      ]
-    },
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
@@ -2862,6 +2321,1477 @@
             "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/MHOA-2018-draft-budget.pdf"
           ],
           "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        }
+      ]
+    },
+    {
+      "id": "ogden-valley-city-notices-and-agencies",
+      "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
+      "checkedAt": "2026-11-12T17:30:18.394Z",
+      "coverage": {
+        "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
+        "routes": [
+          {
+            "route": "public_notice_attachments",
+            "jobs": 169,
+            "completed": 1,
+            "restricted": 0,
+            "unresolved": [
+              {
+                "id": "1d8cfec63e7f97055f5f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1121457.html",
+                "status": "queued"
+              },
+              {
+                "id": "34d4745bd083fac9c03d",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1121571.html",
+                "status": "queued"
+              },
+              {
+                "id": "c21d856c912bfaf47404",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1120187.html",
+                "status": "queued"
+              },
+              {
+                "id": "3df62cb6f6f8fef9ad96",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1119613.html",
+                "status": "queued"
+              },
+              {
+                "id": "97d4cdd573161f28d7aa",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1119721.html",
+                "status": "queued"
+              },
+              {
+                "id": "883448fb8f3589b7e5a8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1116421.html",
+                "status": "queued"
+              },
+              {
+                "id": "3d9bdf0ff9957bc431d2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1118081.html",
+                "status": "queued"
+              },
+              {
+                "id": "c0b6712fdbb77512d1fc",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1116779.html",
+                "status": "queued"
+              },
+              {
+                "id": "9ba2a3d6cc3a1aeaaa30",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1115475.html",
+                "status": "queued"
+              },
+              {
+                "id": "0a5e7f3309bfb552c217",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1114393.html",
+                "status": "queued"
+              },
+              {
+                "id": "56dfe3eda88367ad006c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1106067.html",
+                "status": "queued"
+              },
+              {
+                "id": "38c2d5523ca562ec2563",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1114567.html",
+                "status": "queued"
+              },
+              {
+                "id": "6c9b63a71a2ea29bd171",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1113121.html",
+                "status": "queued"
+              },
+              {
+                "id": "876b23fdea7cd971e9ab",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1112813.html",
+                "status": "queued"
+              },
+              {
+                "id": "0871c1f1a1ae1dd149a2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1112619.html",
+                "status": "queued"
+              },
+              {
+                "id": "376e78e24cd692d1a5ed",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1112809.html",
+                "status": "queued"
+              },
+              {
+                "id": "69b5e39d0070be8fb21b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1112805.html",
+                "status": "queued"
+              },
+              {
+                "id": "2c7b45b1d07623c224ad",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1111301.html",
+                "status": "queued"
+              },
+              {
+                "id": "6c4067333618810f9f7a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1110847.html",
+                "status": "queued"
+              },
+              {
+                "id": "1407715ada41471cbd14",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1110087.html",
+                "status": "queued"
+              },
+              {
+                "id": "e4839479f828ad877487",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1110085.html",
+                "status": "queued"
+              },
+              {
+                "id": "3c3cbe1c20fe34744c6c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1109543.html",
+                "status": "queued"
+              },
+              {
+                "id": "8248e855188fd6a7aba3",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1107199.html",
+                "status": "queued"
+              },
+              {
+                "id": "a843bab516b08b59f13c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1085289.html",
+                "status": "queued"
+              },
+              {
+                "id": "223a4405864e0198ef03",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1084983.html",
+                "status": "queued"
+              },
+              {
+                "id": "3b73ae5b4f4805978fcc",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1084139.html",
+                "status": "queued"
+              },
+              {
+                "id": "ab7e3c01488916495445",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1080277.html",
+                "status": "queued"
+              },
+              {
+                "id": "22fcd70deb064f167c1d",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1081416.html",
+                "status": "queued"
+              },
+              {
+                "id": "966b91a6e912b03a601e",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1083251.html",
+                "status": "queued"
+              },
+              {
+                "id": "8bf66d73548cca6eea33",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1082589.html",
+                "status": "queued"
+              },
+              {
+                "id": "772e400efa3c69c4e12e",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1081451.html",
+                "status": "queued"
+              },
+              {
+                "id": "ffa9f421bb467e9c9da0",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1081449.html",
+                "status": "queued"
+              },
+              {
+                "id": "e9ab20256ac2efb7cb1f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1080427.html",
+                "status": "queued"
+              },
+              {
+                "id": "a8c9dee2f24ff83ba1a9",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1077081.html",
+                "status": "queued"
+              },
+              {
+                "id": "a6ac565a9f36a6c7a8ab",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1079159.html",
+                "status": "queued"
+              },
+              {
+                "id": "ddcf29f09021cefb611e",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1079359.html",
+                "status": "queued"
+              },
+              {
+                "id": "02f0c288c484a7a0f5dc",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1079247.html",
+                "status": "queued"
+              },
+              {
+                "id": "c2c353554ff89ca51bfe",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1079251.html",
+                "status": "queued"
+              },
+              {
+                "id": "f80aa4ef4fb20ac49ed8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1078465.html",
+                "status": "queued"
+              },
+              {
+                "id": "fa8ba33c5c7324693861",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1077439.html",
+                "status": "queued"
+              },
+              {
+                "id": "9dedbdbd9fdea131ba53",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1077437.html",
+                "status": "queued"
+              },
+              {
+                "id": "f456a6f48d7e0a3469fa",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1077079.html",
+                "status": "queued"
+              },
+              {
+                "id": "a272ad4f0e154b50d324",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1077469.html",
+                "status": "queued"
+              },
+              {
+                "id": "d6bab0bd38296d738b1b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1076385.html",
+                "status": "queued"
+              },
+              {
+                "id": "aa7a6629c7821ab6d1e2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1076383.html",
+                "status": "queued"
+              },
+              {
+                "id": "8380679f0c4235a5b866",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1074215.html",
+                "status": "queued"
+              },
+              {
+                "id": "6e99fc4a33a03d604d5c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1075761.html",
+                "status": "queued"
+              },
+              {
+                "id": "b19ca83093791564c005",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1075735.html",
+                "status": "queued"
+              },
+              {
+                "id": "cb910c42ea5789bfef14",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1067643.html",
+                "status": "queued"
+              },
+              {
+                "id": "d59785a1506e7359463f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1061303.html",
+                "status": "queued"
+              },
+              {
+                "id": "a976ed3b66c187211993",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1066583.html",
+                "status": "queued"
+              },
+              {
+                "id": "35ae7a1350ce9cf6d493",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1066337.html",
+                "status": "queued"
+              },
+              {
+                "id": "d540b2481fa7868c351a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1066335.html",
+                "status": "queued"
+              },
+              {
+                "id": "f7a51429171c9ec9957b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1071817.html",
+                "status": "queued"
+              },
+              {
+                "id": "703acce5220b6d44c851",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1065285.html",
+                "status": "queued"
+              },
+              {
+                "id": "e32fb18c37170671d134",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1063727.html",
+                "status": "queued"
+              },
+              {
+                "id": "6e835c7eb3d4ba49a6fe",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1063903.html",
+                "status": "queued"
+              },
+              {
+                "id": "c3d6b56be9406bc36c63",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1064571.html",
+                "status": "queued"
+              },
+              {
+                "id": "164985c57e167a8a5e2a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1062961.html",
+                "status": "queued"
+              },
+              {
+                "id": "dde0e9e6debc621fa5e8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1059997.html",
+                "status": "queued"
+              },
+              {
+                "id": "75a149822c5362ca23ff",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1061295.html",
+                "status": "queued"
+              },
+              {
+                "id": "a7bd5e96c4d3715c03c5",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1062959.html",
+                "status": "queued"
+              },
+              {
+                "id": "b55803f8b1ab6b3064cc",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1061115.html",
+                "status": "queued"
+              },
+              {
+                "id": "367bfa8a689b921ca117",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1059893.html",
+                "status": "queued"
+              },
+              {
+                "id": "0bf0e4d28c7f77e30fd4",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1061503.html",
+                "status": "queued"
+              },
+              {
+                "id": "9a27722c771388a59748",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1059979.html",
+                "status": "queued"
+              },
+              {
+                "id": "68b02374014972416c7a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1059891.html",
+                "status": "queued"
+              },
+              {
+                "id": "fff4cf11bc177feec1f9",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1059291.html",
+                "status": "queued"
+              },
+              {
+                "id": "52b27b79e87578267407",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1058107.html",
+                "status": "queued"
+              },
+              {
+                "id": "c536dc2ab26941383e64",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1103795.html",
+                "status": "queued"
+              },
+              {
+                "id": "f8db631869992270223f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1102253.html",
+                "status": "queued"
+              },
+              {
+                "id": "01655e4ed61ba752d0e5",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1103581.html",
+                "status": "queued"
+              },
+              {
+                "id": "1bd7e69bdc50e08920f6",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1102621.html",
+                "status": "queued"
+              },
+              {
+                "id": "ba80a05655d97e9b4ea9",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1102159.html",
+                "status": "queued"
+              },
+              {
+                "id": "262536dcda9679063339",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1098087.html",
+                "status": "queued"
+              },
+              {
+                "id": "eabd132b1a6e4a9b3bd1",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1100045.html",
+                "status": "queued"
+              },
+              {
+                "id": "7e08a365919659ef7f8d",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1097915.html",
+                "status": "queued"
+              },
+              {
+                "id": "988fb71274f0c36106ff",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1100571.html",
+                "status": "queued"
+              },
+              {
+                "id": "fa9fefee96373069069a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1100532.html",
+                "status": "queued"
+              },
+              {
+                "id": "66d119ae99ced20ca8f1",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1099239.html",
+                "status": "queued"
+              },
+              {
+                "id": "b85631cad05794dac0a3",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1098819.html",
+                "status": "queued"
+              },
+              {
+                "id": "f8e3be338b899f28d572",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1098891.html",
+                "status": "queued"
+              },
+              {
+                "id": "9c45e998dea2793bad7b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1098245.html",
+                "status": "queued"
+              },
+              {
+                "id": "f3bfdbcce840b236d3b8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1097653.html",
+                "status": "queued"
+              },
+              {
+                "id": "6fc4fdce75f168c3905c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1096749.html",
+                "status": "queued"
+              },
+              {
+                "id": "04594ae7628ca876601c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1095177.html",
+                "status": "queued"
+              },
+              {
+                "id": "42fd500d58829053b92a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1096589.html",
+                "status": "queued"
+              },
+              {
+                "id": "863e4485377675779d6c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1096593.html",
+                "status": "queued"
+              },
+              {
+                "id": "7edb2ad94b769aef274d",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1095695.html",
+                "status": "queued"
+              },
+              {
+                "id": "470391734a70fd3bb651",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1094833.html",
+                "status": "queued"
+              },
+              {
+                "id": "090d39b05d1f80c57566",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1093275.html",
+                "status": "queued"
+              },
+              {
+                "id": "5d8b482d6dc484a98cf2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1094831.html",
+                "status": "queued"
+              },
+              {
+                "id": "8402554843f5c136f2a3",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1093395.html",
+                "status": "queued"
+              },
+              {
+                "id": "260c2e0e81159054d063",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1108767.html",
+                "status": "queued"
+              },
+              {
+                "id": "f656a2bd767b5c2bf905",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1058105.html",
+                "status": "queued"
+              },
+              {
+                "id": "47d94c007ad6ea4a2341",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1056517.html",
+                "status": "queued"
+              },
+              {
+                "id": "79c2d35924e1ac6d4796",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1055427.html",
+                "status": "queued"
+              },
+              {
+                "id": "c6472456894b151f4207",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1056311.html",
+                "status": "queued"
+              },
+              {
+                "id": "a46d6ee7e0d959be5ae6",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1056259.html",
+                "status": "queued"
+              },
+              {
+                "id": "8109c20b3bf7b86c2193",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1054661.html",
+                "status": "queued"
+              },
+              {
+                "id": "f4756432200d616634ec",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1054659.html",
+                "status": "queued"
+              },
+              {
+                "id": "d0e64b3efbe2a9e456ec",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1054529.html",
+                "status": "queued"
+              },
+              {
+                "id": "fd7c250c0aa07bf40a41",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1054695.html",
+                "status": "queued"
+              },
+              {
+                "id": "979af5f721ebfc953555",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1053447.html",
+                "status": "queued"
+              },
+              {
+                "id": "36c1edffe7ec01fe46ff",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1053133.html",
+                "status": "queued"
+              },
+              {
+                "id": "bf8dbd84c410399c0a43",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1052579.html",
+                "status": "queued"
+              },
+              {
+                "id": "752958813b523099ac67",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1051281.html",
+                "status": "queued"
+              },
+              {
+                "id": "e9b6b41a05543e77895f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1051759.html",
+                "status": "queued"
+              },
+              {
+                "id": "d7b59ef03db466fb3706",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1051329.html",
+                "status": "queued"
+              },
+              {
+                "id": "d56ca22889878bf21014",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1051163.html",
+                "status": "queued"
+              },
+              {
+                "id": "2454b0abd9317599bf42",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1051161.html",
+                "status": "queued"
+              },
+              {
+                "id": "aa86a33236fe7b92ee65",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1049509.html",
+                "status": "queued"
+              },
+              {
+                "id": "abb33a52c009859deccb",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1048459.html",
+                "status": "queued"
+              },
+              {
+                "id": "6274a586f197d66f8feb",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1049093.html",
+                "status": "queued"
+              },
+              {
+                "id": "069af55a05a532928aa7",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1049153.html",
+                "status": "queued"
+              },
+              {
+                "id": "d5d38fa6d356aef5b903",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1075733.html",
+                "status": "queued"
+              },
+              {
+                "id": "c62167e0606ab6eb662c",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1074221.html",
+                "status": "queued"
+              },
+              {
+                "id": "3f16c9969cbfb82829ae",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1074213.html",
+                "status": "queued"
+              },
+              {
+                "id": "af97283c35fb9eb42657",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1074219.html",
+                "status": "queued"
+              },
+              {
+                "id": "907db36d1367661376db",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1074143.html",
+                "status": "queued"
+              },
+              {
+                "id": "c54c3fcf25acbe8a24f4",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1071763.html",
+                "status": "queued"
+              },
+              {
+                "id": "239032423d58587602f1",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070381.html",
+                "status": "queued"
+              },
+              {
+                "id": "b2ca28d3671b0425a628",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070585.html",
+                "status": "queued"
+              },
+              {
+                "id": "dcb5bfe6bdd2843457a4",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1071663.html",
+                "status": "queued"
+              },
+              {
+                "id": "766223994bc8d99750e7",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1072197.html",
+                "status": "queued"
+              },
+              {
+                "id": "8d3d22794a99cd83ed68",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1072363.html",
+                "status": "queued"
+              },
+              {
+                "id": "a91993c90c249f5765ad",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1072361.html",
+                "status": "queued"
+              },
+              {
+                "id": "c737bf5c48bea787d849",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070331.html",
+                "status": "queued"
+              },
+              {
+                "id": "43041edd397cec0ff833",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1072359.html",
+                "status": "queued"
+              },
+              {
+                "id": "21c798ba4062c490f441",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070851.html",
+                "status": "queued"
+              },
+              {
+                "id": "e60a8f1b88a88e5b4b3b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1069963.html",
+                "status": "queued"
+              },
+              {
+                "id": "dcbe763b0c6e4afb1e92",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070703.html",
+                "status": "queued"
+              },
+              {
+                "id": "9213b5243e1a3ddf660b",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070829.html",
+                "status": "queued"
+              },
+              {
+                "id": "ed6d5bf77f83dd2131b2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1070701.html",
+                "status": "queued"
+              },
+              {
+                "id": "4646c153324b303770b2",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1068019.html",
+                "status": "queued"
+              },
+              {
+                "id": "44e7c9da5c9309a14cd0",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1065455.html",
+                "status": "queued"
+              },
+              {
+                "id": "b125c2dc039faa7b78e7",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1069415.html",
+                "status": "queued"
+              },
+              {
+                "id": "40e1c419b601412a8e25",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1093425.html",
+                "status": "queued"
+              },
+              {
+                "id": "2aa95ff4fecee0ce6098",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1091983.html",
+                "status": "queued"
+              },
+              {
+                "id": "96b64c06e16fb3474d7a",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1093293.html",
+                "status": "queued"
+              },
+              {
+                "id": "2500f8206aeec52bb05e",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1091999.html",
+                "status": "queued"
+              },
+              {
+                "id": "8fb1634a43aff0add75d",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1092102.html",
+                "status": "queued"
+              },
+              {
+                "id": "fb17e32f3430fefea0bf",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1091975.html",
+                "status": "queued"
+              },
+              {
+                "id": "c04914cbd1bfa90f82a1",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1090891.html",
+                "status": "queued"
+              },
+              {
+                "id": "e51f7e5965ecfe67e460",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1090705.html",
+                "status": "queued"
+              },
+              {
+                "id": "8be93a2d3dcad4851b59",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1089195.html",
+                "status": "queued"
+              },
+              {
+                "id": "6f1b1ad4974922a3d6dc",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1086757.html",
+                "status": "queued"
+              },
+              {
+                "id": "824f1d5425d6bc5781c8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1089035.html",
+                "status": "queued"
+              },
+              {
+                "id": "0c2e9b4e137daa226fcb",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1087367.html",
+                "status": "queued"
+              },
+              {
+                "id": "064b358448ba2411c635",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1088025.html",
+                "status": "queued"
+              },
+              {
+                "id": "cea60599edb2d4d044fa",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1087365.html",
+                "status": "queued"
+              },
+              {
+                "id": "8d1f68e645d6cd3b67b9",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1086963.html",
+                "status": "queued"
+              },
+              {
+                "id": "8cbd22c5488469c452ac",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1086961.html",
+                "status": "queued"
+              },
+              {
+                "id": "8bec2ca8656c0e817c18",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1108435.html",
+                "status": "queued"
+              },
+              {
+                "id": "517eee43e4ed6e071dfb",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1108395.html",
+                "status": "queued"
+              },
+              {
+                "id": "4a39fdb8766373bd73f3",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1104659.html",
+                "status": "queued"
+              },
+              {
+                "id": "4c6ebf29581db0bf1ee4",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1106079.html",
+                "status": "queued"
+              },
+              {
+                "id": "3e483147f0b8af3e57b8",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1106159.html",
+                "status": "queued"
+              },
+              {
+                "id": "788a833ebf4185272aef",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1105393.html",
+                "status": "queued"
+              },
+              {
+                "id": "1fff4d9b5b745cc6c050",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1105115.html",
+                "status": "queued"
+              },
+              {
+                "id": "72a2cf2663b460b66719",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1049053.html",
+                "status": "queued"
+              },
+              {
+                "id": "83763a06af3b475b6f56",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1049145.html",
+                "status": "queued"
+              },
+              {
+                "id": "0824774891aefe92c102",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1069237.html",
+                "status": "queued"
+              },
+              {
+                "id": "97d0398358cc170a57f4",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1069881.html",
+                "status": "queued"
+              },
+              {
+                "id": "efba75d111197460d3b0",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1065429.html",
+                "status": "queued"
+              },
+              {
+                "id": "efc3c05e6e1643e7cbb6",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1067929.html",
+                "status": "queued"
+              },
+              {
+                "id": "6c38db5ff098e881b0b5",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1068033.html",
+                "status": "queued"
+              },
+              {
+                "id": "387ca89ded0809d9ae0f",
+                "url": "https://www.utah.gov/pmn/sitemap/notice/1068031.html",
+                "status": "queued"
+              }
+            ],
+            "unreviewedLeads": 0,
+            "complete": false
+          },
+          {
+            "route": "agency_requirements",
+            "jobs": 17,
+            "completed": 4,
+            "restricted": 0,
+            "unresolved": [
+              {
+                "id": "11c55ea67cccf9096215",
+                "url": "https://ogdenvalley.gov/about-ogden-valley-city/",
+                "status": "queued"
+              },
+              {
+                "id": "a65ac8bd529de9b7daa0",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/04/Municipal-Code.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "43cf719228c482fd7bd6",
+                "url": "https://ogdenvalley.gov/planning/",
+                "status": "queued"
+              },
+              {
+                "id": "d47f133a17c0f2c5cca7",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OM_PlanTemplate.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "063ebf74e14f3da7caa5",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OM_PlanTemplate-1.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "fe09269413ff51d930e8",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/StormwaterQualityForm.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "cb25ba9967fd9184f92e",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/DWQ_LIDHandbook.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "63984409ba11c8b16159",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/CGP_SWPPP_Template.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "bc3c8d24fdcbe8b7f0f1",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/CPP_SWPPP_Template.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "d7c846d033e6f0e3e5b4",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/Construction_SWPPP-Evaluation_CGP-UTRC00000_2026.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "07013412afeffd09bd16",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/Construction_SWPPP-Evaluation_CPP-UTRH00000_2026.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "0af6dac4997edbc81375",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/Pages-from-Electronic-Inspection-Information.pdf",
+                "status": "queued"
+              },
+              {
+                "id": "60ed4da1a297eae48d0e",
+                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/09/DWQ_PreferredBMPs.pdf",
+                "status": "queued"
+              }
+            ],
+            "unreviewedLeads": 1,
+            "complete": false
+          }
+        ],
+        "pending": 181,
+        "unreadDocuments": 0,
+        "documents": 0,
+        "publicRouteChecksComplete": false
+      },
+      "legalApplicabilityEstablished": false,
+      "documents": []
+    },
+    {
+      "id": "ogden-valley-city-public-coverage",
+      "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
+      "checkedAt": "2026-11-12T17:31:58.644Z",
+      "coverage": {
+        "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
+        "routes": [
+          {
+            "route": "adopted_code",
+            "jobs": 176,
+            "completed": 171,
+            "restricted": 0,
+            "unresolved": [
+              {
+                "id": "eb44cef820697ed562b0",
+                "status": "source_error",
+                "error": "OCR returned no readable page text"
+              },
+              {
+                "id": "dab6dbb041cb1ce26a0f",
+                "status": "queued"
+              },
+              {
+                "id": "b9919e3376a56f651a73",
+                "status": "queued"
+              },
+              {
+                "id": "459a5c720f882782ebe9",
+                "status": "queued"
+              },
+              {
+                "id": "e72f4fde46863033d930",
+                "status": "queued"
+              }
+            ],
+            "unreviewedLeads": 0,
+            "complete": false
+          },
+          {
+            "route": "planning_requirements",
+            "jobs": 27,
+            "completed": 26,
+            "restricted": 0,
+            "unresolved": [
+              {
+                "id": "f434639d409cc0d86463",
+                "status": "queued"
+              }
+            ],
+            "unreviewedLeads": 1,
+            "complete": false
+          },
+          {
+            "route": "neighborhood_libraries",
+            "jobs": 2,
+            "completed": 2,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 1,
+            "complete": false
+          },
+          {
+            "route": "public_notice_attachments",
+            "jobs": 2,
+            "completed": 2,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          }
+        ],
+        "pending": 5,
+        "unreadDocuments": 3,
+        "documents": 49,
+        "publicRouteChecksComplete": false
+      },
+      "legalApplicabilityEstablished": false,
+      "documents": [
+        {
+          "sha256": "feb1a37e103b21d75d48aeb8ace3fe832f5eed5ee71d165f85accd39b00d744e",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/10/2016-Ogden-Valley-Plan-Study.pdf"
+          ],
+          "pages": 191,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "edb8ec4b4762f2f399f65b02f144bae51cfa39b8ad4039f36c3f659c67bc100d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-104-11-Commercial-Valley-Resort-Receation-CVR-1.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "eb3832dc9827c039d89c8b8e005f9b67fcd8d5fe89101be274ecf74bfd69d81c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-108-2-Architectural-Landscape-And-Screening-Design-Standards.pdf"
+          ],
+          "pages": 12,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b8ada2e56ddc8794b49b62a5da4b19b2b6b2f31f1081d6e6b8b0d575862b5ddc",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-21-Agritourism.pdf"
+          ],
+          "pages": 15,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5f4cd31a895a19547b318651d55e38081c79575a3d9061ccbc166153f5d25f8d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-19-Accessory-Dwelling-Units.pdf"
+          ],
+          "pages": 7,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "60df4d7e240e53a8aca6e685f9b3a9fd000244b6142b0218d8f3770d2f225dcf",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-18-Drinking-Water-Source-Protection.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5a7391d4370129ef3d68ef3e96689bb5005e5d8f2cd3e9a43d893810cd063c46",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-17-Ogden-Valley-Pathways.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5085bd0ddea23238f883bc2f4d3e2faf2c1d26c6ffe9600c9e5001419c34d42b",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-11-Short-Term-Rentals.pdf"
+          ],
+          "pages": 10,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "370e9b810a6cef9a7f6c902ed63362aada11991545850d3a368b1171a06b13e5",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-7-Supplementary-And-Qualifying-Regulations.pdf"
+          ],
+          "pages": 26,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "82c85c7130f828cecb4fdc34144f4ce0e7985c16f770a9a105d1aa0627359515",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Title-106-Subdivisions.pdf"
+          ],
+          "pages": 79,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8d8261c3e0b1b0592f5038b4ae6f2f2172b9fc94f9c0c134c1756aa7d0585463",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-4-Gravel-Zone-G.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "edd9621b452d84db34fe206dc7cb2725d056c7dea2ad4026763c76083048596a",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-21-Manufacturing-MV-1.pdf"
+          ],
+          "pages": 17,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "07c4c21651ad8db0e1b937011c74959e10b029e8cfed0c006262fb8cad86eb41",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-20-Commercial-Valley-CV-2.pdf"
+          ],
+          "pages": 24,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "307a5a2400b57f997099c47d3c28cf5096cc5e41a7349846fcd0e5c9b147a273",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-110-Signs.pdf"
+          ],
+          "pages": 26,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "12ef20d85108d018941c19fda72150667b918e3bc5517d5db605120a8969b4a1",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-8-Parking-And-Loading-Space-Vehicle-Traffic-And-Access-Regulations.pdf"
+          ],
+          "pages": 10,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "ee62415258fc902446b5ca7e29b7d1a1f045eb07a247079d25a4bdc328d81de1",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-6-Time-Share.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3640824bfe8bbd2648bf0ec7c21582fcb2ab1b0898eb1a796db0a5cc428508f6",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-3-Cluster-Subdivisions.pdf"
+          ],
+          "pages": 15,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8aeee53d1aa2495a26160a9b86b9bb2e347b0915c916444c19710bfa0eac29c5",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-4-Conditional-Uses.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "f03642a5aa8523c5f80f2a6b1abd933eac88efc4befb3ebc7a78daca1a9b05f7",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-22-Natural-Hazard-Areas.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3d49ccf1ca34159ee2bde7d64394cb1a499271b9a90e178de0e6330391246eed",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-20-Forest-Campgrounds.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2f83f52273d43cb9d3d4a7266233aa09a8ee49b28691ee6c97a5610a8929106d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-16-Outdoor-Lighting.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "4edb3513ab775744f5a536108b7058e7aa8df28a17237cf4f45f29ce869938e9",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-15-Single-Family-Dwellings-Standards.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "9e6ec5032e1a7dfa4e19871e259c11b08b07c36cfbc89ec406cbbda2b51ce92c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-13-Home-Occupation.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c106973b7771cde3878c6e8f5b194918b88165fd2fe8c491970207ff090344d4",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-12-Noncomplying-Structures-Uses-And-Lots.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fcfaf22b2a1cbad2b002381849d04ac85af4f5a33df266d86ea6afbacb99de6c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-10-Public-Buildings.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3fd92e92d9f78e93cd0c2126128c27a2ae82e056a705fe199585ca177c71951f",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "9c4c4aa9ac89ef7216522ff38e4187f8dc166970abd457c28bf38769413576c7",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-9-Forest-Zones.pdf"
+          ],
+          "pages": 17,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fc9375e91c12dab42611d397ed70a75b93f8247b7fdff5fddc1a6ea02b3700fb",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-8-Hillside-Residential-HR-ADOPTED.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "f5563815644611938450b6218ba844992f8b4ab5a07a6ee53d52c4448647b343",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/Chapter-104-28-Ogden-Valley-Sensitive-Lands-Overlay-Zone1-1.pdf"
+          ],
+          "pages": 19,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "165ce3f55b8b67b4798e34e8e89056b6814bd2ca4191b536388b6589a7b6c6a6",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-26-Open-Space-Zone-O-1.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "0e5ff54f93872998d894201948830df7a4e2f84163e8477702da6427eacaac60",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-19-Res-Manufactured-1.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c0ee964f2ea70c894339e700bfdb23617635664f37f4cf0dfbdfd7eba39c978e",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-14-Forest-Valley-Zone.pdf"
+          ],
+          "pages": 11,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8d118fef898b6ef9d5b3847429f4666ee585fb20760ccce6db70652131cc4c4f",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-10-Shoreline-Zone-S-11-2.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e46a386245d03e29740865243a0dfdf7818228f68fcb5a62f00bc91a7e1e4d8d",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-102-Administration.pdf"
+          ],
+          "pages": 17,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b80fee52613a2db7bbc7943f3555d49a698588cd9469b9ba3befe8b2657840d1",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-3-Residential-Estates-Zones-RE.docx"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3e405b0905abe5e8c4f7dbf10d2e36eb7147023ef3be25ba4b2b74ae11386346",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-2-AV3.pdf"
+          ],
+          "pages": 21,
+          "unreadPages": [
+            21
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "51d3aa4c3ce5d6b3e295c7d71a2348643d5a0f2125aae4166e11867a27c12472",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-104-1-In-General.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2aabfef5039211717a2d22a8f0ae3e6badfd0208ad637c9c90395cfd6df989fe",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-101-2_Definitions.pdf"
+          ],
+          "pages": 49,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b6a4e5b25fa183fe752b0d4e79f6d005d01241434aa63fa5d6c64b7eec3de0fc",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-101-1-Creation-Implementation-Amendment-And-Effect.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7081d758087037262e65ee34dd8985fe79d5ba29229362643a4a7904a5baf921",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Zones4-24-2026.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e83ee9816f820d4e4629c3a29bf00011ce5f764ca751c1378aacc2e4e59fe5fc",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/GeneralPlan-FINAL.pdf"
+          ],
+          "pages": 60,
+          "unreadPages": [
+            7,
+            11,
+            26,
+            40
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+          ],
+          "pages": 30,
+          "unreadPages": [
+            30
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "95623595f8a0002404c04536817693a061e36a1eec06d186eb84d44166adaa85",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/DRAFT-26-8-25-Chapter-104-10-Shoreline-Zone-S-1.docx"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d6a9aeb85bd1f016341e8130de2dbefef936dbebd23f0266ab4461f951e6dc1c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/08/ummary_of_ChangesChapter104-10ShorelineS-1.docx"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5725a190afb4049a3cd2777949d6d661fbb4551c4839ecc5615f03602b2de164",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/07/Shoreline-Summary-of-Changes.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "cfe930d41f42dc305912b419890d30979e94bb53f206c3aac80dc405feab4254",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/07/Chapter-104-10-Shoreline-Zone-S-1.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "043a3ead7e7b31c8a457877891f35e68fdfc877c49dd7a369372f38107e21a2c",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-10-Shoreline-Zone-S-11.pdf"
+          ],
+          "pages": 10,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7d5004bb95bbd9367011fbdcc62c601638a95cb7738455c39bed91fc059eb065",
+          "urls": [
+            "https://ogdenvalley.gov/wp-content/uploads/2026/04/OrdinanceAmendment_108-1_Design_Review.pdf"
+          ],
+          "pages": 15,
           "unreadPages": [],
           "applicability": "unverified"
         }
