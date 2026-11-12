@@ -14,7 +14,7 @@
 
 ## Operational model
 
-`.github/workflows/public-discovery.yml` runs daily, serializes writers, restores the newest nonexpired checkpoint artifact, processes a bounded batch and uploads the checkpoint even after failure. Metadata artifacts retain 30 days; daily successful runs renew retention. A prolonged outage beyond retention requires a new crawl and does not establish source completeness. Each profile receives a bounded share of worker time. Completed queues refresh after seven days. Raw documents and extracted page text are excluded from checkpoints and deployment bundles. OCR resumes by downloading the original and verifying its recorded SHA-256; changed originals remain unresolved. Sanitized index updates commit to main for the existing Vercel integration. GET `/api/public-research` exposes the latest published worker coverage and Actions run link; POST retains the existing research API.
+`.github/workflows/public-discovery.yml` runs daily, serializes writers, restores the newest nonexpired checkpoint artifact, processes a bounded batch and uploads the checkpoint even after failure. Metadata artifacts retain 30 days; daily successful runs renew retention. A prolonged outage beyond retention requires a new crawl and does not establish source completeness. Each profile receives a bounded share of worker time; unused time is redistributed to remaining profiles. Manual runs may focus on one reviewed profile without dropping earlier reports. Completed queues refresh after seven days. Raw documents and extracted page text are excluded from checkpoints and deployment bundles. OCR resumes by downloading the original and verifying its recorded SHA-256; changed originals remain unresolved. Sanitized index updates commit to main for the existing Vercel integration. GET `/api/public-research` exposes the latest published worker coverage and Actions run link; POST retains the existing research API.
 
 The scheduler maintains reviewed source profiles. It does not automatically create a new legal HOA profile for every arbitrary address. Live address/GIS screening continues through the existing application.
 
@@ -34,3 +34,32 @@ Public Retreat guideline acquisition: 66/66 pages OCR-processed, no empty output
 An additional hosted profile searches all Ogden Valley public notices from incorporation onward, independent of the shoreline/design keyword searches, and follows official recorder and municipal-code libraries. This is a separate queue so broadening coverage does not discard existing progress.
 
 Further production validation: full 20-minute run 43266007701 completed and auto-published 49 city documents and 87 Cobabe documents. Resumed broader-profile run 43268388460 completed and seeded the additional city-wide notice queue. Blank-page handling checks both exact-white rendered pixels and absence of actual text/painting content, preventing missing-font rendering from silently clearing a page. Hosted OCR uses Poppler; native extraction has an isolated 512 MB / 120-second bound, and failed extraction—including legacy checkpoints—can retry without duplicate document records.
+
+## Final deployment validation — November 12, 2026
+
+Production orchestration is deployed, not dependent on this laptop. Run [43270939104](https://github.com/wkatzka/lot-dossier/actions/runs/43270939104) completed OCR recovery and published results. Focused neighborhood run [43273279630](https://github.com/wkatzka/lot-dossier/actions/runs/43273279630) successfully restored the checkpoint, acquired 66 documents, and published commit `2961224`. Vercel reported successful deployment of code commit `659b044`. The real Cobabe project was refreshed in production and displayed both “Area matches saved” and “Saved to your account”.
+
+The fourth profile follows public Highlands, Trappers Ridge, Retreat and master-association libraries. Directory membership is only a lead. Trappers Ridge's published 2018 declaration Article 6 (printed pp. 23–24) describes Board written approval before construction; the app exposes this as a membership/current-document verification candidate with a direct original link, not as a proven municipal submission gate. Tests ensure it is not assigned to Cobabe.
+
+Latest published checkpoint (17:51 UTC; profile counts can overlap):
+
+| Source profile | Documents | Pending tasks | Documents with unread pages | Unreviewed external leads |
+| --- | ---: | ---: | ---: | ---: |
+| City adopted-code/planning library | 49 | 0 | 0 | 2 |
+| Broader city notices and agencies | 10 | 412 | 5 | 6 |
+| Cobabe hosted backfill | 87 | 309 | 37 | 1 |
+| Published neighborhood libraries | 66 | 333 | 16 | 7 |
+
+Two neighborhood source reads are unresolved (an illustrative master-plan JPEG and a budget spreadsheet). These remain visible rather than being counted as read. The prior local Cobabe sweep and this new hosted backfill are different passes; completion of the earlier local queue does not close the hosted queue.
+
+## Remaining requirements and their status
+
+- **Attempted, unresolved:** finish the broader notice, neighborhood and hosted Cobabe queues and review external leads. They are durably scheduled; the initial production sweep is not complete. Zero pending tasks in the core city profile means its configured queue drained, not that every city rule was interpreted.
+- **Attempted, unresolved:** exact use/exception interpretation for every city proposal; full adopted shoreline amendment and forest-height ambiguity; controlling MPD original and Cobabe recorded agreement/declaration chain. No public original yet establishes Cobabe approval before municipal submission.
+- **Attempted, unresolved implementation:** unattended ingestion of the anonymous Retreat OneDrive library. Public browser acquisition works, so this is not classified as a private locked source.
+- **Unimplemented:** automatically creating and validating a new parcel-specific legal discovery profile for any arbitrary address. City GIS screening works for addresses; legal source profiles remain reviewed configurations.
+- **Blocked by project evidence:** final shoreline/survey positions, actual proposed stream/wetland impacts and lot-specific approval documents cannot be established from coarse GIS alone. These need the relevant project evidence; no approval is inferred.
+
+Validation passed: discovery engine, checkpoint sanitization/resume, focused production runner, native PDF isolation, OCR blank-page safeguards, area and city rules, permit lifecycle, cloud synchronization and production build. Live project saving and GIS refresh were verified separately from unit checks.
+
+Automatic approval review rejected uploading the local raw Cobabe archive to the public GitHub repository. No draft release was created. An earlier raw workflow artifact was deleted and verified absent; replacement checkpoints contain metadata only. Raw originals and extracted page text remain outside public repository/deployment/checkpoint artifacts.
