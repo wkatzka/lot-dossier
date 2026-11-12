@@ -46,7 +46,7 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 
 - [-] **18. Validate realistic project journeys** (all findings). Cobabe + a second OVC property + Sunridge: who approves what/when, utilities, competing evidence, review closure, plan changes, readiness and exports. Verify authoritative answers where accessible; list unresolved instruments without claiming search exhaustion. Use synthetic projects for destructive/mutating scenarios. Depends on 01–17.
 - [-] **19. Deploy verified increments and check production**. Preserve live/rollback deployments, publish a coherent tested release, inspect actual deployed behavior and record URL/version/results. Local task completion is not production completion. Incremental releases may occur earlier when self-contained; do not deploy unfinished schema migrations. Depends on a release-ready set of tasks.
-- [ ] **20. Validate actual user value**. Observe builder click-through against predetermined questions; measure whether the correct next action is identifiable and whether contradictory/irrelevant information interferes. Customer sessions require participant availability; do not substitute passing code tests. Depends on 18–19.
+- [-] **20. Validate actual user value**. Observe builder click-through against predetermined questions; measure whether the correct next action is identifiable and whether contradictory/irrelevant information interferes. Customer sessions require participant availability; do not substitute passing code tests. Depends on 18–19.
 
 ## Progress log
 
@@ -118,3 +118,12 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - Prioritization now promotes specific unresolved controlling-instrument questions (including Cobabe's reviewer/timing) ahead of routine service checks. Generic unidentified-rule questions do not replace specific site questions. Added explicit wood-burning appliance scope; optional research no longer enters priority/next-action/cost summaries by default. GIS no-match diagnostics are secondary; identical boundary names are deduplicated for display only.
 - Tasks 08, 13–15 are implemented/tested locally and first-increment production observations are recorded above; final release verification remains Task 19. No claim of fresh exhaustive legal/source research is made.
 - Remaining Task 18: technical/user-question journeys are exercised, but independently establishing Cobabe's actual reviewer/timing and all representative code interpretations remains attempted but unresolved. Missing originals are not proven access-blocked. See the existing instrument-by-instrument gap audit. Task 20 requires a real builder participant; automated navigation cannot substitute for it.
+
+
+### Checkpoint 8 — Production version verified; clarity validation remains open
+
+- Vercel deployed `a4d45c8` successfully (`GnEGqQUkKawaWtdtJWsapU8NXnfH`). Reloaded the signed-in production Cobabe Overview: 51 open findings, 34 suggested application answers, no confirmed answers or filing receipt. Architectural reviewer/timing is now first, not hidden below utilities.
+- Participant response to the validation prompt: “i have no idea. i'm not really sure what you're asking”. This establishes that the test instructions were unclear; it does not establish that the participant inspected or misunderstood the app. Task 20 remains unresolved, not passed.
+- Independent production inspection did expose confusing presentation: the suggested action used internal research language and cut off the governing-document paragraph mid-sentence. Replaced that summary with a complete explanation of the unknown reviewer and three distinct stages, and a named evidence button. No approval requirement was inferred or waived.
+- Plan refinement within Task 20: use concrete actions and observe the result, rather than asking the user to interpret audit terminology. No expansion of scope. Tasks 18 and 20 remain open; substantive Cobabe authority/timing and search exhaustion are still attempted but unresolved.
+- Focused information-priority and area-rule regressions and build passed after the clarity change. Production verification of that follow-up is pending.
