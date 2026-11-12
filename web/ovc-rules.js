@@ -42,12 +42,40 @@ const zones={
  'G':{code:'104-4',summary:'§104-4-1–5: gravel excavation/storage uses; no standalone dwelling listed. Base lot 40,000 sq ft, width 150 ft; front/rear 30 ft, side 20 ft; height 35 ft. Gravel operation setback 100 ft from public street and 50 ft from boundaries. Excavation authorization, approved reclamation plan, financial assurance and environmental controls apply; on-site crushing is not permitted.'},
  'RMH-1-6':{code:'104-19',summary:'§104-19-2–5: double-wide or wider home in an approved manufactured-home subdivision. Subdivision conditional-use approval; land-use and building permits before placement. Subdivision minimum 4 acres; lot 6,000 sq ft/60 ft wide, corner 7,000/70 ft; front/rear 15 ft, street side 15 ft; home side 10 ft, awning post 5 ft; height one story or 14 ft; coverage 60%. Perimeter CUP conditions may require larger setbacks.'}
 };
-const fields={cornerLot:'Corner lot?',residentialAdjacency:'Adjacent to medium / low-density residential?',federalShorelineAdjacency:'Adjoins US Forest Service shoreline land?',water:'Water supply',wastewater:'Wastewater system',highwayChange:'New / changed state-highway access or land use along a highway?',streamWork:'Alter natural stream bed / banks?',wetlandFill:'Fill or dredge in wetlands / waters?',grading:'Grading or excavation?',rowWork:'Work in public right-of-way?',slope25:'Surveyed average natural slope at least 25%?',subdivision:'Create lots or amend a plat?',adu:'Accessory dwelling unit?',demolition:'Demolition?',specialUse:'Other use-specific permits (rental, business, signs, agriculture, resort)?'};
+const fields={arterialCollector:'Abuts an arterial / collector street?',sideAbutment:'Side building wall abuts the adjoining building?',rearAbutment:'Rear building wall abuts the adjoining building?',sideMaintenanceContract:'Recorded perpetual side maintenance contract?',rearMaintenanceContract:'Recorded perpetual rear maintenance contract?',cornerLot:'Corner lot?',residentialAdjacency:'Adjacent to medium / low-density residential?',federalShorelineAdjacency:'Adjoins US Forest Service shoreline land?',water:'Water supply',wastewater:'Wastewater system',highwayChange:'New / changed state-highway access or land use along a highway?',streamWork:'Alter natural stream bed / banks?',wetlandFill:'Fill or dredge in wetlands / waters?',grading:'Grading or excavation?',rowWork:'Work in public right-of-way?',slope25:'Surveyed average natural slope at least 25%?',subdivision:'Create lots or amend a plat?',adu:'Accessory dwelling unit?',demolition:'Demolition?',specialUse:'Other use-specific permits (rental, business, signs, agriculture, resort)?'};
 // Explicit inputs are required; an omitted measurement is never treated as zero.
 function dimensionChecks(name,s){
- const x=zones[name];if(!x?.use||s.work!=='new-home')return [];
+ const x=zones[name];if(!x||!['new-home','commercial','other'].includes(s.work))return [];
  const has=k=>s[k]!==''&&s[k]!=null&&Number.isFinite(Number(s[k]));
  const failures=[],min=(k,n)=>{if(n!=null&&has(k)&&Number(s[k])<n)failures.push(k+' '+s[k]+' is below '+n);},max=(k,n)=>{if(n!=null&&has(k)&&Number(s[k])>n)failures.push(k+' exceeds '+n);};
+ if(!x.use){
+  if(name==='MV-1'){
+   const wide=has('roadWidth')&&Number(s.roadWidth)>=80;
+   min('frontSetback',wide?50+Math.max(0,Number(s.buildingHeight||0)-30):30);
+   if(s.residentialAdjacency==='yes'||s.cornerLot==='yes')min('sideSetback',20);
+   if(s.residentialAdjacency==='yes')min('rearSetback',30);
+   max('buildingHeight',wide?35:40);max('buildingCoverage',60);
+  }else if(name==='CV-2'){
+   if(has('stories'))min('frontSetback',Number(s.stories)===2?20:Number(s.stories)>=3?30:0);
+   if(s.arterialCollector==='yes')min('streetCenterlineSetback',50);
+   if(s.sideAbutment!=='yes'&&s.sideMaintenanceContract!=='yes')min('sideSetback',10);
+   if(s.rearAbutment!=='yes'&&s.rearMaintenanceContract!=='yes')min('rearSetback',10);
+   max('buildingHeight',35);max('buildingCoverage',60);
+  }else if(name==='CVR-1'){
+   min('lotArea',108900);min('lotWidth',150);min('frontSetback',30);
+   min('sideSetback',s.residentialAdjacency==='yes'?30:20);min('rearSetback',s.residentialAdjacency==='yes'?30:20);max('buildingHeight',35);
+   min('commercialFloorShare',20);min('commercialGroundShare',50);
+  }else if(name==='O-1'||name==='G'){
+   min('lotArea',name==='O-1'?217800:40000);min('lotWidth',name==='O-1'?300:150);
+   min('frontSetback',30);min('sideSetback',20);min('rearSetback',30);max('buildingHeight',35);
+  }else if(name==='RMH-1-6'){
+   min('lotArea',s.cornerLot==='yes'?7000:6000);min('lotWidth',s.cornerLot==='yes'?70:60);
+   min('frontSetback',15);min('rearSetback',15);min('sideSetback',10);
+   if(s.cornerLot==='yes')min('streetSideSetback',15);max('buildingHeight',14);max('stories',1);max('buildingCoverage',60);
+  }
+  return failures;
+ }
+ if(s.work!=='new-home')return failures;
  let area=x.area,side=x.side,front=x.front;
  if(name==='HR'){
   area=s.wastewater==='sewer'?6000:s.wastewater==='septic'?20000:null;
@@ -95,6 +123,12 @@ function rows(p,add){const layers=p.application.areaMap?.layers||[],s=p.applicat
  rule('lighting','Outdoor lighting plan','108-16','submission','Include the required outdoor-lighting plan and fixture information with applicable building plans; verify shielding, illumination and zone-specific provisions.',s.work==='new-home'||s.work==='commercial'?'required':'verify');
  rule('landscape','Architecture, landscaping and parking','108-2','review','Coordinate applicable architectural/landscape design, parking/access under Chapter 108-8 and water-wise landscaping under §108-7-12. Review project-specific exceptions and design-review conditions.');
  rule('adu','Accessory dwelling unit approval','108-19','issuance','Apply the internal/accessory dwelling standards, owner/use conditions, site capacity and applicable approvals.',s.adu==='yes'?'required':s.adu==='no'?'not-triggered':'verify');
+ if(s.adu==='yes'){
+  rule('adu-submission','ADU application and service feasibility','108-19','submission','§108-19-6(B): signed application, fee, scaled site/floor/elevation plans, owner-residency verification and water/sewer will-serve statements; well or septic proposals require local health feasibility evidence. Detached units also need state-law eligibility evidence.','required');
+  rule('adu-landuse-sequence','ADU land-use approval before building application','108-19','submission','§108-19-6(D)(5): obtain the approved land-use permit before applying for a building permit unless the city combines the applications. Document the combined process or approved permit; approval timing is not inferred from a parcel map.','required');
+  rule('adu-recorded-notice','Record the ADU notice','108-19','issuance','§108-19-6(C): execute and record the city-approved notice before issuance of an ADU land-use permit, building permit or business license. The notice includes occupancy, use and separate-conveyance restrictions.','required','neighborhood','City planning / Weber County Recorder');
+  for(const [id,authority] of [['fire','Fire authority'],['address','Addressing official'],['water','Culinary water authority'],['wastewater','Sanitary sewer / local health authority'],['building','Building official']])rule('adu-'+id,'ADU approval · '+authority,'108-19','review','§108-19-4(13), §108-19-6(D): the city routes the application for relevant department and agency approval. Retain the approval and any conditions for this ADU; a service-area map does not establish approval.','required','municipal',authority);
+ }
  rule('special','Use-specific and existing-building conditions','108-7','issuance','Resolve applicable short-term rental (108-11), home occupation (108-13), public building (108-10), campground (108-20), agritourism (108-21), sign (110), noncomplying building/lot (108-12), accessory-building, pool and agricultural-exemption provisions. These are not all determined by an address.',s.specialUse==='no'?'not-triggered':'verify');
  const h=hits('ov-highways').filter(f=>f.attributes?.DOT_OWN_L==='UDOT'||f.attributes?.DOT_OWN_R==='UDOT'||['1','2','3','4','5','6'].includes(String(f.attributes?.CARTOCODE)));
  add('highway','State-highway access and encroachment','UDOT','construction',(status('ov-highways')?h.length+' state-highway candidate(s) within the 60 m parcel search envelope: '+h.map(f=>{const d=s.accessGeometry?near(parseGeometry(s.accessGeometry),f.geometry):null;return f.name+(d==null?'':' · access sketch '+Math.round(d)+' ft from mapped road');}).join(', '):'Road ownership service unavailable.')+'. New/changed access or land use along a highway requires CAP review; encroachment approval is separate before work in the right-of-way. Off-parcel access can matter even without a nearby match.','https://connect.udot.utah.gov/business/permits/access-management/',s.highwayChange==='yes'?'required':s.highwayChange==='no'?'not-triggered':'verify','ov-highways');

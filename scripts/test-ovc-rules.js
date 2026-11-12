@@ -28,3 +28,12 @@ assert(O.dimensionChecks('FV-3',{work:'new-home',roadWidth:80,frontSetback:35}).
 assert(O.dimensionChecks('S-1',{work:'new-home',federalShorelineAdjacency:'yes',federalShorelineSetback:35,imperviousCover:30}).length===2);
 assert.deepEqual(O.dimensionChecks('HR',{work:'new-home',lotArea:'',sideSetback:''}),[]);
 console.log('PASS: wastewater-dependent HR area, combined yards, adjacency, coverage, road-width and federal shoreline conditions.');
+
+assert(O.dimensionChecks('MV-1',{work:'commercial',roadWidth:80,buildingHeight:35,frontSetback:50}).some(x=>x.includes('55')));
+assert(O.dimensionChecks('CV-2',{work:'commercial',stories:2,frontSetback:10}).length===1);
+assert(O.dimensionChecks('CV-2',{work:'commercial',sideSetback:0,sideAbutment:'yes'}).length===0);
+assert(O.dimensionChecks('CVR-1',{work:'commercial',commercialFloorShare:15,commercialGroundShare:40}).length===2);
+assert(O.dimensionChecks('RMH-1-6',{work:'new-home',cornerLot:'yes',lotArea:6500,stories:2}).length===2);
+console.log('PASS: commercial/resort/industrial/manufactured dimensional conditions and explicit abutment exceptions.');
+
+const adu=project();adu.application.ruleScope.adu='yes';assert.equal(get(adu,'ov-adu-landuse-sequence').stage,'submission');assert.equal(get(adu,'ov-adu-recorded-notice').stage,'issuance');assert.equal(get(adu,'ov-adu-fire').stage,'review');console.log('PASS: ADU application prerequisites, separate reviewer approvals and recorded-notice timing.');

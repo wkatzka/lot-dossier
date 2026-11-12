@@ -13,8 +13,11 @@ async function run({root='.discovery-state',minutes=15}={}){
   // Keep a fixed query interval throughout a resumed run. Refresh only after the previous queue drains.
   const persisted=path.join(dir,'profile.json');
   let active=fs.existsSync(persisted)?JSON.parse(fs.readFileSync(persisted)):profile;
-  if(state&&state.coverage.pending===0&&Date.now()-Date.parse(state.startedAt)>7*86400000){
-   fs.renameSync(dir,dir+'-previous-'+Date.now());state=null;active=profile;
+  const signature=p=>JSON.stringify({...p,endDate:undefined});
+  if(state&&(signature(active)!==signature(profile)||(state.coverage.pending===0&&Date.now()-Date.parse(state.startedAt)>7*86400000))){
+   // The preceding Actions artifact retains older cycles; bound the active checkpoint to two cycles.
+   fs.rmSync(dir+'-previous',{recursive:true,force:true});
+   fs.renameSync(dir,dir+'-previous');state=null;active=profile;
   }
   if(!state)active={...active,endDate:new Date().toISOString().slice(0,10)};
   fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(persisted,JSON.stringify(active,null,2));
@@ -22,6 +25,7 @@ async function run({root='.discovery-state',minutes=15}={}){
   let jobs=0;
   do {
    state=await D.run(active,dir,{maxJobs:1,retry:jobs===0,ocr:require('../lib/discovery-ocr').read});jobs++;
+   if(jobs%10===0)console.log(JSON.stringify({profile:active.id,checkpoint:jobs,pending:state.coverage.pending}));
   }while(state.coverage.pending&&Date.now()<profileDeadline);
   if(active.parcelId)P.publish(active,state,'data/title/discovery-index.json');
   const report={id:active.id,scope:active.scope,checkedAt:state.updatedAt,coverage:state.coverage,
