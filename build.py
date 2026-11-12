@@ -80,7 +80,9 @@ def build(api_base, inline_assets=False):
     results = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "development-v2.json"))
     data["weberValue"] = {"records": sales["records"], "metrics": {k: results[k]["metrics"] for k in ("rollingDevelopment", "flaggedTransactionSensitivity")}}
     sdk = subprocess.check_output(["node", "scripts/bundle-auth.js"], cwd=ROOT, text=True)
+    # Reviewed public-record evidence stays separate from generic downloadable app / private-data guards.
     scripts = "\n".join([
+        '<script src="' + api_base + '/api/public-research?format=approval-evidence&amp;v=' + data["apiVersion"] + '"></script>',
         "<script>" + sdk.replace("</script", "<\\/script") + "</script>",
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
@@ -96,7 +98,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "plan-measurements.js") + "\n" + read(ROOT, "lib", "plan-vectors.js") + "\n" + read(ROOT, "lib", "plan-calibration.js") + "\n" + read(WEB, "permit-facts.js") + "\n" + read(WEB, "planreader.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n</script>",
-        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-assistant.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "ovc-code-sources.js") + "\n" + read(WEB, "ovc-rules.js") + "\n" + read(WEB, "area-rules.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
+        "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-assistant.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "ovc-code-sources.js") + "\n" + read(WEB, "approval-evidence.js") + "\n" + read(WEB, "ovc-rules.js") + "\n" + read(WEB, "area-rules.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
         "<script>\n" + read(WEB, "project-backup.js") + "\n" + read(WEB, "project-store.js") + "\n</script>",
         "<script>\n" + read(WEB, "cloud-sync.js") + "\n" + read(WEB, "project-sync.js") + "\n" + read(WEB, "account.js") + "\n" + read(WEB, "research-workspace.js") + "\n" + read(WEB, "site-document-ui.js") + "\n" + read(WEB, "permit-prep-ui.js") + "\n" + read(WEB, "measurement-workbench.js") + "\n" + read(WEB, "analysis-progress.js") + "\n" + read(WEB, "project-overview.js") + "\n" + read(WEB, "area-rules-ui.js") + "\n" + read(WEB, "project-workspace.js") + "\n</script>",
     ])

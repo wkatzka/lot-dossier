@@ -26,7 +26,7 @@ async function run({root='.discovery-state',minutes=15,profileId=''}={}){
   // One job per checkpoint, with round-robin runs bounded by wall clock. No serverless timeout loses a queue.
   let jobs=0;
   do {
-   state=await D.run(active,dir,{maxJobs:1,retry:jobs===0,ocr:require('../lib/discovery-ocr').read,readPdf:require('../lib/discovery-native-reader').read});jobs++;
+   state=await D.run(active,dir,{maxJobs:4,ocrConcurrency:4,retry:jobs===0,ocr:require('../lib/discovery-ocr').read,readPdf:require('../lib/discovery-native-reader').read});jobs++;
    if(jobs%10===0)console.log(JSON.stringify({profile:active.id,checkpoint:jobs,pending:state.coverage.pending}));
   }while(state.coverage.pending&&Date.now()<profileDeadline);
   if(active.parcelId)P.publish(active,state,'data/title/discovery-index.json');

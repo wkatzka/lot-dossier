@@ -59,7 +59,9 @@
     "nextrequestdev.s3.amazonaws.com",
     "archive.org",
     "index.commoncrawl.org",
-    "rangerealtyco.com"
+    "rangerealtyco.com",
+    "weber.municipalcodeonline.com",
+    "s3-us-west-2.amazonaws.com"
   ],
   "seeds": [
     {
@@ -216,6 +218,12 @@
       "depth": 0,
       "mode": "attachments",
       "maxDepth": 1
+    },
+    {
+      "kind": "municipal-index",
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://weber.municipalcodeonline.com/Docs/Read?type=ordinances",
+      "page": 1
     }
   ],
   "wordpress": [

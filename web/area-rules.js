@@ -2,7 +2,8 @@
 (function(root){'use strict';
 const U='https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/', B='https://maps.webercountyutah.gov/arcgis/rest/services/';
 const O=typeof module!=='undefined'&&module.exports?require('./ovc-rules'):root.OVCRules;
-const checked='2026-11-12', version='2026-11-12.6';
+const E=typeof module!=='undefined'&&module.exports?require('./approval-evidence'):root.ApprovalEvidence;
+const checked='2026-11-12', version='2026-11-12.7';
 const sources={ov:'https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf',design:'https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf',huntsville:'https://huntsvilleutah.gov/documents/270/Building_checklist_2026_v2.pdf',ogden:'https://engineering.ogdencity.com/188/Permit-Applications',ogdenSite:'https://events.ogdencity.com/DocumentCenter/View/35398/Site-Plan-Review-Application',retreat:'https://1drv.ms/u/s!As7yYwZ4WJEpgRQxxL0KXsU4kz34?e=8mUbDB',highlands:'https://www.highlandsedenut.com/about-us/',wolf:'https://wolfcreekresortmasterhoa.com/building-home-wolf-creek-resort/',fire:'https://www.weberfiredistrict.com/plan-reviews',health:'https://webermorganhealth.gov/services/environmental-health/water-quality/',udot:'https://connect.udot.utah.gov/business/permits/access-management/',stream:'https://www.waterrights.utah.gov/strmalt/',flood:'https://www.webercountyutah.gov/Engineering/flood_maps.php',storm:'https://deq.utah.gov/dwq/updes-general',air:'https://deq.utah.gov/daq/permit-guide-cleanup-dust-control-open-burn'};
 const definitions=[
  {id:'municipal',name:'Municipal boundaries',url:U+'UtahMunicipalBoundaries/FeatureServer/0',fields:['NAME']},
@@ -58,9 +59,19 @@ function rules(p){const map=p.application.areaMap,scope=p.application.ruleScope|
  if(!isOV)add('highway','Highway access authorization','UDOT / local road authority','construction','New or changed state-highway access, land use or access intensity may require a Conditional Access Permit. Road frontage and proposed access are not yet automatically matched.',sources.udot,'verify','unmapped');
  if(!isOV)add('stream','Stream / regulated-water authorization','Utah Water Rights / US Army Corps','construction','Alteration of natural stream bed or banks requires authorization before work. Federal water jurisdiction and proposed impacts need separate determination.',sources.stream,'verify','unmapped');
  add('air','Demolition and dust requirements','Utah Division of Air Quality / utilities','construction','Screen demolition, asbestos, utility disconnections and dust-plan applicability against the work and regulated area.',sources.air,'verify','unmapped');
+ const disputed=rows.find(r=>r.id==='ov-sensitive-adoption');if(disputed){disputed.stage='verify';disputed.evidenceCheck=true;disputed.blocksSubmission=true;}
+ const evidenceCase=E.forProject(p);
+ if(evidenceCase){
+  for(const r of rows.filter(r=>r.id==='ov-zone-AV-3'||r.id==='ov-dimensions-AV-3')){
+   r.title=r.id==='ov-zone-AV-3'?'Base-zone reference · AV-3':'Reconcile base-zone and recorded-plat dimensions';
+   r.trigger=evidenceCase.chain.find(x=>x.id==='setbacks').finding+' Resolve the controlling agreement. Base-zone comparison follows: '+r.trigger;
+   r.evidenceIds=['agreement','setbacks'];
+  }
+  return rows.filter(r=>!['covenants','ov-agreement'].includes(r.id)).concat(E.rules(p).map(r=>({...r,version})));
+ }
  return rows;
 }
 function reviewCurrent(p,r){const x=p.application.ruleReviews?.[r.id];return x&&x.version===version&&x.mapAt===p.application.areaMap?.at&&x.siteVersion===p.siteVersion&&x.planVersion===p.planVersion&&x.scope===JSON.stringify(p.application.ruleScope||{})&&( !x.documentId||p.documents.some(d=>d.id===x.documentId&&!p.documents.some(n=>n.family===d.family&&n.version>d.version)))?x:null;}
-function blockers(p){if(p.application.areaMap&&p.application.areaMap.geometryScope!==undefined&&p.application.areaMap.geometryScope!==['workGeometry','accessGeometry'].map(k=>p.application.ruleScope?.[k]).filter(Boolean).join('|'))return ['Proposed work/access changed; refresh Rules & Approvals.'];if(p.application.areaMap&&p.application.areaMap.version!==version)return ['Rule coverage changed; refresh Rules & Approvals.'];if(p.application.areaMap?.siteVersion!==undefined&&p.application.areaMap.siteVersion!==p.siteVersion)return ['Parcel evidence changed; refresh Rules & Approvals.'];if(!p.application.areaMap)return ['Rules for this property have not been checked.'];return rules(p).filter(r=>r.stage==='submission'&&r.applicability!=='not-triggered'&&!['approved','not-applicable'].includes(reviewCurrent(p,r)?.state)).map(r=>r.title+' — approval or documented applicability review needed.');}
-const api={lookup,rules,blockers,reviewCurrent,sources,definitions,version};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AreaRules=api;
+function blockers(p){if(p.application.areaMap&&p.application.areaMap.geometryScope!==undefined&&p.application.areaMap.geometryScope!==['workGeometry','accessGeometry'].map(k=>p.application.ruleScope?.[k]).filter(Boolean).join('|'))return ['Proposed work/access changed; refresh Rules & Approvals.'];if(p.application.areaMap&&p.application.areaMap.version!==version)return ['Rule coverage changed; refresh Rules & Approvals.'];if(p.application.areaMap?.siteVersion!==undefined&&p.application.areaMap.siteVersion!==p.siteVersion)return ['Parcel evidence changed; refresh Rules & Approvals.'];if(!p.application.areaMap)return ['Rules for this property have not been checked.'];return rules(p).filter(r=>(r.stage==='submission'||r.blocksSubmission)&&r.applicability!=='not-triggered'&&!['approved','not-applicable'].includes(reviewCurrent(p,r)?.state)).map(r=>r.title+(r.evidenceCheck?' — missing controlling evidence; approval timing is not established.':' — approval or documented applicability review needed.'));}
+const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,version};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AreaRules=api;
 })(typeof window!=='undefined'?window:globalThis);
