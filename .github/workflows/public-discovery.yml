@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '23 10 * * *'
   workflow_dispatch:
+    inputs:
+      minutes:
+        description: Bounded worker minutes (1–20)
+        default: '20'
+        required: false
 permissions:
   contents: write
   actions: read
@@ -26,7 +31,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p .discovery-state
-          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=discovery-state&per_page=100" --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .id // empty')
+          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=discovery-metadata&per_page=100" --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .id // empty')
           if [ -n "$artifact" ]; then
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact/zip" > /tmp/discovery-state.zip
             unzip -q /tmp/discovery-state.zip -d .discovery-state
@@ -34,15 +39,18 @@ jobs:
       - name: Process bounded discovery batch
         run: node scripts/run-discovery-production.js
         env:
-          DISCOVERY_MINUTES: '20'
+          DISCOVERY_MINUTES: ${{ inputs.minutes || '20' }}
+      - name: Compact source bytes out of checkpoint
+        if: always()
+        run: node scripts/compact-discovery-checkpoint.js .discovery-state
       - name: Preserve checkpoint even after a failed batch
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: discovery-state
-          path: .discovery-state/
+          name: discovery-metadata
+          path: .discovery-metadata/
           include-hidden-files: true
-          retention-days: 90
+          retention-days: 30
           if-no-files-found: error
       - name: Publish sanitized discovery evidence
         run: |

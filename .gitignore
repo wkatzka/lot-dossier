@@ -15,3 +15,5 @@ docs/research/cobabe-discovery/readings/
 docs/research/cobabe-discovery/manifest.json
 
 .discovery-state/
+
+.discovery-metadata/

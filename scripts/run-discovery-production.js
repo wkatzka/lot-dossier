@@ -2,6 +2,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish');
 async function run({root='.discovery-state',minutes=15}={}){
+ if(!Number.isFinite(minutes)||minutes<1||minutes>20)throw Error('Worker time must be 1–20 minutes');
  const deadline=Date.now()+minutes*60000, reports=[];
  fs.mkdirSync(root,{recursive:true});
  const profiles=fs.readdirSync('config/discovery').filter(f=>f.endsWith('.json')).sort();

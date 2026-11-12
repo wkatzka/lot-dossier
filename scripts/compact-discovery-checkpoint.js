@@ -1,0 +1,17 @@
+/* Write a separate allowlisted metadata checkpoint. Never upload extracted text or source bytes. */
+const fs=require('node:fs'),path=require('node:path');
+const root=process.argv[2],out='.discovery-metadata';if(!root||!fs.existsSync(root))process.exit(0);
+const pick=(o,keys)=>Object.fromEntries(keys.filter(k=>o[k]!==undefined).map(k=>[k,o[k]]));
+const safeUrl=u=>{try{const v=new URL(u);for(const k of [...v.searchParams.keys()])if(/token|signature|credential|X-Amz-/i.test(k))v.searchParams.delete(k);return v.href;}catch{return undefined;}};
+fs.mkdirSync(out,{recursive:true});
+for(const name of fs.readdirSync(root)){
+ const dir=path.join(root,name),file=path.join(dir,'manifest.json');if(!fs.existsSync(file))continue;
+ const s=JSON.parse(fs.readFileSync(file)),clean=pick(s,['version','profileId','profileHash','startedAt','updatedAt','runStartedAt','scope','contactFallbackEligible']);
+ clean.jobs=s.jobs.map(j=>({...pick(j,['id','key','kind','term','resource','requestId','route','page','startDate','endDate','status','depth','maxDepth','mode','documentHash','sha256','checkedAt','retrievedAt','bytes','httpStatus']),key:j.key.replace(/([?&](?:token|X-Amz-[^=|]+)=)[^&|]*/gi,'$1'),url:safeUrl(j.url),originalUrl:safeUrl(j.originalUrl),libraryPrefix:safeUrl(j.libraryPrefix),...(j.error?{error:'Source task remains unresolved; retry or review original source'}:{})}));
+ clean.documents=s.documents.map(d=>({...pick(d,['sha256','kind','file','route','retrievedAt','pages','unreadPages','applicability','disposition','ocrReviewRequired']),urls:d.urls.map(safeUrl).filter(Boolean),sourcePages:(d.sourcePages||[]).map(safeUrl).filter(Boolean),matches:(d.matches||[]).map(m=>pick(m,['page','terms'])),...(d.readError?{readError:'Document reading remains unresolved'}:{})}));
+ clean.externalLeads=s.externalLeads.map(l=>({url:safeUrl(l.url),route:l.route,status:l.status}));
+ clean.sourceRestrictions=s.sourceRestrictions.map(r=>({...pick(r,['route','status','httpStatus','retryAfter','checkedAt']),url:safeUrl(r.url)}));
+ clean.queries=[];clean.discarded=[];require('../lib/record-discovery-engine').summarize(clean,JSON.parse(fs.readFileSync(path.join(dir,'profile.json'))));
+ const target=path.join(out,name);fs.mkdirSync(target,{recursive:true});fs.writeFileSync(path.join(target,'manifest.json'),JSON.stringify(clean));
+ if(fs.existsSync(path.join(dir,'profile.json')))fs.copyFileSync(path.join(dir,'profile.json'),path.join(target,'profile.json'));
+}
