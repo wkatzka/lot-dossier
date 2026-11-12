@@ -1,0 +1,265 @@
+{
+  "checkedAt": "2026-11-12",
+  "scope": "Instrument-specific continuation; not a claim of public search exhaustion",
+  "routes": [
+    {
+      "route": "EMMA district disclosures",
+      "identifier": "CUSIP 977695AA3 / security AA41E7C488F2B40019D6F65F0100011FE",
+      "url": "https://emma.msrb.org/Security/Details/AA41E7C488F2B40019D6F65F0100011FE",
+      "result": "User authorized terms acceptance. Browser inventory lists April 1 2025 official statement and quarterly filings through June 30 2026, including revised filing posted November 10 2026.",
+      "documentUrl": "https://emma.msrb.org/P11995876-P11520838-P11975960.pdf",
+      "limit": "PDF viewer failed to render reliably. Full content not reviewed. Automated download rejected by approval review under accepted terms; no alternate programmatic retrieval attempted. Inventory does not establish that missing agreement is contained in any filing."
+    },
+    {
+      "route": "MuniOS public search",
+      "identifier": "Wolf Creek / Special Assessment Bonds Series 2025",
+      "url": "https://www.munios.com/e/MAMCO",
+      "result": "Final statement dated April 1 2025; detail redirects to sign-in.",
+      "limit": "Contents not reviewed; no proof needed instrument is held here or unavailable elsewhere."
+    },
+    {
+      "route": "2026 state boundary index",
+      "url": "https://entitiesandboundaries.utah.gov/2026-boundary-actions-by-county/",
+      "result": "Weber section links Wolf Creek filings 203199 and 203200, Osprey Ranch and Eagle Crest withdrawals.",
+      "limit": "Index titles alone do not establish filing content."
+    },
+    {
+      "route": "State filing 203199",
+      "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/203199-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1-WITHDRAWAL-OSPREY-RANCH-WITHDRAWAL-NO.-1.pdf",
+      "sha256": "baf3089de11f14f1465b3056c9ed6d93898128b6d9e5597b5fc86ce04efcf96b",
+      "result": "32-page PDF acquired. Extracted text has no Cobabe, either disputed agreement number, architectural, or development agreement match; resolution dated April 16 2026 concerns withdrawals.",
+      "limit": "Text search does not certify scanned exhibits; not promoted as Cobabe authority evidence."
+    },
+    {
+      "route": "State filing 203200",
+      "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/203200-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1-WITHDRAWAL-EAGLE-CREST-WITHDRAWAL-NO.-1.pdf",
+      "result": "Web fetch cache miss; direct retrieval HTTP 403.",
+      "limit": "Content unreviewed; route access failure, not absence of document."
+    },
+    {
+      "route": "Sewer district policy",
+      "url": "https://wcwsid.com/policies-procedures/",
+      "documentUrl": "https://wcwsid.com/wp-content/uploads/2026/08/PPM-7.2026.pdf#page=13",
+      "sha256": "051748a85e6d7343176a636f1293fa4ccc477d2b0dbf77a4ad5df947d102357d",
+      "result": "Normal browser exposed public July 2026 manual after shell page requests returned 403. PDF retrieved successfully; PDF page 13 / printed page 6 visually verified. Connection application, fees, district authorization and inspection are distinct from county permit issuance letter.",
+      "productionTreatment": "Added original link and stage distinction to exact Lot 4 evidence; county wording does not override city intake checklist, and district water policies are not attributed to Ogden Valley Mutual Water Company."
+    },
+    {
+      "route": "Developer public website",
+      "urls": [
+        "https://www.cobaberanch.com/",
+        "https://www.cobaberanch.com/theland-1",
+        "https://www.cobaberanch.com/blank"
+      ],
+      "result": "Land page lists Phase 1 lots; FAQ link redirects to lot 1 marketing page. No operative architectural document recovered on these pages.",
+      "limit": "This is a page-level result, not complete developer publication exhaustion."
+    },
+    {
+      "route": "County dedication search, newer Phase 2 plat",
+      "searchUrl": "https://www.webercountyutah.gov/Recorder_Surveyor/ded_plats.php?sub_name=COBABE&submit=Submit",
+      "documentUrl": "https://webercountyutah.gov/mounts/ded_plats/Book_102/102-054.tif",
+      "sha256": "22a19db61a2c6bf12d478a2094fa78cad62eafe31c6ade239b01a2c2ac8f5699",
+      "result": "Visually reviewed Phase 2 sheet S1: note 1 repeats 3372687; note 3 names Wester Geologic February 28 2022 report; note 5 references historical power easements 379388 and 493375. No new operative architectural instrument identified on this sheet.",
+      "limit": "Phase 2 is not Lot 4 Phase 1. A repeated plat citation does not independently authenticate the disputed recorder number. Not substituted into Lot 4 conditions.",
+      "recording": "Entry 3425450, July 14 2026, Book 102 pp54\u201358; visually checked stamp"
+    }
+  ],
+  "productionDiscovery": {
+    "run": "https://github.com/wkatzka/lot-dossier/actions/runs/43325397994",
+    "profileCommit": "190e3cbd7a94fda43bbc947238fb24301b0b908b",
+    "addedSeeds": [
+      "3297522 requests/documents",
+      "2234358 requests/documents",
+      "2628422 requests/documents",
+      "Wester Geologic requests/documents",
+      "current state 202871 URL"
+    ],
+    "status": "Verified in production: eight distinct exact archive searches each returned zero results; two retained observations per search from replay. No duplicate job keys, pending jobs or unread documents in the final configured run. This is not search exhaustion.",
+    "replayRun": "https://github.com/wkatzka/lot-dossier/actions/runs/43327939373",
+    "auditFixCommit": "7514275350abaa26726ade3787ec2091049222b7",
+    "replayCorrection": "Initial replay checkpoint used an unsupported pending status. Corrected to engine queued status; do not count run 43327713299 as completed query evidence.",
+    "queryResults": [
+      {
+        "url": "https://webercountyut.nextrequest.com/client/requests?search_term=3297522&page_size=50&page_number=1&sort_field=request_date&sort_order=desc",
+        "term": "3297522",
+        "resource": "requests",
+        "total": 0,
+        "count": 0,
+        "sha256": "3f1a52c8966953e2d5eeb67709069c14eafa7b5f2235252a5582639018d0bf6c"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/documents?search_term=3297522&page_size=50&page_number=1&sort_field=count&sort_order=desc",
+        "term": "3297522",
+        "resource": "documents",
+        "total": 0,
+        "count": 0,
+        "sha256": "1242b050ad1d272fdd73d542e9ab3454c65e91a00e0ef435ccfb44219457cd08"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/requests?search_term=2234358&page_size=50&page_number=1&sort_field=request_date&sort_order=desc",
+        "term": "2234358",
+        "resource": "requests",
+        "total": 0,
+        "count": 0,
+        "sha256": "3f1a52c8966953e2d5eeb67709069c14eafa7b5f2235252a5582639018d0bf6c"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/documents?search_term=2234358&page_size=50&page_number=1&sort_field=count&sort_order=desc",
+        "term": "2234358",
+        "resource": "documents",
+        "total": 0,
+        "count": 0,
+        "sha256": "1242b050ad1d272fdd73d542e9ab3454c65e91a00e0ef435ccfb44219457cd08"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/requests?search_term=2628422&page_size=50&page_number=1&sort_field=request_date&sort_order=desc",
+        "term": "2628422",
+        "resource": "requests",
+        "total": 0,
+        "count": 0,
+        "sha256": "3f1a52c8966953e2d5eeb67709069c14eafa7b5f2235252a5582639018d0bf6c"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/documents?search_term=2628422&page_size=50&page_number=1&sort_field=count&sort_order=desc",
+        "term": "2628422",
+        "resource": "documents",
+        "total": 0,
+        "count": 0,
+        "sha256": "1242b050ad1d272fdd73d542e9ab3454c65e91a00e0ef435ccfb44219457cd08"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/requests?search_term=Wester+Geologic&page_size=50&page_number=1&sort_field=request_date&sort_order=desc",
+        "term": "Wester Geologic",
+        "resource": "requests",
+        "total": 0,
+        "count": 0,
+        "sha256": "3f1a52c8966953e2d5eeb67709069c14eafa7b5f2235252a5582639018d0bf6c"
+      },
+      {
+        "url": "https://webercountyut.nextrequest.com/client/documents?search_term=Wester+Geologic&page_size=50&page_number=1&sort_field=count&sort_order=desc",
+        "term": "Wester Geologic",
+        "resource": "documents",
+        "total": 0,
+        "count": 0,
+        "sha256": "1242b050ad1d272fdd73d542e9ab3454c65e91a00e0ef435ccfb44219457cd08"
+      }
+    ],
+    "finalRun": "https://github.com/wkatzka/lot-dossier/actions/runs/43328446906",
+    "finalProductionVerification": {
+      "commit": "f0e54065d61465d93fd5bfbbe438cc8d94440c2e",
+      "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43328446906",
+      "coverage": {
+        "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
+        "routes": [
+          {
+            "route": "recorder_index",
+            "jobs": 1,
+            "completed": 1,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "parcel_and_parent_records",
+            "jobs": 167,
+            "completed": 150,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "planning_case_files",
+            "jobs": 4,
+            "completed": 2,
+            "restricted": 1,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "adopted_agreements_and_exhibits",
+            "jobs": 234,
+            "completed": 233,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "public_notice_attachments",
+            "jobs": 220,
+            "completed": 220,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "association_libraries",
+            "jobs": 250,
+            "completed": 250,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "developer_libraries",
+            "jobs": 43,
+            "completed": 43,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "released_records_archive",
+            "jobs": 334,
+            "completed": 171,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          },
+          {
+            "route": "public_mirrors_and_archives",
+            "jobs": 84,
+            "completed": 83,
+            "restricted": 0,
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
+          }
+        ],
+        "pending": 0,
+        "unreadDocuments": 0,
+        "documents": 154,
+        "publicRouteChecksComplete": true
+      }
+    },
+    "deduplicationFixCommit": "f1dc42f",
+    "vercelDeployment": "98bHfwsXksRatLUPuz2JxiiwYD8d"
+  },
+  "remaining": {
+    "attemptedButUnresolved": [
+      "Recorder identity for 3372687 versus 3372667",
+      "Executed 2025 Cobabe agreement with exhibits and amendments",
+      "Current applicable architectural delegation and timing",
+      "Wester Geologic February 28 2022 report",
+      "Complete city use/exception interpretation and independent user validation"
+    ],
+    "notEstablished": [
+      "Paid-only custody",
+      "Global public-search exhaustion",
+      "Exact current architectural reviewer or prerequisite stage"
+    ]
+  },
+  "productionRelease": {
+    "commit": "c0a308c",
+    "vercelDeployment": "EMUvaBbrUuEf2AfQEV2SpQ3cx1nc",
+    "evidenceVersion": "2026-11-12.6",
+    "verification": "Vercel success; signed-in production Cobabe reload shows provider policy paragraph and raw PDF p13 link, unresolved architectural authority and timing retained."
+  }
+}
