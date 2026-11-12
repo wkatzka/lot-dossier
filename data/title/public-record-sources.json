@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "county": "Weber",
+      "entry": "1882728",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+      "label": "Recorded Entry 1882728",
+      "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+      "checkedAt": "2026-11-12",
+      "availablePages": 87,
+      "recordedPages": 87,
+      "completeCopy": true,
+      "applicability": "unverified",
+      "relatedEntries": [
+        "2234358",
+        "2624950",
+        "2628422"
+      ]
+    },
+    {
+      "county": "Weber",
+      "entry": "2234358",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/2234358-first-amendment-9-Jan-07.pdf",
+      "label": "Recorded Entry 2234358",
+      "sha256": "85fa191060ac9ac768d3171d34b8a02ad18feed59d25dd7be8549b4f61a0ad79",
+      "checkedAt": "2026-11-12",
+      "availablePages": 18,
+      "recordedPages": 18,
+      "completeCopy": true,
+      "applicability": "unverified",
+      "relatedEntries": [
+        "1882728",
+        "2624950",
+        "2628422"
+      ]
+    },
+    {
+      "county": "Weber",
+      "entry": "2624950",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment-of-Master-CCRs-water-issues-03132013.pdf",
+      "label": "Recorded Entry 2624950",
+      "sha256": "7acfa022e1d72b5cd4be4ba812c300714acf6b2327d6c397e306a3c084f0cb94",
+      "checkedAt": "2026-11-12",
+      "availablePages": 3,
+      "recordedPages": 15,
+      "completeCopy": false,
+      "applicability": "unverified",
+      "relatedEntries": [
+        "1882728",
+        "2234358",
+        "2628422"
+      ]
+    },
+    {
+      "county": "Weber",
+      "entry": "2628422",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf",
+      "label": "Recorded Entry 2628422",
+      "sha256": "55418659da0baa2968531c30a4965c1c5f55988f1378e18369a22d62c7c70b0d",
+      "checkedAt": "2026-11-12",
+      "availablePages": 15,
+      "recordedPages": 15,
+      "completeCopy": true,
+      "applicability": "unverified",
+      "relatedEntries": [
+        "1882728",
+        "2234358",
+        "2624950"
+      ]
+    }
+  ]
+}

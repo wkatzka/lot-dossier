@@ -4,7 +4,7 @@ function project(){return {schemaVersion:1,propertyKey:'Weber|example',property:
 const get=(p,id)=>A.rules(p).find(r=>r.id===id);
 let p=project();assert.match(get(p,'ov-zone-AV-3').trigger,/130680/);assert.match(get(p,'ov-zone-AV-3').trigger,/24 ft/);assert.equal(get(p,'ov-hillside').applicability,'verify');
 p=W.apply(p,{type:'rule_scope',...p.application.ruleScope,lotArea:'10000',frontSetback:'12',buildingHeight:'42',slope25:'yes',highwayChange:'yes',streamWork:'yes'});
-assert.equal(get(p,'ov-dimensions-AV-3').applicability,'required');assert.match(get(p,'ov-dimensions-AV-3').trigger,/height exceeds/);assert.equal(get(p,'ov-hillside').applicability,'required');assert.equal(get(p,'highway').applicability,'required');assert.equal(get(p,'stream').applicability,'required');assert.equal(A.rules(p).filter(r=>r.id==='stream').length,1);
+assert.equal(get(p,'ov-dimensions-AV-3').applicability,'required');assert.match(get(p,'ov-dimensions-AV-3').trigger,/buildingHeight exceeds/);assert.equal(get(p,'ov-hillside').applicability,'required');assert.equal(get(p,'highway').applicability,'required');assert.equal(get(p,'stream').applicability,'required');assert.equal(A.rules(p).filter(r=>r.id==='stream').length,1);
 assert.equal(O.near(polygon,{paths:[[[-111.831,41.3005],[-111.828,41.3005]]]}),0);
 const d=O.near(polygon,{paths:[[[-111.828,41.30],[-111.828,41.301]]]});assert(d>250&&d<300);
 const q=project();q.application.areaMap.layers[1].features=[{name:'F-5'}];assert.match(get(q,'ov-zone-F-5').trigger,/3525/);assert(!O.zones['F-5'].height);
@@ -19,3 +19,12 @@ console.log('PASS: OVC zone standards, dimensions, source ambiguity, slope/highw
 const protectedProject=project();protectedProject.application.areaMap.layers.push({id:'ov-groundwater-protection',state:'checked',features:[{name:'Example public system',attributes:{ProtZone:'2'}}]});assert.equal(get(protectedProject,'ov-source-protection-use').applicability,'required');assert.match(get(protectedProject,'ov-source-protection').trigger,/Example public system/);assert.match(get(protectedProject,'ov-source-protection').trigger,/unavailable/);
 const shoreline=project();shoreline.application.areaMap.layers[1].features=[{name:'S-1'}];assert(!O.zones['S-1'].height);assert.match(get(shoreline,'ov-shoreline-amendment').trigger,/35 ft/);assert.equal(get(shoreline,'ov-shoreline-amendment').applicability,'required');
 console.log('PASS: DDW inner-zone restrictions, partial-layer coverage and superseded shoreline-height protection.');
+
+assert(O.dimensionChecks('HR',{work:'new-home',wastewater:'septic',lotArea:12000}).some(x=>x.includes('20000')));
+assert(!O.dimensionChecks('HR',{work:'new-home',wastewater:'sewer',lotArea:12000}).length);
+assert(O.dimensionChecks('AV-3',{work:'new-home',combinedSideSetbacks:20}).some(x=>x.includes('24')));
+assert(O.dimensionChecks('HR',{work:'new-home',residentialAdjacency:'yes',sideSetback:10,greenSpace:20,floorAreaRatio:1.2}).length===3);
+assert(O.dimensionChecks('FV-3',{work:'new-home',roadWidth:80,frontSetback:35}).length===1);
+assert(O.dimensionChecks('S-1',{work:'new-home',federalShorelineAdjacency:'yes',federalShorelineSetback:35,imperviousCover:30}).length===2);
+assert.deepEqual(O.dimensionChecks('HR',{work:'new-home',lotArea:'',sideSetback:''}),[]);
+console.log('PASS: wastewater-dependent HR area, combined yards, adjacency, coverage, road-width and federal shoreline conditions.');

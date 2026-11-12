@@ -26,7 +26,11 @@ async function drain(manifest,fetchPage,{maxPages=100,onProgress=()=>{}}={}){
       continue;
      }
      const key=ref.entry?'entry:'+ref.entry:'book:'+ref.book+':'+ref.recordedPage;
-     if(!(manifest.requests||[]).some(x=>x.key===key))manifest.requests.push({...ref,key,discoveredByDoc:doc.id,sourceSha256:r.sha256,extractionMethod:page.method,ocrConfidence:page.confidence,page:ref.recordedPage||null,sourcePage:page.page,source:doc.url+'#page='+page.page,purpose:'Reference extracted from public original; identity and applicability unverified',state:'original_access_unresolved',orderUrl:'https://www.webercountyutah.gov/forms/document/',reason:'Exact original image URL has not been resolved'});
+     const known=ref.publicOriginal;
+     if(known&&!manifest.documents.some(d=>d.url===known.url)&&manifest.documents.length<500)manifest.documents.push({id:'entry-'+ref.entry,url:known.url,label:known.label,kind:'recorded_instrument',state:'queued',matchBasis:['Recording reference on '+doc.label+' page '+page.page+'; identity and applicability unverified'],discoverySources:[doc.url+'#page='+page.page],applicability:'unverified',sourceCoverage:known.sourceCoverage,catalogueSha256:known.catalogueSha256});
+     let request=(manifest.requests||[]).find(x=>x.key===key);
+     if(!request){request={...ref,key,discoveredByDoc:doc.id,sourceSha256:r.sha256,extractionMethod:page.method,ocrConfidence:page.confidence,page:ref.recordedPage||null,sourcePage:page.page,source:doc.url+'#page='+page.page,purpose:'Reference extracted from public original; identity and applicability unverified',state:'original_access_unresolved',reason:'Public discovery is incomplete; absence of a resolved URL is not evidence of restricted access.'};manifest.requests.push(request);}
+     if(known){request.publicUrl=known.url;request.state=known.sourceCoverage.completeCopy?'public_copy_located':'incomplete_public_copy';request.reason=known.sourceCoverage.completeCopy?'Public original located; reading and applicability remain unverified.':'Incomplete public copy; continue searching for missing recorded pages.';delete request.orderUrl;}
     }
     doc.state=r.nextPage?'partially_read':'pages_processed';onProgress(doc);
     if(!r.nextPage)break;cursor=r.nextPage;

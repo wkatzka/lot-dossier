@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cornerpin — Know the ground. Build with clarity.</title>
+<meta name="description" content="From the first look at a lot to a prepared permit application. Cornerpin connects site evidence, plans and the questions that need answers.">
+<link rel="icon" href="/assets/cornerpin-favicon.svg">
+<script>
+// Preserve existing workspace deep links and authentication callbacks.
+if ((location.hash && !['#how-it-works','#site-intelligence','#permit-preparation','#top','#main'].includes(location.hash)) || new URLSearchParams(location.search).has('code') || (history.state && history.state.cornerpinView)) location.replace('/platform.html'+location.search+location.hash);
+</script>
+<link rel="stylesheet" href="/assets/landing.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<section class="hero" id="top" aria-label="Cornerpin introduction">
+<video id="build-film" muted loop playsinline preload="none" poster="/assets/home-finished.jpg" aria-hidden="true" tabindex="-1" data-src="/assets/cornerpin-build.mp4"></video>
+<div class="shade"></div>
+<header class="navigation">
+<a class="brand" href="/" aria-label="Cornerpin home"><img src="/assets/cornerpin-wordmark.svg" alt="Cornerpin" width="220" height="40"></a>
+<nav aria-label="Main navigation"><a href="#site-intelligence">Site intelligence</a><a href="#permit-preparation">Permit preparation</a><a href="#how-it-works">How it works</a></nav>
+<div class="nav-actions"><a class="login-link" href="/platform.html?view=account">Login</a><a class="platform-link glass" href="/platform.html?view=projects">Open platform <span aria-hidden="true">↗</span></a></div>
+</header>
+<main id="main" class="hero-copy">
+<h1>KNOW THE GROUND.<br>BUILD WITH CLARITY.</h1>
+<p class="intro">Paving the path from site to home.<br>Move your build forward faster by spending less time tracking down<br>agency requirements, board approvals, and required documents.</p>
+<div class="actions"><a class="button primary" href="/platform.html#start">Explore a property <span aria-hidden="true">↗</span></a><a class="button glass" href="/platform.html?view=projects">My projects <span aria-hidden="true">→</span></a></div>
+</main>
+<div class="hero-bottom"><a class="scroll-link" href="#how-it-works">A clearer path to building <span aria-hidden="true">↓</span></a><span class="film-caption">FROM LOT TO HOME</span></div>
+</section>
+<section class="overview" id="how-it-works" aria-labelledby="workflow-title">
+<div class="section-heading"><p class="eyebrow">Construction intelligence, connected</p><h2 id="workflow-title">Every good build starts<br>with better questions.</h2><p>Bring the evidence, decisions, and next steps for your property into one workspace.</p></div>
+<div class="workflow">
+<article id="site-intelligence"><span class="step">01 / UNDERSTAND THE SITE</span><h3>Start with the ground.</h3><p>Explore mapped conditions, zoning, utilities, terrain, and recorded restrictions. Follow each finding back to its source.</p><a href="/platform.html#start">Review a property <span aria-hidden="true">↗</span></a></article>
+<article><span class="step">02 / CONNECT YOUR PLANS</span><h3>See what needs resolving.</h3><p>Bring your plans alongside the site evidence. Keep open questions, source documents, and project contacts within reach.</p><a href="/platform.html?view=projects">Open your workspace <span aria-hidden="true">↗</span></a></article>
+<article id="permit-preparation"><span class="step">03 / PREPARE TO SUBMIT</span><h3>Move forward with context.</h3><p>Prepare application details and track supporting documents and prerequisite approvals. Review the package before you submit.</p><a href="/platform.html?view=projects">Continue your project <span aria-hidden="true">↗</span></a></article>
+</div>
+<div class="coverage"><span class="status-dot"></span><p>Built for Utah. Detailed document and permit workflows currently focus on the Ogden Valley pilot. Coverage varies by location.</p></div>
+</section>
+<footer><a class="footer-brand" href="#top">CORNERPIN<span>•</span></a><p>Public evidence. Clear next steps.</p><a href="/platform.html?view=account">Account <span aria-hidden="true">↗</span></a><small>Screening and preparation tools. Not a survey, title opinion, or permit approval.</small></footer>
+<script src="/assets/landing.js"></script>
+</body>
+</html>

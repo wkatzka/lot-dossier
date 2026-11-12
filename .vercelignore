@@ -1,0 +1,9 @@
+# Local research acquisition cache is not application code or a public asset.
+docs/research/cobabe-discovery/blobs/**
+docs/research/cobabe-discovery/readings/**
+docs/research/cobabe-discovery/manifest.json
+**/*Handoff*.zip
+Cobabe-Architectural-Review-Evidence-*.zip
+Cobabe-Public-Discovery-*.zip
+
+.discovery-state/**

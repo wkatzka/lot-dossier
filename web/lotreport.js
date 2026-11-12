@@ -1395,9 +1395,9 @@
         ((plat.entries || []).filter(function (e) { return /agreement/i.test(e.label); }).map(function (e) { return 'The plat also cites the ' + e.label.toLowerCase() + ' recorded as Entry #' + e.entry + '. '; }).join('')) +
         (entries.length ? 'Recorded as Entry ' + entries.join(', ') + ' with the ' + ctx.parcel.county + ' County Recorder. ' : '') +
         (main ? 'Source: ' + cite(main.doc, main.doc.mentionPages[0]) + '. ' : '') +
-        'The recorded text itself is only sold by the Recorder (Weber: $1/page), so the dossier relies on the development standards above for design rules.',
+        'Original covenants may be available from an association or public records library. Retrieve the complete recorded documents and amendments, then verify lot coverage, review authority, and approval timing. Development standards alone do not establish private design-review requirements.',
         main ? cite(main.doc) : 'Recorded plat', main ? main.doc.url : platUrl, null,
-        entries.length ? 'Order Entry ' + entries.join(', ') + ' from the County Recorder to read the full covenants.' : null));
+        entries.length ? 'Find complete copies of Entry ' + entries.join(', ') + ' in public or association records; request missing originals from the County Recorder.' : null));
     }
 
     // State HOA registry: registration status and the association's designated contact.

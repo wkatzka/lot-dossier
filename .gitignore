@@ -8,3 +8,10 @@ dist/
 
 # Tesseract language data downloaded by local OCR runs
 *.traineddata
+
+# Downloaded public-source bytes and machine readings; retain curated evidence/indexes.
+docs/research/cobabe-discovery/blobs/
+docs/research/cobabe-discovery/readings/
+docs/research/cobabe-discovery/manifest.json
+
+.discovery-state/

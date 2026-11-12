@@ -82,7 +82,7 @@ Vercel deploys `main` automatically (project `lot-dossier-assistant`, framework 
 Run `node scripts/test-pool-screen.js` for pool screening scenarios (shallow groundwater, missing evidence, non-pilot jurisdiction, expired state-code verification and sewer/septic distinctions).
 
 - Recorded plats and the parcel-record API are read for **Weber County** only so far. Other counties get the map-based checks.
-- The CC&R *text* is only sold by county recorders. The dossier identifies the recorded documents and uses development standards from public meeting packets.
+- Some recorded CC&Rs are publicly available through association libraries; others require a recorder request. The dossier identifies references, but development standards from meeting packets do not establish private covenant applicability or approval timing.
 - Cost ranges in `config/cost_assumptions.json` are placeholders. Replace them with local bids.
 - This is a screening tool, not a survey, geotechnical report, title report or appraisal.
 

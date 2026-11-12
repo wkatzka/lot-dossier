@@ -1,0 +1,56 @@
+name: Public record discovery
+on:
+  schedule:
+    - cron: '23 10 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: public-record-discovery
+  cancel-in-progress: false
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: sudo apt-get update -qq && sudo apt-get install -y antiword poppler-utils
+      - name: Restore latest durable checkpoint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .discovery-state
+          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=discovery-state&per_page=100" --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .id // empty')
+          if [ -n "$artifact" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact/zip" > /tmp/discovery-state.zip
+            unzip -q /tmp/discovery-state.zip -d .discovery-state
+          fi
+      - name: Process bounded discovery batch
+        run: node scripts/run-discovery-production.js
+        env:
+          DISCOVERY_MINUTES: '20'
+      - name: Preserve checkpoint even after a failed batch
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-state
+          path: .discovery-state/
+          include-hidden-files: true
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish sanitized discovery evidence
+        run: |
+          git config user.name 'Cornerpin discovery'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/title/discovery-index.json data/title/discovery-production.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh public discovery evidence'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

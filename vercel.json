@@ -50,5 +50,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/welcome.html"
+    }
   ]
 }

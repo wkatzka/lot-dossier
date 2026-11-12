@@ -1,0 +1,72 @@
+{
+  "id": "ogden-valley-city-public-coverage",
+  "county": "Weber",
+  "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
+  "startDate": "2026-01-01",
+  "endDate": "2026-11-12",
+  "routes": [
+    "adopted_code",
+    "planning_requirements",
+    "neighborhood_libraries",
+    "public_notice_attachments"
+  ],
+  "terms": [
+    "Ogden Valley",
+    "shoreline",
+    "2026-53",
+    "design",
+    "architectural",
+    "covenant",
+    "declaration",
+    "amendment",
+    "permit"
+  ],
+  "noticeTerms": [
+    "Ogden Valley shoreline",
+    "Ogden Valley design review"
+  ],
+  "hosts": [
+    "ogdenvalley.gov",
+    "www.utah.gov",
+    "wolfcreekresortmasterhoa.com",
+    "retreatwolfcreek.com",
+    "www.retreatwolfcreek.com"
+  ],
+  "seeds": [
+    {
+      "route": "adopted_code",
+      "url": "https://ogdenvalley.gov/land-use/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "planning_requirements",
+      "url": "https://ogdenvalley.gov/planning/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "neighborhood_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/neighborhood-hoas/",
+      "mode": "library",
+      "maxDepth": 2
+    },
+    {
+      "route": "neighborhood_libraries",
+      "url": "https://retreatwolfcreek.com/",
+      "mode": "library",
+      "maxDepth": 2
+    }
+  ],
+  "wordpress": [
+    {
+      "url": "https://ogdenvalley.gov",
+      "route": "adopted_code",
+      "terms": [
+        "shoreline",
+        "2026-53",
+        "design review"
+      ]
+    }
+  ]
+}
