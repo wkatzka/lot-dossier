@@ -1,5 +1,7 @@
 # Address-to-rules implementation — 2026-11-12
 
+This describes the initial pilot. Ogden Valley additions and the current completion checklist are in [ogden-valley-coverage.md](ogden-valley-coverage.md); its expanded GIS screening supersedes the highway/stream and city-zoning omissions below.
+
 ## Agreed capabilities
 - [x] Reuse address-resolved parcel; query actual GIS polygons rather than mailing city.
 - [x] Show municipality, water, health, county zoning/flood/WUI and selected taxing-district intersections with original GIS links and lookup time.

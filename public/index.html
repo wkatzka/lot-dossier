@@ -1010,6 +1010,14 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 @media(max-width:800px){.rules-layout{grid-template-columns:1fr}#rules-map{height:290px}.rules-table table{min-width:680px}}
 .rules-intro{padding:20px!important}.rules-intro h2{margin:0 0 10px}.rules-intro p{margin:8px 0}.rules-intro .pw-actions{margin:12px 0}
 
+/* Rule atlas: map first, scope grouped below, summaries stay readable. */
+.rules-layout{grid-template-columns:minmax(0,1fr)}
+.rules-scope .pw-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.rules-scope label{min-width:0}.rules-scope select,.rules-scope input{width:100%;box-sizing:border-box}
+.rules-table td:first-child{width:23%}.rules-table td:nth-child(4){width:38%}.rules-table td p{margin:0 0 8px;font-size:13px;line-height:1.5}
+@media(max-width:800px){.rules-scope .pw-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.rules-scope .pw-grid{grid-template-columns:1fr}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -5461,10 +5469,283 @@ const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads
   const api={catalog,supported,rows,update,sheet,render,formCommand};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
 })(typeof window!=='undefined'?window:globalThis);
 
+/* Official city-published code manifest, retrieved 2026-11-12. Hashes identify the reviewed files. */
+(function(r){const data={
+  "104-11": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-104-11-Commercial-Valley-Resort-Receation-CVR-1.pdf",
+    "sha256": "edb8ec4b4762f2f399f65b02f144bae51cfa39b8ad4039f36c3f659c67bc100d",
+    "title": "Chapter 104 11 Commercial Valley Resort Receation CVR 1"
+  },
+  "108-2": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-108-2-Architectural-Landscape-And-Screening-Design-Standards.pdf",
+    "sha256": "eb3832dc9827c039d89c8b8e005f9b67fcd8d5fe89101be274ecf74bfd69d81c",
+    "title": "Chapter 108 2 Architectural Landscape And Screening Design Standards"
+  },
+  "108-21": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-21-Agritourism.pdf",
+    "sha256": "b8ada2e56ddc8794b49b62a5da4b19b2b6b2f31f1081d6e6b8b0d575862b5ddc",
+    "title": "Chapter 108 21 Agritourism"
+  },
+  "108-19": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-19-Accessory-Dwelling-Units.pdf",
+    "sha256": "5f4cd31a895a19547b318651d55e38081c79575a3d9061ccbc166153f5d25f8d",
+    "title": "Chapter 108 19 Accessory Dwelling Units"
+  },
+  "108-18": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-18-Drinking-Water-Source-Protection.pdf",
+    "sha256": "60df4d7e240e53a8aca6e685f9b3a9fd000244b6142b0218d8f3770d2f225dcf",
+    "title": "Chapter 108 18 Drinking Water Source Protection"
+  },
+  "108-17": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-17-Ogden-Valley-Pathways.pdf",
+    "sha256": "5a7391d4370129ef3d68ef3e96689bb5005e5d8f2cd3e9a43d893810cd063c46",
+    "title": "Chapter 108 17 Ogden Valley Pathways"
+  },
+  "108-11": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-11-Short-Term-Rentals.pdf",
+    "sha256": "5085bd0ddea23238f883bc2f4d3e2faf2c1d26c6ffe9600c9e5001419c34d42b",
+    "title": "Chapter 108 11 Short Term Rentals"
+  },
+  "108-7": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-108-7-Supplementary-And-Qualifying-Regulations.pdf",
+    "sha256": "370e9b810a6cef9a7f6c902ed63362aada11991545850d3a368b1171a06b13e5",
+    "title": "Chapter 108 7 Supplementary And Qualifying Regulations"
+  },
+  "106": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Title-106-Subdivisions.pdf",
+    "sha256": "82c85c7130f828cecb4fdc34144f4ce0e7985c16f770a9a105d1aa0627359515",
+    "title": "Title 106 Subdivisions"
+  },
+  "104-4": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-4-Gravel-Zone-G.pdf",
+    "sha256": "8d8261c3e0b1b0592f5038b4ae6f2f2172b9fc94f9c0c134c1756aa7d0585463",
+    "title": "Chapter 104 4 Gravel Zone G"
+  },
+  "104-21": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-21-Manufacturing-MV-1.pdf",
+    "sha256": "edd9621b452d84db34fe206dc7cb2725d056c7dea2ad4026763c76083048596a",
+    "title": "Chapter 104 21 Manufacturing MV 1"
+  },
+  "104-20": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/08/Chapter-104-20-Commercial-Valley-CV-2.pdf",
+    "sha256": "07c4c21651ad8db0e1b937011c74959e10b029e8cfed0c006262fb8cad86eb41",
+    "title": "Chapter 104 20 Commercial Valley CV 2"
+  },
+  "110": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-110-Signs.pdf",
+    "sha256": "307a5a2400b57f997099c47d3c28cf5096cc5e41a7349846fcd0e5c9b147a273",
+    "title": "Chapter 110 Signs"
+  },
+  "108-8": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-8-Parking-And-Loading-Space-Vehicle-Traffic-And-Access-Regulations.pdf",
+    "sha256": "12ef20d85108d018941c19fda72150667b918e3bc5517d5db605120a8969b4a1",
+    "title": "Chapter 108 8 Parking And Loading Space Vehicle Traffic And Access Regulations"
+  },
+  "108-6": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-6-Time-Share.pdf",
+    "sha256": "ee62415258fc902446b5ca7e29b7d1a1f045eb07a247079d25a4bdc328d81de1",
+    "title": "Chapter 108 6 Time Share"
+  },
+  "108-3": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-3-Cluster-Subdivisions.pdf",
+    "sha256": "3640824bfe8bbd2648bf0ec7c21582fcb2ab1b0898eb1a796db0a5cc428508f6",
+    "title": "Chapter 108 3 Cluster Subdivisions"
+  },
+  "108-4": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-4-Conditional-Uses.pdf",
+    "sha256": "8aeee53d1aa2495a26160a9b86b9bb2e347b0915c916444c19710bfa0eac29c5",
+    "title": "Chapter 108 4 Conditional Uses"
+  },
+  "108-22": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-22-Natural-Hazard-Areas.pdf",
+    "sha256": "f03642a5aa8523c5f80f2a6b1abd933eac88efc4befb3ebc7a78daca1a9b05f7",
+    "title": "Chapter 108 22 Natural Hazard Areas"
+  },
+  "108-20": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-20-Forest-Campgrounds.pdf",
+    "sha256": "3d49ccf1ca34159ee2bde7d64394cb1a499271b9a90e178de0e6330391246eed",
+    "title": "Chapter 108 20 Forest Campgrounds"
+  },
+  "108-16": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-16-Outdoor-Lighting.pdf",
+    "sha256": "2f83f52273d43cb9d3d4a7266233aa09a8ee49b28691ee6c97a5610a8929106d",
+    "title": "Chapter 108 16 Outdoor Lighting"
+  },
+  "108-15": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-15-Single-Family-Dwellings-Standards.pdf",
+    "sha256": "4edb3513ab775744f5a536108b7058e7aa8df28a17237cf4f45f29ce869938e9",
+    "title": "Chapter 108 15 Single Family Dwellings Standards"
+  },
+  "108-13": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-13-Home-Occupation.pdf",
+    "sha256": "9e6ec5032e1a7dfa4e19871e259c11b08b07c36cfbc89ec406cbbda2b51ce92c",
+    "title": "Chapter 108 13 Home Occupation"
+  },
+  "108-12": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-12-Noncomplying-Structures-Uses-And-Lots.pdf",
+    "sha256": "c106973b7771cde3878c6e8f5b194918b88165fd2fe8c491970207ff090344d4",
+    "title": "Chapter 108 12 Noncomplying Structures Uses And Lots"
+  },
+  "108-10": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-10-Public-Buildings.pdf",
+    "sha256": "fcfaf22b2a1cbad2b002381849d04ac85af4f5a33df266d86ea6afbacb99de6c",
+    "title": "Chapter 108 10 Public Buildings"
+  },
+  "108-1": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf",
+    "sha256": "3fd92e92d9f78e93cd0c2126128c27a2ae82e056a705fe199585ca177c71951f",
+    "title": "Chapter 108 1 Design Review"
+  },
+  "104-9": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-9-Forest-Zones.pdf",
+    "sha256": "9c4c4aa9ac89ef7216522ff38e4187f8dc166970abd457c28bf38769413576c7",
+    "title": "Chapter 104 9 Forest Zones"
+  },
+  "104-8": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-8-Hillside-Residential-HR-ADOPTED.pdf",
+    "sha256": "fc9375e91c12dab42611d397ed70a75b93f8247b7fdff5fddc1a6ea02b3700fb",
+    "title": "Chapter 104 8 Hillside Residential HR ADOPTED"
+  },
+  "104-28": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/Chapter-104-28-Ogden-Valley-Sensitive-Lands-Overlay-Zone1-1.pdf",
+    "sha256": "f5563815644611938450b6218ba844992f8b4ab5a07a6ee53d52c4448647b343",
+    "title": "Chapter 104 28 Ogden Valley Sensitive Lands Overlay Zone1 1"
+  },
+  "104-26": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-26-Open-Space-Zone-O-1.pdf",
+    "sha256": "165ce3f55b8b67b4798e34e8e89056b6814bd2ca4191b536388b6589a7b6c6a6",
+    "title": "Chapter 104 26 Open Space Zone O 1"
+  },
+  "104-19": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-19-Res-Manufactured-1.pdf",
+    "sha256": "0e5ff54f93872998d894201948830df7a4e2f84163e8477702da6427eacaac60",
+    "title": "Chapter 104 19 Res Manufactured 1"
+  },
+  "104-14": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-14-Forest-Valley-Zone.pdf",
+    "sha256": "c0ee964f2ea70c894339e700bfdb23617635664f37f4cf0dfbdfd7eba39c978e",
+    "title": "Chapter 104 14 Forest Valley Zone"
+  },
+  "104-10": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-104-10-Shoreline-Zone-S-11-2.pdf",
+    "sha256": "8d118fef898b6ef9d5b3847429f4666ee585fb20760ccce6db70652131cc4c4f",
+    "title": "Chapter 104 10 Shoreline Zone S 11 2"
+  },
+  "102": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-102-Administration.pdf",
+    "sha256": "e46a386245d03e29740865243a0dfdf7818228f68fcb5a62f00bc91a7e1e4d8d",
+    "title": "Chapter 102 Administration"
+  },
+  "104-3": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-3-Residential-Estates-Zones-RE.docx",
+    "sha256": "b80fee52613a2db7bbc7943f3555d49a698588cd9469b9ba3befe8b2657840d1",
+    "title": "Chapter 104 3 Residential Estates Zones RE"
+  },
+  "104-2": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-104-2-AV3.pdf",
+    "sha256": "3e405b0905abe5e8c4f7dbf10d2e36eb7147023ef3be25ba4b2b74ae11386346",
+    "title": "Chapter 104 2 AV3"
+  },
+  "104-1": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-104-1-In-General.pdf",
+    "sha256": "51d3aa4c3ce5d6b3e295c7d71a2348643d5a0f2125aae4166e11867a27c12472",
+    "title": "Chapter 104 1 In General"
+  },
+  "101-2": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Chapter-101-2_Definitions.pdf",
+    "sha256": "2aabfef5039211717a2d22a8f0ae3e6badfd0208ad637c9c90395cfd6df989fe",
+    "title": "Chapter 101 2_Definitions"
+  },
+  "101-1": {
+    "url": "https://ogdenvalley.gov/wp-content/uploads/2026/05/FINAL_Chapter-101-1-Creation-Implementation-Amendment-And-Effect.pdf",
+    "sha256": "b6a4e5b25fa183fe752b0d4e79f6d005d01241434aa63fa5d6c64b7eec3de0fc",
+    "title": "Chapter 101 1 Creation Implementation Amendment And Effect"
+  }
+};if(typeof module!=='undefined'&&module.exports)module.exports=data;else r.OVCCodeSources=data;})(globalThis);
+
+/* Ogden Valley's adopted-code screening. A result is evidence, never an approval. */
+(function(root){'use strict';
+const S=typeof module!=='undefined'&&module.exports?require('./ovc-code-sources'):root.OVCCodeSources;
+const T=typeof module!=='undefined'&&module.exports?require('@turf/turf'):root.turf;
+const city='https://services7.arcgis.com/IkSdxg7Lmanz55Gq/arcgis/rest/services/',county='https://maps.webercountyutah.gov/arcgis/rest/services/',utah='https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/';
+const definitions=[
+ ['ov-zoning','City current zoning',city+'Zoning_Area_VIEW/FeatureServer/0',['ZONE_NAME']],
+ ['ov-streams','Watercourses in city GIS',county+'planning_layers/MapServer/25',['FENAME','Status'],60],
+ ['ov-roads','City / private roads',city+'Roads_VIEW/FeatureServer/14',['FULLNAME','FinalOwnership'],60],
+ ['ov-highways','State highway and road ownership',utah+'UtahRoads/FeatureServer/0',['FULLNAME','DOT_HWYNAM'],60],
+ ['ov-lakes','Lakes and reservoir shoreline',utah+'UtahLakesNHD/FeatureServer/0',['GNIS_Name','GNIS_NAME'],60],
+ ['ov-slope','City slope classes',city+'PercentRise_Slope_Poly/FeatureServer/0',['gridcode']],
+ ['ov-agreements','Recorded development agreements',county+'planning_layers/MapServer/20',['name','number']],
+ ['ov-wildlife','Important wildlife habitat',county+'planning_layers/MapServer/12',['OBHABITAT']],
+ ['ov-scenic','Scenic roads',county+'planning_layers/MapServer/2',['STREET'],60],
+ ['ov-skyline','Protected skylines',county+'planning_layers/MapServer/1',[],60],
+ ['ov-sewer','City sewer service areas',city+'Sewer_ServiceArea/FeatureServer/7',['DISTRICT','Label']],
+ ['ov-water','City culinary water areas',city+'CulinaryWater_ServiceAreas/FeatureServer/2',['WRNAME','DWNAME','LABEL']],
+ ['ov-landslide','Mapped landslides',county+'engineering/engineering_layers/MapServer/13',[]],
+ ['ov-liquefaction','Liquefaction potential',county+'engineering/engineering_layers/MapServer/12',[]],
+ ['ov-faults','Quaternary faults',county+'engineering/engineering_layers/MapServer/8',[],30],
+ ['ov-wetlands','Utah wetland inventory', 'https://webmaps.geology.utah.gov/arcgis/rest/services/Groundwater/Wetlands/MapServer/4',[],30]
+].map(([id,name,url,fields,buffer])=>({id,name,url,fields,buffer,weber:true}));
+// Main single-family building baselines. Recorded lots, road widening, overlays and exceptions remain separate checks.
+const zones={
+ 'AV-3':{code:'104-2',section:'§104-2-3(f), §104-2-5',use:'P',area:130680,width:150,front:30,side:10,sideSum:24,rear:30,height:35,corner:20},
+ 'RE-15':{code:'104-3',section:'Permitted uses and site-development table (published section numbering is inconsistent)',use:'P',area:15000,width:100,front:30,side:10,sideSum:24,rear:30,height:35,corner:20},
+ 'RE-20':{code:'104-3',section:'Permitted uses and site-development table (published section numbering is inconsistent)',use:'P',area:20000,width:100,front:30,side:10,sideSum:24,rear:30,height:35,corner:20},
+ 'FV-3':{code:'104-14',section:'§104-14-2, §104-14-5',use:'P',area:130680,width:150,front:30,side:20,rear:30,height:35,corner:30,note:'Front setback is 50 ft on streets/highways at least 80 ft wide. Curved-street/cul-de-sac width exception requires measurement 70 ft behind the front line.'},
+ 'F-5':{code:'104-9',section:'§104-9-3(f), §104-9-5',use:'P',area:217800,width:300,front:30,side:20,rear:30,note:'Height is unresolved: published PDF p. 13 displays “3525 feet.” Obtain city clarification. Curved-street lot-width exceptions and wildfire requirements also apply.'},
+ 'F-40':{code:'104-9',section:'§104-9-3(f), §104-9-5',use:'P',area:1742400,width:660,front:75,side:40,rear:30,note:'Height is unresolved: published PDF p. 13 displays “3525 feet.” Obtain city clarification; the width footnote also references F-10. Wildfire requirements apply.'},
+ 'S-1':{code:'104-10',section:'§104-10-3(f), §104-10-5',use:'P',area:217800,width:300,front:30,side:20,rear:30,height:25,impervious:25},
+ 'HR':{code:'104-8',section:'§104-8-3.060 and site-development table pp. 9–11',use:'P',width:60,front:25,side:8,sideSum:18,rear:30,height:35,corner:20,coverage:40,note:'Single-family minimum: 6,000 sq ft on community sewer; 20,000 sq ft on septic. Side setback 20 ft next to medium/low-density residential; green space at least 40%; floor/area ratio 1:1. Additional rental-room area applies.'},
+ 'CVR-1':{code:'104-11',summary:'§104-11-6: overall project at least 2.5 acres, width 150 ft; front 30 ft, side/rear 20 ft or 30 ft adjoining residential; height 35 ft. Lodging/unit density adds net-developable-area requirements. §104-11-5 requires at least 20% total building floor area and 50% ground-floor area commercial/service. Standalone dwelling is not the listed resort/commercial dwelling use.'},
+ 'CV-2':{code:'104-20',summary:'§104-20-5: no base lot-area/width minimum; front setback one story none, two stories 20 ft, three stories 30 ft; arterial/collector baseline 50 ft from street centerline. Side/rear 10 ft with specified abutment/maintenance-contract exceptions. Height 35 ft; building coverage 60%. Exact use, cross-access easement and street-facing design must be reviewed.'},
+ 'MV-1':{code:'104-21',summary:'§104-21-5: no base lot-area/width minimum, but health minimum applies without sewer. Front 30 ft, or 50 ft on existing/planned 80-ft right-of-way with additional height-related setback; side 20 ft adjoining residential or on corner lot; rear 30 ft adjoining residential, otherwise no base side/rear setback. Height 40 ft, reduced to 35 ft on 80-ft right-of-way; coverage 60%. Exact industrial use must be checked in §104-21-3.'},
+ 'O-1':{code:'104-26',summary:'§104-26-2–4: open-space/agricultural/recreational uses; no standalone dwelling listed. Utility substations and golf driving range require conditional use. Minimum 5 acres, width 300 ft; front/rear 30 ft, side 20 ft; height 35 ft. Conservation-easement terms also govern.'},
+ 'G':{code:'104-4',summary:'§104-4-1–5: gravel excavation/storage uses; no standalone dwelling listed. Base lot 40,000 sq ft, width 150 ft; front/rear 30 ft, side 20 ft; height 35 ft. Gravel operation setback 100 ft from public street and 50 ft from boundaries. Excavation authorization, approved reclamation plan, financial assurance and environmental controls apply; on-site crushing is not permitted.'},
+ 'RMH-1-6':{code:'104-19',summary:'§104-19-2–5: double-wide or wider home in an approved manufactured-home subdivision. Subdivision conditional-use approval; land-use and building permits before placement. Subdivision minimum 4 acres; lot 6,000 sq ft/60 ft wide, corner 7,000/70 ft; front/rear 15 ft, street side 15 ft; home side 10 ft, awning post 5 ft; height one story or 14 ft; coverage 60%. Perimeter CUP conditions may require larger setbacks.'}
+};
+const fields={water:'Water supply',wastewater:'Wastewater system',highwayChange:'New / changed state-highway access or land use along a highway?',streamWork:'Alter natural stream bed / banks?',wetlandFill:'Fill or dredge in wetlands / waters?',grading:'Grading or excavation?',rowWork:'Work in public right-of-way?',slope25:'Surveyed average natural slope at least 25%?',subdivision:'Create lots or amend a plat?',adu:'Accessory dwelling unit?',demolition:'Demolition?',specialUse:'Other use-specific permits (rental, business, signs, agriculture, resort)?'};
+function parseGeometry(raw){try{return JSON.parse(raw);}catch{return null;}}
+function feature(g){if(!g)return null;try{if(g.rings)return T.polygon(g.rings);if(g.paths)return T.multiLineString(g.paths);if(Number.isFinite(g.x)&&Number.isFinite(g.y))return T.point([g.x,g.y]);return g.type==='Feature'?g:null;}catch{return null;}}
+function near(g,h){const a=feature(g),b=feature(h);if(!a||!b)return null;try{if(T.booleanIntersects(a,b))return 0;let d=Infinity;const lines=x=>x.geometry.type==='Polygon'?T.polygonToLine(x):x;const la=lines(a),lb=lines(b);T.coordEach(a,c=>{if(/LineString/.test(lb.geometry.type))T.flattenEach(lb,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});T.coordEach(b,c=>{if(/LineString/.test(la.geometry.type))T.flattenEach(la,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});return Number.isFinite(d)?d:null;}catch{return null;}}
+function rows(p,add){const layers=p.application.areaMap?.layers||[],s=p.application.ruleScope||{},get=id=>layers.find(l=>l.id===id),hits=id=>get(id)?.features||[],status=id=>get(id)?.state==='checked',url=k=>S[k]?.url||'https://ogdenvalley.gov/land-use/';
+ const rule=(id,title,code,stage,text,app='verify',layer='ov-zoning',authority='Ogden Valley planning / engineering')=>add('ov-'+id,title,authority,stage,text,url(code),app,layer);
+ const z=[...new Set(hits('ov-zoning').map(f=>String(f.attributes?.ZONE_NAME||f.name).trim().toUpperCase()))];
+ rule('zone-match','Resolve current zoning','104-1','submission',z.length?'City GIS: '+z.join(', ')+'. Compare the adopted map and any parcel-specific rezoning/recorded conditions. Multiple zones require locating the proposed work within the correct zone.':'City zoning was unavailable or returned no zone. Do not substitute a mailing address or older county zone.');
+ for(const name of z){const x=zones[name];rule('zone-'+name,'Zoning standards · '+name,x?.code||'104-1','submission',x?.use?'Single-family dwelling is a permitted use in the base-zone table ('+x.section+'); this does not approve the lot or project. '+[['area','Minimum lot area','sq ft'],['width','Minimum width','ft'],['front','Front setback','ft'],['side','Side setback','ft'],['sideSum','Combined side yards','ft'],['rear','Rear setback','ft'],['height','Maximum main-building height','ft'],['corner','Street-facing side','ft'],['coverage','Maximum building coverage','%'],['impervious','Maximum impervious cover','%']].filter(([k])=>x[k]!=null).map(([k,t,u])=>t+': '+x[k]+' '+u).join('; ')+'. '+(x.note||'')+' Standards are for a main single-family building; other uses and accessory structures need their own table review.':(x?.summary||'No encoded standard for this mapped zone. Obtain the controlling adopted ordinance.')+' Compare the exact proposed use and plan against the original source; a documented planning review is required.');
+  if(x?.use&&s.work==='new-home'){const failures=[];for(const [k,min] of [['lotArea',x.area],['lotWidth',x.width],['frontSetback',x.front],['sideSetback',x.side],['rearSetback',x.rear]])if(min&&s[k]!==''&&s[k]!=null&&Number(s[k])<min)failures.push(k+' '+s[k]+' is below '+min);if(x.height&&Number(s.buildingHeight)>x.height)failures.push('height exceeds '+x.height+' ft');if(failures.length)rule('dimensions-'+name,'Plan dimensions need resolution · '+name,x.code,'submission',failures.join('; ')+'. A variance, recorded-lot exception or revised design must be documented; the baseline comparison is not an automatic prohibition.','required');}
+ }
+ rule('agreement','Development agreement and recorded plat conditions','102','submission',hits('ov-agreements').length?'Mapped agreement: '+hits('ov-agreements').map(f=>f.name).join(', ')+'. Review the original instrument, amendments, phasing and delegated architectural approval.':'No mapped agreement returned. Confirm the recorded plat, building envelope, development agreement and amendments through title/recorder evidence.','verify','ov-agreements');
+ rule('source-protection','Drinking-water source protection','108-18','issuance','§108-18-8 requires demonstrating compliance before a building permit or other development approval. Provider source-protection maps and zones must be obtained; a service-area polygon is not a wellhead-protection zone.','verify','ov-water','Water provider / city / Weber-Morgan Health');
+ const streams=hits('ov-streams');rule('water-setbacks','Stream and reservoir setbacks','104-28','submission','§104-28-2: North, Middle and South Fork Ogden River 100 ft; year-round streams 75 ft; natural ephemeral streams 50 ft; Pineview Reservoir 100 ft. Measure from city-engineer-determined high-water mark, not a GIS centerline. Review recorded pre-2006 envelopes and listed exceptions. '+(status('ov-streams')?streams.length+' mapped watercourse candidate(s) within the 60 m search envelope.':'Watercourse service unavailable.')+' Reservoir/lake candidates: '+hits('ov-lakes').map(f=>f.name).join(', ')+'. '+streams.map(f=>{const a=f.attributes||{},d=near(p.report.parcel.geometry||{rings:p.report.parcel.rings},f.geometry),w=s.workGeometry?near(parseGeometry(s.workGeometry),f.geometry):null;return f.name+' ('+(a.Status||'classification unknown')+'), parcel distance '+(d==null?'unknown':Math.round(d)+' ft')+(w==null?'':', proposed-work distance '+Math.round(w)+' ft');}).join('; '),'verify','ov-streams');
+ const steep=hits('ov-slope').some(f=>Number(f.attributes?.gridcode)>=2);
+ rule('hillside','Hillside engineering and stormwater package','104-28','submission','Average natural slope ≥25% triggers hillside review, engineered cuts/fills, 2-ft contours, geotechnical work, landscape plans and UPDES/SWPPP with application. '+(steep?'City slope classes intersect the parcel at 16–25% or above; a class intersection is not a parcel-average slope.':'Confirm average slope across the parcel, roads and accesses; GIS classes alone do not establish the surveyed average.'),s.slope25==='yes'?'required':s.slope25==='no'?'not-triggered':'verify','ov-slope');
+ rule('habitat','Wildlife habitat mitigation','104-28','review','Important habitat intersections: '+hits('ov-wildlife').length+'. §104-28-3 requires applicable mitigation and written DWR recommendations for development in important habitat. An empty inventory cannot rule out unmapped habitat.','verify','ov-wildlife','City planning / Utah Division of Wildlife Resources');
+ rule('hazards','Natural-hazard report and mitigation','108-22','submission','§108-22-2–5: site-specific studies for development in or adjacent to identified hazards; city-engineer review before affected earthwork. Active-fault baseline setback is 50 ft. Mapped landslide, liquefaction and fault evidence must be interpreted by a qualified professional. Exemptions require a documented basis.','verify','ov-landslide');
+ rule('scenic','Scenic corridor / skyline review','104-28','review','Check skyline protection and scenic-road design provisions, together with the city’s mapped scenic roads and skylines. Mapped proximity is a screening trigger; viewshed and proposed building design require review.','verify','ov-scenic');
+ rule('wetlands','Wetland delineation and federal water review','104-28','construction','City may require delineation and Corps concurrence. Inventory intersections: '+hits('ov-wetlands').length+'. Inventory is not a jurisdictional determination. Resolve fill/dredge authorization and state water-quality conditions before affected work.',s.wetlandFill==='yes'?'required':'verify','ov-wetlands','City engineer / US Army Corps / Utah DEQ');
+ rule('access','Legal access, road standards and future right-of-way','108-7','submission','§108-7-10 uses future collector/arterial right-of-way for setbacks where widening is designated. §§108-7-19, 29, 32 address substandard roads, landlocked lots and alternate access. Mapped nearby roads do not establish recorded access rights.','verify','ov-roads');
+ rule('wildfire','Wildfire access and construction conditions','104-9','review','Check mapped wildland–urban interface, fire access, water supply and vegetation requirements with the fire authority. Forest-zone development also has emergency-access and fire-suppression provisions in §104-9-5.','verify','wui','Weber Fire District / city building official');
+ if(s.water==='well')add('ov-well','Private well and drinking-water approval','Utah Water Rights / Weber-Morgan Health','submission','A well location alone is not a water right or approved supply. Obtain the applicable drilling/water-right authorization and health approval required by the permit checklist.','https://webermorganhealth.gov/services/environmental-health/water-quality/','required','ov-water');
+ if(s.wastewater==='septic')add('ov-septic','Onsite wastewater permit','Weber-Morgan Health','submission','Obtain the lot-specific onsite wastewater approval, including site/soil evaluation and approved system design; a lack of mapped sewer service is not septic approval.','https://webermorganhealth.gov/services/environmental-health/water-quality/','required','ov-sewer');
+ rule('subdivision','Subdivision / plat approval','106','issuance','Resolve subdivision, plat amendment, required improvements, agency approvals and recorded building-parcel status before relying on the proposed lot.',s.subdivision==='yes'?'required':s.subdivision==='no'?'not-triggered':'verify','neighborhood');
+ rule('conditional','Conditional use and site-plan authorization','108-4','issuance','Compare the exact proposed use with its zone table. A C use needs conditional-use authorization and conditions; an unlisted or prohibited use needs planning resolution. Mixed uses cannot be cleared by selecting a general commercial category.');
+ rule('lighting','Outdoor lighting plan','108-16','submission','Include the required outdoor-lighting plan and fixture information with applicable building plans; verify shielding, illumination and zone-specific provisions.',s.work==='new-home'||s.work==='commercial'?'required':'verify');
+ rule('landscape','Architecture, landscaping and parking','108-2','review','Coordinate applicable architectural/landscape design, parking/access under Chapter 108-8 and water-wise landscaping under §108-7-12. Review project-specific exceptions and design-review conditions.');
+ rule('adu','Accessory dwelling unit approval','108-19','issuance','Apply the internal/accessory dwelling standards, owner/use conditions, site capacity and applicable approvals.',s.adu==='yes'?'required':s.adu==='no'?'not-triggered':'verify');
+ rule('special','Use-specific and existing-building conditions','108-7','issuance','Resolve applicable short-term rental (108-11), home occupation (108-13), public building (108-10), campground (108-20), agritourism (108-21), sign (110), noncomplying building/lot (108-12), accessory-building, pool and agricultural-exemption provisions. These are not all determined by an address.',s.specialUse==='no'?'not-triggered':'verify');
+ const h=hits('ov-highways').filter(f=>f.attributes?.DOT_OWN_L==='UDOT'||f.attributes?.DOT_OWN_R==='UDOT'||['1','2','3','4','5','6'].includes(String(f.attributes?.CARTOCODE)));
+ add('highway','State-highway access and encroachment','UDOT','construction',(status('ov-highways')?h.length+' state-highway candidate(s) within the 60 m parcel search envelope: '+h.map(f=>{const d=s.accessGeometry?near(parseGeometry(s.accessGeometry),f.geometry):null;return f.name+(d==null?'':' · access sketch '+Math.round(d)+' ft from mapped road');}).join(', '):'Road ownership service unavailable.')+'. New/changed access or land use along a highway requires CAP review; encroachment approval is separate before work in the right-of-way. Off-parcel access can matter even without a nearby match.','https://connect.udot.utah.gov/business/permits/access-management/',s.highwayChange==='yes'?'required':s.highwayChange==='no'?'not-triggered':'verify','ov-highways');
+ add('stream','Stream alteration authorization','Utah Water Rights / US Army Corps','construction','Written authorization is required before altering natural stream bed/banks. Proposed work is screened against mapped watercourses; field high-water marks, drainage paths and federal jurisdiction need evidence.','https://www.waterrights.utah.gov/strmalt/',s.streamWork==='yes'?'required':s.streamWork==='no'?'not-triggered':'verify','ov-streams');
+ add('ov-excavation','City excavation / right-of-way permit','Ogden Valley engineering','construction','City planning provides a separate excavation application. Resolve right-of-way work, utility crossings, road restoration and drainage conditions before excavation.','https://ogdenvalley.gov/planning/',s.rowWork==='yes'?'required':s.rowWork==='no'?'not-triggered':'verify','ov-roads');
+}
+const api={definitions,zones,fields,rows,sources:S,near,feature};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.OVCRules=api;
+})(globalThis);
+
 /* Spatial evidence and sourced approval rules. Geometry matches are not approvals. */
 (function(root){'use strict';
 const U='https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/', B='https://maps.webercountyutah.gov/arcgis/rest/services/';
-const checked='2026-11-12', version='2026-11-12.1';
+const O=typeof module!=='undefined'&&module.exports?require('./ovc-rules'):root.OVCRules;
+const checked='2026-11-12', version='2026-11-12.2';
 const sources={ov:'https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf',design:'https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf',huntsville:'https://huntsvilleutah.gov/documents/270/Building_checklist_2026_v2.pdf',ogden:'https://engineering.ogdencity.com/188/Permit-Applications',ogdenSite:'https://events.ogdencity.com/DocumentCenter/View/35398/Site-Plan-Review-Application',retreat:'https://retreatwolfcreek.com/',highlands:'https://www.highlandsedenut.com/about-us/',wolf:'https://wolfcreekresortmasterhoa.com/building-home-wolf-creek-resort/',fire:'https://www.weberfiredistrict.com/plan-reviews',health:'https://webermorganhealth.gov/services/environmental-health/water-quality/',udot:'https://connect.udot.utah.gov/business/permits/access-management/',stream:'https://www.waterrights.utah.gov/strmalt/',flood:'https://www.webercountyutah.gov/Engineering/flood_maps.php',storm:'https://deq.utah.gov/dwq/updes-general',air:'https://deq.utah.gov/daq/permit-guide-cleanup-dust-control-open-burn'};
 const definitions=[
  {id:'municipal',name:'Municipal boundaries',url:U+'UtahMunicipalBoundaries/FeatureServer/0',fields:['NAME']},
@@ -5476,21 +5757,24 @@ const definitions=[
 ];
 function geometry(p){const x=p.report.parcel;return x.geometry?.rings?x.geometry:x.rings?.length?{rings:x.rings}:x.point||{x:x.cx,y:x.cy};}
 async function json(url,fetcher){const r=await fetcher(url,{signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(d.error)throw Error(d.error.message||'GIS service error');return d;}
-async function query(def,g,fetcher){const params=new URLSearchParams({f:'json',where:def.where||'1=1',outFields:def.outFields||'*',returnGeometry:'true',outSR:'4326',inSR:'4326',geometryType:g.rings?'esriGeometryPolygon':'esriGeometryPoint',spatialRel:'esriSpatialRelIntersects',geometry:JSON.stringify(g),maxAllowableOffset:'0.00002'});if(def.where)params.delete('geometry');const d=await json(def.url+'/query?'+params,fetcher);if(d.exceededTransferLimit)throw Error('Incomplete GIS response; result limit reached');return (d.features||[]).map(f=>({name:def.fields.map(k=>f.attributes?.[k]).find(Boolean)||def.name,attributes:f.attributes,geometry:f.geometry}));}
+async function query(def,g,fetcher){const params=new URLSearchParams({f:'json',where:def.where||'1=1',outFields:def.outFields||'*',returnGeometry:'true',outSR:'4326',inSR:'4326',geometryType:g.rings?'esriGeometryPolygon':'esriGeometryPoint',spatialRel:'esriSpatialRelIntersects',geometry:JSON.stringify(g),maxAllowableOffset:'0.00002'});if(def.where)params.delete('geometry');if(def.buffer){params.set('distance',String(def.buffer));params.set('units','esriSRUnit_Meter');}let d=await json(def.url+'/query?'+params,fetcher);if(d.exceededTransferLimit){const ids=new URLSearchParams(params);ids.set('returnIdsOnly','true');ids.delete('outFields');ids.delete('returnGeometry');const all=await json(def.url+'/query?'+ids,fetcher);if(!Array.isArray(all.objectIds)||all.objectIds.length>20000)throw Error('Incomplete GIS response; result limit reached');const features=[];for(let i=0;i<all.objectIds.length;i+=200){const chunk=new URLSearchParams({f:'json',objectIds:all.objectIds.slice(i,i+200).join(','),outFields: def.outFields||'*',returnGeometry:'true',outSR:'4326'});const part=await json(def.url+'/query?'+chunk,fetcher);if(part.exceededTransferLimit||(part.features||[]).length!==all.objectIds.slice(i,i+200).length)throw Error('Incomplete GIS response');features.push(...(part.features||[]));}d={features};}return (d.features||[]).map(f=>({name:def.fields.map(k=>f.attributes?.[k]).find(v=>v!=null&&String(v).trim())||def.name,attributes:f.attributes,geometry:f.geometry}));}
 async function lookup(p,fetcher=root.fetch){const g=geometry(p);if(!g?.rings&&(!Number.isFinite(g?.x)||!Number.isFinite(g?.y)))throw Error('A located parcel is required. Run Site Review for this address first.');
- const defs=definitions.filter(d=>!d.weber||p.property.county==='Weber');let districtError;
+ const defs=[...definitions,...O.definitions].filter(d=>!d.weber||p.property.county==='Weber');let districtError;
  if(p.property.county==='Weber')try{const d=await json(B+'tax_entities/tax_entities/MapServer?f=json',fetcher);for(const l of d.layers||[])if(/water|sewer|fire_district|health/i.test(l.name)&&! /bond|levy|rede[vw]/i.test(l.name))defs.push({id:'district-'+l.id,name:l.name.replace(/_+/g,' '),url:B+'tax_entities/tax_entities/MapServer/'+l.id,fields:[],tax:true});}catch(e){districtError=e.message;}
  const sub=p.report.parcel.attrs?.SUBDIV_NAME;if(sub)defs.push({id:'neighborhood',name:'Subdivision parcel candidates',url:U+'Parcels_'+p.property.county.replace(/ /g,'')+'_LIR/FeatureServer/0',fields:['SUBDIV_NAME'],outFields:'SUBDIV_NAME,PARCEL_ID',where:"SUBDIV_NAME = '"+String(sub).replace(/'/g,"''")+"'"});
- const layers=[];let index=0;await Promise.all(Array.from({length:5},async()=>{while(index<defs.length){const def=defs[index++];try{layers.push({...def,state:'checked',features:await query(def,g,fetcher)});}catch(e){layers.push({...def,state:'unavailable',error:e.message,features:[]});}}}));
+ let searchG=g;const drawings=['workGeometry','accessGeometry'].map(k=>p.application.ruleScope?.[k]).filter(Boolean);if(drawings.length){const points=[...(g.rings||[[[g.x,g.y]]]).flat()];for(const raw of drawings){try{const d=JSON.parse(raw);points.push(...(d.rings||d.paths||[]).flat());}catch{throw Error('Invalid proposed-work geometry; redraw and save scope.');}}const xs=points.map(c=>c[0]),ys=points.map(c=>c[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);if(x1-x0>.1||y1-y0>.1)throw Error('Work/access drawing exceeds the local search area; check the drawing.');searchG={rings:[[[x0,y0],[x1,y0],[x1,y1],[x0,y1],[x0,y0]]]};}
+ const layers=[];let index=0;await Promise.all(Array.from({length:5},async()=>{while(index<defs.length){const def=defs[index++];try{layers.push({...def,state:'checked',features:await query(def,def.id.startsWith('ov-')?searchG:g,fetcher)});}catch(e){layers.push({...def,state:'unavailable',error:e.message,features:[]});}}}));
  if(districtError)layers.push({id:'districts',name:'Taxing districts',state:'unavailable',error:districtError,features:[]});
- return {version,parcelKey:p.propertyKey,siteVersion:p.siteVersion,at:new Date().toISOString(),basis:g.rings?'Parcel intersection':'Point only — parcel boundary unavailable',layers:layers.sort((a,b)=>a.id.localeCompare(b.id))};
+ return {version,geometryScope:drawings.join('|'),parcelKey:p.propertyKey,siteVersion:p.siteVersion,at:new Date().toISOString(),basis:g.rings?'Parcel intersection':'Point only — parcel boundary unavailable',layers:layers.sort((a,b)=>a.id.localeCompare(b.id))};
 }
 function rules(p){const map=p.application.areaMap,scope=p.application.ruleScope||{},layers=map?.layers||[],mun=layers.find(l=>l.id==='municipal'),names=(mun?.features||[]).map(f=>String(f.name).toUpperCase()),known=mun?.state==='checked'&&names.length===1,city=known?names[0]:'',rows=[];
  const add=(id,title,authority,stage,trigger,url,applicability='verify',layer='municipal')=>rows.push({id,title,authority,stage,trigger,url,applicability,layer,checked,version});
  if(!map||mun?.state!=='checked'||names.length>1)add('jurisdiction','Confirm permitting jurisdiction','Municipal / county planning','submission',names.length>1?'Parcel intersects multiple municipal boundaries. Resolve authority for the proposed building.':'Municipal boundary lookup is incomplete. Mailing city is not used as a substitute.',U+'UtahMunicipalBoundaries/FeatureServer/0');
  const newHome=scope.work==='new-home';
  add('zoning-scope','Zoning, overlays and development conditions','Local planning authority','submission','Review mapped zoning against the adopted use table, overlays, recorded development agreements and proposed work. GIS intersection alone does not establish a permitted use or an exemption.',city.includes('OGDEN VALLEY')?'https://ogdenvalley.gov/land-use/':city==='OGDEN'?sources.ogden:city==='HUNTSVILLE'?sources.huntsville:'','verify','zoning');
- if(city==='OGDEN VALLEY'||city==='OGDEN VALLEY CITY'){
+ const isOV=city==='OGDEN VALLEY'||city==='OGDEN VALLEY CITY';
+ if(isOV){
+  O.rows(p,add);
   add('ov-water','Lot-specific water approval','Water provider / well approval authority','submission','New dwelling: obtain a lot-specific will-serve letter or approved well permit. Checklist p. 2.',sources.ov,(newHome||scope.work==='commercial')?'required':'verify','water');
   add('ov-sewer','Lot-specific wastewater approval','Sewer provider / Weber-Morgan Health','submission','New dwelling: obtain a lot-specific sewer will-serve letter or approved septic. Checklist p. 2.',sources.ov,(newHome||scope.work==='commercial')?'required':'verify','health');
   const storm=scope.disturbance==='one-acre'||scope.commonPlan==='yes';
@@ -5506,17 +5790,18 @@ function rules(p){const map=p.application.areaMap,scope=p.application.ruleScope|
  const sub=String(p.report.parcel.attrs?.SUBDIV_NAME||'');
  if(p.property.county==='Weber'&&/retreat/i.test(sub)&&/wolf creek/i.test(sub))add('retreat-ac','Neighborhood architectural approval','Retreat Architectural Committee / AMD Architecture','submission','Subdivision-name candidate only. Confirm recorded membership. Published process requires AC approval before permit submission; its county reference needs jurisdiction reconciliation.',sources.retreat,'verify','neighborhood');
  if(p.property.county==='Weber'&&/highlands/i.test(sub))add('highlands-ac','Neighborhood architectural review','Highlands Architectural Committee','verify','Name candidate only: confirm this is The Highlands in Eden and obtain the governing review sequence.',sources.highlands,'verify','neighborhood');
- if(p.property.county==='Weber'&&/wolf creek|retreat|highlands/i.test(sub))add('wolf-master','Master-association design review','Wolf Creek Master HOA','verify','Check master and neighborhood covenants for review delegation. No verified HOA boundary is available; a tax district is not HOA membership.',sources.wolf,'verify','neighborhood');
+ if(p.property.county==='Weber'&&/wolf creek|retreat|highlands|trappers ridge|fairways|hidden oaks|eagles landing|bridges/i.test(sub))add('wolf-master','Master-association design review','Wolf Creek Master HOA','verify','Check master and neighborhood covenants for review delegation. No verified HOA boundary is available; a tax district is not HOA membership.',sources.wolf,'verify','neighborhood');
+ if(isOV&&/trappers ridge|fairways|hidden oaks|eagles landing|bridges/i.test(sub))add('wolf-neighborhood','Neighborhood approval and master delegation','Neighborhood HOA / Wolf Creek Master HOA','submission','Name candidate: '+sub+'. The master association lists these neighborhoods. Obtain the lot-specific declaration, architectural rules and delegation before deciding which committee must approve or when.','https://wolfcreekresortmasterhoa.com/neighborhood-hoas/','verify','neighborhood');
  add('covenants','Recorded neighborhood and private approvals','Title company / association / easement holder','submission','Confirm governing CC&Rs, master association, architectural committee, and approval timing from recorded instruments. '+(sub?'Parcel subdivision: '+sub+'.':'No subdivision name returned; private covenants may still apply.'),p.property.county==='Weber'?'https://webercountyutah.gov/parcelsearch/ownership-info.php?id='+encodeURIComponent(p.property.parcelId):'', 'verify','neighborhood');
- if(layers.some(l=>l.tax&&/fire/i.test(l.name)&&l.features.length))add('fire','Fire access and plan review','Mapped fire district','review','New development requires fire review. Tax polygon is a jurisdiction candidate; confirm service responsibility and local review sequence.',sources.fire,'verify',layers.find(l=>l.tax&&/fire/i.test(l.name)&&l.features.length).id);
+ if(isOV||layers.some(l=>l.tax&&/fire/i.test(l.name)&&l.features.length))add('fire','Fire access and plan review','Mapped fire district','review','New development requires fire review. Tax polygon is a jurisdiction candidate; confirm service responsibility and local review sequence.',sources.fire,'verify',layers.find(l=>l.tax&&/fire/i.test(l.name)&&l.features.length)?.id||'municipal');
  const flood=layers.find(l=>l.id==='flood');if(flood?.state!=='checked'||flood.features.some(f=>/^(A|V)/i.test(f.attributes?.FLD_ZONE||'')))add('flood','Floodplain development approval','Local floodplain administrator','construction','Resolve mapped flood hazard and whether proposed structures, fill or disturbance fall within it. County source is for unincorporated Weber; municipal applicability must be confirmed.',sources.flood,'verify','flood');
- add('highway','Highway access authorization','UDOT / local road authority','construction','New or changed state-highway access, land use or access intensity may require a Conditional Access Permit. Road frontage and proposed access are not yet automatically matched.',sources.udot,'verify','unmapped');
- add('stream','Stream / regulated-water authorization','Utah Water Rights / US Army Corps','construction','Alteration of natural stream bed or banks requires authorization before work. Federal water jurisdiction and proposed impacts need separate determination.',sources.stream,'verify','unmapped');
+ if(!isOV)add('highway','Highway access authorization','UDOT / local road authority','construction','New or changed state-highway access, land use or access intensity may require a Conditional Access Permit. Road frontage and proposed access are not yet automatically matched.',sources.udot,'verify','unmapped');
+ if(!isOV)add('stream','Stream / regulated-water authorization','Utah Water Rights / US Army Corps','construction','Alteration of natural stream bed or banks requires authorization before work. Federal water jurisdiction and proposed impacts need separate determination.',sources.stream,'verify','unmapped');
  add('air','Demolition and dust requirements','Utah Division of Air Quality / utilities','construction','Screen demolition, asbestos, utility disconnections and dust-plan applicability against the work and regulated area.',sources.air,'verify','unmapped');
  return rows;
 }
 function reviewCurrent(p,r){const x=p.application.ruleReviews?.[r.id];return x&&x.version===version&&x.mapAt===p.application.areaMap?.at&&x.siteVersion===p.siteVersion&&x.planVersion===p.planVersion&&x.scope===JSON.stringify(p.application.ruleScope||{})&&( !x.documentId||p.documents.some(d=>d.id===x.documentId&&!p.documents.some(n=>n.family===d.family&&n.version>d.version)))?x:null;}
-function blockers(p){if(p.application.areaMap?.siteVersion!==undefined&&p.application.areaMap.siteVersion!==p.siteVersion)return ['Parcel evidence changed; refresh Rules & Approvals.'];if(!p.application.areaMap)return ['Rules for this property have not been checked.'];return rules(p).filter(r=>r.stage==='submission'&&r.applicability!=='not-triggered'&&!['approved','not-applicable'].includes(reviewCurrent(p,r)?.state)).map(r=>r.title+' — approval or documented applicability review needed.');}
+function blockers(p){if(p.application.areaMap&&p.application.areaMap.geometryScope!==undefined&&p.application.areaMap.geometryScope!==['workGeometry','accessGeometry'].map(k=>p.application.ruleScope?.[k]).filter(Boolean).join('|'))return ['Proposed work/access changed; refresh Rules & Approvals.'];if(p.application.areaMap&&p.application.areaMap.version!==version)return ['Rule coverage changed; refresh Rules & Approvals.'];if(p.application.areaMap?.siteVersion!==undefined&&p.application.areaMap.siteVersion!==p.siteVersion)return ['Parcel evidence changed; refresh Rules & Approvals.'];if(!p.application.areaMap)return ['Rules for this property have not been checked.'];return rules(p).filter(r=>r.stage==='submission'&&r.applicability!=='not-triggered'&&!['approved','not-applicable'].includes(reviewCurrent(p,r)?.state)).map(r=>r.title+' — approval or documented applicability review needed.');}
 const api={lookup,rules,blockers,reviewCurrent,sources,definitions,version};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AreaRules=api;
 })(typeof window!=='undefined'?window:globalThis);
 
@@ -5589,7 +5874,12 @@ const api={lookup,rules,blockers,reviewCurrent,sources,definitions,version};if(t
       }
       case 'rule_scope': {
         required(['','new-home','addition','commercial','other'].includes(a.work)&&['','under-acre','one-acre'].includes(a.disturbance)&&['','yes','no'].includes(a.commonPlan),'Choose a valid project scope.');
-        p.application.ruleScope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};invalidate(p);event(p,a.type,'Updated approval-rule project triggers.',now);break;
+        const scope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};
+        for(const k of ['highwayChange','streamWork','wetlandFill','grading','rowWork','slope25','subdivision','adu','demolition','specialUse']){required(['','yes','no',undefined].includes(a[k]),'Choose a valid '+k+' answer.');if(a[k]!==undefined)scope[k]=a[k];}
+        for(const [k,opts] of Object.entries({water:['provider','well'],wastewater:['sewer','septic']})){required(a[k]===undefined||a[k]===''||opts.includes(a[k]),'Choose a valid '+k+' system.');if(a[k]!==undefined)scope[k]=a[k];}
+        for(const k of ['lotArea','lotWidth','frontSetback','sideSetback','rearSetback','buildingHeight']){if(a[k]!==undefined){required(a[k]===''||(Number.isFinite(Number(a[k]))&&Number(a[k])>=0),'Enter a nonnegative measurement.');scope[k]=a[k];}}
+        for(const k of ['workGeometry','accessGeometry']){if(a[k]){let g;try{g=JSON.parse(a[k]);}catch{throw Error('Invalid drawn geometry.');}const lines=k==='workGeometry'?g.rings:g.paths;required(Array.isArray(lines)&&lines.length>0&&lines.length<=10&&lines.every(l=>Array.isArray(l)&&l.length>=(k==='workGeometry'?4:2)&&l.length<=500&&l.every(c=>Array.isArray(c)&&c.length===2&&c.every(Number.isFinite)&&Math.abs(c[0])<=180&&Math.abs(c[1])<=90)),'Draw a valid work area or access route.');if(k==='workGeometry')required(lines.every(l=>l[0][0]===l[l.length-1][0]&&l[0][1]===l[l.length-1][1]),'Close the work-area boundary.');scope[k]=JSON.stringify(g);}}
+        p.application.ruleScope=scope;invalidate(p);event(p,a.type,'Updated approval-rule project triggers.',now);break;
       }
       case 'rule_review': {
         required(p.application.areaMap,'Match the parcel before recording an approval decision.');
@@ -6224,18 +6514,28 @@ const api={summary,stageLabel,render};if(typeof module!=='undefined'&&module.exp
 })(typeof window!=='undefined'?window:globalThis);
 
 (function(root){'use strict';
-const A=root.AreaRules,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const A=root.AreaRules,O=root.OVCRules,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const link=(u,t)=>/^https:\/\//.test(u||'')?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(t)+'</a>':'';
 const stages={submission:'Before submission',review:'During review',issuance:'Before issuance',construction:'Before affected work',verify:'Timing needs verification'};
 let map, overlays={},parcelBounds;
 function select(name,label,opts,value){return '<label>'+label+'<select name="'+name+'"><option value="">Not yet known</option>'+opts.map(([v,t])=>'<option value="'+v+'"'+(v===value?' selected':'')+'>'+t+'</option>').join('')+'</select></label>';}
-function render(p){const s=p.application.ruleScope||{},snapshot=p.application.areaMap,rows=A.rules(p);return '<section class="pw-card rules-intro"><h2>Rules for this property</h2><p>Address → parcel → overlapping authorities → required approvals.</p><p>Municipal rules researched for Ogden Valley, Ogden and Huntsville. Neighborhood coverage is preliminary; other municipalities and property-specific conditions require verification.</p><div class="pw-actions"><button data-action="refresh-rules">'+(snapshot?'Refresh area matches':'Match this parcel to areas')+'</button><button data-action="tab" data-id="contacts">Authority contacts</button></div><p>'+esc(snapshot?'GIS checked '+new Date(snapshot.at).toLocaleString()+' · '+snapshot.basis:'The map will query public GIS boundaries for this parcel.')+'</p></section><div class="rules-layout"><section class="pw-card"><div id="rules-map" aria-label="Parcel and matched rule areas"></div><p>Parcel outlined in gold. Select a rule to highlight its mapped area. Boundaries are GIS evidence, not surveyed or legal determinations.</p><div class="rules-layers"><button type="button" data-rule-layer="parcel">Reset to parcel</button>'+(snapshot?.layers||[]).filter(l=>l.features.length||l.state!=='checked').map(l=>'<button type="button" data-rule-layer="'+esc(l.id)+'">'+esc(l.name)+' · '+(l.state==='checked'?l.features.length+' intersection(s)':'Unavailable')+'</button>').join('')+'</div><p>Subdivision parcels can be highlighted as candidates; they are not legal HOA boundaries. Highway-access and stream-work impacts are not mapped yet. Missing layers remain unresolved.</p></section><section class="pw-card"><h3>Proposed work</h3><p>Location selects the rules to evaluate; these details determine their triggers.</p><form data-command="rule_scope"><div class="pw-grid">'+select('work','Work type',[['new-home','New single-family dwelling'],['addition','Addition / remodel'],['commercial','Commercial'],['other','Other / mixed scope']],s.work)+select('disturbance','Area disturbed',[['under-acre','Less than one acre'],['one-acre','One acre or more']],s.disturbance)+select('commonPlan','Part of a common development disturbing at least one acre?',[['yes','Yes'],['no','No']],s.commonPlan)+'</div><button type="submit">Save project scope</button></form><h3>Source coverage</h3><p>Rules checked 12 November 2026. Refreshing boundaries does not re-research ordinances. Confirm current requirements before filing.</p><p>Tax districts identify candidate authorities, not service entitlement. Subdivision names identify candidate associations, not recorded membership.</p></section></div><section class="pw-card rules-table"><h3>Requirements and approval sequence</h3><div class="rules-scroll"><table><thead><tr><th>Requirement / authority</th><th>When needed</th><th>Applicability</th><th>Evidence</th><th>Action</th></tr></thead><tbody>'+rows.map(r=>{const review=A.reviewCurrent(p,r);return '<tr><td><strong>'+esc(r.title)+'</strong><br>'+esc(r.authority)+'</td><td>'+stages[r.stage]+'</td><td>'+esc(r.applicability==='required'?'Trigger matched':r.applicability==='not-triggered'?'Trigger not matched':'Needs verification')+'<br><small>'+esc(review?review.state:'No current decision')+'</small></td><td>'+link(r.url,'View original source')+'</td><td><button data-rule-open="'+r.id+'">Review requirement</button></td></tr>';}).join('')+'</tbody></table></div><div id="rule-detail" tabindex="-1"></div></section><section class="pw-card"><h3>Boundary evidence</h3>'+ (snapshot?.layers||[]).map(l=>'<p><strong>'+esc(l.name)+'</strong>: '+esc(l.state==='checked'?(l.features.map(f=>f.name).join(', ')||'No intersection returned; this alone does not establish exemption.'):l.error)+' '+link(l.url,'GIS source')+'</p>').join('')+'</section>';}
-function detail(p,id){const r=A.rules(p).find(r=>r.id===id);if(!r)return '';const x=A.reviewCurrent(p,r)||{};return '<h3>'+esc(r.title)+'</h3><p>'+esc(r.trigger)+'</p><p>'+stages[r.stage]+' · '+esc(r.authority)+' · '+link(r.url,'View controlling source')+'</p><form data-command="rule_review" data-id="'+r.id+'">'+select('state','Decision',[['approved','Approval received and reviewed'],['not-applicable','Not applicable — documented basis'],['needs-review','Needs review']],x.state)+'<label>Reviewed by<input name="reviewer" required value="'+esc(x.reviewer)+'"></label><label>Approval date / reference / conditions or applicability basis<textarea name="note" required>'+esc(x.note)+'</textarea></label><label>Original approval or applicability evidence HTTPS link<input type="url" name="url" value="'+esc(x.url)+'"></label><label>Or current supporting document<select name="documentId"><option value="">Choose evidence</option>'+p.documents.filter(d=>!p.documents.some(n=>n.family===d.family&&n.version>d.version)).map(d=>'<option value="'+esc(d.id)+'"'+(d.id===x.documentId?' selected':'')+'>'+esc(d.name)+'</option>').join('')+'</select></label><p>Uploading or finding a rule does not prove approval. Decisions are your recorded review, not verification by the authority. Changes to plans, scope or map checks require renewed review.</p><button type="submit">Save decision</button></form>';}
+function render(p){const s=p.application.ruleScope||{},snapshot=p.application.areaMap,rows=A.rules(p);return '<section class="pw-card rules-intro"><h2>Rules for this property</h2><p>Address → parcel → overlapping authorities → required approvals.</p><p>Ogden Valley City: adopted-code sources, current city zoning, environmental screening, roads, utilities and approval sequence. Recorded covenants and project-specific conditions remain evidence checks.</p><div class="pw-actions"><button data-action="refresh-rules">'+(snapshot?'Refresh area matches':'Match this parcel to areas')+'</button><button data-action="tab" data-id="contacts">Authority contacts</button></div><p>'+esc(snapshot?'GIS checked '+new Date(snapshot.at).toLocaleString()+' · '+snapshot.basis:'The map will query public GIS boundaries for this parcel.')+'</p></section><div class="rules-layout"><section class="pw-card"><div id="rules-map" aria-label="Parcel and matched rule areas"></div><div class="pw-actions"><button type="button" data-draw-rule="workGeometry">Draw proposed work</button><button type="button" data-draw-rule="accessGeometry">Draw access route</button><button type="button" id="rules-draw-finish">Finish drawing</button><button type="button" id="rules-draw-clear">Clear drawings</button></div><p id="rules-draw-status" role="status">Drawings are planning sketches, not surveyed footprints.</p><p>Parcel outlined in gold. Select a rule to highlight its mapped area. Boundaries are GIS evidence, not surveyed or legal determinations.</p><div class="rules-layers"><button type="button" data-rule-layer="parcel">Reset to parcel</button>'+(snapshot?.layers||[]).filter(l=>l.features.length||l.state!=='checked').map(l=>'<button type="button" data-rule-layer="'+esc(l.id)+'">'+esc(l.name)+' · '+(l.state==='checked'?l.features.length+' intersection(s)':'Unavailable')+'</button>').join('')+'</div><p>Subdivision parcels can be highlighted as candidates; they are not legal HOA boundaries. Road and watercourse searches include a 60 m area around the parcel; mapped centerlines are not surveyed boundaries. Missing layers remain unresolved.</p></section><section class="pw-card rules-scope"><h3>Proposed work</h3><p>Location selects the rules to evaluate; these details determine their triggers.</p><form data-command="rule_scope"><div class="pw-grid">'+select('work','Work type',[['new-home','New single-family dwelling'],['addition','Addition / remodel'],['commercial','Commercial'],['other','Other / mixed scope']],s.work)+select('disturbance','Area disturbed',[['under-acre','Less than one acre'],['one-acre','One acre or more']],s.disturbance)+select('commonPlan','Part of a common development disturbing at least one acre?',[['yes','Yes'],['no','No']],s.commonPlan)+scopeInputs(s)+'</div><button type="submit">Save project scope</button></form><h3>Source coverage</h3><p>Rules checked 12 November 2026. Refreshing boundaries does not re-research ordinances. Confirm current requirements before filing.</p><p>Tax districts identify candidate authorities, not service entitlement. Subdivision names identify candidate associations, not recorded membership.</p></section></div><section class="pw-card rules-table"><h3>Requirements and approval sequence</h3><div class="rules-scroll"><table><thead><tr><th>Requirement / authority</th><th>When needed</th><th>Applicability</th><th>Why it matters / source</th><th>Action</th></tr></thead><tbody>'+rows.map(r=>{const review=A.reviewCurrent(p,r);return '<tr><td><strong>'+esc(r.title)+'</strong><br>'+esc(r.authority)+'</td><td>'+stages[r.stage]+'</td><td>'+esc(r.applicability==='required'?'Trigger matched':r.applicability==='not-triggered'?'Trigger not matched':'Needs verification')+'<br><small>'+esc(review?review.state:'No current decision')+'</small></td><td><p>'+esc(r.trigger.length>185?r.trigger.slice(0,182)+'…':r.trigger)+'</p>'+link(r.url,'View original source')+'</td><td><button data-rule-open="'+r.id+'">Review requirement</button></td></tr>';}).join('')+'</tbody></table></div><div id="rule-detail" tabindex="-1"></div></section><section class="pw-card"><h3>Boundary evidence</h3>'+ (snapshot?.layers||[]).map(l=>'<p><strong>'+esc(l.name)+'</strong>: '+esc(l.state==='checked'?(l.features.map(f=>l.id==='ov-slope'?({'1':'0–15% slope','2':'16–25% slope','3':'26–30% slope','4':'31–40% slope','5':'>40% slope'}[f.attributes?.gridcode]||'Unknown slope class'):f.name).join(', ')||'No intersection returned; this alone does not establish exemption.'):l.error)+' '+link(l.url,'GIS source')+'</p>').join('')+'</section>'+sourceLibrary(p);}
+
+function scopeInputs(s){return Object.entries(O.fields).map(([k,label])=>select(k,label,k==='water'?[['provider','Public / community provider'],['well','Private well']]:k==='wastewater'?[['sewer','Community sewer'],['septic','Onsite septic']]:[['yes','Yes'],['no','No']],s[k])).join('')+[['lotArea','Surveyed lot area (sq ft)'],['lotWidth','Lot width (ft)'],['frontSetback','Proposed front setback (ft)'],['sideSetback','Smallest proposed side setback (ft)'],['rearSetback','Proposed rear setback (ft)'],['buildingHeight','Main building height (ft)']].map(([k,t])=>'<label>'+t+'<input name="'+k+'" type="number" min="0" step="any" value="'+esc(s[k])+'"></label>').join('')+['workGeometry','accessGeometry'].map(k=>'<input type="hidden" name="'+k+'" value="'+esc(s[k])+'">').join('');}
+function sourceLibrary(p){if(!A.rules(p).some(r=>r.id==='ov-zone-match'))return '';return '<section class="pw-card"><h3>Ogden Valley code library</h3><p>Original city-published documents checked 12 November 2026. Open the chapter for exceptions, complete use tables and application requirements. A linked chapter does not mean every use has an automated interpretation.</p><div class="rules-contacts">'+Object.entries(O.sources).map(([k,x])=>'<p>'+link(x.url,x.title)+'</p>').join('')+'</div></section>';}
+
+function detail(p,id){const r=A.rules(p).find(r=>r.id===id);if(!r)return '';const x=A.reviewCurrent(p,r)||{};return '<h3>'+esc(r.title)+'</h3><p>'+esc(r.trigger)+'</p><p>'+stages[r.stage]+' · '+esc(r.authority)+' · '+link(r.url,'View controlling source')+'</p>'+((p.application.areaMap?.layers||[]).find(l=>l.id===r.layer)?.features||[]).map(f=>'<p>'+esc(f.name)+' '+Object.entries(f.attributes||{}).filter(([k,v])=>/link|url/i.test(k)&&/^https:\/\//.test(String(v))).map(([k,v])=>link(v,'Open original mapped record')).join(' ')+'</p>').join('')+'<form data-command="rule_review" data-id="'+r.id+'">'+select('state','Decision',[['approved','Approval received and reviewed'],['not-applicable','Not applicable — documented basis'],['needs-review','Needs review']],x.state)+'<label>Reviewed by<input name="reviewer" required value="'+esc(x.reviewer)+'"></label><label>Approval date / reference / conditions or applicability basis<textarea name="note" required>'+esc(x.note)+'</textarea></label><label>Original approval or applicability evidence HTTPS link<input type="url" name="url" value="'+esc(x.url)+'"></label><label>Or current supporting document<select name="documentId"><option value="">Choose evidence</option>'+p.documents.filter(d=>!p.documents.some(n=>n.family===d.family&&n.version>d.version)).map(d=>'<option value="'+esc(d.id)+'"'+(d.id===x.documentId?' selected':'')+'>'+esc(d.name)+'</option>').join('')+'</select></label><p>Uploading or finding a rule does not prove approval. Decisions are your recorded review, not verification by the authority. Changes to plans, scope or map checks require renewed review.</p><button type="submit">Save decision</button></form>';}
 function mount(p){if(map){map.remove();map=null;}overlays={};const el=document.getElementById('rules-map');if(!el||!root.L)return;map=root.L.map(el,{scrollWheelZoom:false});root.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Imagery © Esri, Maxar, Earthstar Geographics',maxZoom:19}).addTo(map);const rings=p.report.parcel.rings||p.report.parcel.geometry?.rings;if(rings?.length){const parcel=root.L.polygon(rings.map(r=>r.map(pt=>[pt[1],pt[0]])),{color:'#f0c744',weight:3,fillOpacity:.08}).addTo(map);parcelBounds=parcel.getBounds();map.fitBounds(parcelBounds,{padding:[20,20]});}else{const pt=p.report.parcel.point;map.setView([pt?.y||41.25,pt?.x||-111.8],13);}
- for(const l of p.application.areaMap?.layers||[])overlays[l.id]=root.L.featureGroup(l.features.filter(f=>f.geometry?.rings).map(f=>root.L.polygon(f.geometry.rings.map(r=>r.map(pt=>[pt[1],pt[0]])),{color:'#3a85be',weight:2,fillOpacity:.14}).bindTooltip(esc(f.name))));
+ for(const l of p.application.areaMap?.layers||[])overlays[l.id]=root.L.featureGroup(l.features.map(f=>{const g=O.feature(f.geometry);return g?root.L.geoJSON(g,{style:{color:'#3a85be',weight:2,fillOpacity:.14}}).bindTooltip(esc(f.name)):null;}).filter(Boolean));
+ const form=document.querySelector('form[data-command="rule_scope"]');let mode='',points=[],draft;const drawn=root.L.featureGroup().addTo(map);
+ for(const k of ['workGeometry','accessGeometry'])if(p.application.ruleScope?.[k]){const f=O.feature(JSON.parse(p.application.ruleScope[k]));if(f)root.L.geoJSON(f,{style:{color:k==='workGeometry'?'#d86924':'#ffffff',weight:3,fillOpacity:.15}}).addTo(drawn);}
+ document.querySelectorAll('[data-draw-rule]').forEach(b=>b.onclick=()=>{mode=b.dataset.drawRule;points=[];if(draft)map.removeLayer(draft);document.getElementById('rules-draw-status').textContent=mode==='workGeometry'?'Click at least three corners of the proposed work, then Finish.':'Click at least two points along the proposed access, then Finish.';});
+ map.on('click',e=>{if(!mode)return;points.push([e.latlng.lng,e.latlng.lat]);if(draft)map.removeLayer(draft);draft=root.L.polyline(points.map(c=>[c[1],c[0]]),{color:'#d86924'}).addTo(map);});
+ document.getElementById('rules-draw-finish').onclick=()=>{if(!mode||points.length<(mode==='workGeometry'?3:2)){document.getElementById('rules-draw-status').textContent='Add more points before finishing.';return;}const g=mode==='workGeometry'?{rings:[[...points,points[0]]]}:{paths:[points]};form.elements[mode].value=JSON.stringify(g);root.L.geoJSON(O.feature(g),{style:{color:'#d86924',weight:3}}).addTo(drawn);if(draft)map.removeLayer(draft);mode='';document.getElementById('rules-draw-status').textContent='Drawing ready. Save project scope, then refresh area matches if the route extends beyond the parcel.';};
+ document.getElementById('rules-draw-clear').onclick=()=>{mode='';points=[];drawn.clearLayers();if(draft)map.removeLayer(draft);form.elements.workGeometry.value='';form.elements.accessGeometry.value='';document.getElementById('rules-draw-status').textContent='Drawings cleared. Save project scope to apply.';};
 }
-function highlight(id){if(!map)return;Object.values(overlays).forEach(l=>map.removeLayer(l));if(id==='parcel'&&parcelBounds){map.fitBounds(parcelBounds,{padding:[20,20]});return;}const l=overlays[id];if(l?.getLayers().length){l.addTo(map);map.fitBounds(l.getBounds(),{padding:[20,20],maxZoom:15});}}
-function contacts(p){const mapped=(p.application.areaMap?.layers||[]).filter(l=>l.features.length&&(l.tax||['municipal','water','health'].includes(l.id)));const saved=p.report.facts?.contacts||[];return '<section class="pw-card"><h2>Contacts</h2><p>Public authorities and neighborhood reviewers. Your designer and contractor remain under Permit Preparation → Project team.</p><button data-action="tab" data-id="rules">Rules for this property</button></section><div class="rules-contacts">'+saved.map(c=>'<section class="pw-card"><h3>'+esc(c.name)+'</h3><p>'+esc(c.kind)+'</p>'+(c.people||[]).map(x=>'<p>'+esc(x.role)+'<br>'+esc(x.phone)+' '+(/^[^\s@]+@[^\s@]+$/.test(x.email||'')?'<a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a>':'')+'</p>').join('')+(c.lines||[]).map(t=>'<p>'+esc(t)+'</p>').join('')+link(c.portal,'Permit portal')+' '+link(c.url,'Official contact source')+'<p>'+esc(c.asOf||'Contact date not recorded')+'</p></section>').join('')+[...new Map(A.rules(p).filter(r=>r.url).map(r=>[r.authority,r])).values()].map(r=>'<section class="pw-card"><h3>'+esc(r.authority)+'</h3><p>'+esc(r.title)+'</p>'+link(r.url,'Authority / original requirement')+'<p>Applicability: '+esc(r.applicability)+'. Contact details must be confirmed with the authority.</p></section>').join('')+'</div><section class="pw-card"><h3>Mapped authority candidates</h3>'+mapped.map(l=>'<p>'+esc(l.name)+': '+esc(l.features.map(f=>f.name).join(', '))+' '+link(l.url,'Boundary source')+'</p>').join('')+(!saved.length?'<p>No saved directory contacts. Use the linked authority sources above; missing contacts do not mean no approval is required.</p>':'')+'</section>';}
+function highlight(id){if(!map)return;Object.values(overlays).forEach(l=>map.removeLayer(l));if(id==='parcel'&&parcelBounds){map.fitBounds(parcelBounds,{padding:[20,20]});return;}const l=overlays[id];if(l?.getLayers().length){l.addTo(map);map.fitBounds(parcelBounds||l.getBounds(),{padding:[45,45],maxZoom:17});}}
+function contacts(p){const mapped=(p.application.areaMap?.layers||[]).filter(l=>l.features.length&&(l.tax||['municipal','water','health'].includes(l.id)));const saved=p.report.facts?.contacts||[];return '<section class="pw-card"><h2>Contacts</h2><p>Public authorities and neighborhood reviewers. Your designer and contractor remain under Permit Preparation → Project team.</p><button data-action="tab" data-id="rules">Rules for this property</button></section><div class="rules-contacts">'+saved.map(c=>'<section class="pw-card"><h3>'+esc(c.name)+'</h3><p>'+esc(c.kind)+'</p>'+(c.people||[]).map(x=>'<p>'+esc(x.role)+'<br>'+esc(x.phone)+' '+(/^[^\s@]+@[^\s@]+$/.test(x.email||'')?'<a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a>':'')+'</p>').join('')+(c.lines||[]).map(t=>'<p>'+esc(t)+'</p>').join('')+link(c.portal,'Permit portal')+' '+link(c.url,'Official contact source')+'<p>'+esc(c.asOf||'Contact date not recorded')+'</p></section>').join('')+[...new Map(A.rules(p).filter(r=>r.url).map(r=>[r.authority,r])).values()].map(r=>'<section class="pw-card"><h3>'+esc(r.authority)+'</h3><p>'+esc(r.title)+'</p>'+link(r.url,'Authority / original requirement')+'<p>Applicability: '+esc(r.applicability)+'. Contact details must be confirmed with the authority.</p></section>').join('')+'</div><section class="pw-card"><h3>Mapped authority candidates</h3>'+mapped.map(l=>'<p>'+esc(l.name)+': '+esc(l.features.map(f=>l.id==='ov-slope'?({'1':'0–15% slope','2':'16–25% slope','3':'26–30% slope','4':'31–40% slope','5':'>40% slope'}[f.attributes?.gridcode]||'Unknown slope class'):f.name).join(', '))+' '+link(l.url,'Boundary source')+'</p>').join('')+(!saved.length?'<p>No saved directory contacts. Use the linked authority sources above; missing contacts do not mean no approval is required.</p>':'')+'</section>';}
 root.AreaRulesUI={render,detail,mount,highlight,contacts};
 })(window);
 

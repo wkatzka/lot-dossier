@@ -188,3 +188,11 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .rules-contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 @media(max-width:800px){.rules-layout{grid-template-columns:1fr}#rules-map{height:290px}.rules-table table{min-width:680px}}
 .rules-intro{padding:20px!important}.rules-intro h2{margin:0 0 10px}.rules-intro p{margin:8px 0}.rules-intro .pw-actions{margin:12px 0}
+
+/* Rule atlas: map first, scope grouped below, summaries stay readable. */
+.rules-layout{grid-template-columns:minmax(0,1fr)}
+.rules-scope .pw-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.rules-scope label{min-width:0}.rules-scope select,.rules-scope input{width:100%;box-sizing:border-box}
+.rules-table td:first-child{width:23%}.rules-table td:nth-child(4){width:38%}.rules-table td p{margin:0 0 8px;font-size:13px;line-height:1.5}
+@media(max-width:800px){.rules-scope .pw-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.rules-scope .pw-grid{grid-template-columns:1fr}}

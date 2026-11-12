@@ -67,7 +67,12 @@
       }
       case 'rule_scope': {
         required(['','new-home','addition','commercial','other'].includes(a.work)&&['','under-acre','one-acre'].includes(a.disturbance)&&['','yes','no'].includes(a.commonPlan),'Choose a valid project scope.');
-        p.application.ruleScope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};invalidate(p);event(p,a.type,'Updated approval-rule project triggers.',now);break;
+        const scope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};
+        for(const k of ['highwayChange','streamWork','wetlandFill','grading','rowWork','slope25','subdivision','adu','demolition','specialUse']){required(['','yes','no',undefined].includes(a[k]),'Choose a valid '+k+' answer.');if(a[k]!==undefined)scope[k]=a[k];}
+        for(const [k,opts] of Object.entries({water:['provider','well'],wastewater:['sewer','septic']})){required(a[k]===undefined||a[k]===''||opts.includes(a[k]),'Choose a valid '+k+' system.');if(a[k]!==undefined)scope[k]=a[k];}
+        for(const k of ['lotArea','lotWidth','frontSetback','sideSetback','rearSetback','buildingHeight']){if(a[k]!==undefined){required(a[k]===''||(Number.isFinite(Number(a[k]))&&Number(a[k])>=0),'Enter a nonnegative measurement.');scope[k]=a[k];}}
+        for(const k of ['workGeometry','accessGeometry']){if(a[k]){let g;try{g=JSON.parse(a[k]);}catch{throw Error('Invalid drawn geometry.');}const lines=k==='workGeometry'?g.rings:g.paths;required(Array.isArray(lines)&&lines.length>0&&lines.length<=10&&lines.every(l=>Array.isArray(l)&&l.length>=(k==='workGeometry'?4:2)&&l.length<=500&&l.every(c=>Array.isArray(c)&&c.length===2&&c.every(Number.isFinite)&&Math.abs(c[0])<=180&&Math.abs(c[1])<=90)),'Draw a valid work area or access route.');if(k==='workGeometry')required(lines.every(l=>l[0][0]===l[l.length-1][0]&&l[0][1]===l[l.length-1][1]),'Close the work-area boundary.');scope[k]=JSON.stringify(g);}}
+        p.application.ruleScope=scope;invalidate(p);event(p,a.type,'Updated approval-rule project triggers.',now);break;
       }
       case 'rule_review': {
         required(p.application.areaMap,'Match the parcel before recording an approval decision.');
