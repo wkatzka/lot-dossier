@@ -134,7 +134,7 @@ if __name__ == "__main__":
     ap.add_argument("--api", help="deployed base URL for the emailable single-file build")
     a = ap.parse_args()
     app = build("")
-    write(os.path.join(ROOT, "public", "index.html"), app)
+    write(os.path.join(ROOT, "public", "index.html"), read(WEB, "landing.html"))
     # Dedicated platform entry retains the same origin, storage and auth session.
     entry = """<script>(async()=>{const view=new URLSearchParams(location.search).get('view');if(!['projects','account'].includes(view))return;try{await window.CornerpinAccount.ready;}catch(_){}if(view==='account')window.CornerpinAccount.open();else document.getElementById('home-projects').click();})();</script>"""
     write(os.path.join(ROOT, "public", "platform.html"), app[:app.rfind('</body>')] + entry + app[app.rfind('</body>'):])
