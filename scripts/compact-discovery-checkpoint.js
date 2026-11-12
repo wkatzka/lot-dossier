@@ -13,7 +13,8 @@ for(const name of fs.readdirSync(root)){
  clean.documents=s.documents.map(d=>({...pick(d,['sha256','kind','file','route','retrievedAt','pages','unreadPages','blankPages','applicability','disposition','ocrReviewRequired','pdfLinkScanVersion']),urls:d.urls.map(safeUrl).filter(Boolean),sourcePages:(d.sourcePages||[]).map(safeUrl).filter(Boolean),matches:(d.matches||[]).map(m=>pick(m,['page','terms'])),...(d.readError?{readError:'Document reading remains unresolved'}:{})}));
  clean.externalLeads=s.externalLeads.map(l=>({url:safeUrl(l.url),route:l.route,status:l.status}));
  clean.sourceRestrictions=s.sourceRestrictions.map(r=>({...pick(r,['route','status','httpStatus','retryAfter','checkedAt']),url:safeUrl(r.url)}));
- clean.queries=[];clean.discarded=[];require('../lib/record-discovery-engine').summarize(clean,JSON.parse(fs.readFileSync(path.join(dir,'profile.json'))));
+ // Preserve search evidence and pagination identities, never response bodies or request text.
+ clean.queries=(s.queries||[]).filter(q=>q.url).map(q=>({...pick(q,['route','kind','term','page','requestId','total','count']),url:safeUrl(q.url),...(Array.isArray(q.rows)?{count:q.rows.length,rows:q.rows.map(r=>pick(r,['id','timeline_id']))}:{})}));clean.discarded=[];require('../lib/record-discovery-engine').summarize(clean,JSON.parse(fs.readFileSync(path.join(dir,'profile.json'))));
  const target=path.join(out,name);fs.mkdirSync(target,{recursive:true});fs.writeFileSync(path.join(target,'manifest.json'),JSON.stringify(clean));
  if(fs.existsSync(path.join(dir,'profile.json')))fs.copyFileSync(path.join(dir,'profile.json'),path.join(target,'profile.json'));
 }

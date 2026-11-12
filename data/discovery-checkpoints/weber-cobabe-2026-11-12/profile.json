@@ -239,6 +239,75 @@
       "route": "adopted_agreements_and_exhibits",
       "url": "https://www.webercountyutah.gov/planning/documents/wolfcreek/2002_Wolf_Creek_Zoning_Development_Agreement.pdf",
       "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
+      "maxDepth": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "3297522",
+      "resource": "requests",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "3297522",
+      "resource": "documents",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "2234358",
+      "resource": "requests",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "2234358",
+      "resource": "documents",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "2628422",
+      "resource": "requests",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "2628422",
+      "resource": "documents",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "Wester Geologic",
+      "resource": "requests",
+      "page": 1
+    },
+    {
+      "kind": "nextrequest",
+      "route": "released_records_archive",
+      "url": "https://webercountyut.nextrequest.com",
+      "term": "Wester Geologic",
+      "resource": "documents",
+      "page": 1
     }
   ],
   "wordpress": [
