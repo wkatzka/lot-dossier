@@ -1,0 +1,17 @@
+{
+  "id": "ogden-valley-published-neighborhood-libraries",
+  "county": "Weber",
+  "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
+  "startDate": "2026-01-01",
+  "endDate": "2026-11-12",
+  "routes": ["neighborhood_libraries"],
+  "terms": ["hoa", "neighborhood", "architectural", "design", "document", "covenant", "cc&r", "declaration", "guideline", "rule", "standard", "contact", "highlands", "trappers", "retreat"],
+  "hosts": ["wolfcreekresortmasterhoa.com", "www.highlandsedenut.com", "highlandsedenut.com", "trappersridgehoa.com", "www.trappersridgehoa.com", "retreatwolfcreek.com", "www.retreatwolfcreek.com"],
+  "seeds": [
+    {"route":"neighborhood_libraries","url":"https://wolfcreekresortmasterhoa.com/neighborhood-hoas/","mode":"library","maxDepth":3},
+    {"route":"neighborhood_libraries","url":"https://wolfcreekresortmasterhoa.com/hoa-documents/","mode":"library","maxDepth":2},
+    {"route":"neighborhood_libraries","url":"https://www.highlandsedenut.com/home/","mode":"library","maxDepth":3},
+    {"route":"neighborhood_libraries","url":"https://trappersridgehoa.com/","mode":"library","maxDepth":3},
+    {"route":"neighborhood_libraries","url":"https://retreatwolfcreek.com/","mode":"library","maxDepth":2}
+  ]
+}

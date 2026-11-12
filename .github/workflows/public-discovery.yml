@@ -8,6 +8,10 @@ on:
         description: Bounded worker minutes (1–20)
         default: '20'
         required: false
+      profile:
+        description: Optional reviewed profile ID (blank runs all)
+        default: ''
+        required: false
 permissions:
   contents: write
   actions: read
@@ -42,6 +46,7 @@ jobs:
         run: node scripts/run-discovery-production.js
         env:
           DISCOVERY_MINUTES: ${{ inputs.minutes || '20' }}
+          DISCOVERY_PROFILE: ${{ inputs.profile || '' }}
       - name: Compact source bytes out of checkpoint
         if: always()
         run: node scripts/compact-discovery-checkpoint.js .discovery-state

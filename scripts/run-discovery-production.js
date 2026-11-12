@@ -1,14 +1,15 @@
 /* Bounded, restartable worker. State is restored/persisted by the Actions artifact workflow. */
 const fs=require('node:fs'),path=require('node:path');
 const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish'),M=require('../lib/discovery-metadata');
-async function run({root='.discovery-state',minutes=15}={}){
+async function run({root='.discovery-state',minutes=15,profileId=''}={}){
  if(!Number.isFinite(minutes)||minutes<1||minutes>20)throw Error('Worker time must be 1–20 minutes');
  const deadline=Date.now()+minutes*60000, reports=[];
  fs.mkdirSync(root,{recursive:true});
- const profiles=fs.readdirSync('config/discovery').filter(f=>f.endsWith('.json')).sort();
- for(const filename of profiles){
+ const profiles=fs.readdirSync('config/discovery').filter(f=>f.endsWith('.json')&&(!profileId||JSON.parse(fs.readFileSync(path.join('config/discovery',f))).id===profileId)).sort();
+ if(!profiles.length)throw Error('Unknown reviewed discovery profile');
+ for(const [profileIndex,filename] of profiles.entries()){
   const profile=JSON.parse(fs.readFileSync(path.join('config/discovery',filename))),dir=path.join(root,profile.id);
-  const profileDeadline=Math.min(deadline,Date.now()+minutes*60000/profiles.length);
+  const profileDeadline=Math.min(deadline,Date.now()+Math.max(0,deadline-Date.now())/(profiles.length-profileIndex));
   const manifest=path.join(dir,'manifest.json');
   let state=fs.existsSync(manifest)?JSON.parse(fs.readFileSync(manifest)):null;
   // Keep a fixed query interval throughout a resumed run. Refresh only after the previous queue drains.
@@ -40,5 +41,5 @@ async function run({root='.discovery-state',minutes=15}={}){
  fs.writeFileSync(target,JSON.stringify({version:1,updatedAt:new Date().toISOString(),runUrl:process.env.GITHUB_RUN_ID?`https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null,profiles:[...old.filter(p=>!ids.has(p.id)),...reports]},null,2)+'\n');
  return reports;
 }
-if(require.main===module)run({minutes:Number(process.env.DISCOVERY_MINUTES||15)}).catch(e=>{console.error(e);process.exitCode=1;});
+if(require.main===module)run({minutes:Number(process.env.DISCOVERY_MINUTES||15),profileId:process.env.DISCOVERY_PROFILE||''}).catch(e=>{console.error(e);process.exitCode=1;});
 module.exports={run};
