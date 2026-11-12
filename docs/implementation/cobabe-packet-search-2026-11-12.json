@@ -6522,5 +6522,43 @@
       "nativeHits": [],
       "ocrHitPages": []
     }
+  ],
+  "followupSearches": [
+    {
+      "query": "\"Cobabe Ranch\" \"architectural\" approval",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"Cobabe Ranch\" \"design guidelines\"",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"3372687\" OR \"3372667\" agreement",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"Cobabe\" \"Wester\" geology",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"Cobabe\" \"February 28, 2022\"",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"Cobabe Ranch\" \"CC&Rs\"",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "site.geology.utah.gov \"Cobabe\"",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "site.webercountyutah.gov \"Wester\" \"2022\" Cobabe",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    },
+    {
+      "query": "\"Cobabe Ranch\" \"geologic\" report",
+      "result": "No complete operative target original recovered; returned historical/proposed agreements, existing plat citations, other-property results or marketing. Search-index absence is not proof of nonpublication."
+    }
   ]
 }
