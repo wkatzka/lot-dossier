@@ -39,6 +39,7 @@
     if(C.supported(p)){const type=p.application.filingPermitType;if(!type)out.push('Designate the permit worksheet for this filing.');else out.push(...C.readiness(p,type).issues);}
     if (kind !== 'resubmission' && A) out.push(...A.blockers(p));
     if (kind === 'resubmission') {
+      if(A)for(const rule of A.rules(p)){const prior=p.application.ruleReviews?.[rule.id];if(prior&&['approved','not-applicable'].includes(prior.state)&&!A.reviewCurrent(p,rule))out.push(rule.title+' — prior approval/applicability review is stale; recheck changed evidence before preparing the resubmission.');}
       if (!p.application.reference) out.push('Application reference is missing.');
       const open = openCorrections(p).filter(c => c.state !== 'resubmitted');
       if (!open.length) out.push('No open corrections to resubmit.');
@@ -93,7 +94,7 @@
         const d=doc(p,a.documentId);required(a.state==='needs-review'||(/^https:\/\//i.test(a.url||'')||(d&&latest(p,d))),'Attach a current approval/applicability document or HTTPS evidence link.');
         p.application.ruleReviews=p.application.ruleReviews||{};
         if(p.application.ruleReviews[a.id]){p.application.ruleReviewHistory=p.application.ruleReviewHistory||[];p.application.ruleReviewHistory.push({id:a.id,...clone(p.application.ruleReviews[a.id])});}
-        p.application.ruleReviews[a.id]={state:a.state,reviewer:clean(a.reviewer),note:clean(a.note),url:clean(a.url),documentId:d?.id||'',at:now,version:A.version,mapAt:p.application.areaMap.at,siteVersion:p.siteVersion,planVersion:p.planVersion,scope:JSON.stringify(p.application.ruleScope||{})};
+        p.application.ruleReviews[a.id]={state:a.state,reviewer:clean(a.reviewer),note:clean(a.note),url:clean(a.url),documentId:d?.id||'',documentHash:d?.hash||'',ruleFingerprint:A.reviewFingerprint(p,rule),at:now,version:A.version,mapAt:p.application.areaMap.at,siteVersion:p.siteVersion,planVersion:p.planVersion,scope:JSON.stringify(p.application.ruleScope||{})};
         invalidate(p);event(p,a.type,'Recorded '+a.state+' for '+rule.title+'; user-reviewed evidence.',now);break;
       }
       case 'sync_report': {

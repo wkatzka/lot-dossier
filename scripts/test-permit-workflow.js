@@ -39,6 +39,8 @@ fails({type:'issuance',permitNumber:'P-TEST',issuedAt:'2026-11-10',url:'https://
 fails({type:'correction',id:cid,state:'response_prepared',owner:'Engineer',response:'Updated.'},/Attach a revision/);
 run(file('v3','v1'));
 run({type:'correction',id:cid,state:'response_prepared',owner:'Engineer',response:'Footing detail added to S2.',documentIds:['v3']});
+assert(W.blockers(p,'resubmission').some(x=>/prior approval.*stale/.test(x)), 'Revised plans must not bypass prior approval dependencies during resubmission');
+reviewAreas();
 run({type:'prepare',kind:'resubmission',reviewer:'Builder',reviewed:true});
 assert.equal(p.corrections[0].state,'response_prepared','Preparing is not submitting');
 const resubmit=W.currentPackage(p,'resubmission');
