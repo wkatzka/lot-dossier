@@ -5766,8 +5766,17 @@ function dimensionChecks(name,s){
  return failures;
 }
 function parseGeometry(raw){try{return JSON.parse(raw);}catch{return null;}}
-function feature(g){if(!g)return null;try{if(g.rings)return T.polygon(g.rings);if(g.paths)return T.multiLineString(g.paths);if(Number.isFinite(g.x)&&Number.isFinite(g.y))return T.point([g.x,g.y]);return g.type==='Feature'?g:null;}catch{return null;}}
-function near(g,h){const a=feature(g),b=feature(h);if(!a||!b)return null;try{if(T.booleanIntersects(a,b))return 0;let d=Infinity;const lines=x=>x.geometry.type==='Polygon'?T.polygonToLine(x):x;const la=lines(a),lb=lines(b);T.coordEach(a,c=>{if(/LineString/.test(lb.geometry.type))T.flattenEach(lb,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});T.coordEach(b,c=>{if(/LineString/.test(la.geometry.type))T.flattenEach(la,l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));});});return Number.isFinite(d)?d:null;}catch{return null;}}
+function feature(g){if(!g)return null;try{if(g.rings){
+ if(!g.rings.length)return null;
+ const rings=g.rings.map(r=>({ring:r,shape:T.polygon([r])}));for(const r of rings){r.area=T.area(r.shape);r.bounds=T.bbox(r.shape);}
+ for(const r of rings)r.parent=rings.filter(p=>p!==r&&p.area>r.area&&r.bounds[0]>=p.bounds[0]&&r.bounds[1]>=p.bounds[1]&&r.bounds[2]<=p.bounds[2]&&r.bounds[3]<=p.bounds[3]&&T.booleanPointInPolygon(r.ring[0],p.shape,{ignoreBoundary:true})).sort((a,b)=>a.area-b.area)[0];
+ const depth=r=>r.parent?1+depth(r.parent):0,polygons=rings.filter(r=>depth(r)%2===0).map(r=>[r.ring,...rings.filter(h=>h.parent===r&&depth(h)%2===1).map(h=>h.ring)]);
+ return polygons.length===1?T.polygon(polygons[0]):T.multiPolygon(polygons);
+ }if(g.paths)return T.multiLineString(g.paths);if(Number.isFinite(g.x)&&Number.isFinite(g.y))return T.point([g.x,g.y]);return g.type==='Feature'?g:null;}catch{return null;}}
+function near(g,h){const a=feature(g),b=feature(h);if(!a||!b)return null;try{if(T.booleanIntersects(a,b))return 0;let d=Infinity;
+ const lines=x=>{const out=[];T.flattenEach(x,f=>{if(f.geometry.type==='Polygon')T.flattenEach(T.polygonToLine(f),l=>out.push(l));else if(f.geometry.type==='LineString')out.push(f);});return out;};
+ const la=lines(a),lb=lines(b);T.coordEach(a,c=>lb.forEach(l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));}));T.coordEach(b,c=>la.forEach(l=>{d=Math.min(d,T.pointToLineDistance(c,l,{units:'feet'}));}));return Number.isFinite(d)?d:null;}catch{return null;}}
+
 function localizeSnapshot(snapshot,parcelGeometry){
  if(!snapshot?.layers||!feature(parcelGeometry))return snapshot;
  let bounds=T.bbox(feature(parcelGeometry));

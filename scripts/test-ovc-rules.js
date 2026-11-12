@@ -42,3 +42,7 @@ const regional={layers:[{id:'municipal',features:[{name:'Example',attributes:{OB
 
 const master=project();master.application.areaMap.layers[1].features.push({name:"MPD"});assert.match(get(master,"ov-zone-AV-3").trigger,/130680/);assert.equal(get(master,"ov-zone-MPD").applicability,"required");assert.match(get(master,"ov-zone-MPD").trigger,/does not identify the private reviewer/);assert(!get(master,"ov-dimensions-MPD"));
 console.log("PASS: live-shaped AV-3 plus MPD overlap retains base standards and separate recorded-plan evidence gate.");
+
+const archipelago={rings:[[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[2,1],[2,2],[1,2],[1,1]],[[6,0],[7,0],[7,1],[6,1],[6,0]]]};
+const arch=O.feature(archipelago);assert.equal(arch.geometry.type,'MultiPolygon');assert.equal(arch.geometry.coordinates.length,2);assert.equal(arch.geometry.coordinates[0].length,2);assert.equal(O.near({x:6.5,y:.5},archipelago),0);assert(O.near({x:1.5,y:1.5},archipelago)>1000);assert.equal(O.feature({rings:[...archipelago.rings].reverse()}).geometry.coordinates.length,2);
+console.log('PASS: multipart GIS preserves disjoint regions and holes regardless of ring order.');
