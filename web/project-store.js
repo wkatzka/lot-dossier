@@ -31,15 +31,16 @@
       t.onabort = t.onerror = () => reject(conflict || t.error || new Error('Project could not be saved. Browser storage may be full.'));
     });
   }
-  async function checklistFiles(county,parcelId) {
+  async function checklistRecords(county,parcelId) {
     return new Promise((resolve,reject)=>{
       const request=indexedDB.open(owner?'lot-dossier-'+owner:'lot-dossier',1);
       request.onerror=()=>reject(request.error);request.onsuccess=()=>{const d=request.result;if(!d.objectStoreNames.contains('items')){d.close();resolve([]);return;}
-        const files=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
-        r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))for(const file of c.value.files||[])if(file.blob)files.push({...file,checklistKey:c.key});c.continue();};t.oncomplete=()=>{d.close();resolve(files);};t.onerror=()=>reject(t.error);
+        const rows=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
+        r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))rows.push({key:String(c.key),status:c.value.status,files:c.value.files||[]});c.continue();};t.oncomplete=()=>{d.close();resolve(rows);};t.onerror=()=>reject(t.error);
       };
     });
   }
+  async function checklistFiles(county,parcelId) {return (await checklistRecords(county,parcelId)).flatMap(r=>r.files.filter(f=>f.blob).map(f=>({...f,checklistKey:r.key})));}
   async function restore(project, files, options={}) {
     const account=owner,d=await db();return new Promise((resolve,reject)=>{
       const t=d.transaction(['projects','files'],'readwrite'),ps=t.objectStore('projects');let error;
@@ -47,5 +48,5 @@
       t.oncomplete=()=>{resolve(project);if(!options.cloudRestore)notify(project,account);};t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
-  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };
+  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles, checklistRecords };
 })(window);

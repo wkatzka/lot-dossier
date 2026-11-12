@@ -27,3 +27,5 @@ assert.equal(diagnostic.independentValidation,false);
 assert.equal(diagnostic.leaveOneOut.length,rows.length);
 assert.match(output,/How sensitive is this property/);
 console.log('Property-specific delete-one sensitivity and honest interval labeling passed');
+
+assert(output.indexOf('Builder budget')<output.indexOf('Weber land-price research'));assert.match(output,/Current market value is not established/);assert.match(output,/sensitivity range is not a confidence interval/);

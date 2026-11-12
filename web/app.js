@@ -299,7 +299,8 @@
 
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = LR.reviewFindings(r.findings), plan = r.plan;
-    var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x); }).length; };
+    var reviewProject=window.SiteDecisions && window.SiteDecisions.forReport(r);
+    var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x) && (!reviewProject || window.SiteDecisions.inScope(reviewProject,x)) && !(reviewProject && window.SiteDecisions.status(reviewProject,x).closed); }).length; };
     var costs = rollup(f);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
@@ -310,9 +311,10 @@
             (st.files.length ? '<span class="chk-files">Attached: ' + st.files.map(function (f) { return esc(f.name); }).join(', ') + '</span>' : '') + '</div>'
           : '<div class="chk" data-key="' + esc(k) + '"><div class="chk-seg" role="group" aria-label="Checklist status">' +
             ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
-            '</div><label class="chk-attach">Attach file<input type="file" multiple></label><ul class="chk-list"></ul></div>';
+            '</div><label class="chk-attach">Attach file<input type="file" multiple></label><p class="hint">Attachments add evidence. Review it before marking this item Done.</p><ul class="chk-list"></ul></div>';
       }
-      return '<article class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
+      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
+      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(decision.state):STATUS[x.status]) + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
         (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
         '<div class="src">' + src + '</div>' + chk + '</div></article>';
@@ -374,7 +376,8 @@
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
     if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
-    var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
+    pk = LR.reviewPacket(pk);
+    var pct = pk.needed ? Math.round(pk.ready / pk.needed * 100) : 0;
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
     var items = pk.items.map(function (it) {
@@ -398,12 +401,9 @@
     }).join('');
     var rows = pk.rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td><td class="pk-src">' + esc(r[2]) + '</td></tr>'; }).join('');
     return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + esc(pk.jurisdiction) + '</h2>' +
-      '<p class="pk-sub">Everything public records and your plan let us fill in, estimate or draft. Utah law gives the city 3 business days to screen a complete application and 14 more to finish plan review for a house (Utah Code 10-20-909), so a complete packet on day one is the fastest path.</p>' +
+      '<p class="pk-sub">Review the source materials, applicable approvals and proposed-work answers before preparing a filing handoff.</p>' +
       '<div class="pk-meter"><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><span><b>' + pk.ready + ' of ' + pk.needed + '</b> source-packet items available or drafted — not application completeness</span></div>' +
-      '<ol class="pk-timeline"><li><b>Today</b> Send the drafted requests; order the survey' + (pk.items.some(function (i) { return /Structural calculations/.test(i.title) && i.status !== 'ready'; }) ? ' and structural engineering' : '') + '.</li>' +
-      '<li><b>' + esc(tl.submitLo) + ' to ' + esc(tl.submitHi) + '</b> Earliest realistic submittal. Longest lead: ' + esc(tl.critical.join('; ')) + '.</li>' +
-      '<li><b>+3 business days</b> City must accept or reject the application as incomplete.</li>' +
-      '<li><b>' + esc(tl.issueLo) + ' to ' + esc(tl.issueHi) + '</b> Plan review due (14 business days after screening). Holidays and correction rounds can add time.</li></ol>' +
+      '<ol class="pk-timeline"><li><b>Resolve prerequisites</b> Confirm which approvals apply and whether they precede submission, issuance or construction.</li><li><b>Establish durations</b> Professional work and authority turnaround are not established for this project. No submission or issuance date is predicted.</li><li><b>Check review conditions</b> Statutory review periods depend on the application and applicable exceptions; they are not a project completion guarantee. <a href="https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html" target="_blank" rel="noopener">Utah Code §10-20-909</a></li></ol>' +
       (pk.portal ? '<p class="pk-portal">Submit through the <a href="' + esc(pk.portal) + '" target="_blank" rel="noopener">city permit portal</a>' + (pk.checklist ? ' · <a href="' + esc(pk.checklist) + '" target="_blank" rel="noopener">city submission checklist</a>' : '') + '.</p>' : '') +
       '<ol class="pk-items">' + items + '</ol>' +
       '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
@@ -416,8 +416,8 @@
   }
 
   function checklistSummary(f, state, saved) {
-    var items = f.filter(actionable), done = 0, files = 0;
-    items.forEach(function (x) { var st = (state && state[itemKey(x)]) || { status: 'todo', files: [] }; if (st.status !== 'todo') done++; files += st.files.length; });
+    var items = f.filter(function(x){var p=window.SiteDecisions&&window.SiteDecisions.forReport(last);return actionable(x)&&(!p||window.SiteDecisions.inScope(p,x));}), done = 0, files = 0;
+    items.forEach(function (x) { var st = (state && state[itemKey(x)]) || { status: 'todo', files: [] }; if (window.SiteDecisions && window.SiteDecisions.forReport(last) ? window.SiteDecisions.status(window.SiteDecisions.forReport(last),x).closed : st.status !== 'todo') done++; files += st.files.length; });
     var pct = items.length ? Math.round(done / items.length * 100) : 100;
     return '<div class="chk-sum"><h2>Checklist</h2><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
       '<div class="chk-sum-row"><span><b class="chk-done">' + done + '</b> of ' + items.length + ' items closed · <b class="chk-nfiles">' + files + '</b> file' + (files === 1 ? '' : 's') + ' attached</span>' +
@@ -475,8 +475,7 @@
     Array.prototype.forEach.call(e.target.files, function (f) {
       st.files.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), name: f.name, size: f.size, type: f.type, added: Date.now(), blob: f });
     });
-    // Attaching the document usually means the item is handled; mark it done unless the user chose N/A.
-    if (st.status === 'todo' && e.target.files.length) st.status = 'done';
+    // Receiving evidence does not resolve the finding. Keep the user's current status.
     e.target.value = '';
     checklist[k] = st; Store.put(k, st); applyState(el, st); refreshSummary();
   });
@@ -509,7 +508,7 @@
   });
   var renderedReportKey = '';
   function showReport(fromHistory) {
-    var nextReportKey=JSON.stringify(last), reuse=renderedReportKey===nextReportKey && $('rv-body').children.length;
+    var nextReportKey=JSON.stringify([last,window.SiteDecisions&&window.SiteDecisions.forReport(last)?.revision]), reuse=renderedReportKey===nextReportKey && $('rv-body').children.length;
     if(!reuse){
     renderedReportKey=nextReportKey;
     $('rv-body').innerHTML = reportHTML(last, null, false);

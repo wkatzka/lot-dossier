@@ -26,10 +26,10 @@
     categories.forEach(c=>{
       c.nodes.forEach(n=>panel.appendChild(n));
       const rows=c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads'));
-      c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.classList.contains('s-'+s)).length]));
+      c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.dataset.researchOnly!=='true'&&r.dataset.reviewClosed!=='true'&&r.classList.contains('s-'+s)).length]));
       const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';name.textContent=c.label;tr.append(name);
       for(const status of ['flag','watch','verify','ok']){const td=document.createElement('td');td.className='topic-'+status;td.textContent=c.counts[status];if(!c.counts[status])td.classList.add('is-zero');tr.append(td);}
-      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);evidence.textContent=rows.length+(rows.length===1?' finding':' findings')+(leads?' · '+leads+' record leads':'');tr.append(evidence);
+      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);const closed=rows.filter(r=>r.dataset.reviewClosed==='true').length;const optional=rows.some(r=>r.dataset.researchOnly==='true');evidence.textContent=(optional?'Optional research · ':'')+rows.length+(rows.length===1?' finding':' findings')+(closed?' · '+closed+' resolved':'')+(leads?' · '+leads+' record leads':'');tr.append(evidence);
       const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='topic-details';b.id='category-'+c.key;b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;b.textContent='View details';b.setAttribute('aria-label','View '+c.label+' details');td.append(b);tr.append(td);c.resource=['contacts','actions','costs'].includes(c.key);if(c.resource){b.textContent=c.label;resources.append(b);}else chips.append(tr);c.button=b;c.tableRow=tr;
       b.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
     });
@@ -53,7 +53,7 @@
       const scroll=document.createElement('div');scroll.className='status-findings-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Finding summaries');inner.append(scroll);
       const table=document.createElement('table');table.className='status-findings-table';table.innerHTML='<thead><tr><th scope="col">Topic / finding</th><th scope="col">Summary</th><th scope="col"><span class="sr-only">Details</span></th></tr></thead><tbody></tbody>';scroll.append(table);
       const body=table.querySelector('tbody');let count=0;
-      matches.forEach(c=>c.nodes.forEach(n=>Array.from(n.querySelectorAll('.frow')).filter(row=>!row.closest('.source-leads')&&(!status||row.classList.contains('s-'+status))).forEach(row=>{
+      matches.forEach(c=>c.nodes.forEach(n=>Array.from(n.querySelectorAll('.frow')).filter(row=>!row.closest('.source-leads')&&(!status||(row.dataset.researchOnly!=='true'&&row.dataset.reviewClosed!=='true'&&row.classList.contains('s-'+status)))).forEach(row=>{
         count++;const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';
         const topic=document.createElement('small');topic.textContent=c.label;name.append(topic);
         const title=document.createElement('span');title.textContent=row.querySelector('.item')?.textContent||c.label;name.append(title);tr.append(name);

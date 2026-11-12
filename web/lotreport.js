@@ -720,11 +720,11 @@
     var health = await arcgisQuery(UGRC + '/HealthDistricts/FeatureServer/0', { geometry: ctx.parcel.point });
     var hdName = health.length ? health[0].attributes.DISTNAME : null, hk = HEALTH[hdName];
     var hd = hdName ? hdName + ' Health Department' : 'the local health department';
-    var sw = worst(sepR); ctx.facts.septic = { required: !sewer, rating: sw, hd: hd };
+    var sw = worst(sepR); ctx.facts.septic = { required: null, rating: sw, hd: hd };
     var reasonTxt = reasons.length ? ' Limiting factors: ' + reasons.map(function (r) { return r.interphrc.toLowerCase(); }).join(', ') + '.' : '';
     if (sewer) {
-      ctx.facts.septic.required = false;
-      out.push(F('septic', 'Sewer vs. septic', 'watch', sewerDist ? 'Inside ' + sewerDist : 'Inside a mapped sewer service area', 'Sewer service avoids the septic limits on these soils. Confirm the main is reachable from the lot and get the connection/impact fee.',
+      ctx.facts.septic.required = null;
+      out.push(F('septic', 'Sewer vs. septic', 'watch', sewerDist ? 'Inside ' + sewerDist : 'Inside a mapped sewer service area', 'Mapped district coverage does not establish a lot-specific connection or capacity. Confirm the wastewater system, provider commitment and connection costs. Septic feasibility remains conditional until the system is established.',
         sewerDist ? 'Weber County taxing districts' : 'Weber County sewer impact-fee area', null, ctx.cost('sewer_connection')));
     } else if (finDist && ctx.parcel.attrs.SUBDIV_NAME) {
       ctx.facts.septic.required = null;
@@ -737,7 +737,7 @@
     } else {
       var r = (sw || 'unrated').toLowerCase(), unknown = sewer === null;
       out.push(F('septic', 'Sewer vs. septic', unknown ? 'verify' : (sw === 'Very limited' ? 'flag' : 'watch'),
-        unknown ? 'Sewer service not mapped for this county; soils rated ' + r + ' if septic' : 'Septic likely required; soils rated ' + r + ' for absorption fields',
+        unknown ? 'Sewer service not mapped for this county; soils rated ' + r + ' if septic' : 'Wastewater system unverified; soils rated ' + r + ' if septic',
         (sewer === false ? 'No mapped sewer service.' : 'Sewer availability not mapped here.') + ' The soil survey rates septic absorption fields as ' + r + '.' + reasonTxt +
         " A \"very limited\" rating doesn't rule out septic, but expect a larger or engineered/alternative system. " + hd + ' issues the permit after a soil profile and percolation test.' +
         (hk ? ' ' + hk.rules + ' ' + hk.feeText : ''),
@@ -806,35 +806,28 @@
 
   C.check_utilities = async function (ctx) {
     var pt = ctx.parcel.point, out = [];
-    var r = await Promise.all([UGRC + '/UtahElectricServiceAreas/FeatureServer/0', UGRC + '/UtahNaturalGasServiceAreas_Approx/FeatureServer/0',
-      UGRC + '/TelecomBoundaries/FeatureServer/0'].map(function (u) { return arcgisQuery(u, { geometry: pt }); }));
-    var homes = await arcgisQuery(lirUrl(ctx.parcel.county), { geometry: pt, distance: 400, where: 'BUILT_YR > 0', outFields: 'BUILT_YR' }).catch(function () { return []; });
-    var years = homes.map(function (h) { return +h.attributes.BUILT_YR; }).filter(Boolean).sort();
-    ctx.facts.homes_nearby = { n: years.length, newest: years[years.length - 1] };
-    if (r[0].length) {
-      var e = r[0][0].attributes, platted = !!ctx.parcel.attrs.SUBDIV_NAME;
-      if (years.length >= 5) {
-        out.push(F('utilities', 'Power', 'ok', e.PROVIDER + '; ' + years.length + ' homes within 400 m (newest built ' + years[years.length - 1] + ')',
-          'Occupied homes nearby mean distribution lines already serve the area' + (platted ? ', and recorded subdivisions normally have power stubbed to each lot as a plat condition' : '') +
-          '. The remaining cost is the service lateral from the lot line to the house, which is usually trenched with the other utilities.',
-          'UGRC electric service areas + county parcels', e.WEBLINK));
-      } else {
-        out.push(F('utilities', 'Power', 'watch', e.PROVIDER + ' territory; only ' + years.length + ' homes within 400 m',
-          'Few built homes nearby, so the nearest line or transformer may be some distance away. Line extensions are billed per foot and can add tens of thousands on rural lots.',
-          'UGRC electric service areas + county parcels', e.WEBLINK, ctx.cost('power_extension'), 'Request a ' + e.PROVIDER + ' line-extension estimate for the lot.'));
-      }
-    } else out.push(F('utilities', 'Power', 'flag', 'No electric provider mapped', '', 'UGRC electric service areas'));
-    ctx.facts.gas = r[1].length > 0;
-    if (r[1].length) {
-      var g = r[1][0].attributes;
-      out.push(F('utilities', 'Natural gas', 'ok', g.PROVIDER + ' service area (approximate)', 'Confirm a main runs along the lot frontage.', 'UGRC natural gas service areas', g.WEBLINK));
-    } else out.push(F('utilities', 'Natural gas', 'watch', 'No natural gas service mapped', 'Plan for propane or all-electric heat.', 'UGRC natural gas service areas', null, ctx.cost('propane')));
-    var prov = Array.from(new Set(r[2].map(function (f) { return f.attributes.PROVIDER; }))).sort().join(', ') || 'none mapped';
+    var serviceUrls = [UGRC + '/UtahElectricServiceAreas/FeatureServer/0', UGRC + '/UtahNaturalGasServiceAreas_Approx/FeatureServer/0', UGRC + '/TelecomBoundaries/FeatureServer/0'];
+    var r = await Promise.all(serviceUrls.map(function (u) { return arcgisQuery(u, { geometry: pt }).catch(function () { return null; }); }));
+    var homes = await arcgisQuery(lirUrl(ctx.parcel.county), { geometry: pt, distance: 400, where: 'BUILT_YR > 0', outFields: 'BUILT_YR' }).catch(function () { return null; });
+    var years = (homes || []).map(function (h) { return +h.attributes.BUILT_YR; }).filter(Boolean).sort();
+    ctx.facts.homes_nearby = { n: homes ? years.length : null, newest: years[years.length - 1] };
+    var electric = r[0] && r[0][0], gas = r[1] && r[1][0];
+    out.push(F('utilities', 'Power', 'verify', electric ? electric.attributes.PROVIDER + ' mapped territory; lot service unverified' : r[0] ? 'No electric provider returned by this map; service unverified' : 'Electric service-area lookup unavailable; service unverified',
+      (homes ? years.length + ' recorded homes within 400 m' + (years.length ? ' (newest built ' + years[years.length - 1] + ')' : '') + '. ' : 'Nearby-building lookup unavailable. ') +
+      'Mapped territory and nearby buildings do not establish a connection, available capacity, a transformer or a stub at this lot. Extension work and connection costs are not established.',
+      'UGRC electric service areas + county parcels', serviceUrls[0], null,
+      'Obtain lot-specific service confirmation, the connection location and capacity, and an itemized connection or extension quote from the provider.'));
+    // This flag describes a map observation only, never a confirmed connection.
+    ctx.facts.gas = r[1] === null ? null : !!gas;
+    out.push(F('utilities', 'Natural gas', 'verify', gas ? gas.attributes.PROVIDER + ' mapped area (approximate); lot service unverified' : r[1] ? 'No natural gas provider returned by this map; service unverified' : 'Natural gas service-area lookup unavailable; service unverified',
+      'Approximate service-area coverage does not establish a reachable main, capacity or connection cost. A missing map result does not require propane or an all-electric design.',
+      'UGRC natural gas service areas', serviceUrls[1], null, 'Confirm service and connection requirements for the proposed building before selecting the heating system.'));
+    var prov = Array.from(new Set((r[2] || []).map(function (f) { return f.attributes.PROVIDER; }))).sort().join(', ') || (r[2] === null ? 'lookup unavailable' : 'none returned by this map');
     var fccUrl = 'https://broadbandmap.fcc.gov/location-summary/fixed?lat=' + ctx.parcel.cy.toFixed(6) + '&lon=' + ctx.parcel.cx.toFixed(6);
     // Utah Broadband Center service areas, built from providers' FCC Broadband Data Collection filings (H3 hexagons, ~0.3 sq mi).
     var bb = await area(ctx, BROADBAND, { outFields: 'brand_name,max_advertised_download_speed,max_advertised_upload_speed,common_tech,category' }).catch(function () { return null; });
     if (!bb) {
-      out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov, 'The broadband availability layer did not respond. Buyers of high-end spec homes expect fiber.', 'UGRC telecom boundaries + FCC', fccUrl));
+      out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov, 'The broadband availability layer did not respond. Address-level availability, capacity and installation costs remain unverified.', 'UGRC telecom boundaries + FCC', fccUrl));
       return out;
     }
     var best = {};
@@ -849,13 +842,13 @@
     var wired = list.filter(function (x) { return x.cat === 'wired'; }), other = list.filter(function (x) { return x.cat !== 'wired'; });
     ctx.facts.fiber = fiber.length > 0;
     var caveat = ' Providers report coverage to the FCC by hexagon (about 0.3 sq mi), so a listed provider serves part of the area around the lot, not necessarily this lot. A new lot may not be in the FCC location list until a home is built.';
-    var status = fiber.length ? 'ok' : wired.length ? 'watch' : 'verify';
+    var status = 'verify';
     var head = fiber.length ? 'Fiber reported nearby: ' + fiber.map(function (x) { return x.name + ' ' + spd(x.down); }).join(', ')
-      : cable.length ? 'No fiber reported; cable from ' + cable.map(function (x) { return x.name; }).join(', ')
-      : wired.length ? 'No fiber or cable; best wired option is ' + desc(wired[0]) : 'No wired broadband in this dataset; service availability unverified';
+      : cable.length ? 'Cable reported in the area: ' + cable.map(function (x) { return x.name; }).join(', ')
+      : wired.length ? 'Wired service reported in the area: ' + desc(wired[0]) : 'No wired broadband in this dataset; service availability unverified';
     out.push(F('utilities', 'Internet', status, head,
       'Wired: ' + (wired.map(desc).join('; ') || 'none') + '. Wireless and satellite: ' + (other.slice(0, 5).map(desc).join('; ') || 'none') + '.' + caveat +
-      (fiber.length ? '' : ' Buyers of high-end spec homes expect fiber; a line extension may be negotiable with a provider before closing.'),
+      ' Confirm address-level service, installation capacity and charges; advertised area speeds are not a commitment for this lot.',
       'Utah Broadband Center (FCC filings)', fccUrl, null,
       fiber.length ? 'Ask ' + fiber[0].name + "'s new-construction team to confirm service to this lot and any build-out charge." : 'Ask wired providers for a line-extension quote to the lot.'));
     return out;
@@ -1102,7 +1095,7 @@
    * the site condition it runs into, and where the plan value came from. */
   C.check_plan_fit = async function (ctx) {
     var p = ctx.plan, fp = p.footprint || {}, fx = ctx.facts, out = [], src = p.src || {};
-    if (!p.footprint && !p.bedrooms && !p.foundation) return [];
+    if (!p.footprint && !p.bedrooms && !p.foundation && !p.fuel) return [];
     var from = function (k) { return src[k] ? ' (plan: ' + src[k] + ')' : ''; };
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
     out.push(P('House and driveway vs. easements', 'verify', 'Easement clearance has not been established',
@@ -1141,9 +1134,10 @@
     }
 
     // Heating fuel vs. gas service
-    if (p.fuel === 'gas') out.push(fx.gas
-      ? P('Gas appliances', 'ok', 'Plan uses gas appliances; lot is in a natural gas service area', 'Gas appliances or a gas line schedule appear in the plan' + from('fuel') + '. Confirm the main runs along the frontage.')
-      : P('Gas appliances', 'watch', 'Plan uses gas appliances, but no natural gas service is mapped', 'Plan on a buried propane tank (setbacks from the house and lot lines apply) or convert to heat pumps.' + from('fuel'), ctx.cost('propane')));
+    if (p.fuel === 'gas') out.push(P('Gas appliances', 'verify', 'Plan uses gas appliances; lot-specific gas service needs confirmation',
+      'Gas appliances or a gas line schedule appear in the plan' + from('fuel') + '. ' +
+      (fx.gas ? 'An approximate provider area covers the lot. ' : 'The saved map result does not establish gas availability. ') +
+      'Confirm the fuel specification, reachable main, capacity and connection costs before choosing natural gas, propane or an electric alternative.'));
 
     // Exterior cladding vs. wildfire code
     var citesWui = (p.codes || []).some(function (c) { return /WILDLAND/i.test(c); });
@@ -1427,13 +1421,13 @@
     if (sewerDoc || sewerPlat) {
       var prov = sewerDoc ? sewerDoc.provider : title(sewerPlat);
       ctx.facts.sewer = prov;
-      ctx.facts.septic = Object.assign(ctx.facts.septic || {}, { required: false });
-      replaceFinding(ctx, 'septic', 'Sewer vs. septic', F('septic', 'Sewer vs. septic', 'watch', 'Sewered: ' + prov + ' serves the subdivision',
+      ctx.facts.septic = Object.assign(ctx.facts.septic || {}, { required: null });
+      replaceFinding(ctx, 'septic', 'Sewer vs. septic', F('septic', 'Sewer vs. septic', 'watch', 'Subdivision sewer reference: ' + prov + '; lot connection unverified',
         (sewerDoc ? '"' + sewerDoc.text.replace(/\s+/g, ' ').slice(0, 220) + '" (' + cite(sewerDoc.doc) + '). ' : '') +
         (sewerPlat ? 'The recorded plat carries the ' + title(sewerPlat) + ' approval block. ' : '') +
-        'The septic soil limits do not apply; budget the sewer connection and impact fee instead.',
+        'This record is a subdivision-level service lead, not confirmation of this lot’s current connection, capacity or costs. Confirm the applicable wastewater system before excluding septic constraints or budgeting connection work.',
         sewerDoc ? cite(sewerDoc.doc) : 'Recorded plat', sewerDoc ? sewerDoc.doc.url : platUrl, ctx.cost('sewer_connection'),
-        'Get the connection and impact fee from ' + prov + '.'));
+        'Obtain a current lot-specific service commitment and connection requirements from ' + prov + '.'));
     }
     var waterDoc = util.find(function (q) { return q.kind === 'culinary water' && q.provider; });
     if (waterDoc) {
@@ -1948,8 +1942,8 @@
     I({ group: 'Drawings', title: 'Outdoor lighting plan (dark-sky)', status: has('lighting') ? 'ready' : kb && kb.lighting ? 'pro' : kb ? 'na' : 'you', who: kb && !kb.lighting ? '' : 'Designer', lead: [1, 3], why: kb && kb.lighting ? 'City land use code 108-16' : '',
       detail: kb && kb.lighting ? kb.lighting + ' Show each exterior fixture, its height and a cut sheet.' : kb ? 'Not required here.' : 'Check whether ' + juris + ' requires an exterior lighting plan.' });
     var steep = f.slope != null && f.slope > 15;
-    I({ group: 'Reports', title: 'Geotechnical report', status: steep ? 'pro' : 'optional', who: 'Geotechnical engineer', lead: steep ? [15, 25] : [0, 0], why: '10-20-909(12)(f): only if slope exceeds 15% and the city requires it',
-      detail: 'Lot slope about ' + (f.slope != null ? f.slope.toFixed(1) + '%' : '?') + (steep ? ', so the city may require one.' : ', so the statute does not require one for the application.') +
+    I({ group: 'Reports', title: 'Geotechnical report', status: 'you', who: 'Geotechnical engineer', lead: steep ? [15, 25] : [0, 0], why: 'Verify applicable geotechnical and development conditions',
+      detail: 'Lot slope about ' + (f.slope != null ? f.slope.toFixed(1) + '%' : '?') + '. Slope alone does not determine whether a report is required. Check mapped hazards, recorded plat/development conditions and the authority’s requirements.' +
         (f.water_table_in != null && f.water_table_in < 48 ? ' Recommended anyway: the soil survey shows a seasonal water table about ' + f.water_table_in + ' in. down.' : '') });
     I({ group: 'Stormwater', title: 'Storm water statement, SWPPP and city stormwater permit', status: est.disturb ? 'drafted' : 'partial', who: 'You / builder', lead: [1, 2], why: '10-20-909(12)(g); city code ch. 6.15',
       detail: (est.disturb ? 'Estimated land disturbance about ' + fmt(est.disturb) + ' sq ft and ' + fmt(est.cut) + ' cubic yards of excavation' + (kb && kb.stormwater ? ', above the city\'s 500 sq ft / 20 cubic yard permit threshold. ' : '. ') : '') +
@@ -1966,12 +1960,9 @@
     I({ group: 'Fees', title: 'Permit, plan review and impact fees', status: 'you', who: 'You', lead: [0, 0], why: '10-20-909(12)(h)',
       detail: (feeRow ? feeRow.headline + '. ' : '') + (est.esu > 1 ? 'With about ' + fmt(est.impervious) + ' sq ft of impervious area this lot is ' + est.esu + ' storm-drain units, so the storm drain impact fee is about $' + fmt(est.stormFee) + ' rather than one unit. ' : '') + 'Paid at issuance through the portal.' });
 
-    // Timeline: everything that gates submittal runs in parallel; then screening (3) + plan review (14) business days.
-    var gating = items.filter(function (x) { return x.status !== 'ready' && x.status !== 'na' && x.status !== 'optional' && x.lead; });
-    var lo = Math.max.apply(0, gating.map(function (x) { return x.lead[0]; }).concat([1])), hi = Math.max.apply(0, gating.map(function (x) { return x.lead[1]; }).concat([2]));
-    var now = new Date(), subLo = addBusinessDays(now, lo), subHi = addBusinessDays(now, hi);
-    var timeline = { submitLo: day(subLo), submitHi: day(subHi), screen: 3, review: 14, issueLo: day(addBusinessDays(subLo, 17)), issueHi: day(addBusinessDays(subHi, 17)),
-      critical: gating.filter(function (x) { return x.lead[1] === hi; }).map(function (x) { return x.title; }) };
+    // Durations and prerequisite order have not been established for this project.
+    items.forEach(function(item){delete item.lead;});
+    var timeline = {status:'unresolved', dependencies:items.filter(function(x){return !['ready','na'].includes(x.status);}).map(function(x){return x.title;})};
 
     // Application data sheet.
     var zstd = f.zone_std || {}, rows = [];
@@ -1994,7 +1985,7 @@
       R('Building height', p.height_ft && p.height_ft + "'", 'Plan'); R('Foundation', p.foundation, 'Plan'); R('Heating fuel', p.fuel, 'Plan'); R('Fireplace', p.fireplace, 'Plan');
       R('Construction valuation', est.valuation && '$' + fmt(est.valuation), 'ICC Building Valuation Data, ' + BVD.asOf);
     }
-    R('Fire sprinklers', hydrant > 600 ? 'Likely required (NFPA 13D): nearest hydrant about ' + fmt(hydrant) + ' ft by road' : hydrant ? 'Not expected: hydrant about ' + fmt(hydrant) + ' ft by road' : null, 'Hydrant map + roads');
+    R('Fire sprinklers', 'Requirement unresolved; confirm proposed-building access, hose route and available fire flow with the fire authority', 'Hydrant map is screening evidence only');
     R('Ground snow load', f.snow && f.snow.pg && f.snow.pg + ' psf', 'Utah Snow Load Study');
     R('Seismic', f.sds != null ? 'SDS ' + f.sds.toFixed(2) + ' g, seismic design category ' + (f.irc_sdc || '?') : null, 'USGS, site class D default');
     R('Soil bearing', p.structural && p.structural.bearing_psf ? p.structural.bearing_psf + ' psf (plan)' : (f.soils || []).some(function (s) { return /clay|silt/i.test(s); }) ? '1,500 psf presumptive (IRC Table R401.4.1, clay/silt soils) unless the geotech says otherwise' : null, 'Soil survey');
@@ -2018,9 +2009,10 @@
     var ready = items.filter(function (x) { return x.status === 'ready' || x.status === 'drafted'; }).length, needed = items.filter(function (x) { return x.status !== 'na' && x.status !== 'optional'; }).length;
     f.packet = { jurisdiction: juris, items: items, letters: letters, rows: rows, est: est, timeline: timeline, sitePlan: sp && !sp.error ? { svg: sp.svg, fits: sp.fits, samples: sp.samples } : null,
       sitePlanError: sp && sp.error, ready: ready, needed: needed, portal: kb && kb.portal, checklist: cityReq };
+    f.packet = reviewPacket(f.packet);
     return [F('permits', 'Permit packet', ready >= needed ? 'ok' : 'verify', ready + ' of ' + needed + ' application items ready or drafted',
-      'Utah law makes the city screen a complete application in 3 business days and finish plan review for a house within 14 business days after that (Utah Code 10-20-909). The permit packet below lists every item, fills in what public records and the plan show, and drafts the requests to the water, sewer and fire providers' + (hoa ? ' and the HOA' : '') + '. Earliest realistic submittal ' + timeline.submitLo + ' to ' + timeline.submitHi + '; the longest lead item is: ' + timeline.critical.slice(0, 2).join('; ') + '.',
-      'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Send the drafted requests now; they run in parallel with the survey and engineering.')];
+      'Source materials and drafts are not confirmed submission prerequisites. Review Rules & Approvals, application answers and supporting documents. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.',
+      'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Resolve the applicable approval sequence before scheduling the filing.')];
   };
 
   C.check_pool = async function (ctx) {
@@ -2138,7 +2130,26 @@
     ctx.facts.areaSources=areas;
     areas.forEach(function(m){findings.push(F('land','Lot area · '+m.name,'verify',m.value.toFixed(4)+' acres ('+Math.round(m.value*43560)+' sq ft)',m.basis+'. Values are retained separately to compare source agreement; no value establishes a surveyed legal area.',m.name,m.url));});
     if(areas.length>1){var values=areas.map(function(m){return m.value;});findings.push(F('land','Lot area source comparison','verify','Source spread '+((Math.max.apply(null,values)-Math.min.apply(null,values))*43560).toFixed(1)+' sq ft','Compare the individually cited parcel, GIS and available plat measurements above. Parcel records and GIS can share an upstream source; matching values are not independent confirmation.'));}
-    return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
+    return { findings: reviewFindings(findings), facts: ctx.facts, documents: await ctx.docs };
+  }
+
+  function reviewPacket(packet) {
+    if(!packet)return packet;
+    var p=JSON.parse(JSON.stringify(packet));
+    p.items=(p.items||[]).map(function(item){
+      delete item.lead;
+      if(item.title==='Geotechnical report' && (item.status==='optional'||/statute does not require|only if slope/.test((item.detail||'')+(item.why||'')))){
+        item.status='you';item.why='Verify applicable geotechnical and development conditions';
+        item.detail='Report applicability is unresolved. Check site hazards, recorded plat/development conditions and authority requirements; mapped slope alone does not establish an exemption.';
+      }
+      return item;
+    });
+    p.rows=(p.rows||[]).map(function(row){return row[0]==='Fire sprinklers'?[row[0],'Requirement unresolved; confirm building access, hose route and fire flow with the fire authority','Mapped hydrant distance is screening evidence only']:row;});
+    if(p.timeline&&p.timeline.status!=='unresolved')p.priorTimeline=p.priorTimeline||p.timeline;
+    p.timeline={status:'unresolved',dependencies:p.items.filter(function(x){return !['ready','na'].includes(x.status);}).map(function(x){return x.title;})};
+    p.ready=p.items.filter(function(x){return ['ready','drafted'].includes(x.status);}).length;
+    p.needed=p.items.filter(function(x){return !['na','optional'].includes(x.status);}).length;
+    return p;
   }
 
   function reviewFindings(findings) {
@@ -2154,8 +2165,55 @@
       if(f.item==='Flood zone'&&/Zone .*D.*minimal flood hazard/.test(f.headline)){f.status='verify';f.headline=f.headline.replace(': minimal flood hazard',': flood hazard partly undetermined');f.detail='Interpretation corrected: FEMA Zone D is undetermined hazard, not minimal risk. Check the effective panel and Zone X subtype before siting improvements. Source data has not been refreshed.';}
       if(f.item==='Internet'&&/No wired broadband reported; wireless and satellite only/.test(f.headline)){f.status='verify';f.headline='No wired broadband in this dataset; service availability unverified';}
       if(f.item==='Drinking-water source protection'&&/Septic systems are not allowed|allows septic/.test(f.detail)){f.detail='Interpretation corrected: mapped source-protection overlap may restrict onsite wastewater. Confirm the zone boundary, source type and current applicable rules. This map alone does not establish a lot-specific septic prohibition or approval.';}
+      // Apply the same interpretation boundary to older saved reports and new findings.
+      // The saved snapshot itself is not mutated; retain its original text for audit history.
+      var prior = {status:f.status, headline:f.headline, detail:f.detail, next_step:f.next_step, cost:f.cost};
+      if(/1882728/.test((f.headline||'')+' '+(f.detail||'')+' '+(f.next_step||'')) && /only sold by the Recorder/.test(f.detail||'')){
+        f.status='verify';
+        f.detail=f.detail.replace(/The recorded text itself is only sold by the Recorder[^.]*\./g,'Public original entry 1882728 is available from the Wolf Creek Resort Master HOA website. Public availability does not establish that it controls this lot; reconcile parcel coverage, amendments, reviewer authority and approval timing.');
+        f.source='Public original declaration · entry 1882728';
+        f.url='https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf';
+        f.next_step='Open the public original and compare the governing-instrument chain in Rules & Approvals. Resolve amendments and lot applicability before deciding who approves plans or when.';
+      }
+      if(f.item==='Power' && /UGRC electric service areas/.test(f.source||'') && !/service.*unverified/.test(f.headline||'')){
+        f.status='verify';f.headline='Electric service to this lot is unverified';
+        f.detail='Saved map observation: '+prior.headline+'. Provider territory and nearby homes do not establish a reachable line, transformer capacity, a stub at the lot or connection costs.';
+        f.next_step='Obtain lot-specific service confirmation, connection location and capacity, and an itemized connection or extension quote.';f.cost=null;
+      }
+      if(f.item==='Natural gas' && /UGRC natural gas/.test(f.source||'') && !/service.*unverified/.test(f.headline||'')){
+        f.status='verify';f.headline='Natural gas service to this lot is unverified';
+        f.detail='Saved map observation: '+prior.headline+'. Approximate coverage or an absent map result does not establish main availability, capacity or connection costs. Confirm service before selecting natural gas, propane or electric heat.';f.cost=null;f.next_step='Confirm service and connection requirements with the provider.';
+      }
+      if(f.item==='Internet' && /FCC|Broadband|telecom/i.test(f.source||'')){
+        f.status='verify';
+        f.headline=(f.headline||'').replace('No fiber reported; cable from','Cable reported in the area:').replace('No fiber or cable; best wired option is','Wired service reported in the area:');
+        f.detail=(f.detail||'').replace(/Buyers of high-end spec homes expect fiber[^.]*\./g,'Address-level service and installation costs remain unverified.');
+      }
+      if(f.item==='Gas appliances' && /Plan uses gas appliances/.test(f.headline||'')){
+        f.status='verify';f.headline='Plan uses gas appliances; lot-specific gas service needs confirmation';
+        f.detail='The proposed gas appliances need a confirmed fuel supply. Approximate provider coverage or a missing map result does not establish gas availability. Confirm the fuel specification, reachable main, capacity and costs before selecting an alternative.';f.cost=null;
+      }
+      if(f.item==='Sewer vs. septic'){
+        f.detail=(f.detail||'').replace('The septic soil limits do not apply; budget the sewer connection and impact fee instead.','Subdivision evidence does not confirm this lot’s current connection, capacity or costs. Establish the wastewater system before excluding septic constraints.').replace('Sewer service avoids the septic limits on these soils.','Mapped coverage does not establish a lot-specific connection or capacity.');
+        f.headline=(f.headline||'').replace(/^Sewered: (.*) serves the subdivision$/,'Subdivision sewer reference: $1; lot connection unverified').replace('Septic likely required; soils rated','Wastewater system unverified; soils rated');
+        f.next_step='Confirm the applicable wastewater system and lot-specific service or onsite approval requirements before budgeting sewer or septic work.';
+      }
+      if(f.item==='Permit packet'){
+        f.status='verify';f.detail='Source materials and drafts do not establish application completeness. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.';
+        f.next_step='Review Rules & Approvals and the application checklist before scheduling the filing.';
+      }
+      if(/No lot-coverage cap/.test((f.headline||'')+' '+(f.detail||''))){
+        f.status='verify';f.headline=(f.headline||'').replace('No lot-coverage cap','Base-zone coverage reference; controlling limits unresolved');
+        f.detail=(f.detail||'').replace('No lot-coverage cap for the main house in this zone.','The base-zone reference does not establish the absence of coverage restrictions from other applicable instruments.');
+        f.next_step='Reconcile the base zone with overlays, recorded plats, development agreements and applicable covenants.';
+      }
+      if(f.item==='Fire hydrant' && !/^No mapped hydrant within/.test(f.headline||'')){
+        f.status='verify';f.cost=null;f.detail='The displayed distance is a mapped screening measurement to the parcel center, not an approved hose route to every part of the proposed building. Verify the building location, access route, available flow and current fire-authority requirements. Neither sprinkler requirements nor an exemption are established.';
+        f.next_step='Confirm the fire-protection design with the responsible fire authority.';
+      }
+      if(JSON.stringify(prior)!==JSON.stringify({status:f.status,headline:f.headline,detail:f.detail,next_step:f.next_step,cost:f.cost}))f.priorInterpretation=original.priorInterpretation||prior;
       return f;
     });
   }
-  root.LotReport = { reviewFindings:reviewFindings, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
+  root.LotReport = { reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
 })(typeof window !== 'undefined' ? window : globalThis);

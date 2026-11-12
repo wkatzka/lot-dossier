@@ -17,7 +17,7 @@ p.application.documentExtractions=[{permitType:'site_reference',documentId:'surv
 assert(w.SiteDocumentUI.panel(p).includes('survey.pdf#page=2'));
 p.documents[0].sourceUrl='javascript:alert(1)';assert(!w.SiteDocumentUI.panel(p).includes('javascript:'));
 assert(w.SiteDocumentUI.panel(p).includes('View raw document</button>'));
-const C=require('../web/city-application');w.LR_DATA={cityInspect:C.catalog};for(const f of ['permit-facts','permit-assistant','city-application'])w.eval(fs.readFileSync('web/'+f+'.js','utf8'));
+const C=require('../web/city-application');w.LR_DATA={cityInspect:C.catalog};for(const f of ['permit-facts','permit-assistant','site-decisions','answer-reviews','city-application'])w.eval(fs.readFileSync('web/'+f+'.js','utf8'));
 const project=structuredClone(require('../docs/ux-audit/phase-3/validation/synthetic-backup.json').project);project.documents=p.documents;
 w.document.body.innerHTML=w.CityApplication.render(project,'documents');
 assert(!w.document.querySelector('.site-documents'));assert(![...w.document.querySelectorAll('#city-source-doc option')].some(o=>['receipt','survey'].includes(o.value)));

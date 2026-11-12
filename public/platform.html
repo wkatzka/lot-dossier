@@ -2680,11 +2680,11 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     var health = await arcgisQuery(UGRC + '/HealthDistricts/FeatureServer/0', { geometry: ctx.parcel.point });
     var hdName = health.length ? health[0].attributes.DISTNAME : null, hk = HEALTH[hdName];
     var hd = hdName ? hdName + ' Health Department' : 'the local health department';
-    var sw = worst(sepR); ctx.facts.septic = { required: !sewer, rating: sw, hd: hd };
+    var sw = worst(sepR); ctx.facts.septic = { required: null, rating: sw, hd: hd };
     var reasonTxt = reasons.length ? ' Limiting factors: ' + reasons.map(function (r) { return r.interphrc.toLowerCase(); }).join(', ') + '.' : '';
     if (sewer) {
-      ctx.facts.septic.required = false;
-      out.push(F('septic', 'Sewer vs. septic', 'watch', sewerDist ? 'Inside ' + sewerDist : 'Inside a mapped sewer service area', 'Sewer service avoids the septic limits on these soils. Confirm the main is reachable from the lot and get the connection/impact fee.',
+      ctx.facts.septic.required = null;
+      out.push(F('septic', 'Sewer vs. septic', 'watch', sewerDist ? 'Inside ' + sewerDist : 'Inside a mapped sewer service area', 'Mapped district coverage does not establish a lot-specific connection or capacity. Confirm the wastewater system, provider commitment and connection costs. Septic feasibility remains conditional until the system is established.',
         sewerDist ? 'Weber County taxing districts' : 'Weber County sewer impact-fee area', null, ctx.cost('sewer_connection')));
     } else if (finDist && ctx.parcel.attrs.SUBDIV_NAME) {
       ctx.facts.septic.required = null;
@@ -2697,7 +2697,7 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     } else {
       var r = (sw || 'unrated').toLowerCase(), unknown = sewer === null;
       out.push(F('septic', 'Sewer vs. septic', unknown ? 'verify' : (sw === 'Very limited' ? 'flag' : 'watch'),
-        unknown ? 'Sewer service not mapped for this county; soils rated ' + r + ' if septic' : 'Septic likely required; soils rated ' + r + ' for absorption fields',
+        unknown ? 'Sewer service not mapped for this county; soils rated ' + r + ' if septic' : 'Wastewater system unverified; soils rated ' + r + ' if septic',
         (sewer === false ? 'No mapped sewer service.' : 'Sewer availability not mapped here.') + ' The soil survey rates septic absorption fields as ' + r + '.' + reasonTxt +
         " A \"very limited\" rating doesn't rule out septic, but expect a larger or engineered/alternative system. " + hd + ' issues the permit after a soil profile and percolation test.' +
         (hk ? ' ' + hk.rules + ' ' + hk.feeText : ''),
@@ -2766,35 +2766,28 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
 
   C.check_utilities = async function (ctx) {
     var pt = ctx.parcel.point, out = [];
-    var r = await Promise.all([UGRC + '/UtahElectricServiceAreas/FeatureServer/0', UGRC + '/UtahNaturalGasServiceAreas_Approx/FeatureServer/0',
-      UGRC + '/TelecomBoundaries/FeatureServer/0'].map(function (u) { return arcgisQuery(u, { geometry: pt }); }));
-    var homes = await arcgisQuery(lirUrl(ctx.parcel.county), { geometry: pt, distance: 400, where: 'BUILT_YR > 0', outFields: 'BUILT_YR' }).catch(function () { return []; });
-    var years = homes.map(function (h) { return +h.attributes.BUILT_YR; }).filter(Boolean).sort();
-    ctx.facts.homes_nearby = { n: years.length, newest: years[years.length - 1] };
-    if (r[0].length) {
-      var e = r[0][0].attributes, platted = !!ctx.parcel.attrs.SUBDIV_NAME;
-      if (years.length >= 5) {
-        out.push(F('utilities', 'Power', 'ok', e.PROVIDER + '; ' + years.length + ' homes within 400 m (newest built ' + years[years.length - 1] + ')',
-          'Occupied homes nearby mean distribution lines already serve the area' + (platted ? ', and recorded subdivisions normally have power stubbed to each lot as a plat condition' : '') +
-          '. The remaining cost is the service lateral from the lot line to the house, which is usually trenched with the other utilities.',
-          'UGRC electric service areas + county parcels', e.WEBLINK));
-      } else {
-        out.push(F('utilities', 'Power', 'watch', e.PROVIDER + ' territory; only ' + years.length + ' homes within 400 m',
-          'Few built homes nearby, so the nearest line or transformer may be some distance away. Line extensions are billed per foot and can add tens of thousands on rural lots.',
-          'UGRC electric service areas + county parcels', e.WEBLINK, ctx.cost('power_extension'), 'Request a ' + e.PROVIDER + ' line-extension estimate for the lot.'));
-      }
-    } else out.push(F('utilities', 'Power', 'flag', 'No electric provider mapped', '', 'UGRC electric service areas'));
-    ctx.facts.gas = r[1].length > 0;
-    if (r[1].length) {
-      var g = r[1][0].attributes;
-      out.push(F('utilities', 'Natural gas', 'ok', g.PROVIDER + ' service area (approximate)', 'Confirm a main runs along the lot frontage.', 'UGRC natural gas service areas', g.WEBLINK));
-    } else out.push(F('utilities', 'Natural gas', 'watch', 'No natural gas service mapped', 'Plan for propane or all-electric heat.', 'UGRC natural gas service areas', null, ctx.cost('propane')));
-    var prov = Array.from(new Set(r[2].map(function (f) { return f.attributes.PROVIDER; }))).sort().join(', ') || 'none mapped';
+    var serviceUrls = [UGRC + '/UtahElectricServiceAreas/FeatureServer/0', UGRC + '/UtahNaturalGasServiceAreas_Approx/FeatureServer/0', UGRC + '/TelecomBoundaries/FeatureServer/0'];
+    var r = await Promise.all(serviceUrls.map(function (u) { return arcgisQuery(u, { geometry: pt }).catch(function () { return null; }); }));
+    var homes = await arcgisQuery(lirUrl(ctx.parcel.county), { geometry: pt, distance: 400, where: 'BUILT_YR > 0', outFields: 'BUILT_YR' }).catch(function () { return null; });
+    var years = (homes || []).map(function (h) { return +h.attributes.BUILT_YR; }).filter(Boolean).sort();
+    ctx.facts.homes_nearby = { n: homes ? years.length : null, newest: years[years.length - 1] };
+    var electric = r[0] && r[0][0], gas = r[1] && r[1][0];
+    out.push(F('utilities', 'Power', 'verify', electric ? electric.attributes.PROVIDER + ' mapped territory; lot service unverified' : r[0] ? 'No electric provider returned by this map; service unverified' : 'Electric service-area lookup unavailable; service unverified',
+      (homes ? years.length + ' recorded homes within 400 m' + (years.length ? ' (newest built ' + years[years.length - 1] + ')' : '') + '. ' : 'Nearby-building lookup unavailable. ') +
+      'Mapped territory and nearby buildings do not establish a connection, available capacity, a transformer or a stub at this lot. Extension work and connection costs are not established.',
+      'UGRC electric service areas + county parcels', serviceUrls[0], null,
+      'Obtain lot-specific service confirmation, the connection location and capacity, and an itemized connection or extension quote from the provider.'));
+    // This flag describes a map observation only, never a confirmed connection.
+    ctx.facts.gas = r[1] === null ? null : !!gas;
+    out.push(F('utilities', 'Natural gas', 'verify', gas ? gas.attributes.PROVIDER + ' mapped area (approximate); lot service unverified' : r[1] ? 'No natural gas provider returned by this map; service unverified' : 'Natural gas service-area lookup unavailable; service unverified',
+      'Approximate service-area coverage does not establish a reachable main, capacity or connection cost. A missing map result does not require propane or an all-electric design.',
+      'UGRC natural gas service areas', serviceUrls[1], null, 'Confirm service and connection requirements for the proposed building before selecting the heating system.'));
+    var prov = Array.from(new Set((r[2] || []).map(function (f) { return f.attributes.PROVIDER; }))).sort().join(', ') || (r[2] === null ? 'lookup unavailable' : 'none returned by this map');
     var fccUrl = 'https://broadbandmap.fcc.gov/location-summary/fixed?lat=' + ctx.parcel.cy.toFixed(6) + '&lon=' + ctx.parcel.cx.toFixed(6);
     // Utah Broadband Center service areas, built from providers' FCC Broadband Data Collection filings (H3 hexagons, ~0.3 sq mi).
     var bb = await area(ctx, BROADBAND, { outFields: 'brand_name,max_advertised_download_speed,max_advertised_upload_speed,common_tech,category' }).catch(function () { return null; });
     if (!bb) {
-      out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov, 'The broadband availability layer did not respond. Buyers of high-end spec homes expect fiber.', 'UGRC telecom boundaries + FCC', fccUrl));
+      out.push(F('utilities', 'Internet', 'verify', 'Wireline telecom territory: ' + prov, 'The broadband availability layer did not respond. Address-level availability, capacity and installation costs remain unverified.', 'UGRC telecom boundaries + FCC', fccUrl));
       return out;
     }
     var best = {};
@@ -2809,13 +2802,13 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     var wired = list.filter(function (x) { return x.cat === 'wired'; }), other = list.filter(function (x) { return x.cat !== 'wired'; });
     ctx.facts.fiber = fiber.length > 0;
     var caveat = ' Providers report coverage to the FCC by hexagon (about 0.3 sq mi), so a listed provider serves part of the area around the lot, not necessarily this lot. A new lot may not be in the FCC location list until a home is built.';
-    var status = fiber.length ? 'ok' : wired.length ? 'watch' : 'verify';
+    var status = 'verify';
     var head = fiber.length ? 'Fiber reported nearby: ' + fiber.map(function (x) { return x.name + ' ' + spd(x.down); }).join(', ')
-      : cable.length ? 'No fiber reported; cable from ' + cable.map(function (x) { return x.name; }).join(', ')
-      : wired.length ? 'No fiber or cable; best wired option is ' + desc(wired[0]) : 'No wired broadband in this dataset; service availability unverified';
+      : cable.length ? 'Cable reported in the area: ' + cable.map(function (x) { return x.name; }).join(', ')
+      : wired.length ? 'Wired service reported in the area: ' + desc(wired[0]) : 'No wired broadband in this dataset; service availability unverified';
     out.push(F('utilities', 'Internet', status, head,
       'Wired: ' + (wired.map(desc).join('; ') || 'none') + '. Wireless and satellite: ' + (other.slice(0, 5).map(desc).join('; ') || 'none') + '.' + caveat +
-      (fiber.length ? '' : ' Buyers of high-end spec homes expect fiber; a line extension may be negotiable with a provider before closing.'),
+      ' Confirm address-level service, installation capacity and charges; advertised area speeds are not a commitment for this lot.',
       'Utah Broadband Center (FCC filings)', fccUrl, null,
       fiber.length ? 'Ask ' + fiber[0].name + "'s new-construction team to confirm service to this lot and any build-out charge." : 'Ask wired providers for a line-extension quote to the lot.'));
     return out;
@@ -3062,7 +3055,7 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
    * the site condition it runs into, and where the plan value came from. */
   C.check_plan_fit = async function (ctx) {
     var p = ctx.plan, fp = p.footprint || {}, fx = ctx.facts, out = [], src = p.src || {};
-    if (!p.footprint && !p.bedrooms && !p.foundation) return [];
+    if (!p.footprint && !p.bedrooms && !p.foundation && !p.fuel) return [];
     var from = function (k) { return src[k] ? ' (plan: ' + src[k] + ')' : ''; };
     var P = function (item, status, headline, detail, cost, next) { return F('plan', item, status, headline, detail, 'Plan ' + (p.filename ? '"' + p.filename + '"' : 'inputs') + ' vs. site findings', null, cost, next); };
     out.push(P('House and driveway vs. easements', 'verify', 'Easement clearance has not been established',
@@ -3101,9 +3094,10 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     }
 
     // Heating fuel vs. gas service
-    if (p.fuel === 'gas') out.push(fx.gas
-      ? P('Gas appliances', 'ok', 'Plan uses gas appliances; lot is in a natural gas service area', 'Gas appliances or a gas line schedule appear in the plan' + from('fuel') + '. Confirm the main runs along the frontage.')
-      : P('Gas appliances', 'watch', 'Plan uses gas appliances, but no natural gas service is mapped', 'Plan on a buried propane tank (setbacks from the house and lot lines apply) or convert to heat pumps.' + from('fuel'), ctx.cost('propane')));
+    if (p.fuel === 'gas') out.push(P('Gas appliances', 'verify', 'Plan uses gas appliances; lot-specific gas service needs confirmation',
+      'Gas appliances or a gas line schedule appear in the plan' + from('fuel') + '. ' +
+      (fx.gas ? 'An approximate provider area covers the lot. ' : 'The saved map result does not establish gas availability. ') +
+      'Confirm the fuel specification, reachable main, capacity and connection costs before choosing natural gas, propane or an electric alternative.'));
 
     // Exterior cladding vs. wildfire code
     var citesWui = (p.codes || []).some(function (c) { return /WILDLAND/i.test(c); });
@@ -3387,13 +3381,13 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     if (sewerDoc || sewerPlat) {
       var prov = sewerDoc ? sewerDoc.provider : title(sewerPlat);
       ctx.facts.sewer = prov;
-      ctx.facts.septic = Object.assign(ctx.facts.septic || {}, { required: false });
-      replaceFinding(ctx, 'septic', 'Sewer vs. septic', F('septic', 'Sewer vs. septic', 'watch', 'Sewered: ' + prov + ' serves the subdivision',
+      ctx.facts.septic = Object.assign(ctx.facts.septic || {}, { required: null });
+      replaceFinding(ctx, 'septic', 'Sewer vs. septic', F('septic', 'Sewer vs. septic', 'watch', 'Subdivision sewer reference: ' + prov + '; lot connection unverified',
         (sewerDoc ? '"' + sewerDoc.text.replace(/\s+/g, ' ').slice(0, 220) + '" (' + cite(sewerDoc.doc) + '). ' : '') +
         (sewerPlat ? 'The recorded plat carries the ' + title(sewerPlat) + ' approval block. ' : '') +
-        'The septic soil limits do not apply; budget the sewer connection and impact fee instead.',
+        'This record is a subdivision-level service lead, not confirmation of this lot’s current connection, capacity or costs. Confirm the applicable wastewater system before excluding septic constraints or budgeting connection work.',
         sewerDoc ? cite(sewerDoc.doc) : 'Recorded plat', sewerDoc ? sewerDoc.doc.url : platUrl, ctx.cost('sewer_connection'),
-        'Get the connection and impact fee from ' + prov + '.'));
+        'Obtain a current lot-specific service commitment and connection requirements from ' + prov + '.'));
     }
     var waterDoc = util.find(function (q) { return q.kind === 'culinary water' && q.provider; });
     if (waterDoc) {
@@ -3908,8 +3902,8 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     I({ group: 'Drawings', title: 'Outdoor lighting plan (dark-sky)', status: has('lighting') ? 'ready' : kb && kb.lighting ? 'pro' : kb ? 'na' : 'you', who: kb && !kb.lighting ? '' : 'Designer', lead: [1, 3], why: kb && kb.lighting ? 'City land use code 108-16' : '',
       detail: kb && kb.lighting ? kb.lighting + ' Show each exterior fixture, its height and a cut sheet.' : kb ? 'Not required here.' : 'Check whether ' + juris + ' requires an exterior lighting plan.' });
     var steep = f.slope != null && f.slope > 15;
-    I({ group: 'Reports', title: 'Geotechnical report', status: steep ? 'pro' : 'optional', who: 'Geotechnical engineer', lead: steep ? [15, 25] : [0, 0], why: '10-20-909(12)(f): only if slope exceeds 15% and the city requires it',
-      detail: 'Lot slope about ' + (f.slope != null ? f.slope.toFixed(1) + '%' : '?') + (steep ? ', so the city may require one.' : ', so the statute does not require one for the application.') +
+    I({ group: 'Reports', title: 'Geotechnical report', status: 'you', who: 'Geotechnical engineer', lead: steep ? [15, 25] : [0, 0], why: 'Verify applicable geotechnical and development conditions',
+      detail: 'Lot slope about ' + (f.slope != null ? f.slope.toFixed(1) + '%' : '?') + '. Slope alone does not determine whether a report is required. Check mapped hazards, recorded plat/development conditions and the authority’s requirements.' +
         (f.water_table_in != null && f.water_table_in < 48 ? ' Recommended anyway: the soil survey shows a seasonal water table about ' + f.water_table_in + ' in. down.' : '') });
     I({ group: 'Stormwater', title: 'Storm water statement, SWPPP and city stormwater permit', status: est.disturb ? 'drafted' : 'partial', who: 'You / builder', lead: [1, 2], why: '10-20-909(12)(g); city code ch. 6.15',
       detail: (est.disturb ? 'Estimated land disturbance about ' + fmt(est.disturb) + ' sq ft and ' + fmt(est.cut) + ' cubic yards of excavation' + (kb && kb.stormwater ? ', above the city\'s 500 sq ft / 20 cubic yard permit threshold. ' : '. ') : '') +
@@ -3926,12 +3920,9 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     I({ group: 'Fees', title: 'Permit, plan review and impact fees', status: 'you', who: 'You', lead: [0, 0], why: '10-20-909(12)(h)',
       detail: (feeRow ? feeRow.headline + '. ' : '') + (est.esu > 1 ? 'With about ' + fmt(est.impervious) + ' sq ft of impervious area this lot is ' + est.esu + ' storm-drain units, so the storm drain impact fee is about $' + fmt(est.stormFee) + ' rather than one unit. ' : '') + 'Paid at issuance through the portal.' });
 
-    // Timeline: everything that gates submittal runs in parallel; then screening (3) + plan review (14) business days.
-    var gating = items.filter(function (x) { return x.status !== 'ready' && x.status !== 'na' && x.status !== 'optional' && x.lead; });
-    var lo = Math.max.apply(0, gating.map(function (x) { return x.lead[0]; }).concat([1])), hi = Math.max.apply(0, gating.map(function (x) { return x.lead[1]; }).concat([2]));
-    var now = new Date(), subLo = addBusinessDays(now, lo), subHi = addBusinessDays(now, hi);
-    var timeline = { submitLo: day(subLo), submitHi: day(subHi), screen: 3, review: 14, issueLo: day(addBusinessDays(subLo, 17)), issueHi: day(addBusinessDays(subHi, 17)),
-      critical: gating.filter(function (x) { return x.lead[1] === hi; }).map(function (x) { return x.title; }) };
+    // Durations and prerequisite order have not been established for this project.
+    items.forEach(function(item){delete item.lead;});
+    var timeline = {status:'unresolved', dependencies:items.filter(function(x){return !['ready','na'].includes(x.status);}).map(function(x){return x.title;})};
 
     // Application data sheet.
     var zstd = f.zone_std || {}, rows = [];
@@ -3954,7 +3945,7 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
       R('Building height', p.height_ft && p.height_ft + "'", 'Plan'); R('Foundation', p.foundation, 'Plan'); R('Heating fuel', p.fuel, 'Plan'); R('Fireplace', p.fireplace, 'Plan');
       R('Construction valuation', est.valuation && '$' + fmt(est.valuation), 'ICC Building Valuation Data, ' + BVD.asOf);
     }
-    R('Fire sprinklers', hydrant > 600 ? 'Likely required (NFPA 13D): nearest hydrant about ' + fmt(hydrant) + ' ft by road' : hydrant ? 'Not expected: hydrant about ' + fmt(hydrant) + ' ft by road' : null, 'Hydrant map + roads');
+    R('Fire sprinklers', 'Requirement unresolved; confirm proposed-building access, hose route and available fire flow with the fire authority', 'Hydrant map is screening evidence only');
     R('Ground snow load', f.snow && f.snow.pg && f.snow.pg + ' psf', 'Utah Snow Load Study');
     R('Seismic', f.sds != null ? 'SDS ' + f.sds.toFixed(2) + ' g, seismic design category ' + (f.irc_sdc || '?') : null, 'USGS, site class D default');
     R('Soil bearing', p.structural && p.structural.bearing_psf ? p.structural.bearing_psf + ' psf (plan)' : (f.soils || []).some(function (s) { return /clay|silt/i.test(s); }) ? '1,500 psf presumptive (IRC Table R401.4.1, clay/silt soils) unless the geotech says otherwise' : null, 'Soil survey');
@@ -3978,9 +3969,10 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     var ready = items.filter(function (x) { return x.status === 'ready' || x.status === 'drafted'; }).length, needed = items.filter(function (x) { return x.status !== 'na' && x.status !== 'optional'; }).length;
     f.packet = { jurisdiction: juris, items: items, letters: letters, rows: rows, est: est, timeline: timeline, sitePlan: sp && !sp.error ? { svg: sp.svg, fits: sp.fits, samples: sp.samples } : null,
       sitePlanError: sp && sp.error, ready: ready, needed: needed, portal: kb && kb.portal, checklist: cityReq };
+    f.packet = reviewPacket(f.packet);
     return [F('permits', 'Permit packet', ready >= needed ? 'ok' : 'verify', ready + ' of ' + needed + ' application items ready or drafted',
-      'Utah law makes the city screen a complete application in 3 business days and finish plan review for a house within 14 business days after that (Utah Code 10-20-909). The permit packet below lists every item, fills in what public records and the plan show, and drafts the requests to the water, sewer and fire providers' + (hoa ? ' and the HOA' : '') + '. Earliest realistic submittal ' + timeline.submitLo + ' to ' + timeline.submitHi + '; the longest lead item is: ' + timeline.critical.slice(0, 2).join('; ') + '.',
-      'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Send the drafted requests now; they run in parallel with the survey and engineering.')];
+      'Source materials and drafts are not confirmed submission prerequisites. Review Rules & Approvals, application answers and supporting documents. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.',
+      'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Resolve the applicable approval sequence before scheduling the filing.')];
   };
 
   C.check_pool = async function (ctx) {
@@ -4098,7 +4090,26 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
     ctx.facts.areaSources=areas;
     areas.forEach(function(m){findings.push(F('land','Lot area · '+m.name,'verify',m.value.toFixed(4)+' acres ('+Math.round(m.value*43560)+' sq ft)',m.basis+'. Values are retained separately to compare source agreement; no value establishes a surveyed legal area.',m.name,m.url));});
     if(areas.length>1){var values=areas.map(function(m){return m.value;});findings.push(F('land','Lot area source comparison','verify','Source spread '+((Math.max.apply(null,values)-Math.min.apply(null,values))*43560).toFixed(1)+' sq ft','Compare the individually cited parcel, GIS and available plat measurements above. Parcel records and GIS can share an upstream source; matching values are not independent confirmation.'));}
-    return { findings: findings, facts: ctx.facts, documents: await ctx.docs };
+    return { findings: reviewFindings(findings), facts: ctx.facts, documents: await ctx.docs };
+  }
+
+  function reviewPacket(packet) {
+    if(!packet)return packet;
+    var p=JSON.parse(JSON.stringify(packet));
+    p.items=(p.items||[]).map(function(item){
+      delete item.lead;
+      if(item.title==='Geotechnical report' && (item.status==='optional'||/statute does not require|only if slope/.test((item.detail||'')+(item.why||'')))){
+        item.status='you';item.why='Verify applicable geotechnical and development conditions';
+        item.detail='Report applicability is unresolved. Check site hazards, recorded plat/development conditions and authority requirements; mapped slope alone does not establish an exemption.';
+      }
+      return item;
+    });
+    p.rows=(p.rows||[]).map(function(row){return row[0]==='Fire sprinklers'?[row[0],'Requirement unresolved; confirm building access, hose route and fire flow with the fire authority','Mapped hydrant distance is screening evidence only']:row;});
+    if(p.timeline&&p.timeline.status!=='unresolved')p.priorTimeline=p.priorTimeline||p.timeline;
+    p.timeline={status:'unresolved',dependencies:p.items.filter(function(x){return !['ready','na'].includes(x.status);}).map(function(x){return x.title;})};
+    p.ready=p.items.filter(function(x){return ['ready','drafted'].includes(x.status);}).length;
+    p.needed=p.items.filter(function(x){return !['na','optional'].includes(x.status);}).length;
+    return p;
   }
 
   function reviewFindings(findings) {
@@ -4114,10 +4125,57 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
       if(f.item==='Flood zone'&&/Zone .*D.*minimal flood hazard/.test(f.headline)){f.status='verify';f.headline=f.headline.replace(': minimal flood hazard',': flood hazard partly undetermined');f.detail='Interpretation corrected: FEMA Zone D is undetermined hazard, not minimal risk. Check the effective panel and Zone X subtype before siting improvements. Source data has not been refreshed.';}
       if(f.item==='Internet'&&/No wired broadband reported; wireless and satellite only/.test(f.headline)){f.status='verify';f.headline='No wired broadband in this dataset; service availability unverified';}
       if(f.item==='Drinking-water source protection'&&/Septic systems are not allowed|allows septic/.test(f.detail)){f.detail='Interpretation corrected: mapped source-protection overlap may restrict onsite wastewater. Confirm the zone boundary, source type and current applicable rules. This map alone does not establish a lot-specific septic prohibition or approval.';}
+      // Apply the same interpretation boundary to older saved reports and new findings.
+      // The saved snapshot itself is not mutated; retain its original text for audit history.
+      var prior = {status:f.status, headline:f.headline, detail:f.detail, next_step:f.next_step, cost:f.cost};
+      if(/1882728/.test((f.headline||'')+' '+(f.detail||'')+' '+(f.next_step||'')) && /only sold by the Recorder/.test(f.detail||'')){
+        f.status='verify';
+        f.detail=f.detail.replace(/The recorded text itself is only sold by the Recorder[^.]*\./g,'Public original entry 1882728 is available from the Wolf Creek Resort Master HOA website. Public availability does not establish that it controls this lot; reconcile parcel coverage, amendments, reviewer authority and approval timing.');
+        f.source='Public original declaration · entry 1882728';
+        f.url='https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf';
+        f.next_step='Open the public original and compare the governing-instrument chain in Rules & Approvals. Resolve amendments and lot applicability before deciding who approves plans or when.';
+      }
+      if(f.item==='Power' && /UGRC electric service areas/.test(f.source||'') && !/service.*unverified/.test(f.headline||'')){
+        f.status='verify';f.headline='Electric service to this lot is unverified';
+        f.detail='Saved map observation: '+prior.headline+'. Provider territory and nearby homes do not establish a reachable line, transformer capacity, a stub at the lot or connection costs.';
+        f.next_step='Obtain lot-specific service confirmation, connection location and capacity, and an itemized connection or extension quote.';f.cost=null;
+      }
+      if(f.item==='Natural gas' && /UGRC natural gas/.test(f.source||'') && !/service.*unverified/.test(f.headline||'')){
+        f.status='verify';f.headline='Natural gas service to this lot is unverified';
+        f.detail='Saved map observation: '+prior.headline+'. Approximate coverage or an absent map result does not establish main availability, capacity or connection costs. Confirm service before selecting natural gas, propane or electric heat.';f.cost=null;f.next_step='Confirm service and connection requirements with the provider.';
+      }
+      if(f.item==='Internet' && /FCC|Broadband|telecom/i.test(f.source||'')){
+        f.status='verify';
+        f.headline=(f.headline||'').replace('No fiber reported; cable from','Cable reported in the area:').replace('No fiber or cable; best wired option is','Wired service reported in the area:');
+        f.detail=(f.detail||'').replace(/Buyers of high-end spec homes expect fiber[^.]*\./g,'Address-level service and installation costs remain unverified.');
+      }
+      if(f.item==='Gas appliances' && /Plan uses gas appliances/.test(f.headline||'')){
+        f.status='verify';f.headline='Plan uses gas appliances; lot-specific gas service needs confirmation';
+        f.detail='The proposed gas appliances need a confirmed fuel supply. Approximate provider coverage or a missing map result does not establish gas availability. Confirm the fuel specification, reachable main, capacity and costs before selecting an alternative.';f.cost=null;
+      }
+      if(f.item==='Sewer vs. septic'){
+        f.detail=(f.detail||'').replace('The septic soil limits do not apply; budget the sewer connection and impact fee instead.','Subdivision evidence does not confirm this lot’s current connection, capacity or costs. Establish the wastewater system before excluding septic constraints.').replace('Sewer service avoids the septic limits on these soils.','Mapped coverage does not establish a lot-specific connection or capacity.');
+        f.headline=(f.headline||'').replace(/^Sewered: (.*) serves the subdivision$/,'Subdivision sewer reference: $1; lot connection unverified').replace('Septic likely required; soils rated','Wastewater system unverified; soils rated');
+        f.next_step='Confirm the applicable wastewater system and lot-specific service or onsite approval requirements before budgeting sewer or septic work.';
+      }
+      if(f.item==='Permit packet'){
+        f.status='verify';f.detail='Source materials and drafts do not establish application completeness. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.';
+        f.next_step='Review Rules & Approvals and the application checklist before scheduling the filing.';
+      }
+      if(/No lot-coverage cap/.test((f.headline||'')+' '+(f.detail||''))){
+        f.status='verify';f.headline=(f.headline||'').replace('No lot-coverage cap','Base-zone coverage reference; controlling limits unresolved');
+        f.detail=(f.detail||'').replace('No lot-coverage cap for the main house in this zone.','The base-zone reference does not establish the absence of coverage restrictions from other applicable instruments.');
+        f.next_step='Reconcile the base zone with overlays, recorded plats, development agreements and applicable covenants.';
+      }
+      if(f.item==='Fire hydrant' && !/^No mapped hydrant within/.test(f.headline||'')){
+        f.status='verify';f.cost=null;f.detail='The displayed distance is a mapped screening measurement to the parcel center, not an approved hose route to every part of the proposed building. Verify the building location, access route, available flow and current fire-authority requirements. Neither sprinkler requirements nor an exemption are established.';
+        f.next_step='Confirm the fire-protection design with the responsible fire authority.';
+      }
+      if(JSON.stringify(prior)!==JSON.stringify({status:f.status,headline:f.headline,detail:f.detail,next_step:f.next_step,cost:f.cost}))f.priorInterpretation=original.priorInterpretation||prior;
       return f;
     });
   }
-  root.LotReport = { reviewFindings:reviewFindings, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
+  root.LotReport = { reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -4822,7 +4880,8 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
 
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = LR.reviewFindings(r.findings), plan = r.plan;
-    var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x); }).length; };
+    var reviewProject=window.SiteDecisions && window.SiteDecisions.forReport(r);
+    var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x) && (!reviewProject || window.SiteDecisions.inScope(reviewProject,x)) && !(reviewProject && window.SiteDecisions.status(reviewProject,x).closed); }).length; };
     var costs = rollup(f);
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
@@ -4833,9 +4892,10 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
             (st.files.length ? '<span class="chk-files">Attached: ' + st.files.map(function (f) { return esc(f.name); }).join(', ') + '</span>' : '') + '</div>'
           : '<div class="chk" data-key="' + esc(k) + '"><div class="chk-seg" role="group" aria-label="Checklist status">' +
             ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
-            '</div><label class="chk-attach">Attach file<input type="file" multiple></label><ul class="chk-list"></ul></div>';
+            '</div><label class="chk-attach">Attach file<input type="file" multiple></label><p class="hint">Attachments add evidence. Review it before marking this item Done.</p><ul class="chk-list"></ul></div>';
       }
-      return '<article class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + STATUS[x.status] + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
+      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
+      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(decision.state):STATUS[x.status]) + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
         (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
         '<div class="src">' + src + '</div>' + chk + '</div></article>';
@@ -4897,7 +4957,8 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
     if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
-    var tl = pk.timeline, pct = Math.round(pk.ready / pk.needed * 100);
+    pk = LR.reviewPacket(pk);
+    var pct = pk.needed ? Math.round(pk.ready / pk.needed * 100) : 0;
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
     var items = pk.items.map(function (it) {
@@ -4921,12 +4982,9 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     }).join('');
     var rows = pk.rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td><td class="pk-src">' + esc(r[2]) + '</td></tr>'; }).join('');
     return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + esc(pk.jurisdiction) + '</h2>' +
-      '<p class="pk-sub">Everything public records and your plan let us fill in, estimate or draft. Utah law gives the city 3 business days to screen a complete application and 14 more to finish plan review for a house (Utah Code 10-20-909), so a complete packet on day one is the fastest path.</p>' +
+      '<p class="pk-sub">Review the source materials, applicable approvals and proposed-work answers before preparing a filing handoff.</p>' +
       '<div class="pk-meter"><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><span><b>' + pk.ready + ' of ' + pk.needed + '</b> source-packet items available or drafted — not application completeness</span></div>' +
-      '<ol class="pk-timeline"><li><b>Today</b> Send the drafted requests; order the survey' + (pk.items.some(function (i) { return /Structural calculations/.test(i.title) && i.status !== 'ready'; }) ? ' and structural engineering' : '') + '.</li>' +
-      '<li><b>' + esc(tl.submitLo) + ' to ' + esc(tl.submitHi) + '</b> Earliest realistic submittal. Longest lead: ' + esc(tl.critical.join('; ')) + '.</li>' +
-      '<li><b>+3 business days</b> City must accept or reject the application as incomplete.</li>' +
-      '<li><b>' + esc(tl.issueLo) + ' to ' + esc(tl.issueHi) + '</b> Plan review due (14 business days after screening). Holidays and correction rounds can add time.</li></ol>' +
+      '<ol class="pk-timeline"><li><b>Resolve prerequisites</b> Confirm which approvals apply and whether they precede submission, issuance or construction.</li><li><b>Establish durations</b> Professional work and authority turnaround are not established for this project. No submission or issuance date is predicted.</li><li><b>Check review conditions</b> Statutory review periods depend on the application and applicable exceptions; they are not a project completion guarantee. <a href="https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html" target="_blank" rel="noopener">Utah Code §10-20-909</a></li></ol>' +
       (pk.portal ? '<p class="pk-portal">Submit through the <a href="' + esc(pk.portal) + '" target="_blank" rel="noopener">city permit portal</a>' + (pk.checklist ? ' · <a href="' + esc(pk.checklist) + '" target="_blank" rel="noopener">city submission checklist</a>' : '') + '.</p>' : '') +
       '<ol class="pk-items">' + items + '</ol>' +
       '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
@@ -4939,8 +4997,8 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
   }
 
   function checklistSummary(f, state, saved) {
-    var items = f.filter(actionable), done = 0, files = 0;
-    items.forEach(function (x) { var st = (state && state[itemKey(x)]) || { status: 'todo', files: [] }; if (st.status !== 'todo') done++; files += st.files.length; });
+    var items = f.filter(function(x){var p=window.SiteDecisions&&window.SiteDecisions.forReport(last);return actionable(x)&&(!p||window.SiteDecisions.inScope(p,x));}), done = 0, files = 0;
+    items.forEach(function (x) { var st = (state && state[itemKey(x)]) || { status: 'todo', files: [] }; if (window.SiteDecisions && window.SiteDecisions.forReport(last) ? window.SiteDecisions.status(window.SiteDecisions.forReport(last),x).closed : st.status !== 'todo') done++; files += st.files.length; });
     var pct = items.length ? Math.round(done / items.length * 100) : 100;
     return '<div class="chk-sum"><h2>Checklist</h2><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
       '<div class="chk-sum-row"><span><b class="chk-done">' + done + '</b> of ' + items.length + ' items closed · <b class="chk-nfiles">' + files + '</b> file' + (files === 1 ? '' : 's') + ' attached</span>' +
@@ -4998,8 +5056,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     Array.prototype.forEach.call(e.target.files, function (f) {
       st.files.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), name: f.name, size: f.size, type: f.type, added: Date.now(), blob: f });
     });
-    // Attaching the document usually means the item is handled; mark it done unless the user chose N/A.
-    if (st.status === 'todo' && e.target.files.length) st.status = 'done';
+    // Receiving evidence does not resolve the finding. Keep the user's current status.
     e.target.value = '';
     checklist[k] = st; Store.put(k, st); applyState(el, st); refreshSummary();
   });
@@ -5032,7 +5089,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
   });
   var renderedReportKey = '';
   function showReport(fromHistory) {
-    var nextReportKey=JSON.stringify(last), reuse=renderedReportKey===nextReportKey && $('rv-body').children.length;
+    var nextReportKey=JSON.stringify([last,window.SiteDecisions&&window.SiteDecisions.forReport(last)?.revision]), reuse=renderedReportKey===nextReportKey && $('rv-body').children.length;
     if(!reuse){
     renderedReportKey=nextReportKey;
     $('rv-body').innerHTML = reportHTML(last, null, false);
@@ -5131,10 +5188,10 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     categories.forEach(c=>{
       c.nodes.forEach(n=>panel.appendChild(n));
       const rows=c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads'));
-      c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.classList.contains('s-'+s)).length]));
+      c.counts=Object.fromEntries(['flag','watch','verify','ok'].map(s=>[s,rows.filter(r=>r.dataset.researchOnly!=='true'&&r.dataset.reviewClosed!=='true'&&r.classList.contains('s-'+s)).length]));
       const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';name.textContent=c.label;tr.append(name);
       for(const status of ['flag','watch','verify','ok']){const td=document.createElement('td');td.className='topic-'+status;td.textContent=c.counts[status];if(!c.counts[status])td.classList.add('is-zero');tr.append(td);}
-      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);evidence.textContent=rows.length+(rows.length===1?' finding':' findings')+(leads?' · '+leads+' record leads':'');tr.append(evidence);
+      const evidence=document.createElement('td');const leads=c.nodes.reduce((n,x)=>n+x.querySelectorAll('.source-leads .frow').length,0);const closed=rows.filter(r=>r.dataset.reviewClosed==='true').length;const optional=rows.some(r=>r.dataset.researchOnly==='true');evidence.textContent=(optional?'Optional research · ':'')+rows.length+(rows.length===1?' finding':' findings')+(closed?' · '+closed+' resolved':'')+(leads?' · '+leads+' record leads':'');tr.append(evidence);
       const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='topic-details';b.id='category-'+c.key;b.setAttribute('aria-controls',panel.id);b.dataset.category=c.key;b.textContent='View details';b.setAttribute('aria-label','View '+c.label+' details');td.append(b);tr.append(td);c.resource=['contacts','actions','costs'].includes(c.key);if(c.resource){b.textContent=c.label;resources.append(b);}else chips.append(tr);c.button=b;c.tableRow=tr;
       b.addEventListener('click',()=>{select(c);panel.focus({preventScroll:true});panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
     });
@@ -5158,7 +5215,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
       const scroll=document.createElement('div');scroll.className='status-findings-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Finding summaries');inner.append(scroll);
       const table=document.createElement('table');table.className='status-findings-table';table.innerHTML='<thead><tr><th scope="col">Topic / finding</th><th scope="col">Summary</th><th scope="col"><span class="sr-only">Details</span></th></tr></thead><tbody></tbody>';scroll.append(table);
       const body=table.querySelector('tbody');let count=0;
-      matches.forEach(c=>c.nodes.forEach(n=>Array.from(n.querySelectorAll('.frow')).filter(row=>!row.closest('.source-leads')&&(!status||row.classList.contains('s-'+status))).forEach(row=>{
+      matches.forEach(c=>c.nodes.forEach(n=>Array.from(n.querySelectorAll('.frow')).filter(row=>!row.closest('.source-leads')&&(!status||(row.dataset.researchOnly!=='true'&&row.dataset.reviewClosed!=='true'&&row.classList.contains('s-'+status)))).forEach(row=>{
         count++;const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';
         const topic=document.createElement('small');topic.textContent=c.label;name.append(topic);
         const title=document.createElement('span');title.textContent=row.querySelector('.item')?.textContent||c.label;name.append(title);tr.append(name);
@@ -5322,6 +5379,87 @@ function scopeFacts(pages,document){const out=[];for(const p of pages)for(const 
 const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads,recommendations,siteRecommendations,candidate,coverage,documentMatches,documentRequirement,valuation,scopeFacts};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PermitAssistant=api;
 })(typeof window!=='undefined'?window:globalThis);
 
+/* Shared, version-bound site review decisions. Observations and legal approvals remain separate. */
+(function(root){'use strict';
+const clone=x=>JSON.parse(JSON.stringify(x)),clean=x=>String(x||'').trim(),required=(x,m)=>{if(!x)throw Error(m);};
+const id=f=>encodeURIComponent(f.section||'')+'/'+encodeURIComponent(f.item||'');
+const finding=(p,key)=>(p.report.findings||[]).find(f=>id(f)===key);
+const fingerprint=(p,f)=>JSON.stringify({finding:f,scope:p.application.ruleScope||{},plan:f.section==='plan'?(p.planVersion||0):null});
+const latest=(p,d)=>!(p.documents||[]).some(x=>x.family===d.family&&x.version>d.version);
+function status(p,f){
+ const r=p.siteReviews?.items?.[id(f)];if(!r)return {state:'unreviewed',closed:false};
+ const stale=r.fingerprint!==fingerprint(p,finding(p,id(f))||f)||(r.references||[]).some(ref=>ref.documentId&&!(p.documents||[]).some(d=>d.id===ref.documentId&&d.hash===ref.hash&&latest(p,d)));
+ return {...r,state:stale?'stale':r.state,closed:!stale&&['resolved','not-applicable'].includes(r.state)};
+}
+function migrate(p,records,now){
+ const ledger=clone(p.siteReviews||{version:1,items:{},history:[],legacy:{}});
+ for(const row of records||[]){required(row.key.startsWith(p.propertyKey+'|'),'Legacy checklist belongs to another property.');
+  const record={status:row.status,files:(row.files||[]).map(f=>({name:f.name,id:f.id})),provenance:'legacy-unverified'};
+  if(JSON.stringify(ledger.legacy[row.key]?.record)!==JSON.stringify(record)){
+   if(ledger.legacy[row.key])ledger.history.push({at:now,type:'legacy-superseded',key:row.key,...ledger.legacy[row.key]});
+   ledger.legacy[row.key]={record,importedAt:now};
+  }
+ }
+ return ledger;
+}
+function apply(p,a,now){
+ const f=finding(p,a.id);required(f,'The finding is no longer present. Refresh before reviewing.');
+ required(['resolved','not-applicable','needs-evidence'].includes(a.state),'Choose a review disposition.');
+ required(clean(a.reviewer)&&clean(a.basis)&&clean(a.conclusion),'Record reviewer, conclusion and evidence reasoning.');
+ required(clean(a.scope),'Explain why the evidence applies to this parcel and proposed work.');
+ const refs=a.references||[{documentId:a.documentId,url:a.url,locator:a.locator}];
+ required(Array.isArray(refs)&&refs.length<=20,'Choose up to 20 evidence references.');
+ const references=refs.filter(r=>r.documentId||r.url).map(r=>{
+  required(clean(r.locator),'Cite a page, section or specific source location.');
+  const role=r.role||'supports';required(['supports','contradicts','excluded'].includes(role),'Choose the evidence relationship.');
+  if(r.documentId){const d=p.documents.find(d=>d.id===r.documentId);required(d&&latest(p,d),'Choose a current document version.');return {documentId:d.id,hash:d.hash,locator:clean(r.locator),name:d.name,role};}
+  let url;try{url=new URL(r.url);}catch{}required(url&&url.protocol==='https:'&&!url.username&&!url.password,'Use an HTTPS original-source URL.');
+  return {url:url.href,locator:clean(r.locator),role};
+ });
+ required(a.state==='needs-evidence'||references.some(r=>r.role==='supports'),'A resolved or not-applicable decision needs cited evidence.');
+ required(a.state!=='needs-evidence'||clean(a.missing),'Name the specific missing evidence or unresolved question.');
+ required(!references.some(r=>r.role==='contradicts')||clean(a.conflicts),'Explain how conflicting evidence was reconciled or what remains open.');
+ required(a.confirmed===true,'Confirm you reviewed applicability and conflicting sources.');
+ const ledger=migrate(p,[],now),previous=ledger.items[a.id];
+ if(previous)ledger.history.push({at:now,type:'decision-superseded',id:a.id,decision:previous});
+ ledger.items[a.id]={state:a.state,reviewer:clean(a.reviewer),basis:clean(a.basis),conclusion:clean(a.conclusion),scope:clean(a.scope),conflicts:clean(a.conflicts),missing:clean(a.missing),references,fingerprint:fingerprint(p,f),at:now};return ledger;
+}
+function inScope(p,f){return f.section!=='pool'||p.application.researchScope?.pool==='included';}
+function openFindings(p,findings){return (findings||p.report.findings||[]).filter(f=>inScope(p,f)&&!status(p,finding(p,id(f))||f).closed);}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function panel(p,key){
+ const f=finding(p,key);if(!f)return '';
+ const r=status(p,f),input=(name,label,value='')=>'<label>'+label+'<input name="'+name+'" value="'+esc(value)+'"></label>',area=(name,label,value='')=>'<label>'+label+'<textarea name="'+name+'">'+esc(value)+'</textarea></label>';
+ return '<section class="pw-card" id="site-decision"><h2>Review: '+esc(f.item)+'</h2><p>'+esc(f.headline)+'</p><p>Review status: <strong>'+esc(r.state)+'</strong>. A recorded conclusion does not itself grant an authority approval.</p>'+(r.conclusion?'<p>'+esc(r.conclusion)+'</p><p>Reviewed by '+esc(r.reviewer)+' · '+esc(r.at)+'</p>':'')+
+ '<form data-command="site_review" data-id="'+esc(key)+'"><label>Disposition<select name="state"><option value="needs-evidence">Needs specific evidence</option><option value="resolved">Question resolved with evidence</option><option value="not-applicable">Not applicable to this work</option></select></label>'+input('reviewer','Reviewer',r.reviewer)+area('conclusion','Conclusion',r.conclusion)+area('scope','Parcel and work applicability',r.scope)+area('basis','Evidence reasoning',r.basis)+area('conflicts','Competing sources and why one controls (or remains unresolved)',r.conflicts)+area('missing','Specific missing evidence / next question',r.missing)+
+ '<label>Current evidence document<select name="documentId"><option value="">Use source URL below</option>'+(p.documents||[]).filter(d=>latest(p,d)).map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+' · v'+d.version+'</option>').join('')+'</select></label>'+input('url','Original-source HTTPS URL')+input('locator','Page / section / source location')+input('comparisonUrl','Additional original-source HTTPS URL (optional)')+input('comparisonLocator','Additional page / section')+'<label>Additional source relationship<select name="comparisonRole"><option value="contradicts">Conflicts with the conclusion</option><option value="supports">Supports the conclusion</option><option value="excluded">Excluded: wrong property or scope</option></select></label><label><input type="checkbox" name="confirmed"> I reviewed parcel applicability and conflicting sources.</label><button type="submit">Save review decision</button></form>'+
+ '<h3>Reviewed sources</h3>'+((r.references||[]).map(ref=>'<p>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'" target="_blank" rel="noopener">Original source</a>':esc(ref.name)+' <button type="button" data-action="download-file" data-id="'+esc(ref.documentId)+'">View original</button>')+'</p>').join('')||'<p>No cited review yet.</p>')+'<h3>Prior decisions</h3>'+((p.siteReviews?.history||[]).filter(h=>h.id===key&&h.decision).map(h=>'<p>'+esc(h.decision.at)+' · '+esc(h.decision.reviewer)+' · '+esc(h.decision.state)+': '+esc(h.decision.conclusion)+'</p>').join('')||'<p>No earlier decision.</p>')+'</section>';
+}
+function workspace(p,key){return '<section class="pw-card"><h2>Site review decisions</h2><label>Question<select data-site-question><option value="">Choose a finding</option>'+(p.report.findings||[]).map(f=>'<option value="'+esc(id(f))+'"'+(id(f)===key?' selected':'')+'>'+esc(f.item)+' · '+esc(status(p,f).state)+'</option>').join('')+'</select></label><p>Record the conclusion and its evidence here. Earlier checklist marks are unverified history.</p></section>'+panel(p,key);}
+let active=null;
+function setActive(p){active=p;}
+function forReport(r){return active&&active.propertyKey===r.parcel.county+'|'+r.parcel.id?active:null;}
+const api={id,finding,fingerprint,status,migrate,apply,openFindings,panel,workspace,setActive,forReport,inScope};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SiteDecisions=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+/* Version-bound review of a single answer in a single permit worksheet. */
+(function(root){'use strict';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const D=typeof module!=='undefined'&&module.exports?require('./site-decisions'):root.SiteDecisions;
+const clean=v=>String(v||'').trim(),need=(v,m)=>{if(!v)throw Error(m);};
+function fingerprint(p,r){return JSON.stringify({value:r.value,basis:r.basis,site:p.siteVersion,plan:p.planVersion||0,scope:p.application.ruleScope||{},documents:(p.documents||[]).filter(d=>['plan','site_plan','engineering','structural'].includes(d.role)).map(d=>[d.id,d.hash,d.version])});}
+function status(p,r,type){const a=p.application.answerReviews?.[type]?.[r.key];if(!a)return {state:'unreviewed'};const ref=a.documentId&&(p.documents||[]).find(d=>d.id===a.documentId),site=a.siteQuestion&&p.siteReviews?.items?.[a.siteQuestion];const changed=a.fingerprint!==fingerprint(p,r)||(a.documentId&&(!ref||ref.hash!==a.documentHash||p.documents.some(d=>d.family===ref.family&&d.version>ref.version)))||(a.siteQuestion&&(JSON.stringify(site)!==a.siteDecision||!D.finding(p,a.siteQuestion)||D.status(p,D.finding(p,a.siteQuestion)).state==='stale'));return {...a,state:changed?'stale':a.state};}
+function apply(p,r,a,now){need(r&&!r.locked,'Choose an editable answer.');need(['confirmed','rejected','needs-evidence'].includes(a.state),'Choose an answer disposition.');need(clean(a.reviewer)&&clean(a.reason),'Record the reviewer and review reasoning.');need(a.confirmed===true,'Confirm this review applies to the saved answer.');need(a.expected===fingerprint(p,r),'Answer or evidence changed. Reopen View evidence and review the saved answer.');need(a.state!=='confirmed'||clean(r.value),'A blank answer cannot be confirmed.');
+ const d=a.documentId&&(p.documents||[]).find(d=>d.id===a.documentId);if(a.documentId)need(d&&!p.documents.some(x=>x.family===d.family&&x.version>d.version),'Use a current source document.');
+ need(a.state!=='confirmed'||clean(a.locator),'Name the source page, record or first-hand basis.');
+ const site=a.siteQuestion&&p.siteReviews?.items?.[a.siteQuestion];if(a.siteQuestion)need(site,'Review the site question before linking it.');
+ const all=JSON.parse(JSON.stringify(p.application.answerReviews||{}));all[a.permitType]=all[a.permitType]||{};const previous=all[a.permitType][r.key];
+ all[a.permitType][r.key]={state:a.state,reviewer:clean(a.reviewer),reason:clean(a.reason),locator:clean(a.locator),documentId:d?.id||'',documentHash:d?.hash||'',siteQuestion:a.siteQuestion||'',siteDecision:site?JSON.stringify(site):'',fingerprint:fingerprint(p,r),value:r.value,at:now,history:previous?[...(previous.history||[]),{...previous,history:undefined}]:[]};return all;
+}
+function panel(p,r,type){if(r.locked)return '<p>This acknowledgment or upload must be completed in the official portal.</p>';const current=status(p,r,type);return '<p>Saved answer: <strong>'+esc(r.value||'Unanswered')+'</strong></p><p>Review: '+esc(current.state)+(current.reviewer?' · '+esc(current.reviewer):'')+'</p><form data-command="answer_review"><input type="hidden" name="permitType" value="'+esc(type)+'"><input type="hidden" name="fieldKey" value="'+esc(r.key)+'"><input type="hidden" name="expected" value="'+esc(fingerprint(p,r))+'"><label>Decision<select name="state"><option value="needs-evidence">Needs evidence</option><option value="confirmed">Confirm saved answer</option><option value="rejected">Reject saved answer</option></select></label><label>Reviewer<input name="reviewer" required></label><label>Review reasoning / missing evidence<textarea name="reason" required></textarea></label><label>Source document<select name="documentId"><option value="">First-hand or external source below</option>'+(p.documents||[]).filter(d=>!p.documents.some(x=>x.family===d.family&&x.version>d.version)).map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+'</option>').join('')+'</select></label><label>Source page, record or first-hand basis<input name="locator"></label><label>Related reviewed site question<select name="siteQuestion"><option value="">No linked site decision</option>'+Object.entries(p.siteReviews?.items||{}).map(([id])=>'<option value="'+esc(id)+'">'+esc(decodeURIComponent(id))+'</option>').join('')+'</select></label><label><input type="checkbox" name="confirmed"> I reviewed this saved value for this permit scope.</label><button type="submit">Save answer review</button></form>';}
+const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AnswerReviews=api;
+})(typeof window!=='undefined'?window:globalThis);
+
 /* Observed city forms, with explicit provenance. No portal writes or submissions. */
 (function(root){
   'use strict';
@@ -5329,6 +5467,8 @@ const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads
   const Facts=typeof module!=='undefined'&&module.exports?require('./permit-facts'):root.PermitFacts;
   const Assistant=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const Reviews=typeof module!=='undefined'&&module.exports?require('./answer-reviews'):root.AnswerReviews;
+  let renderedProject=null;
   const titles={primary:'Property & application',professionals:'Designers & contractors',building:'Building details',attachments:'Documents & acknowledgments'};
   const supported=p=>p.report?.facts?.jurisdiction===catalog.jurisdiction;
   const getType=id=>catalog.types.find(t=>t.value===String(id));
@@ -5385,9 +5525,14 @@ const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads
     const t=getType(id);if(!t)return [];
     return Object.entries(t.sections).flatMap(([section,keys])=>keys.map(key=>{
       const f=catalog.fields[key],rowId=section+'.'+key,c=candidate(p,t,section,f),saved=p.application.cityInspect?.answers?.[t.value]?.[rowId];
-      return {...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
+      const row={...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
         status:saved?(saved.siteVersion===p.siteVersion&&(saved.planVersion||0)===(p.planVersion||0)?'User supplied · review before filing':'Site or plans changed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
+      row.review=Reviews.status(p,row,t.value);if(row.review.state!=='unreviewed')row.status=({confirmed:'Confirmed',rejected:'Rejected · replace this answer','needs-evidence':'Needs evidence',stale:'Stale · review again'})[row.review.state];return row;
     }));
+  }
+  function readiness(p,id){
+    const list=rows(p,id).filter(r=>!r.locked),missing=list.filter(r=>(r.required||r.markedRequired)&&!String(r.value).trim()),unreviewed=list.filter(r=>String(r.value).trim()&&r.review.state!=='confirmed');
+    return {missing,unreviewed,issues:[...missing.map(r=>r.label+': required answer missing.'),...unreviewed.map(r=>r.label+': '+r.review.state+' answer needs review.')]};
   }
   function update(p,a){
     if(!supported(p))throw Error('Exact form mapping is currently available for Ogden Valley City Building Permits only.');
@@ -5432,14 +5577,15 @@ const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads
     return {type:'city_application',permitType,entries};
   }
   function render(p,page='primary'){
+    renderedProject=p;
     if(!supported(p))return '<section class="pw-card"><h2>City application</h2><p>Exact field mapping is currently available for Ogden Valley City Building Permits. Other jurisdictions need their own form mapping.</p></section>';
     const id=p.application.cityInspect?.typeId||'',t=getType(id),rs=rows(p,id);
     if(!titles[page])page='primary';
     const groups=[...new Set(catalog.types.map(x=>x.group))];
     let html='<section class="pw-card city-application"><label for="city-permit-type">Permit type</label><select id="city-permit-type" data-city-type><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select>';
     if(t){
-      const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.status.startsWith('User supplied')),stale=filled.filter(r=>r.status.startsWith('Site or plans changed'));
-      html+='<div class="application-stats"><div><strong>'+filled.length+' / '+editable.length+'</strong><span>Editable fields populated</span><progress value="'+filled.length+'" max="'+(editable.length||1)+'" aria-label="Editable fields populated"></progress></div><div><strong>'+supplied.length+'</strong><span>User supplied · review needed</span></div><div><strong>'+suggested.length+'</strong><span>Suggested · review needed'+(stale.length?' · '+stale.length+' additional stale answers':'')+'</span></div><div><strong>'+(editable.length-filled.length)+'</strong><span>Unanswered · includes optional</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
+      const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.review.state==='confirmed'),stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed'));
+      html+='<div class="application-stats"><div><strong>'+filled.length+' / '+editable.length+'</strong><span>Editable fields populated</span><progress value="'+filled.length+'" max="'+(editable.length||1)+'" aria-label="Editable fields populated"></progress></div><div><strong>'+supplied.length+'</strong><span>Confirmed answers</span></div><div><strong>'+suggested.length+'</strong><span>Suggested · review needed'+(stale.length?' · '+stale.length+' additional stale answers':'')+'</span></div><div><strong>'+(editable.length-filled.length)+'</strong><span>Unanswered · includes optional</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
 
       html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>'<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'">'+(i+1)+'. '+titles[key]+'</button>').join('')+'</nav><p>Review each answer against its source. * marks a required field observed in the city form.</p><a href="#application-documents">Read a document +</a></aside>';
       const list=rs.filter(r=>r.section===page);
@@ -5473,10 +5619,10 @@ const api={bvd,valuationDefaults,roles,profileKeys,profileForField,profile,reads
     workspace.querySelectorAll('.city-field').forEach(n=>n.classList.toggle('is-selected',n===field));
     workspace.querySelector('#field-evidence-heading').textContent=field.querySelector('label').textContent;
     const target=workspace.querySelector('#field-evidence-content');target.replaceChildren(field.querySelector('.city-note').cloneNode(true));target.firstChild.removeAttribute('id');
-    const note=root.document.createElement('p');note.textContent='Review the source against this permit scope. Editing the answer uses the existing page save controls; this does not record a confirmation or city approval.';target.append(note);const backButton=root.document.createElement('button');backButton.type='button';backButton.dataset.returnField='';backButton.textContent='Return to answer';target.append(backButton);
+    const note=root.document.createElement('div'),type=renderedProject.application.cityInspect?.typeId,row=rows(renderedProject,type).find(r=>r.key===button.dataset.fieldEvidence);note.innerHTML=Reviews.panel(renderedProject,row,type);target.append(note);const backButton=root.document.createElement('button');backButton.type='button';backButton.dataset.returnField='';backButton.textContent='Return to answer';target.append(backButton);
     if(root.matchMedia('(max-width: 900px)').matches)target.scrollIntoView({behavior:root.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
   });
-  const api={catalog,supported,rows,update,sheet,render,formCommand};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
+  const api={catalog,supported,rows,update,sheet,render,formCommand,Reviews,readiness};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
 })(typeof window!=='undefined'?window:globalThis);
 
 /* Official city-published code manifest, retrieved 2026-11-12. Hashes identify the reviewed files. */
@@ -5940,6 +6086,7 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
   'use strict';
   const E = typeof module !== 'undefined' && module.exports ? require('./evidence-ledger') : root.EvidenceLedger;
   const A = typeof module !== 'undefined' && module.exports ? require('./area-rules') : root.AreaRules;
+  const D = typeof module !== 'undefined' && module.exports ? require('./site-decisions') : root.SiteDecisions;
   const clone = x => JSON.parse(JSON.stringify(x));
   const required = (x, message) => { if (!x) throw new Error(message); };
   const clean = x => String(x || '').trim();
@@ -5951,7 +6098,7 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
   function evidence(p, ref) {
     return !!(ref && (doc(p, ref.documentId) || /^https:\/\//i.test(ref.url || '')));
   }
-  function event(p, type, text, now) { p.events.push({ id: id(), at: now, type, text, provenance: 'Recorded in this browser by user' }); }
+  function event(p, type, text, now, explicitActor) { const actor=explicitActor||(['migrate_site_reviews','public_owner','area_map','sync_report'].includes(type)?'system':type==='document_extraction'?'extraction':type==='review_round'?'import':'user');p.events.push({ id: id(), at: now, type, text, actor, provenance:({system:'System update',extraction:'Document extraction · not reviewer confirmation',ai:'AI extraction · not reviewer confirmation',import:'Imported correspondence · user checked',user:'User action'})[actor] }); }
   function requirements(report) {
     const items = (((report || {}).facts || {}).packet || {}).items || [];
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
@@ -5971,6 +6118,8 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
   function openCorrections(p) { return p.corrections.filter(c => c.state !== 'accepted'); }
   function blockers(p, kind) {
     const out = [];
+    const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+    if(C.supported(p)){const type=p.application.filingPermitType;if(!type)out.push('Designate the permit worksheet for this filing.');else out.push(...C.readiness(p,type).issues);}
     if (kind !== 'resubmission' && A) out.push(...A.blockers(p));
     if (kind === 'resubmission') {
       if (!p.application.reference) out.push('Application reference is missing.');
@@ -5998,6 +6147,14 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
     const p = clone(project), a = command; now = now || new Date().toISOString();
     required(p.schemaVersion === 1, 'Unsupported project version.');
     switch (a.type) {
+      case 'site_review':
+        p.siteReviews=D.apply(p,a,now);invalidate(p);event(p,a.type,'Site decision recorded: '+D.finding(p,a.id).item,now);break;
+      case 'migrate_site_reviews': {
+        const reviews=D.migrate(p,a.records,now),upgrade=p.correctnessVersion!==1;if(!upgrade&&JSON.stringify(reviews)===JSON.stringify(p.siteReviews))return project;
+        p.siteReviews=reviews;
+        if(upgrade){p.correctnessVersion=1;for(const r of p.requirements){if(/geotechnical/i.test(r.title)&&!r.required){r.previousInterpretation=clone(r);r.required=true;r.title='Determine geotechnical report applicability';r.state='needs_review';r.detail='Determine applicability from current authority requirements, hazards and controlling instruments; slope alone does not establish an exemption.';}}invalidate(p);}
+        event(p,a.type,'Review model upgraded; legacy marks retained as unverified history. Unsubmitted package reviews require renewal.',now);break;
+      }
       case 'area_map': {
         required(a.snapshot?.parcelKey===p.propertyKey && Array.isArray(a.snapshot.layers),'Area matches must belong to this parcel.');
         p.application.areaMap=clone(a.snapshot);invalidate(p);event(p,a.type,'Refreshed parcel boundary matches; approval decisions require renewed review.',now);break;
@@ -6046,7 +6203,7 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
         const PF=typeof module!=='undefined'&&module.exports?require('./permit-facts'):window.PermitFacts;
         x.facts=PF.retainConflicts(x.facts,(p.application.documentExtractions||[]).filter(y=>y.documentId===d.id&&y.documentHash===d.hash&&(y.permitType||'1')===(x.permitType||'1')).flatMap(y=>y.facts||[]));
         p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
-        invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now);break;
+        invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now,/claude|ai/i.test(x.method||'')?'ai':'system');break;
       }
       case 'measurement_candidates': {
         const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);required(d&&latest(p,d),'Choose the current document version.');required(Array.isArray(x.measurements)&&x.measurements.length<=40,'Invalid geometry response.');p.application.measurementReads=(p.application.measurementReads||[]).filter(r=>r.documentId!==d.id).concat([clone(x)]);event(p,a.type,'Drawing geometry candidates saved; not accepted as application answers.',now);break;
@@ -6078,6 +6235,19 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
       }
       case 'license_check': {
         required(p.application.team?.[a.role]&&a.license===p.application.team[a.role].license,'Team license changed; repeat lookup.');p.application.team[a.role].licenseCheck={at:now,summary:clean(a.summary),source:'https://services.commerce.utah.gov/cbr/'};event(p,a.type,'Public registry response retained; not a full license verification.',now);break;
+      }
+      case 'research_scope': {
+        required(['included','excluded','unknown'].includes(a.pool),'Choose the pool scope.');p.application.researchScope={...p.application.researchScope,pool:a.pool};invalidate(p);event(p,a.type,'Optional pool research scope updated.',now);break;
+      }
+      case 'filing_scope': {
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        required(!p.receipts.length&&!p.application.reference,'An existing filing keeps its permit scope. Create a separate project for another independent filing.');
+        required((p.application.permitSelections||[]).includes(String(a.permitType))&&C.catalog.types.some(t=>t.value===String(a.permitType)),'Choose a saved permit worksheet.');
+        p.application.filingPermitType=String(a.permitType);invalidate(p);event(p,a.type,'Designated worksheet for this filing; other worksheets are not independent filings.',now);break;
+      }
+      case 'answer_review': {
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        const row=C.rows(p,a.permitType).find(r=>r.key===a.fieldKey);p.application.answerReviews=C.Reviews.apply(p,row,a,now);invalidate(p);event(p,a.type,'Answer '+a.state+': '+row.label+' · '+a.reviewer,now);break;
       }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
@@ -6122,7 +6292,7 @@ const api={lookup,rules,blockers,reviewCurrent,evidence:E,sources,definitions,ve
         required(a.reviewed === true, 'Review the exact package before preparing the handoff.');
         const existing = currentPackage(p, kind);
         if (existing && !existing.receiptId) return p; // Repeated clicks do not create duplicate handoffs.
-        const snapshot = { id: id(), kind, preparedAt: now, reviewedBy: clean(a.reviewer), siteVersion: p.siteVersion,
+        const snapshot = { id: id(), kind, permitType:p.application.filingPermitType||null, preparedAt: now, reviewedBy: clean(a.reviewer), siteVersion: p.siteVersion,
           application: clone(p.application), fields: clone(((p.report.facts || {}).packet || {}).rows || []),
           requirements: clone(p.requirements), documentIds: p.documents.filter(d => latest(p, d) && !['receipt', 'permit', 'review_letter'].includes(d.role)).map(d => d.id),
           responses: kind === 'resubmission' ? clone(openCorrections(p).filter(c => c.state === 'response_prepared')) : [], stale: false, receiptId: null };
@@ -6260,15 +6430,16 @@ const api={pack,unpack,hash};if(typeof module!=='undefined'&&module.exports)modu
       t.onabort = t.onerror = () => reject(conflict || t.error || new Error('Project could not be saved. Browser storage may be full.'));
     });
   }
-  async function checklistFiles(county,parcelId) {
+  async function checklistRecords(county,parcelId) {
     return new Promise((resolve,reject)=>{
       const request=indexedDB.open(owner?'lot-dossier-'+owner:'lot-dossier',1);
       request.onerror=()=>reject(request.error);request.onsuccess=()=>{const d=request.result;if(!d.objectStoreNames.contains('items')){d.close();resolve([]);return;}
-        const files=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
-        r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))for(const file of c.value.files||[])if(file.blob)files.push({...file,checklistKey:c.key});c.continue();};t.oncomplete=()=>{d.close();resolve(files);};t.onerror=()=>reject(t.error);
+        const rows=[],prefix=county+'|'+parcelId+'|',t=d.transaction('items'),r=t.objectStore('items').openCursor();
+        r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(prefix))rows.push({key:String(c.key),status:c.value.status,files:c.value.files||[]});c.continue();};t.oncomplete=()=>{d.close();resolve(rows);};t.onerror=()=>reject(t.error);
       };
     });
   }
+  async function checklistFiles(county,parcelId) {return (await checklistRecords(county,parcelId)).flatMap(r=>r.files.filter(f=>f.blob).map(f=>({...f,checklistKey:r.key})));}
   async function restore(project, files, options={}) {
     const account=owner,d=await db();return new Promise((resolve,reject)=>{
       const t=d.transaction(['projects','files'],'readwrite'),ps=t.objectStore('projects');let error;
@@ -6276,7 +6447,7 @@ const api={pack,unpack,hash};if(typeof module!=='undefined'&&module.exports)modu
       t.oncomplete=()=>{resolve(project);if(!options.cloudRestore)notify(project,account);};t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
-  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles };
+  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles, checklistRecords };
 })(window);
 
 </script>
@@ -6430,7 +6601,7 @@ function marketReference(p){
  try{
   if(!subject.region)throw Error('This parcel is outside the two matched Weber submarkets, or its submarket has not been identified.');
   const r=root.WeberValue.predict(data.records,subject),stability=root.WeberValue.diagnostics(data.records,subject),m=data.metrics.rollingDevelopment,s=data.metrics.flaggedTransactionSensitivity;
-  content='<h3>'+money(r.estimate)+' <small>historical-price reference</small></h3><p>'+esc(subject.region)+' · '+esc(subject.grossAcres)+' acres · '+r.comps.length+' local comparables.</p>'+
+  content='<h3>Current market value is not established</h3><p>Historical model output: '+money(r.estimate)+'. Leave-one-sale-out sensitivity: '+(stability.range?money(stability.range[0])+'–'+money(stability.range[1]):'unavailable')+'. This sensitivity range is not a confidence interval.</p><p>'+esc(subject.region)+' · '+esc(subject.grossAcres)+' acres · '+r.comps.length+' local comparables.</p>'+
    '<p class="pw-warning">Based on 2019–2021 reported sales, with no adjustment to today’s market. This is an experimental land-price reference, not a current appraised value or a ±$50,000 accuracy guarantee.</p>'+
    (r.extrapolated?'<p>The parcel size is outside the acreage range of the local comparables; the size adjustment extrapolates beyond them.</p>':'')+
    '<details><summary>Comparable sales and adjustments</summary><p>Size elasticity: '+r.elasticity.toFixed(3)+'. Estimated from same-submarket, same-category sale pairs across '+r.trainingCount+' research records. Water, access, usable area, entitlements and time adjustments are not calibrated.</p><div style="overflow-x:auto"><table><thead><tr><th>Comparable / source</th><th>Sale date</th><th>Acres</th><th>Reported price</th><th>Size-adjusted price</th></tr></thead><tbody>'+r.comps.map(c=>'<tr><td>'+link(c.source+'#page='+c.page,c.address)+'<br>'+esc((c.flags||[]).join('; '))+'</td><td>'+esc(c.saleDate)+'</td><td>'+esc(c.grossAcres)+'</td><td>'+money(c.price)+'</td><td>'+money(c.adjustedPrice)+'</td></tr>').join('')+'</tbody></table></div><p>County-hosted MLS exhibits; settlement amounts and transaction conditions are not independently verified. The subject parcel’s own sales are excluded.</p></details>'+
@@ -6440,7 +6611,7 @@ function marketReference(p){
 }
 function valuation(p){
  const l=ledger(p),last=l.runs.filter(r=>r.kind==='valuation').at(-1),values=last?last.inputs:{};
- return marketReference(p)+'<section class="pw-card"><h2>Builder budget</h2><h3>Residual development scenario</h3><p>Net sale proceeds minus construction, site, fees, financing, carry and target profit, with land acquisition costs solved separately. Every input retains its basis. Blank inputs prevent a calculation; zero is an explicit assumption.</p>'+form('valuation','<div class="pw-grid">'+V.required.map(k=>'<div>'+input(k,labels[k],values[k]?.value??'','number')+input(k+'Basis','Source or assumption basis',values[k]?.basis||'')+'</div>').join('')+'</div>')+'</section>'+runs(l,'valuation');
+ return '<section class="pw-card"><h2>Builder budget</h2><h3>Residual development scenario</h3><p>Net sale proceeds minus construction, site, fees, financing, carry and target profit, with land acquisition costs solved separately. Every input retains its basis. Blank inputs prevent a calculation; zero is an explicit assumption.</p>'+form('valuation','<div class="pw-grid">'+V.required.map(k=>'<div>'+input(k,labels[k],values[k]?.value??'','number')+input(k+'Basis','Source or assumption basis',values[k]?.basis||'')+'</div>').join('')+'</div>')+'</section>'+runs(l,'valuation')+marketReference(p);
 }
 function shape(p,values={}){
  const rings=p.report.parcel.rings;if(!rings)throw Error('Mapped parcel boundary unavailable');
@@ -6523,10 +6694,10 @@ function consequence(r){
  if(r.parcelMatch!=='matched')return 'First confirm which property this document describes. Then compare the cited pages with the site finding and its other sources; relevance is still unverified.';
  return 'Compare the quoted pages with the original and the site finding’s other sources. Resolve any differences before relying on the claim; analysis alone does not close the finding.';
 }
-function panel(p,context){const ds=(p.documents||[]).filter(d=>d.role==='public_source'&&latest(p,d)),pdfs=documents(p),pending=pdfs.filter(d=>!result(p,d));const sources=p.report?.facts?.publicSurveys?.documents||[];
+function panel(p,context){const refs=context?.reviewId?p.siteReviews?.items?.[context.reviewId]?.references||[]:[],linked=new Set(refs.map(r=>r.documentId));const ds=(p.documents||[]).filter(d=>d.role==='public_source'&&latest(p,d)).sort((a,b)=>Number(linked.has(b.id))-Number(linked.has(a.id))||Number(result(p,a)?.parcelMatch==='different-property')-Number(result(p,b)?.parcelMatch==='different-property')),pdfs=documents(p),pending=pdfs.filter(d=>!result(p,d));const sources=p.report?.facts?.publicSurveys?.documents||[];
 return '<section class="pw-card site-documents" id="public-records" tabindex="-1"><h2>Public records & site evidence</h2><p>Existing surveys and other public records retrieved during site research. Use them to investigate boundaries, easements and site conditions; they do not describe your proposed building.</p><p>Retrieval does not establish that a record applies to this parcel. Compare its parcel references and cited pages before relying on a finding.</p>'+(ds.length?'<p>'+ (pdfs.length-pending.length)+' of '+pdfs.length+' saved PDFs analyzed · findings still require review</p><button type="button" data-action="scan-site-documents"'+(!pending.length?' disabled':'')+'>'+(!pending.length?'All saved PDFs analyzed':'Analyze public records with CornerpinAI ('+pending.length+')')+'</button><div id="site-document-progress" role="status" aria-live="polite"></div><p class="pw-muted">Analysis sends these PDFs to Anthropic within the shared $5/day budget. Saved results are reused. Findings appear below and do not fill proposed-building answers or automatically change Site Review findings.</p>':'<p>No public PDFs saved yet. Available source references appear below; otherwise consult the sources attached to Site Review findings.</p>')+ds.map(d=>{
 const r=result(p,d),record=/^survey-(\d+)$/.exec(d.family||''),source=url(d.sourceUrl);let origin='Public source';if(source)origin=new URL(source).hostname;
-return '<article class="document-record"><div class="document-record-heading"><h3>'+esc(record?'Public survey · record '+record[1]:d.name)+'</h3><span class="pw-status">'+(r?'Analysis available · review needed':'Not yet analyzed')+'</span></div><p class="pw-muted">'+esc(d.name)+' · Version '+esc(d.version)+' · '+esc(origin)+(d.retrievedAt?' · Retrieved '+esc(d.retrievedAt.slice(0,10)):'')+'</p><p><strong>Purpose:</strong> '+(record?'Check survey notes, lot labels, boundaries and recorded-right references. A nearby survey may describe another property.':'Check the existing site evidence and determine whether it applies to this property.')+'</p>'+actions(d)+(r?'<p><strong>Document summary:</strong> '+esc(r.summary||'No summary returned.')+'</p><p><strong>Parcel relevance:</strong> AI suggests '+esc(String(r.parcelMatch||'unclear').replace(/-/g,' '))+'; not independently verified.</p>'+(r.notice?'<p class="pw-muted">'+esc(r.notice)+'</p>':'')+'<h4>Evidence found in this document</h4>'+((r.claims||[]).map(c=>'<article class="document-claim"><h4>'+esc(c.category)+' · page '+esc(c.page)+'</h4><p>'+esc(c.finding)+'</p><blockquote>'+esc(c.quote)+'</blockquote><p>'+esc(c.basis)+'</p><p>Suggested scope: '+esc(c.scope)+' · requires review</p>'+(source?'<a href="'+esc(source.split('#')[0])+'#page='+encodeURIComponent(c.page)+'" target="_blank" rel="noopener">View original page ↗</a>':'')+'</article>').join('')||'<p>No supported findings returned. Open the original to review it directly.</p>'):'<p><strong>Parcel relevance:</strong> Not established. Open the raw document now, or analyze it to see cited evidence here.</p>')+'<div class="document-next"><h4>What to do next</h4><p>'+esc(consequence(r))+'</p>'+(context?'<button type="button" data-action="return-investigation">'+(context.draft?'Return to application':'Return to '+esc(context.title))+'</button>':'<button type="button" data-action="site">Compare with Site Review</button>')+'</div></article>';
+return '<article class="document-record"><div class="document-record-heading"><h3>'+esc(record?'Public survey · record '+record[1]:d.name)+'</h3><span class="pw-status">'+(r?'Analysis available · review needed':'Not yet analyzed')+'</span></div><p class="pw-muted">'+esc(d.name)+' · Version '+esc(d.version)+' · '+esc(origin)+(d.retrievedAt?' · Retrieved '+esc(d.retrievedAt.slice(0,10)):'')+'</p><p><strong>Purpose:</strong> '+(record?'Check survey notes, lot labels, boundaries and recorded-right references. A nearby survey may describe another property.':'Check the existing site evidence and determine whether it applies to this property.')+'</p>'+actions(d)+(r?'<p><strong>Document summary:</strong> '+esc(r.summary||'No summary returned.')+'</p><p><strong>Parcel relevance:</strong> AI suggests '+esc(String(r.parcelMatch||'unclear').replace(/-/g,' '))+'; not independently verified.</p>'+(r.notice?'<p class="pw-muted">'+esc(r.notice)+'</p>':'')+(r.parcelMatch==='different-property'?'<details><summary>Other-property analysis — secondary evidence</summary>':'')+'<h4>Evidence found in this document</h4>'+((r.claims||[]).map(c=>'<article class="document-claim"><h4>'+esc(c.category)+' · page '+esc(c.page)+'</h4><p>'+esc(c.finding)+'</p><blockquote>'+esc(c.quote)+'</blockquote><p>'+esc(c.basis)+'</p><p>Suggested scope: '+esc(c.scope)+' · requires review</p>'+(source?'<a href="'+esc(source.split('#')[0])+'#page='+encodeURIComponent(c.page)+'" target="_blank" rel="noopener">View original page ↗</a>':'')+'</article>').join('')||'<p>No supported findings returned. Open the original to review it directly.</p>')+(r.parcelMatch==='different-property'?'</details>':''):'<p><strong>Parcel relevance:</strong> Not established. Open the raw document now, or analyze it to see cited evidence here.</p>')+'<div class="document-next"><h4>What to do next</h4><p>'+esc(consequence(r))+'</p>'+(context?'<button type="button" data-action="return-investigation">'+(context.draft?'Return to application':'Return to '+esc(context.title))+'</button>':'<button type="button" data-action="site">Compare with Site Review</button>')+'</div></article>';
 }).join('')+sources.filter(s=>!ds.some(d=>d.family==='survey-'+s.recordNumber||(s.sha256&&d.hash===s.sha256))).map(s=>'<article class="document-record"><h3>Public survey · record '+esc(s.recordNumber)+'</h3><p>Source referenced in site research; a saved PDF is unavailable for analysis.</p>'+(s.error?'<p>'+esc(s.error)+'</p>':'')+(url(s.url)?'<a href="'+esc(url(s.url))+'" target="_blank" rel="noopener">View raw document ↗</a>':'<p>Original source link unavailable.</p>')+'</article>').join('')+'</section>';}
 function library(p){const groups=[['Proposed plans',['plan','site_plan'],'Plans for the work you intend to build. Analyze building plans and review application answers in Permit Preparation.'],['Supporting reports & approvals',null,'Reports, calculations and service letters supporting the project. Attach the applicable versions to filing requirements.'],['Correspondence & filing records',['review_letter','receipt','permit'],'Authority feedback, filing receipts and issued permits. Manage corrections and filing history in Submissions & Review.'],['Version history',[],'Earlier files retained for evidence and package history. Use the current version for new work.']];
 return groups.map(([name,roles,purpose],i)=>{const ds=(p.documents||[]).filter(d=>i===3?!latest(p,d):latest(p,d)&&d.role!=='public_source'&&(roles?roles.includes(d.role):!['plan','site_plan','review_letter','receipt','permit'].includes(d.role)));return '<section class="pw-card" id="documents-'+['plans','supporting','filing','history'][i]+'"><h2>'+name+'</h2><p>'+purpose+'</p>'+(ds.map(d=>'<article class="document-record"><h3>'+esc(d.name)+'</h3><p>'+esc(String(d.role).replace(/_/g,' '))+' · Version '+esc(d.version)+(i===3?' · Superseded':' · Current')+'</p>'+actions(d)+'</article>').join('')||'<p>No documents in this group.</p>')+'</section>';}).join('');}
@@ -6552,17 +6723,17 @@ const A=root.PermitAssistant,C=root.CityApplication,F=root.PermitFacts;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const input=(name,label,value='',type='text')=>'<label>'+esc(label)+'<input name="'+name+'" type="'+type+'"'+(type==='number'?' step="any" min="0"':'')+' value="'+esc(value)+'"></label>';
 function plans(p){const ds=p.documents.filter(d=>d.role==='plan'&&!p.documents.some(x=>x.family===d.family&&x.version>d.version));return '<section class="pw-card"><h2>Building plans</h2><p>Upload plans here to keep them with this project, find permit scopes and fill application answers. Uploading does not send files to CornerpinAI until you choose Analyze.</p><form data-command="upload-plans"><label class="pw-backup-picker" data-empty-label="Choose building plans" data-empty-hint="PDF file · up to 25 MB"><input class="pw-backup-input" name="file" type="file" accept="application/pdf,.pdf" required aria-label="Choose building plans"><span class="pw-backup-icon" aria-hidden="true">↥</span><span class="pw-backup-copy"><span class="pw-backup-name">Choose building plans</span><span class="pw-backup-hint">PDF file · up to 25 MB</span></span></label><label>Document version<select name="family"><option value="">New plan document</option>'+ds.map(d=>'<option value="'+esc(d.family)+'">Replace '+esc(d.name)+' with a new version</option>').join('')+'</select></label><button type="submit" disabled>Upload building plans</button></form>'+ds.map(d=>'<div class="pw-plan-row"><h3>'+esc(d.name)+' · v'+d.version+'</h3><button data-action="analyze-project-plan" data-id="'+esc(d.id)+'">Analyze plans with CornerpinAI</button> <button data-action="view-file" data-id="'+esc(d.id)+'">View raw document</button> <button data-action="download-file" data-id="'+esc(d.id)+'">Download</button><div class="analysis-inline" id="plan-analysis-'+esc(d.id)+'" role="status" aria-live="polite"></div></div>').join('')+'<p class="pw-muted">Analyze sends the selected PDF to Anthropic. Results are saved and reused. New versions require a fresh analysis; older evidence stays in history.</p></section>';}
-function progress(p,id){const rows=C.rows(p,id).filter(r=>!r.locked),total=rows.length,filled=rows.filter(r=>String(r.value??'').trim()!==''),stale=filled.filter(r=>/^Site or plans changed/.test(r.status)).length,supplied=filled.filter(r=>/^User supplied/.test(r.status)).length,suggested=filled.length-stale-supplied;return{rows,total,filled:filled.length,missing:total-filled.length,stale,supplied,suggested};}
-function progressReport(p,id){const c=progress(p,id);const researched=c.rows.filter(r=>r.value!==''&&/^(Public company contact|Saved site report|County owner mailing|Calculated lot area|Saved zoning|Phase explicitly|Uploaded\/entered plan|Explicit plan text|CornerpinAI)/.test(r.basis)),unique=new Set(researched.map(r=>({buildername:'builder_name',owneremail:'owner_email',ownername:'owner_name'})[r.name]||r.name)).size;if(!c.total)return '<p>Field mapping is unavailable for this permit.</p>';return '<div class="permit-progress"><div class="permit-progress-label"><strong>'+c.filled+' / '+c.total+' editable fields have answers</strong><span>'+Math.round(c.filled/c.total*100)+'%</span></div><progress max="'+c.total+'" value="'+c.filled+'" aria-label="Application fields with answers"></progress><p class="pw-muted">'+c.supplied+' supplied · '+c.suggested+' suggested · '+c.missing+' unanswered'+(c.stale?' · '+c.stale+' need rechecking after changes':'')+'</p><details><summary>Progress report</summary><p><strong>'+unique+' distinct fields supported by site records or document extraction.</strong> Team-profile reuse and draft administrative text are excluded from this count.</p><p>Answer coverage, not filing approval. Suggestions and supplied answers still need review; required attachments and city acknowledgments are separate.</p>'+Object.entries({primary:'Property & application',professionals:'Designers & contractors',building:'Building details'}).map(([key,label])=>{const rs=c.rows.filter(r=>r.section===key),n=rs.filter(r=>String(r.value??'').trim()!=='').length;return rs.length?'<p><strong>'+label+'</strong>: '+n+' of '+rs.length+' answered · '+(rs.length-n)+' unanswered</p>':'';}).join('')+'<details><summary>Unanswered fields and evidence gaps</summary>'+c.rows.filter(r=>r.value==='').map(r=>'<p><strong>'+esc(r.label)+'</strong><br>'+esc(r.guidance||r.basis)+'</p>').join('')+'</details></details></div>';}
+function progress(p,id){const rows=C.rows(p,id).filter(r=>!r.locked),total=rows.length,filled=rows.filter(r=>String(r.value??'').trim()!==''),stale=filled.filter(r=>r.review.state==='stale'||/^Site or plans changed/.test(r.status)).length,supplied=filled.filter(r=>/^User supplied/.test(r.status)).length,confirmed=filled.filter(r=>r.review.state==='confirmed').length,suggested=filled.filter(r=>/^Suggested/.test(r.status)).length;return{rows,total,filled:filled.length,missing:total-filled.length,stale,supplied,suggested,confirmed};}
+function progressReport(p,id){const c=progress(p,id);const researched=c.rows.filter(r=>r.value!==''&&/^(Public company contact|Saved site report|County owner mailing|Calculated lot area|Saved zoning|Phase explicitly|Uploaded\/entered plan|Explicit plan text|CornerpinAI)/.test(r.basis)),unique=new Set(researched.map(r=>({buildername:'builder_name',owneremail:'owner_email',ownername:'owner_name'})[r.name]||r.name)).size;if(!c.total)return '<p>Field mapping is unavailable for this permit.</p>';return '<div class="permit-progress"><div class="permit-progress-label"><strong>'+c.filled+' / '+c.total+' editable fields have answers</strong><span>'+Math.round(c.filled/c.total*100)+'%</span></div><progress max="'+c.total+'" value="'+c.filled+'" aria-label="Application fields with answers"></progress><p class="pw-muted">'+c.confirmed+' confirmed · '+c.supplied+' supplied · '+c.suggested+' suggested · '+c.missing+' unanswered'+(c.stale?' · '+c.stale+' need rechecking after changes':'')+'</p><details><summary>Progress report</summary><p><strong>'+unique+' distinct fields supported by site records or document extraction.</strong> Team-profile reuse and draft administrative text are excluded from this count.</p><p>Answer coverage, not filing approval. Suggestions and supplied answers still need review; required attachments and city acknowledgments are separate.</p>'+Object.entries({primary:'Property & application',professionals:'Designers & contractors',building:'Building details'}).map(([key,label])=>{const rs=c.rows.filter(r=>r.section===key),n=rs.filter(r=>String(r.value??'').trim()!=='').length;return rs.length?'<p><strong>'+label+'</strong>: '+n+' of '+rs.length+' answered · '+(rs.length-n)+' unanswered</p>':'';}).join('')+'<details><summary>Unanswered fields and evidence gaps</summary>'+c.rows.filter(r=>r.value==='').map(r=>'<p><strong>'+esc(r.label)+'</strong><br>'+esc(r.guidance||r.basis)+'</p>').join('')+'</details></details></div>';}
 function sitePermits(p){const rs=A.siteRecommendations(p);return '<section class="pw-card suggested-site-permits"><h2>Suggested permit types from site research</h2><p>Applications suggested by this project’s findings. Conditional items become relevant only when the stated work is proposed; they are not established permit requirements.</p>'+(rs.length?rs.map(r=>'<article class="permit-summary"><h3>'+esc(r.label)+' <span class="priority-status priority-verify">'+esc(r.state)+'</span></h3><p><strong>Why suggested:</strong> '+esc(r.reason)+'</p><p>'+esc(r.condition)+'</p><p><strong>Authority:</strong> '+esc(r.authority)+'</p><p>'+esc(r.next)+'</p><div class="pw-actions"><a class="btn" href="'+esc(r.url)+'" target="_blank" rel="noopener">Open official applications ↗</a><a href="'+esc(r.reference)+'" target="_blank" rel="noopener">Process &amp; requirements</a>'+(r.source&&/^https:\/\//.test(r.source)?'<a href="'+esc(r.source)+'" target="_blank" rel="noopener">Finding source</a>':'')+'</div><p class="pw-muted">External application: Cornerpin does not yet reproduce or submit this agency’s form.</p></article>').join(''):'<p>No additional application routes identified by the supported site rules. This is not a complete determination of required permits.</p>')+'</section>';}
-function permits(p){const recs=A.recommendations(p),chosen=p.application.permitSelections||[],extra=chosen.filter(id=>!recs.some(r=>r.typeId===id)).map(id=>{const t=C.catalog.types.find(t=>t.value===id);return t?{typeId:id,label:t.label,selected:true,evidence:[],note:''}:null;}).filter(Boolean),all=[...recs,...extra];return sitePermits(p)+'<section class="pw-card"><h2>Plan-based permits & drafts</h2><p>Choose a permit to prepare its application. Progress includes suggested answers that still need review.</p>'+all.map(r=>'<article class="permit-summary"><div class="permit-summary-head"><div><h3>'+esc(r.label)+'</h3><button data-action="prepare-permit" data-id="'+esc(r.typeId)+'">'+(r.selected?'Open draft':'Prepare this permit')+'</button></div>'+progressReport(p,r.typeId)+'</div>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.evidence.length?'<details><summary>Why this permit is suggested</summary>'+r.evidence.map(f=>'<p>'+esc(f.filename)+' · page '+f.page+': “'+esc(f.quote)+'”</p>').join('')+'</details>':'')+'</article>').join('')+'<label>Start another permit<select data-city-type><option value="">Choose a permit type</option>'+C.catalog.types.map(t=>'<option value="'+esc(t.value)+'">'+esc(t.label)+'</option>').join('')+'</select></label></section>';}
+function permits(p){const recs=A.recommendations(p),chosen=p.application.permitSelections||[],extra=chosen.filter(id=>!recs.some(r=>r.typeId===id)).map(id=>{const t=C.catalog.types.find(t=>t.value===id);return t?{typeId:id,label:t.label,selected:true,evidence:[],note:''}:null;}).filter(Boolean),all=[...recs,...extra];return sitePermits(p)+'<section class="pw-card"><h2>Plan-based permits & drafts</h2><p>Choose a permit to prepare its application. Progress includes suggested answers that still need review. This project tracks one filing; other permit drafts are worksheets with no separate submission or issuance history. Use a separate project for an independent filing.</p><form data-command="filing_scope"><label>Worksheet for this filing<select name="permitType"><option value="">Choose saved worksheet</option>'+chosen.map(id=>'<option value="'+esc(id)+'"'+(p.application.filingPermitType===id?' selected':'')+'>'+esc(C.catalog.types.find(t=>t.value===id)?.label||id)+'</option>').join('')+'</select></label><button type="submit"'+(p.receipts.length?' disabled':'')+'>Set filing worksheet</button></form>'+all.map(r=>'<article class="permit-summary"><div class="permit-summary-head"><div><h3>'+esc(r.label)+'</h3><button data-action="prepare-permit" data-id="'+esc(r.typeId)+'">'+(r.selected?'Open draft':'Prepare this permit')+'</button></div>'+progressReport(p,r.typeId)+'</div>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.evidence.length?'<details><summary>Why this permit is suggested</summary>'+r.evidence.map(f=>'<p>'+esc(f.filename)+' · page '+f.page+': “'+esc(f.quote)+'”</p>').join('')+'</details>':'')+'</article>').join('')+'<label>Start another permit<select data-city-type><option value="">Choose a permit type</option>'+C.catalog.types.map(t=>'<option value="'+esc(t.value)+'">'+esc(t.label)+'</option>').join('')+'</select></label></section>';}
 function team(p){return '<section class="pw-card"><h2>Project team</h2><p>Enter each contact once. Their details fill all matching fields and permit drafts. Existing field edits keep precedence.</p><button data-action="reuse-team">Reuse a team from another saved project</button><div id="team-library"></div>'+Object.entries(A.roles).map(([role,label])=>{const saved=A.profile(p,role),prefix=role==='designer'?'design_professional':role==='engineer'?'engineer_record':role;return '<details><summary>'+esc(label)+(saved.name?' — '+esc(saved.name):'')+'</summary><form data-command="team_profile"><input name="role" type="hidden" value="'+role+'"><div class="pw-grid">'+A.profileKeys.filter(k=>!['owner','contact'].includes(role)||!['license','contact'].includes(k)).map(k=>{const fn=k==='name'&&['designer','engineer'].includes(role)?prefix:prefix+'_'+k,found=F.selected(p,fn,'1');return input(k,k==='name'?'Person / company':k[0].toUpperCase()+k.slice(1),saved[k]||found?.value||'',k==='email'?'email':'text')+(found&&!saved[k]?'<p class="pw-muted">Plan suggestion: page '+found.page+' — '+esc(found.quote)+'</p>':'');}).join('')+'</div><label><input type="checkbox" name="confirmed" required> I confirm this person or company has this role on this project.</label><button type="submit">Save '+esc(label)+'</button></form>'+(saved.license?'<p>License '+esc(saved.license)+' · '+(saved.licenseCheck?'Lookup recorded '+esc(saved.licenseCheck.at):'Not independently verified')+'</p><button data-action="lookup-license" data-id="'+role+'">Look up public registry</button>':'')+'<p><a href="https://secure.utah.gov/llv/search/index.html" target="_blank" rel="noopener">Utah license verification</a> · Verify current status and classifications; a plan title block does not prove licensure.</p>'+(saved.licenseCheck?'<p>'+esc(saved.licenseCheck.summary)+'</p>':'')+'</details>';}).join('')+'</section>';}
 function valuation(p){const type=p.application.cityInspect?.typeId;if(!type)return '';const old=p.application.valuations?.[type],items=old?.items||A.valuationDefaults(p,type),n=Math.max(8,items.length+1);return '<section class="pw-card"><details><summary>Construction valuation worksheet</summary><p>Enter scope-specific areas and sourced rates, or a documented contract amount as quantity 1. Default rates, where shown, are ICC August 2026 R-3/V-B and garage benchmarks. Confirm this construction classification and the city’s accepted method. Include each applicable area once; missing or conflicting quantities are not assumed zero. Total excludes land and is not a bid or city-approved valuation. Confirm the jurisdiction’s accepted method before filing.</p><form data-command="construction_valuation"><input type="hidden" name="permitType" value="'+esc(type)+'">'+Array.from({length:n},(_,i)=>{const x=items[i]||{};return '<fieldset><legend>Line '+(i+1)+'</legend><label><input type="checkbox" name="include_'+i+'"'+(x.quantity?' checked':'')+'> Include this line</label><div class="pw-grid">'+input('label_'+i,'Work / area',x.label)+input('quantity_'+i,'Quantity (sq ft or 1 for lump sum)',x.quantity,'number')+input('rate_'+i,'Rate / amount ($)',x.rate,'number')+input('source_'+i,'Rate source and date',x.source)+'</div></fieldset>';}).join('')+'<label><input type="checkbox" name="confirmed" required> These lines cover this permit scope without overlapping areas; I checked the rate sources.</label><button type="submit">Calculate and use valuation</button></form>'+(old?'<p>Draft construction valuation: $'+old.total.toLocaleString()+' · '+esc(old.at)+'</p>':'')+'</details></section>';}
 function readiness(p){
  const id=p.application.cityInspect?.typeId,rows=C.rows(p,id).filter(r=>!r.locked);if(!rows.length)return '';
- const blank=rows.filter(r=>String(r.value??'').trim()===''),required=blank.filter(r=>r.required||r.markedRequired),stale=rows.filter(r=>/^Site or plans changed/.test(r.status)),suggested=rows.filter(r=>/^Suggested/.test(r.status)),checks=root.PermitWorkflow.blockers(p,p.application.reference?'resubmission':'initial');
+ const evaluated=C.readiness(p,id);const blank=rows.filter(r=>String(r.value??'').trim()===''),required=evaluated.missing,stale=rows.filter(r=>r.review.state==='stale'||/^Site or plans changed/.test(r.status)),suggested=evaluated.unreviewed.filter(r=>r.review.state!=='stale'),checks=root.PermitWorkflow.blockers(p,p.application.reference?'resubmission':'initial');
  const go=(section,label,key='')=>'<button type="button" data-action="city-page" data-field-target="'+esc(key)+'" data-id="'+esc(section)+'">'+label+'</button>';
- return '<section class="pw-card handoff-guide"><h2>Before you hand this off</h2><p>'+(required.length||stale.length||checks.length?'Recorded gaps still need attention. Start with the items below.':'No required-answer gaps or package blockers are identified by these saved checks. The answers and official submission requirements still need review.')+'</p><ol>'+ (required.length?'<li><strong>Complete '+required.length+' required answer(s).</strong> '+esc(required.slice(0,3).map(r=>r.label).join(', '))+(required.length>3?' and more.':'.')+' '+go(required[0].section,'Open required answers →',required[0].key)+'</li>':'')+(stale.length?'<li><strong>Recheck '+stale.length+' answer(s) affected by site or plan changes.</strong> '+go(stale[0].section,'Review changed answers →',stale[0].key)+'</li>':'')+(suggested.length?'<li><strong>Review '+suggested.length+' suggested answer(s) against their evidence.</strong> Populated fields are not confirmed answers. '+go(suggested[0].section,'Review suggestions →',suggested[0].key)+'</li>':'')+(checks.length?'<li><strong>Resolve '+checks.length+' package checklist item(s).</strong> '+esc(checks.slice(0,3).join(' · '))+' <button type="button" data-action="handoff-checklist">Open package checklist →</button></li>':'')+'<li><strong>Check the official form, signatures and attachments.</strong> General answer confirmation and final authority acceptance are not established by these counts. '+go('documents','Review documents & acknowledgments →')+'</li></ol><p class="pw-muted">'+(blank.length-required.length)+' other blank editable fields may be optional or conditional. A frozen package is a saved handoff, not a filed or approved application.</p></section>';
+ return '<section class="pw-card handoff-guide"><h2>Before you hand this off</h2><p>'+(required.length||stale.length||checks.length?'Recorded gaps still need attention. Start with the items below.':'No required-answer gaps or package blockers are identified by these saved checks. The answers and official submission requirements still need review.')+'</p><ol>'+ (required.length?'<li><strong>Complete '+required.length+' required answer(s).</strong> '+esc(required.slice(0,3).map(r=>r.label).join(', '))+(required.length>3?' and more.':'.')+' '+go(required[0].section,'Open required answers →',required[0].key)+'</li>':'')+(stale.length?'<li><strong>Recheck '+stale.length+' answer(s) affected by site or plan changes.</strong> '+go(stale[0].section,'Review changed answers →',stale[0].key)+'</li>':'')+(suggested.length?'<li><strong>Review '+suggested.length+' unconfirmed answer(s) against their evidence.</strong> Populated fields are not confirmed answers. '+go(suggested[0].section,'Review suggestions →',suggested[0].key)+'</li>':'')+(checks.length?'<li><strong>Resolve '+checks.length+' package checklist item(s).</strong> '+esc(checks.slice(0,3).join(' · '))+' <button type="button" data-action="handoff-checklist">Open package checklist →</button></li>':'')+'<li><strong>Check the official form, signatures and attachments.</strong> Confirmed answers record a project review; final authority acceptance remains separate. '+go('documents','Review documents & acknowledgments →')+'</li></ol><p class="pw-muted">'+(blank.length-required.length)+' other blank editable fields may be optional or conditional. A frozen package is a saved handoff, not a filed or approved application.</p></section>';
 }
 
 root.PermitPrepUI={plans,permits,team,valuation,readiness,progress,progressReport};
@@ -6618,19 +6789,20 @@ if(typeof module!=='undefined'&&module.exports)module.exports={phrase,create};el
 (function(root){'use strict';
 const W=typeof module!=='undefined'&&module.exports?require('./permit-workflow'):root.PermitWorkflow;
 const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+const D=typeof module!=='undefined'&&module.exports?require('./site-decisions'):root.SiteDecisions;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function stageLabel(p){if(p.issuance)return 'Issuance recorded';if(p.receipts.length)return W.openCorrections(p).length?'Corrections open':'Filing receipt recorded';return p.packages.some(x=>!x.stale)?'Package frozen · review still required':'In preparation';}
 function summary(p){
  const findings=(root.LotReport?root.LotReport.reviewFindings(p.report.findings):p.report.findings||[]).filter(f=>!(/^(Historical entry |Later indexed record |Public original |Original .* page .* candidate )/.test(f.item||''))),counts={flag:0,watch:0,verify:0,ok:0};
- for(const f of findings)if(f.status in counts)counts[f.status]++;
+ for(const f of D.openFindings(p,findings))if(f.status in counts)counts[f.status]++;
  const ids=[...new Set([...(p.application.permitSelections||[]),p.application.cityInspect?.typeId].filter(Boolean))];
- const drafts=ids.map(id=>{const rows=C.rows(p,id).filter(r=>!r.locked),filled=rows.filter(r=>String(r.value??'').trim()),suggested=filled.filter(r=>r.status.startsWith('Suggested')).length,stale=filled.filter(r=>r.status.startsWith('Site or plans changed')).length;return {id,label:C.catalog.types.find(t=>t.value===id)?.label||'Permit draft',total:rows.length,filled:filled.length,suggested,stale,supplied:filled.length-suggested-stale,missing:rows.length-filled.length};});
+ const drafts=ids.map(id=>{const rows=C.rows(p,id).filter(r=>!r.locked),filled=rows.filter(r=>String(r.value??'').trim()),suggested=filled.filter(r=>r.status.startsWith('Suggested')).length,stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed')).length;return {id,label:C.catalog.types.find(t=>t.value===id)?.label||'Permit draft',total:rows.length,filled:filled.length,suggested,stale,confirmed:filled.filter(r=>r.review.state==='confirmed').length,supplied:filled.filter(r=>r.status.startsWith('User supplied')).length,missing:rows.length-filled.length};});
  const open=W.openCorrections(p),required=p.requirements.filter(r=>r.required),reviewed=required.filter(r=>['reviewed','waived'].includes(r.state)),blockers=W.blockers(p,p.application.reference?'resubmission':'initial');
  const siteOpen=counts.flag+counts.watch+counts.verify;
  const groups=[];
  if(siteOpen)groups.push({action:'site',label:'Review site evidence',detail:counts.flag+' concerns · '+counts.watch+' review · '+counts.verify+' verification findings'});
  if(drafts.some(d=>d.suggested||d.stale||d.missing))groups.push({action:'filing',label:'Review application answers',detail:drafts.reduce((n,d)=>n+d.suggested,0)+' suggested · '+drafts.reduce((n,d)=>n+d.stale,0)+' stale · '+drafts.reduce((n,d)=>n+d.missing,0)+' blank editable fields across '+drafts.length+' draft(s)'});
- if(blockers.length&&!p.receipts.length)groups.push({action:'filing',label:'Review package checklist',detail:blockers.length+' checklist / identity items remain; application completeness is assessed separately'});
+ if(blockers.length&&!p.receipts.length)groups.push({action:'filing',label:'Review package checklist',detail:blockers.length+' recorded answer, approval or checklist gaps remain'});
  if(open.length)groups.unshift({action:'management',label:'Resolve recorded corrections',detail:open.length+' open corrections from '+p.rounds.length+' recorded review round(s)'});
  const actionable=open.filter(c=>c.state!=='resubmitted');
  let next=p.issuance?{action:'management',label:'Review the issued permit record',reason:'Issuance is recorded. Check the original permit and any conditions before relying on it.'}:
@@ -6643,15 +6815,16 @@ function summary(p){
  drafts.some(d=>d.missing||d.suggested)?{action:'filing',label:'Review the application and its evidence',reason:'Open a draft to see required-answer gaps, suggestions and supporting-document checks. Blank optional fields are not automatically blockers.'}:
  {action:'filing',label:'Review the filing handoff',reason:blockers.length?blockers.length+' package checklist items need attention. Review the named requirements before freezing a handoff.':'Recorded checklist checks have no blockers. Verify answer completeness and required signatures in the official form; this is not filing approval.'};
 
- return {counts,siteOpen,drafts,open,required,reviewed,blockers,groups,next};
+ const priorities=D.openFindings(p,findings).filter(f=>['flag','watch','verify'].includes(f.status)).sort((a,b)=>({flag:0,verify:1,watch:2}[a.status]-{flag:0,verify:1,watch:2}[b.status])||(['ccr','easements','water','utilities'].includes(b.section)-['ccr','easements','water','utilities'].includes(a.section))).slice(0,3);
+ return {priorities,counts,siteOpen,drafts,open,required,reviewed,blockers,groups,next};
 }
 function render(p){const s=summary(p),b=(action,label,id)=>'<button type="button" data-action="'+action+'" data-id="'+esc(id||'')+'">'+esc(label)+'</button>',go=(id,label)=>b(id==='site'?'site':'tab',label,id),badge=(text,tone='neutral')=>'<span class="cp-status cp-'+tone+'">'+esc(text)+'</span>';
- const date=v=>v&&!isNaN(Date.parse(v))?new Date(v).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'Date unavailable';
+ const date=v=>v&&!isNaN(Date.parse(v))?new Date(/^\d{4}-\d{2}-\d{2}$/.test(v)?v+'T12:00:00':v).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'Date unavailable';
  const stage=(n,title,state,detail,id,action)=>'<li><span class="cp-stage-number">'+n+'</span><div><div class="cp-stage-title"><h3>'+title+'</h3>'+badge(state,state==='Needs attention'?'review':'neutral')+'</div><p>'+esc(detail)+'</p>'+go(id,action)+'</div></li>';
  return '<section class="cp-overview" aria-labelledby="overview-heading"><div class="cp-page-heading"><div><h2 id="overview-heading" tabindex="-1">Project overview</h2><p>What is known, what remains open, and where to continue.</p></div></div><section class="cp-next" aria-labelledby="next-heading"><div><p class="cp-eyebrow">'+'Suggested next action'+'</p><h3 id="next-heading">'+esc(s.next.label)+'</h3><p>'+esc(s.next.reason)+'</p></div>'+b(s.next.action==='work'?'overview-work':s.next.action==='site'?'site':'tab',s.next.action==='work'?'View outstanding work':'Continue →',s.next.action)+'</section><ol class="cp-pipeline" aria-label="Project lifecycle">'+
  stage('01','Site Review',s.siteOpen?'Needs attention':(p.report.findings?.length?'Snapshot available':'Not assessed'),s.siteOpen+' findings need review or verification · snapshot '+date(p.report.date),'site','Open Site Review')+
  stage('02','Permit Preparation',s.drafts.length?'In progress':'Not started',s.drafts.length+' selected draft(s) · '+s.reviewed.length+' / '+s.required.length+' required checklist items reviewed or waived','filing','Open Permit Preparation')+
- stage('03','Permit Management',p.issuance?'Issuance recorded':p.receipts.length?'Receipt recorded':'Not started',p.receipts.length?s.open.length+' open corrections · '+p.receipts.length+' recorded receipt(s)':'No filing receipt recorded. Drafts are not submissions.','management','Open Submissions & Review')+'</ol><div class="cp-overview-grid"><div><section class="cp-panel" id="overview-work" tabindex="-1"><div class="cp-panel-head"><h3>Outstanding work</h3><p>Groups may overlap; these are not independent risk counts.</p></div><div class="cp-metrics">'+[['flag','Concerns'],['watch','Review'],['verify','Verify']].map(([key,label])=>'<div class="cp-'+key+'"><strong>'+s.counts[key]+'</strong><span>'+label+'</span></div>').join('')+'</div>'+ (s.groups.length?s.groups.map(g=>'<div class="cp-work-row"><div><h4>'+esc(g.label)+'</h4><p>'+esc(g.detail)+'</p></div>'+go(g.action,g.action==='site'?'Open Site Review':g.action==='management'?'Open Submissions & Review':'Open Permit Preparation')+'</div>').join(''):'<p class="cp-panel-body">No open work identified by these summaries. This does not establish approval or application completeness.</p>')+'</section><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Recent project activity</h3>'+go('activity','View activity')+'</div><ul class="cp-activity">'+(p.events.slice(-3).reverse().map(e=>'<li><div>'+esc(e.text)+'<small>'+esc(e.provenance||'Recorded project event')+'</small></div><time datetime="'+esc(e.at)+'">'+esc(date(e.at))+'</time></li>').join('')||'<li>No project events recorded yet.</li>')+'</ul></section></div><aside><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Site at a glance</h3>'+go('site','Open map & evidence')+'</div><div id="overview-map" role="region" aria-label="Saved parcel map"><p>Parcel geometry is unavailable in this snapshot. Open Site Review for the available evidence.</p></div><p class="cp-panel-note">Findings from saved checks, not site clearance. Snapshot '+esc(date(p.report.date))+'.</p><div class="cp-panel-body">'+b('refresh-evidence','Refresh public evidence')+'</div></section><section class="cp-panel"><div class="cp-panel-head"><h3>Application drafts</h3></div>'+ (s.drafts.length?s.drafts.map(d=>'<div class="cp-draft"><h4>'+esc(d.label)+'</h4><p><strong>'+d.filled+' / '+d.total+'</strong> editable fields populated</p><progress value="'+d.filled+'" max="'+(d.total||1)+'" aria-label="'+esc(d.label)+' editable field population"></progress><p>'+d.suggested+' suggested · '+d.supplied+' supplied · '+d.stale+' stale</p>'+b('prepare-permit','Open '+d.label+' draft',d.id)+'</div>').join(''):'<div class="cp-panel-body"><p>No permit scope selected.</p>'+go('filing','Choose permit scope')+'</div>')+'<p class="cp-panel-note">Population is not confirmation. General answer confirmation is not tracked; blank fields may include optional items. Drafts share the existing filing lifecycle.</p></section><section class="cp-panel cp-panel-body"><h3>Project resources</h3><div class="cp-resource-links">'+go('rules','Rules & Approvals')+go('contacts','Contacts')+go('documents','Documents')+go('evidence','Record Review')+go('valuation','Valuation')+go('placement','Pool Planning')+go('filing','Plans, measurements & team')+'</div></section></aside></div></section>';
+ stage('03','Permit Management',p.issuance?'Issuance recorded':p.receipts.length?'Receipt recorded':'Not started',p.receipts.length?s.open.length+' open corrections · '+p.receipts.length+' recorded receipt(s)':'No filing receipt recorded. Drafts are not submissions.','management','Open Submissions & Review')+'</ol><div class="cp-overview-grid"><div><section class="cp-panel" id="overview-work" tabindex="-1"><div class="cp-panel-head"><h3>Outstanding work</h3><p>Groups may overlap; these are not independent risk counts.</p></div><div class="cp-priority-questions">'+s.priorities.map(f=>'<article class="cp-work-row"><div><h4>'+esc(f.item)+'</h4><p>'+esc(f.headline)+'</p><p>'+esc(D.status(p,f).missing||f.next_step||'Review the original evidence and parcel applicability before relying on this finding.')+'</p></div><button type="button" data-review-question="'+esc(D.id(f))+'">Review question</button></article>').join('')+'</div><div class="cp-metrics">'+[['flag','Concerns'],['watch','Review'],['verify','Verify']].map(([key,label])=>'<div class="cp-'+key+'"><strong>'+s.counts[key]+'</strong><span>'+label+'</span></div>').join('')+'</div>'+ (s.groups.length?s.groups.map(g=>'<div class="cp-work-row"><div><h4>'+esc(g.label)+'</h4><p>'+esc(g.detail)+'</p></div>'+go(g.action,g.action==='site'?'Open Site Review':g.action==='management'?'Open Submissions & Review':'Open Permit Preparation')+'</div>').join(''):'<p class="cp-panel-body">No open work identified by these summaries. This does not establish approval or application completeness.</p>')+'</section><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Recent project activity</h3>'+go('activity','View activity')+'</div><ul class="cp-activity">'+(p.events.slice(-3).reverse().map(e=>'<li><div>'+esc(e.text)+'<small>'+esc(e.actor?(e.provenance||e.actor):'Legacy event · actor not verified')+'</small></div><time datetime="'+esc(e.at)+'">'+esc(date(e.at))+'</time></li>').join('')||'<li>No project events recorded yet.</li>')+'</ul></section></div><aside><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Site at a glance</h3>'+go('site','Open map & evidence')+'</div><div id="overview-map" role="region" aria-label="Saved parcel map"><p>Parcel geometry is unavailable in this snapshot. Open Site Review for the available evidence.</p></div><p class="cp-panel-note">Findings from saved checks, not site clearance. Snapshot '+esc(date(p.report.date))+'.</p><div class="cp-panel-body">'+b('refresh-evidence','Refresh public evidence')+'</div></section><section class="cp-panel"><div class="cp-panel-head"><h3>Application drafts</h3></div>'+ (s.drafts.length?s.drafts.map(d=>'<div class="cp-draft"><h4>'+esc(d.label)+'</h4><p><strong>'+d.filled+' / '+d.total+'</strong> editable fields populated</p><progress value="'+d.filled+'" max="'+(d.total||1)+'" aria-label="'+esc(d.label)+' editable field population"></progress><p>'+d.suggested+' suggested · '+d.supplied+' supplied · '+d.confirmed+' confirmed · '+d.stale+' stale</p>'+b('prepare-permit','Open '+d.label+' draft',d.id)+'</div>').join(''):'<div class="cp-panel-body"><p>No permit scope selected.</p>'+go('filing','Choose permit scope')+'</div>')+'<p class="cp-panel-note">Population is not confirmation. Confirmed answers record a review of the saved value and evidence. Blank fields may be optional. Only the designated worksheet belongs to the tracked filing; other drafts are worksheets.</p></section><section class="cp-panel cp-panel-body"><h3>Optional work</h3><form data-command="research_scope"><label>Pool in this project?<select name="pool">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.pool||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><button type="submit">Save scope</button></form><p>Pool research stays available; it counts as open project work only when included.</p><h3>Project resources</h3><div class="cp-resource-links">'+go('rules','Rules & Approvals')+go('contacts','Contacts')+go('documents','Documents')+go('evidence','Record Review')+go('valuation','Valuation')+go('placement','Pool Planning')+go('filing','Plans, measurements & team')+'</div></section></aside></div></section>';
 }
 const api={summary,stageLabel,render};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectOverview=api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -6700,7 +6873,13 @@ function mount(p){discoveryStatus();if(map){map.remove();map=null;}overlays={};c
  document.getElementById('rules-draw-clear').onclick=()=>{mode='';points=[];drawn.clearLayers();if(draft)map.removeLayer(draft);form.elements.workGeometry.value='';form.elements.accessGeometry.value='';document.getElementById('rules-draw-status').textContent='Drawings cleared. Save project scope to apply.';};
 }
 function highlight(id){if(!map)return;Object.values(overlays).forEach(l=>map.removeLayer(l));if(id==='parcel'&&parcelBounds){map.fitBounds(parcelBounds,{padding:[20,20]});return;}const l=overlays[id];if(l?.getLayers().length){l.addTo(map);map.fitBounds(parcelBounds||l.getBounds(),{padding:[45,45],maxZoom:17});}}
-function contacts(p){const mapped=(p.application.areaMap?.layers||[]).filter(l=>l.features.length&&(l.tax||['municipal','water','health'].includes(l.id)));const saved=p.report.facts?.contacts||[];return '<section class="pw-card"><h2>Contacts</h2><p>Public authorities and neighborhood reviewers. Your designer and contractor remain under Permit Preparation → Project team.</p><button data-action="tab" data-id="rules">Rules for this property</button></section><div class="rules-contacts">'+saved.map(c=>'<section class="pw-card"><h3>'+esc(c.name)+'</h3><p>'+esc(c.kind)+'</p>'+(c.people||[]).map(x=>'<p>'+esc(x.role)+'<br>'+esc(x.phone)+' '+(/^[^\s@]+@[^\s@]+$/.test(x.email||'')?'<a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a>':'')+'</p>').join('')+(c.lines||[]).map(t=>'<p>'+esc(t)+'</p>').join('')+link(c.portal,'Permit portal')+' '+link(c.url,'Official contact source')+'<p>'+esc(c.asOf||'Contact date not recorded')+'</p></section>').join('')+[...new Map(A.rules(p).filter(r=>r.url).map(r=>[r.authority,r])).values()].map(r=>'<section class="pw-card"><h3>'+esc(r.authority)+'</h3><p>'+esc(r.title)+'</p>'+link(r.url,'Authority / original requirement')+'<p>Applicability: '+esc(r.applicability)+'. Contact details must be confirmed with the authority.</p></section>').join('')+'</div><section class="pw-card"><h3>Mapped authority candidates</h3>'+mapped.map(l=>'<p>'+esc(l.name)+': '+esc(l.features.map(f=>l.id==='ov-slope'?({'1':'0–15% slope','2':'16–25% slope','3':'26–30% slope','4':'31–40% slope','5':'>40% slope'}[f.attributes?.gridcode]||'Unknown slope class'):f.name).join(', '))+' '+link(l.url,'Boundary source')+'</p>').join('')+(!saved.length?'<p>No saved directory contacts. Use the linked authority sources above; missing contacts do not mean no approval is required.</p>':'')+'</section>';}
+function contacts(p){
+ const groups=new Map(),key=name=>String(name||'Unidentified authority').toLowerCase().replace(/[^a-z0-9]/g,'');
+ function group(name){const k=key(name);if(!groups.has(k))groups.set(k,{name,contacts:[],rules:[]});return groups.get(k);}
+ for(const c of p.report.facts?.contacts||[])group(c.name).contacts.push(c);
+ for(const r of A.rules(p).filter(r=>r.url&&r.applicability!=='not-triggered'))group(r.authority).rules.push(r);
+ return '<section class="pw-card"><h2>Contacts by decision</h2><p>Use the original sources first. When a specific missing record or approval needs an authority response, the questions below identify why that organization is relevant. Contact listings do not establish that approval is required.</p><button data-action="tab" data-id="rules">Review approval timing and evidence</button></section><div class="rules-contacts">'+[...groups.values()].map(g=>'<section class="pw-card"><h3>'+esc(g.name)+'</h3>'+g.rules.map(r=>'<p><strong>'+esc(r.title)+'</strong> · '+esc(stages[r.stage]||'Timing unresolved')+'</p><p>'+esc(r.trigger)+'</p><p>Applicability: '+esc(r.applicability)+' · '+link(r.url,'Original requirement / authority source')+'</p>').join('')+g.contacts.map(c=>'<p>'+esc(c.kind)+'</p>'+[...new Map((c.people||[]).map(x=>[JSON.stringify(x),x])).values()].map(x=>'<p>'+esc(x.role)+' · '+esc(x.phone)+' '+(/^[^\s@]+@[^\s@]+$/.test(x.email||'')?'<a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a>':'')+'</p>').join('')+(c.lines||[]).map(t=>'<p>'+esc(t)+'</p>').join('')+link(c.portal,'Permit portal')+' '+link(c.url,'Contact source')+'<p>'+esc(c.asOf||'Contact verification date not recorded')+'</p>').join('')+(!g.contacts.length?'<p>No verified person or direct channel retained. Use the authority source above to verify the current contact.</p>':'')+'</section>').join('')+'</div><section class="pw-card"><h3>Boundary matches</h3><p>Mapped candidates are shown with their geometry and applicability under Rules &amp; Approvals. A boundary match alone is not an approval requirement.</p><button data-action="tab" data-id="rules">View authority map</button></section>';
+}
 root.AreaRulesUI={render,detail,mount,highlight,contacts};
 })(window);
 
@@ -6758,9 +6937,9 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
         else if(remote&&p&&remote.revision!==window.CloudSync.baseRevision(id)&&p.revision!==window.CloudSync.baseRevision(id))notice='This device and your account have different changes. Device work was kept; download a backup before reconciling.';
       }catch(e){if(!p)throw e;notice='Opened the saved device copy. '+e.message;}
     }
-    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');project=p;investigation=view?.investigation||null;draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
+    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
   }
-  async function commit(command, file) { const next = W.apply(project, command); if(next===project){render();return;} await S.save(next, project.revision, file); project = next; render(); }
+  async function commit(command, file) { const next = W.apply(project, command); if(next===project){render();return;} await S.save(next, project.revision, file); project = next; window.SiteDecisions.setActive(project);render(); }
   function draftProject(){if(tab!=='draft')return project;return {...project,application:{...project.application,cityInspect:{...project.application.cityInspect,typeId:draftType||project.application.cityInspect?.typeId}}};}
   async function openPermitDraft(id){
     await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';
@@ -6775,12 +6954,16 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
     if(f){const command=window.CityApplication.formCommand(project,new FormData(f));if(command.entries.length)await commit(command);}
   }
   async function collectChecklist(p) {
+    const account=S.owner();const checkAccount=()=>{if(S.owner()!==account)throw Error('Account changed during checklist migration. Reopen the project.');};
     for(const file of await S.checklistFiles(p.property.county,p.property.parcelId)){
-      const hash=await window.ProjectBackup.hash(await file.blob.arrayBuffer());if(p.documents.some(d=>d.hash===hash))continue;
+      const hash=await window.ProjectBackup.hash(await file.blob.arrayBuffer());checkAccount();if(p.documents.some(d=>d.hash===hash))continue;
       if(file.size>25*1024*1024||p.documents.reduce((n,d)=>n+(d.size||0),0)+file.size>100*1024*1024){const next=JSON.parse(JSON.stringify(p));next.revision++;next.events.push({id:W.id(),at:new Date().toISOString(),type:'attachment_copy_failed',text:'Checklist attachment '+file.name+' remains in the checklist: project file capacity exceeded.'});await S.save(next,p.revision);p=next;continue;}
       const id=W.id(),next=W.apply(p,{type:'document',document:{id,name:file.name,size:file.size,hash,role:'supporting',family:id,checklistKey:file.checklistKey}});
       await S.save(next,p.revision,{id,blob:file.blob});p=next;
-    }return p;
+    }
+    const records=await S.checklistRecords(p.property.county,p.property.parcelId);
+    checkAccount();const next=W.apply(p,{type:'migrate_site_reviews',records});if(next!==p){await S.save(next,p.revision);p=next;}
+    return p;
   }
   async function retainPublicSources(p) {
     const sources=(p.report.facts.publicSurveys||{}).documents||[];
@@ -6799,6 +6982,7 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
   // One persistent project frame shared by the report and workflow views.
   const frame=document.createElement('section');frame.id='project-frame';document.body.insertBefore(frame,document.getElementById('rv'));
   function projectFrame(active) {
+    window.SiteDecisions.setActive(project);
     if(overviewMapInstance){overviewMapInstance.remove();overviewMapInstance=null;}
     rememberView(active);
     document.body.classList.toggle('project-frame-active',!!project);
@@ -6836,7 +7020,7 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
     const p = project, blockers = W.blockers(p,kind), pkg = W.currentPackage(p,kind);
     if (kind === 'resubmission' && W.openCorrections(p).length && W.openCorrections(p).every(c => c.state === 'resubmitted')) return '<section class="pw-card"><h2>Awaiting reviewer response</h2><p>Resubmission recorded. Retain the city’s acceptance or import its next correction round when received.</p>' + (pkg ? button('export-package','Download submitted package',pkg.id) : '') + '</section>';
     if (kind === 'initial' && p.application.reference) return '<section class="pw-card"><h2>Filing recorded</h2><p>Reference ' + esc(p.application.reference) + '. Manage subsequent corrections in Submissions & review.</p></section>';
-    return '<section class="pw-card"><h2>' + (kind === 'initial' ? 'Prepare filing handoff' : 'Prepare resubmission') + '</h2>' + (blockers.length ? '<p>' + blockers.length + ' blockers:</p><ul>' + blockers.map(b => '<li>' + esc(b) + '</li>').join('') + '</ul>' : '<p>Recorded package checklist has no open items. Application completeness and answer confirmation have not been established.</p>') + form('prepare', '<input type="hidden" name="kind" value="' + kind + '">' + field('reviewer','Package reviewer','') + '<label><input type="checkbox" name="reviewed"> I reviewed the application, supporting documents and responses listed in this workspace.</label>', 'Freeze reviewed package') + (pkg ? '<p>Package ' + esc(pkg.id) + ' · ' + esc(pkg.preparedAt) + '</p>' + button('export-package','Download frozen package',pkg.id) : '') + '<div class="pw-actions"><button disabled>Submit automatically — connection required</button>' + link(p.application.portal,'Open official filing portal') + '</div><p class="pw-muted">A frozen package records a reviewer snapshot, not complete application validation or a filing receipt. Suggested and supplied answers still require review; general answer confirmation is not tracked. Download includes the application snapshot and attached documents; it does not replace jurisdiction forms, required stamps, signatures or fees.</p></section>';
+    return '<section class="pw-card"><h2>' + (kind === 'initial' ? 'Prepare filing handoff' : 'Prepare resubmission') + '</h2>' + (blockers.length ? '<p>' + blockers.length + ' blockers:</p><ul>' + blockers.map(b => '<li>' + esc(b) + '</li>').join('') + '</ul>' : '<p>Recorded package checklist has no open items. Application completeness and answer confirmation have not been established.</p>') + form('prepare', '<input type="hidden" name="kind" value="' + kind + '">' + field('reviewer','Package reviewer','') + '<label><input type="checkbox" name="reviewed"> I reviewed the application, supporting documents and responses listed in this workspace.</label>', 'Freeze reviewed package') + (pkg ? '<p>Package ' + esc(pkg.id) + ' · ' + esc(pkg.preparedAt) + '</p>' + button('export-package','Download frozen package',pkg.id) : '') + '<div class="pw-actions"><button disabled>Submit automatically — connection required</button>' + link(p.application.portal,'Open official filing portal') + '</div><p class="pw-muted">A frozen package records a reviewer snapshot, not complete application validation or a filing receipt. Required answers and populated values must pass the same review checks shown in Permit Preparation. Recorded confirmation is a project review, not authority acceptance. Download includes the application snapshot and attached documents; it does not replace jurisdiction forms, required stamps, signatures or fees.</p></section>';
   }
   function receiptForm() {
     return '<section class="pw-card"><h2>Record an external filing receipt</h2><p>After filing through the official portal, retain the confirmation here. Cornerpin does not independently verify this receipt.</p>' + form('receipt', field('reference','Application reference',project.application.reference) + field('receivedAt','Receipt date','','date') + select('packageId','Submitted package',[['','Filed outside Cornerpin — package not captured']].concat(project.packages.filter(p => !p.stale && !p.receiptId).map(p => [p.id,p.kind + ' · ' + p.preparedAt])), '') + source(),'Record filing receipt') + project.receipts.map(r => '<p>' + esc(r.receivedAt + ' · ' + r.reference + ' · ' + (r.packageId || 'Package not captured')) + '</p>').join('') + '</section>';
@@ -6846,13 +7030,14 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
     return '<section class="pw-card"><h2>Approval milestones</h2><p>Before issuance or affected construction work, review any remaining authority approvals and conditions.</p>'+button('tab','Open approval sequence','rules')+'</section><section class="pw-card"><h2>Reviewer correspondence</h2><p>Import actual city feedback. Paste the reviewer text with a blank line between each actionable comment, check the items, then confirm. Attach the original letter under Documents or retain its source link.</p>' + form('review_round', field('department','Review department','Building') + field('sourceDate','Correspondence date','','date') + field('sourceLocator','Page / section reference','') + source() + area('originalText','Reviewer comments — one item per paragraph','') + '<label><input type="checkbox" name="confirmed"> I checked each paragraph against the original correspondence.</label>', 'Import confirmed comments') + p.rounds.map(r => '<details><summary>Review round ' + r.number + ' · ' + esc(r.department) + ' · ' + esc(r.sourceDate) + '</summary><pre>' + esc(r.originalText) + '</pre>' + link(r.url,'Original correspondence') + (r.documentId ? button('download-file','Download original letter',r.documentId) : '') + '</details>').join('') + '</section><section class="pw-card"><h2>Corrections</h2>' + (p.corrections.map(c => '<details><summary>' + esc(c.department + ' · ' + c.text) + ' <span class="pw-status">— ' + esc(human(c.state)) + '</span></summary><p class="pw-muted">' + esc(c.sourceLocator) + '</p>' + (c.state === 'accepted' ? '<p>Acceptance recorded: ' + esc(c.acceptance.note) + '</p>' : form('correction', '<div class="pw-grid">' + field('owner','Responsible person',c.owner) + field('email','Contact email (for draft only)',c.email,'email') + field('dueDate','Due date',c.dueDate,'date') + '</div>' + select('state','Work status',[['received','Received'],['assigned','Assigned'],['revision_received','Revision received'],['response_prepared','Response prepared']].concat(c.state === 'resubmitted' ? [['resubmitted','Resubmitted — awaiting reviewer']] : []),c.state) + area('response','Response to reviewer',c.response) + docs(c.documentIds) + area('noRevisionReason','If no revised document is needed, explain why',c.noRevisionReason), 'Save correction',c.id) + button('draft-assignment','Download assignment email draft',c.id) + (c.state === 'resubmitted' ? '<h3>Record reviewer acceptance</h3>' + form('accept_correction',source() + area('note','Acceptance text / applicable comment reference',''),'Record acceptance',c.id) : '')) + '</details>').join('') || '<p>No reviewer comments imported.</p>') + '</section>' + packagePanel('resubmission') + receiptForm() + '<section class="pw-card"><h2>Permit issuance</h2><p>Record issuance only when you have the actual permit and all tracked corrections have been reconciled.</p>' + form('issuance',field('permitNumber','Issued permit number','') + field('issuedAt','Issue date','','date') + source(),'Record issued permit') + (p.issuance ? '<p>Recorded permit: ' + esc(p.issuance.permitNumber) + ' · ' + esc(p.issuance.issuedAt) + '</p>' : '') + '</section>';
   }
   function documents() {
-    return (investigation?'<section class="cp-next" id="evidence-task" tabindex="-1"><div><p class="cp-eyebrow">'+(investigation.draft?'Supporting your application':'Investigating a site finding')+'</p><h2>'+esc(investigation.title)+'</h2><p>'+esc(investigation.question||'Inspect the original and its applicability, then return to the question you were reviewing.')+'</p><p>These are candidate records, not automatically matched evidence for this question.</p></div>'+button('return-investigation',investigation.draft?'Return to application':'Return to '+investigation.title)+'</section>':'')+'<section class="pw-card"><h2>Documents</h2><p>Original files, organized by what they support. Site Review holds site findings; Permit Preparation holds proposed-work answers; Submissions &amp; Review holds filing decisions.</p><nav class="pw-actions" aria-label="Document groups"><a href="#public-records">Public records</a><a href="#documents-plans">Proposed plans</a><a href="#documents-supporting">Supporting reports</a><a href="#documents-filing">Filing records</a><a href="#documents-history">Version history</a></nav></section>'+window.SiteDocumentUI.panel(project,investigation)+window.SiteDocumentUI.library(project)+'<section class="pw-card"><h2>Add a supporting document</h2><p>Files save with your project. Signed-in changes sync to your account automatically; their checklist status does not approve filing requirements. Uploading a file does not approve a requirement.</p>' + form('upload', '<label>File (maximum 25 MB)<input type="file" name="file" required></label>' + select('role','Document role',[['plan','Building plans'],['site_plan','Site plan'],['geotechnical','Geotechnical report'],['hazard','Hazard assessment'],['fire_receipt','Fire district receipt'],['stormwater','Stormwater permit'],['energy','REScheck / energy compliance'],['structural','Structural calculations'],['engineering','Permit engineering'],['truss_layout','Truss layout'],['truss_specs','Truss specifications'],['soils','Soils report'],['noi','State NOI'],['swppp','SWPPP'],['will_serve','Will-serve letters'],['owner_builder','Owner-builder certificate'],['supporting','Supporting report / approval'],['review_letter','Reviewer letter'],['receipt','Filing receipt'],['permit','Issued permit']], 'supporting') + select('family','Version of',[['','New document']].concat(project.documents.filter(d => W.latest(project,d)).map(d => [d.family,d.name + ' · next version'])),''), 'Save document') + '</section>';
+    const key=investigation?.reviewId||(investigation&&!investigation.draft?window.SiteDecisions.id((project.report.findings||[]).find(f=>f.item===investigation.title)||{}):'');
+    return window.SiteDecisions.workspace(project,key)+(investigation?'<section class="cp-next" id="evidence-task" tabindex="-1"><div><p class="cp-eyebrow">'+(investigation.draft?'Supporting your application':'Investigating a site finding')+'</p><h2>'+esc(investigation.title)+'</h2><p>'+esc(investigation.question||'Inspect the original and its applicability, then return to the question you were reviewing.')+'</p><p>These are candidate records, not automatically matched evidence for this question.</p></div>'+button('return-investigation',investigation.draft?'Return to application':'Return to '+investigation.title)+'</section>':'')+'<section class="pw-card"><h2>Documents</h2><p>Original files, organized by what they support. Site Review holds site findings; Permit Preparation holds proposed-work answers; Submissions &amp; Review holds filing decisions.</p><nav class="pw-actions" aria-label="Document groups"><a href="#public-records">Public records</a><a href="#documents-plans">Proposed plans</a><a href="#documents-supporting">Supporting reports</a><a href="#documents-filing">Filing records</a><a href="#documents-history">Version history</a></nav></section>'+window.SiteDocumentUI.panel(project,investigation)+window.SiteDocumentUI.library(project)+'<section class="pw-card"><h2>Add a supporting document</h2><p>Files save with your project. Signed-in changes sync to your account automatically; their checklist status does not approve filing requirements. Uploading a file does not approve a requirement.</p>' + form('upload', '<label>File (maximum 25 MB)<input type="file" name="file" required></label>' + select('role','Document role',[['plan','Building plans'],['site_plan','Site plan'],['geotechnical','Geotechnical report'],['hazard','Hazard assessment'],['fire_receipt','Fire district receipt'],['stormwater','Stormwater permit'],['energy','REScheck / energy compliance'],['structural','Structural calculations'],['engineering','Permit engineering'],['truss_layout','Truss layout'],['truss_specs','Truss specifications'],['soils','Soils report'],['noi','State NOI'],['swppp','SWPPP'],['will_serve','Will-serve letters'],['owner_builder','Owner-builder certificate'],['supporting','Supporting report / approval'],['review_letter','Reviewer letter'],['receipt','Filing receipt'],['permit','Issued permit']], 'supporting') + select('family','Version of',[['','New document']].concat(project.documents.filter(d => W.latest(project,d)).map(d => [d.family,d.name + ' · next version'])),''), 'Save document') + '</section>';
   }
   function render() {
     document.body.classList.add('show-project');
     projectFrame(tab);
     document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · My projects';
-    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(window.ProjectOverview.stageLabel(project)) + '</strong></p>' : '<h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p>Open a saved site to continue where you left off. Public research only reruns when you choose Refresh.</p>') + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,draft,management,documents,rules:()=>window.AreaRulesUI.render(project),contacts:()=>window.AreaRulesUI.contacts(project),activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '</p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div>');
+    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(window.ProjectOverview.stageLabel(project)) + '</strong></p>' : '<h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p>Open a saved site to continue where you left off. Public research only reruns when you choose Refresh.</p>') + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.SiteDecisions.workspace(project,investigation?.reviewId||'')+window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,draft,management,documents,rules:()=>window.AreaRulesUI.render(project),contacts:()=>window.AreaRulesUI.contacts(project),activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '<br><small>'+esc(e.actor?(e.provenance||e.actor):'Legacy event · actor not verified')+'</small></p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div>');
     if(project&&tab==='overview')overviewMap();
     if(project&&tab==='rules'){window.AreaRulesUI.mount(project);if(!project.application.areaMap)setTimeout(()=>{if(tab==='rules'&&!busy&&!project.application.areaMap)refreshRules();},0);}
   }
@@ -6991,12 +7176,16 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
     const permitType=e.target.value;if(!permitType){render();return;}busy=true;
     try{await openPermitDraft(permitType);}catch(err){render();message(err.message);}finally{busy=false;}
   });
+  host.addEventListener('change',e=>{if(e.target.matches('[data-site-question]')){const f=window.SiteDecisions.finding(project,e.target.value);investigation=f?{reviewId:e.target.value,title:f.item,question:f.headline}:null;render();}});
+  document.addEventListener('click',async e=>{const b=e.target.closest('[data-review-question]');if(!b)return;try{project=project||await capture;if(!project)throw Error('Save the project before recording a decision.');const key=b.dataset.reviewQuestion,f=window.SiteDecisions.finding(project,key);investigation={reviewId:key,title:f.item,question:f.headline};tab='documents';render();host.querySelector('#site-decision')?.scrollIntoView({block:'start'});}catch(err){message(err.message);}});
   host.addEventListener('submit', async e => {
     const f=e.target.closest('form[data-command]'); if(!f)return;e.preventDefault();if(busy)return;busy=true;
     const submit=f.querySelector('[type=submit]');submit.disabled=true;
     try {
       const data=new FormData(f);if(e.submitter?.name==='reset')data.set('reset','yes');if(e.submitter?.dataset.poolSearch)data.set('mode','placement-search');const command=Object.fromEntries(data);command.type=f.dataset.command;command.id=f.dataset.id;
       command.documentIds=data.getAll('documentIds').filter(Boolean);command.reviewed=data.has('reviewed');command.confirmed=data.has('confirmed');
+      if(command.type==='answer_review')await saveCityPage();
+      if(command.type==='site_review'){command.references=[{documentId:command.documentId,url:command.url,locator:command.locator,role:'supports'}];if(command.comparisonUrl)command.references.push({url:command.comparisonUrl,locator:command.comparisonLocator,role:command.comparisonRole});}
       if(command.type==='city_application_page'){
         await commit(window.CityApplication.formCommand(project,data));if(e.submitter?.dataset.cityNext){cityPage=e.submitter.dataset.cityNext;render();}
         message('Application page saved. Nothing sent to CityInspect.');return;
@@ -7017,7 +7206,7 @@ root.AreaRulesUI={render,detail,mount,highlight,contacts};
       message('');
     } catch(err) {message(err.message);submit.disabled=false;} finally {window.AnalysisProgress.stop();analysisTarget='';busy=false;}
   });
-  window.addEventListener('cornerpin:account-changed',()=>{project=null;reusableProjects=[];capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
+  window.addEventListener('cornerpin:account-changed',()=>{project=null;window.SiteDecisions.setActive(null);reusableProjects=[];capture=Promise.resolve();tab='overview';document.body.classList.remove('show-project');document.getElementById('rv-body').innerHTML='';window.dispatchEvent(new CustomEvent('cornerpin:home'));});
   window.addEventListener('cornerpin:report', e => {
     const report=JSON.parse(JSON.stringify(e.detail));capturing++;
     capture=capture.catch(()=>{}).then(async()=>{

@@ -5,6 +5,8 @@
   const Facts=typeof module!=='undefined'&&module.exports?require('./permit-facts'):root.PermitFacts;
   const Assistant=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const Reviews=typeof module!=='undefined'&&module.exports?require('./answer-reviews'):root.AnswerReviews;
+  let renderedProject=null;
   const titles={primary:'Property & application',professionals:'Designers & contractors',building:'Building details',attachments:'Documents & acknowledgments'};
   const supported=p=>p.report?.facts?.jurisdiction===catalog.jurisdiction;
   const getType=id=>catalog.types.find(t=>t.value===String(id));
@@ -61,9 +63,14 @@
     const t=getType(id);if(!t)return [];
     return Object.entries(t.sections).flatMap(([section,keys])=>keys.map(key=>{
       const f=catalog.fields[key],rowId=section+'.'+key,c=candidate(p,t,section,f),saved=p.application.cityInspect?.answers?.[t.value]?.[rowId];
-      return {...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
+      const row={...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
         status:saved?(saved.siteVersion===p.siteVersion&&(saved.planVersion||0)===(p.planVersion||0)?'User supplied · review before filing':'Site or plans changed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
+      row.review=Reviews.status(p,row,t.value);if(row.review.state!=='unreviewed')row.status=({confirmed:'Confirmed',rejected:'Rejected · replace this answer','needs-evidence':'Needs evidence',stale:'Stale · review again'})[row.review.state];return row;
     }));
+  }
+  function readiness(p,id){
+    const list=rows(p,id).filter(r=>!r.locked),missing=list.filter(r=>(r.required||r.markedRequired)&&!String(r.value).trim()),unreviewed=list.filter(r=>String(r.value).trim()&&r.review.state!=='confirmed');
+    return {missing,unreviewed,issues:[...missing.map(r=>r.label+': required answer missing.'),...unreviewed.map(r=>r.label+': '+r.review.state+' answer needs review.')]};
   }
   function update(p,a){
     if(!supported(p))throw Error('Exact form mapping is currently available for Ogden Valley City Building Permits only.');
@@ -108,14 +115,15 @@
     return {type:'city_application',permitType,entries};
   }
   function render(p,page='primary'){
+    renderedProject=p;
     if(!supported(p))return '<section class="pw-card"><h2>City application</h2><p>Exact field mapping is currently available for Ogden Valley City Building Permits. Other jurisdictions need their own form mapping.</p></section>';
     const id=p.application.cityInspect?.typeId||'',t=getType(id),rs=rows(p,id);
     if(!titles[page])page='primary';
     const groups=[...new Set(catalog.types.map(x=>x.group))];
     let html='<section class="pw-card city-application"><label for="city-permit-type">Permit type</label><select id="city-permit-type" data-city-type><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select>';
     if(t){
-      const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.status.startsWith('User supplied')),stale=filled.filter(r=>r.status.startsWith('Site or plans changed'));
-      html+='<div class="application-stats"><div><strong>'+filled.length+' / '+editable.length+'</strong><span>Editable fields populated</span><progress value="'+filled.length+'" max="'+(editable.length||1)+'" aria-label="Editable fields populated"></progress></div><div><strong>'+supplied.length+'</strong><span>User supplied · review needed</span></div><div><strong>'+suggested.length+'</strong><span>Suggested · review needed'+(stale.length?' · '+stale.length+' additional stale answers':'')+'</span></div><div><strong>'+(editable.length-filled.length)+'</strong><span>Unanswered · includes optional</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
+      const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.review.state==='confirmed'),stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed'));
+      html+='<div class="application-stats"><div><strong>'+filled.length+' / '+editable.length+'</strong><span>Editable fields populated</span><progress value="'+filled.length+'" max="'+(editable.length||1)+'" aria-label="Editable fields populated"></progress></div><div><strong>'+supplied.length+'</strong><span>Confirmed answers</span></div><div><strong>'+suggested.length+'</strong><span>Suggested · review needed'+(stale.length?' · '+stale.length+' additional stale answers':'')+'</span></div><div><strong>'+(editable.length-filled.length)+'</strong><span>Unanswered · includes optional</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
 
       html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>'<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'">'+(i+1)+'. '+titles[key]+'</button>').join('')+'</nav><p>Review each answer against its source. * marks a required field observed in the city form.</p><a href="#application-documents">Read a document +</a></aside>';
       const list=rs.filter(r=>r.section===page);
@@ -149,8 +157,8 @@
     workspace.querySelectorAll('.city-field').forEach(n=>n.classList.toggle('is-selected',n===field));
     workspace.querySelector('#field-evidence-heading').textContent=field.querySelector('label').textContent;
     const target=workspace.querySelector('#field-evidence-content');target.replaceChildren(field.querySelector('.city-note').cloneNode(true));target.firstChild.removeAttribute('id');
-    const note=root.document.createElement('p');note.textContent='Review the source against this permit scope. Editing the answer uses the existing page save controls; this does not record a confirmation or city approval.';target.append(note);const backButton=root.document.createElement('button');backButton.type='button';backButton.dataset.returnField='';backButton.textContent='Return to answer';target.append(backButton);
+    const note=root.document.createElement('div'),type=renderedProject.application.cityInspect?.typeId,row=rows(renderedProject,type).find(r=>r.key===button.dataset.fieldEvidence);note.innerHTML=Reviews.panel(renderedProject,row,type);target.append(note);const backButton=root.document.createElement('button');backButton.type='button';backButton.dataset.returnField='';backButton.textContent='Return to answer';target.append(backButton);
     if(root.matchMedia('(max-width: 900px)').matches)target.scrollIntoView({behavior:root.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
   });
-  const api={catalog,supported,rows,update,sheet,render,formCommand};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
+  const api={catalog,supported,rows,update,sheet,render,formCommand,Reviews,readiness};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
 })(typeof window!=='undefined'?window:globalThis);

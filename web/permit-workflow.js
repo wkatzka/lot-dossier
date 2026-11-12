@@ -3,6 +3,7 @@
   'use strict';
   const E = typeof module !== 'undefined' && module.exports ? require('./evidence-ledger') : root.EvidenceLedger;
   const A = typeof module !== 'undefined' && module.exports ? require('./area-rules') : root.AreaRules;
+  const D = typeof module !== 'undefined' && module.exports ? require('./site-decisions') : root.SiteDecisions;
   const clone = x => JSON.parse(JSON.stringify(x));
   const required = (x, message) => { if (!x) throw new Error(message); };
   const clean = x => String(x || '').trim();
@@ -14,7 +15,7 @@
   function evidence(p, ref) {
     return !!(ref && (doc(p, ref.documentId) || /^https:\/\//i.test(ref.url || '')));
   }
-  function event(p, type, text, now) { p.events.push({ id: id(), at: now, type, text, provenance: 'Recorded in this browser by user' }); }
+  function event(p, type, text, now, explicitActor) { const actor=explicitActor||(['migrate_site_reviews','public_owner','area_map','sync_report'].includes(type)?'system':type==='document_extraction'?'extraction':type==='review_round'?'import':'user');p.events.push({ id: id(), at: now, type, text, actor, provenance:({system:'System update',extraction:'Document extraction · not reviewer confirmation',ai:'AI extraction · not reviewer confirmation',import:'Imported correspondence · user checked',user:'User action'})[actor] }); }
   function requirements(report) {
     const items = (((report || {}).facts || {}).packet || {}).items || [];
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
@@ -34,6 +35,8 @@
   function openCorrections(p) { return p.corrections.filter(c => c.state !== 'accepted'); }
   function blockers(p, kind) {
     const out = [];
+    const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+    if(C.supported(p)){const type=p.application.filingPermitType;if(!type)out.push('Designate the permit worksheet for this filing.');else out.push(...C.readiness(p,type).issues);}
     if (kind !== 'resubmission' && A) out.push(...A.blockers(p));
     if (kind === 'resubmission') {
       if (!p.application.reference) out.push('Application reference is missing.');
@@ -61,6 +64,14 @@
     const p = clone(project), a = command; now = now || new Date().toISOString();
     required(p.schemaVersion === 1, 'Unsupported project version.');
     switch (a.type) {
+      case 'site_review':
+        p.siteReviews=D.apply(p,a,now);invalidate(p);event(p,a.type,'Site decision recorded: '+D.finding(p,a.id).item,now);break;
+      case 'migrate_site_reviews': {
+        const reviews=D.migrate(p,a.records,now),upgrade=p.correctnessVersion!==1;if(!upgrade&&JSON.stringify(reviews)===JSON.stringify(p.siteReviews))return project;
+        p.siteReviews=reviews;
+        if(upgrade){p.correctnessVersion=1;for(const r of p.requirements){if(/geotechnical/i.test(r.title)&&!r.required){r.previousInterpretation=clone(r);r.required=true;r.title='Determine geotechnical report applicability';r.state='needs_review';r.detail='Determine applicability from current authority requirements, hazards and controlling instruments; slope alone does not establish an exemption.';}}invalidate(p);}
+        event(p,a.type,'Review model upgraded; legacy marks retained as unverified history. Unsubmitted package reviews require renewal.',now);break;
+      }
       case 'area_map': {
         required(a.snapshot?.parcelKey===p.propertyKey && Array.isArray(a.snapshot.layers),'Area matches must belong to this parcel.');
         p.application.areaMap=clone(a.snapshot);invalidate(p);event(p,a.type,'Refreshed parcel boundary matches; approval decisions require renewed review.',now);break;
@@ -109,7 +120,7 @@
         const PF=typeof module!=='undefined'&&module.exports?require('./permit-facts'):window.PermitFacts;
         x.facts=PF.retainConflicts(x.facts,(p.application.documentExtractions||[]).filter(y=>y.documentId===d.id&&y.documentHash===d.hash&&(y.permitType||'1')===(x.permitType||'1')).flatMap(y=>y.facts||[]));
         p.application.documentExtractions=(p.application.documentExtractions||[]).filter(y=>y.documentId!==d.id||(y.permitType||'1')!==(x.permitType||'1')).concat([clone(x)]);
-        invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now);break;
+        invalidate(p);event(p,a.type,'Read '+d.name+': '+x.facts.length+' source-linked candidates; review required.',now,/claude|ai/i.test(x.method||'')?'ai':'system');break;
       }
       case 'measurement_candidates': {
         const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);required(d&&latest(p,d),'Choose the current document version.');required(Array.isArray(x.measurements)&&x.measurements.length<=40,'Invalid geometry response.');p.application.measurementReads=(p.application.measurementReads||[]).filter(r=>r.documentId!==d.id).concat([clone(x)]);event(p,a.type,'Drawing geometry candidates saved; not accepted as application answers.',now);break;
@@ -141,6 +152,19 @@
       }
       case 'license_check': {
         required(p.application.team?.[a.role]&&a.license===p.application.team[a.role].license,'Team license changed; repeat lookup.');p.application.team[a.role].licenseCheck={at:now,summary:clean(a.summary),source:'https://services.commerce.utah.gov/cbr/'};event(p,a.type,'Public registry response retained; not a full license verification.',now);break;
+      }
+      case 'research_scope': {
+        required(['included','excluded','unknown'].includes(a.pool),'Choose the pool scope.');p.application.researchScope={...p.application.researchScope,pool:a.pool};invalidate(p);event(p,a.type,'Optional pool research scope updated.',now);break;
+      }
+      case 'filing_scope': {
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        required(!p.receipts.length&&!p.application.reference,'An existing filing keeps its permit scope. Create a separate project for another independent filing.');
+        required((p.application.permitSelections||[]).includes(String(a.permitType))&&C.catalog.types.some(t=>t.value===String(a.permitType)),'Choose a saved permit worksheet.');
+        p.application.filingPermitType=String(a.permitType);invalidate(p);event(p,a.type,'Designated worksheet for this filing; other worksheets are not independent filings.',now);break;
+      }
+      case 'answer_review': {
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        const row=C.rows(p,a.permitType).find(r=>r.key===a.fieldKey);p.application.answerReviews=C.Reviews.apply(p,row,a,now);invalidate(p);event(p,a.type,'Answer '+a.state+': '+row.label+' · '+a.reviewer,now);break;
       }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
@@ -185,7 +209,7 @@
         required(a.reviewed === true, 'Review the exact package before preparing the handoff.');
         const existing = currentPackage(p, kind);
         if (existing && !existing.receiptId) return p; // Repeated clicks do not create duplicate handoffs.
-        const snapshot = { id: id(), kind, preparedAt: now, reviewedBy: clean(a.reviewer), siteVersion: p.siteVersion,
+        const snapshot = { id: id(), kind, permitType:p.application.filingPermitType||null, preparedAt: now, reviewedBy: clean(a.reviewer), siteVersion: p.siteVersion,
           application: clone(p.application), fields: clone(((p.report.facts || {}).packet || {}).rows || []),
           requirements: clone(p.requirements), documentIds: p.documents.filter(d => latest(p, d) && !['receipt', 'permit', 'review_letter'].includes(d.role)).map(d => d.id),
           responses: kind === 'resubmission' ? clone(openCorrections(p).filter(c => c.state === 'response_prepared')) : [], stale: false, receiptId: null };

@@ -26,7 +26,7 @@ assert.equal(find(screen({water_table_in: 120, boreholes: {gwMin: 2, nearestKm: 
 assert.equal(find(screen({slope: 15, sfha: true}, current), 'Pool grading and ground conditions').status, 'watch');
 assert.equal(find(screen({sfha: true}, current), 'Pool flood and geologic constraints').status, 'watch');
 assert.match(find(screen({}, new Date('2027-01-01')), 'State pool code').headline, /new verification/);
-const html = fs.readFileSync('public/index.html', 'utf8');
+const html = fs.readFileSync('public/platform.html', 'utf8');
 assert.ok(html.indexOf('root.PoolScreen =') < html.indexOf('root.LotReport ='));
 assert.match(html, /\['check_pool', 'Pool feasibility'\]/);
 assert.match(html, /\['pool', 'Pool feasibility'\]/);

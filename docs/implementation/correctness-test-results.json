@@ -1,0 +1,275 @@
+[
+  {
+    "test": "checklist-evidence",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "0b47f4",
+        "wall_time_seconds": 1.260397083,
+        "exit_code": 0,
+        "original_token_count": 32,
+        "output": "PASS: real checklist upload events preserve review status, explicit choices, summary counts, file removal and IndexedDB reload.\n"
+      }
+    }
+  },
+  {
+    "test": "utility-evidence",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "96eda3",
+        "wall_time_seconds": 1.465433625,
+        "exit_code": 0,
+        "original_token_count": 44,
+        "output": "PASS: dense neighborhood, mapped fiber/gas, empty results, independent source failure, total outage, plan gas dependency, and immutable/idempotent saved-report corrections.\n"
+      }
+    }
+  },
+  {
+    "test": "report-corrections",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ec5ec5",
+        "wall_time_seconds": 1.46665825,
+        "exit_code": 0,
+        "original_token_count": 41,
+        "output": "PASS: immutable/idempotent packet corrections, geotechnical applicability, unresolved fire design, base-zone scope, public-original access, live and saved HTML.\n"
+      }
+    }
+  },
+  {
+    "test": "site-decisions",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "6e60e3",
+        "wall_time_seconds": 0.258472625,
+        "exit_code": 0,
+        "original_token_count": 130,
+        "output": "PASS: legacy migration/idempotence, property isolation, cited decisions, conflict reopening, overview propagation, immutable history, document-version invalidation and serialization.\nPASS: competing evidence requires reconciliation; excluded sources cannot support closure; scope changes reopen decisions.\nPASS: one-time upgrade reopens legacy geotechnical applicability and unsubmitted reviews; filed history is retained.\nPASS: undecided/excluded pool research remains accessible without inflating open project work.\n"
+      }
+    }
+  },
+  {
+    "test": "answer-reviews",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "46b898",
+        "wall_time_seconds": 0.364410084,
+        "exit_code": 0,
+        "original_token_count": 87,
+        "output": "PASS: blank/unconfirmed answers rejected, permit isolation, value and plan invalidation, review history, stale-form protection and export status.\nPASS: required valuation and unconfirmed values gate handoff; worksheet navigation does not switch filing identity.\nPASS: changing a linked site decision invalidates the dependent application answer.\n"
+      }
+    }
+  },
+  {
+    "test": "permit-workflow",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "f37fd2",
+        "wall_time_seconds": 0.321180708,
+        "exit_code": 0,
+        "original_token_count": 41,
+        "output": "Permit lifecycle verified: evidence gates, version invalidation, frozen packages, idempotency, correction/resubmission/acceptance, issuance, disconnected adapter.\n"
+      }
+    }
+  },
+  {
+    "test": "city-application",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "efb837",
+        "wall_time_seconds": 2.3541994170000002,
+        "exit_code": 0,
+        "original_token_count": 28,
+        "output": "PASS: all 38 native forms, field safety, scope isolation, persistence, refresh review, page saves and export.\n"
+      }
+    }
+  },
+  {
+    "test": "city-form-workspace",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ccd4ce",
+        "wall_time_seconds": 1.453019333,
+        "exit_code": 0,
+        "original_token_count": 34,
+        "output": "PASS: selecting a type loads its form; edits persist across page/type changes; save-and-continue and export include the latest answers.\n"
+      }
+    }
+  },
+  {
+    "test": "phase3-workspace",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "fae531",
+        "wall_time_seconds": 1.488277375,
+        "exit_code": 0,
+        "original_token_count": 246,
+        "output": "PASS: Same selected type is an exact reducer no-op\nPASS: Real answer edits invalidate; identical normalized answers do not; unrelated state retained\nPASS: Receipt, frozen submitted snapshot and audit history survive legitimate edits\nPASS: Relevant attachments invalidate and replacement preserves prior versions\nPASS: Opening prepared draft runs real UI + store with zero writes, events or owner enrichment\nPASS: Reselecting current type leaves persisted project byte-for-byte identical\nPASS: Dirty draft navigation saves correct answer and invalidates unreceipted package\nPASS: Switching between existing drafts is transient, retains scoped answers and restores view history\nPASS: Project navigation has explicit expanded state and Escape focus return\nPASS: CP-07 missing original stays unverified; legacy display corrected without changing saved source\nPASS: Readiness presentation separates population, checklist, receipt and unknown confirmation; neutral priority and empty state\n"
+      }
+    }
+  },
+  {
+    "test": "project-backup",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "6988d3",
+        "wall_time_seconds": 0.308582666,
+        "exit_code": 0,
+        "original_token_count": 21,
+        "output": "Complete backup roundtrip, missing-file detection and corruption detection passed.\n"
+      }
+    }
+  },
+  {
+    "test": "account-storage",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "7daf78",
+        "wall_time_seconds": 0.136966125,
+        "exit_code": 0,
+        "original_token_count": 26,
+        "output": "Guest / account A / account B project and file isolation, sign-out recovery, and stale writes passed.\n"
+      }
+    }
+  },
+  {
+    "test": "my-projects",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "271ebf",
+        "wall_time_seconds": 1.347009959,
+        "exit_code": 0,
+        "original_token_count": 54,
+        "output": "PASS: report autosave; one My projects card; three-stage reopen; cached findings; offline recovery; file restoration on second device; explicit refresh only; safe newer-cloud restore and local-conflict protection.\n"
+      }
+    }
+  },
+  {
+    "test": "narrative-flow",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "0b7508",
+        "wall_time_seconds": 1.324812167,
+        "exit_code": 0,
+        "original_token_count": 43,
+        "output": "PASS: stage-based next action, exact finding investigation/return, analysis consequences by actual parcel-match states, and actionable readiness without false approval.\n"
+      }
+    }
+  },
+  {
+    "test": "document-information-flow",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "94da2f",
+        "wall_time_seconds": 1.217085083,
+        "exit_code": 0,
+        "original_token_count": 49,
+        "output": "PASS: source access before analysis, visible provenance/purpose, current/hash-matched evidence, page anchors, unsafe URL rejection, document groups/history, and separation from permit extraction.\n"
+      }
+    }
+  },
+  {
+    "test": "screen-redesign",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "77a3c4",
+        "wall_time_seconds": 1.337473167,
+        "exit_code": 0,
+        "original_token_count": 48,
+        "output": "PASS: status/search intersection, separate record leads, real topic navigation, overview placement, source basis, unsaved edits preserved, existing save command, no unsupported confirmation.\n"
+      }
+    }
+  },
+  {
+    "test": "area-rules",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "570ba3",
+        "wall_time_seconds": 0.387021833,
+        "exit_code": 0,
+        "original_token_count": 32,
+        "output": "PASS: scope triggers, neighborhood candidates, evidence, stale approvals, boundary conflict, unknown coverage and GIS failure\n"
+      }
+    }
+  },
+  {
+    "test": "weber-value",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "3a3ec8",
+        "wall_time_seconds": 0.16975275,
+        "exit_code": 0,
+        "original_token_count": 40,
+        "output": "Weber browser parity, scope, self-sale exclusion and economics rendering passed\nProperty-specific delete-one sensitivity and honest interval labeling passed\n"
+      }
+    }
+  },
+  {
+    "test": "research-engines",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "84baff",
+        "wall_time_seconds": 0.380573375,
+        "exit_code": 0,
+        "original_token_count": 97,
+        "output": "Research engines passed: unknown vs clearance, boundary, holes, obstacles, units, stale evidence, release evidence, residual arithmetic, sparse comps and temporal leakage.\nRegistration control/check-point tests and scoped mineral transfer/severance arithmetic passed.\nConcavity crossing and invalid exterior-hole tests passed.\nCandidate alignment refuses missing or ambiguous control.\n"
+      }
+    }
+  },
+  {
+    "test": "pool-screen",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "f3c563",
+        "wall_time_seconds": 0.125145875,
+        "exit_code": 0,
+        "original_token_count": 32,
+        "output": "Pool screen: realistic lot, missing evidence, jurisdiction isolation, hazard flags, code expiry and build integration passed.\n"
+      }
+    }
+  },
+  {
+    "test": "permit-facts",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "e6d019",
+        "wall_time_seconds": 0.302230583,
+        "exit_code": 0,
+        "original_token_count": 45,
+        "output": "PASS: direct schedules, units, fabricated citations rejected, plan footprint mapping, scope isolation, superseded-document invalidation, cache keys and incomplete model responses.\n"
+      }
+    }
+  },
+  {
+    "test": "permit-assistant",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a794c5",
+        "wall_time_seconds": 0.309525792,
+        "exit_code": 0,
+        "original_token_count": 51,
+        "output": "PASS: multi-permit recommendations with no boilerplate matches, project upload facts, scope isolation, team reuse, duplicate contacts, reviewed valuation, revision invalidation, and file-slot readiness.\n"
+      }
+    }
+  }
+]
