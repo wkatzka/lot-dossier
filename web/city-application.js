@@ -70,7 +70,7 @@
   }
   function readiness(p,id){
     const list=rows(p,id).filter(r=>!r.locked),missing=list.filter(r=>(r.required||r.markedRequired)&&!String(r.value).trim()),unreviewed=list.filter(r=>String(r.value).trim()&&r.review.state!=='confirmed');
-    return {missing,unreviewed,issues:[...missing.map(r=>r.label+': required answer missing.'),...unreviewed.map(r=>r.label+': '+r.review.state+' answer needs review.')]};
+    return {missing,unreviewed,issues:[...missing.map(r=>r.label+': required answer missing.'),...unreviewed.map(r=>r.label+': '+r.review.state+' answer: open this field in Permit Preparation, inspect its supporting evidence, then confirm or correct the answer.')]};
   }
   function update(p,a){
     if(!supported(p))throw Error('Exact form mapping is currently available for Ogden Valley City Building Permits only.');

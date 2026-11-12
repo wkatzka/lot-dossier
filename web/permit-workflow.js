@@ -54,7 +54,7 @@
       if (!clean(p.application.jurisdiction)) out.push('Permitting authority is missing.');
       p.requirements.filter(r => r.required).forEach(r => {
         if (!['reviewed', 'waived'].includes(r.state)) out.push(r.title);
-        (r.documentIds || []).forEach(key => { const d = doc(p, key); if (!d || !latest(p, d)) out.push(r.title + ': document version needs review.'); });
+        (r.documentIds || []).forEach(key => { const d = doc(p, key); if (!d || !latest(p, d)) out.push(r.title + ': open Documents, select the current version, then update this requirement’s evidence in Permit Preparation.'); });
       });
     }
     return Array.from(new Set(out));

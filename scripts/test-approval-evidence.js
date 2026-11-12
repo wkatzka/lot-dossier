@@ -26,3 +26,22 @@ assert.match(sewerRule.trigger,/before Weber County permit issuance/);
 assert.match(sewerRule.trigger,/does not establish Ogden Valley City/);
 assert.equal(sewerRule.stage,'submission','Provider issuance wording must not erase the independently cited city intake requirement');
 assert(require('../lib/approval-evidence-data').cases[0].chain.find(x=>x.id==='sewer-plan').sources.includes('sewerPolicy'));
+
+// Every unresolved evidence-chain question needs an actionable, sourced destination.
+for(const row of c.chain.filter(x=>x.missing)){
+ assert(row.nextStep?.action && row.nextStep.organization && /^https:\/\//.test(row.nextStep.url),row.id+' must identify what to do and where');
+}
+const {JSDOM}=require('jsdom'),dom=new JSDOM('',{runScripts:'outside-only'});
+dom.window.AreaRules=A;dom.window.OVCRules=require('../web/ovc-rules');
+dom.window.eval(fs.readFileSync('web/area-rules-ui.js','utf8'));
+const ui=dom.window.AreaRulesUI;
+for(const id of ['cobabe-agreement-chain','cobabe-architectural-chain','cobabe-plat-conditions','ov-water','ov-sewer']){
+ dom.window.document.body.innerHTML=ui.detail(p,id);
+ const step=dom.window.document.querySelector('.evidence-next-step');assert(step?.textContent.includes('Next step'),id);
+ assert(step.querySelector('a[href^="https://"]'),id+' needs an actual destination');
+}
+const timingHtml=ui.detail(p,'cobabe-architectural-chain');assert.match(timingHtml,/14305604-HOA1/);assert.match(timingHtml,/mailto:planning@ogdenvalley.gov/);
+const geologyHtml=ui.detail(p,'cobabe-plat-conditions');assert.match(geologyHtml,/February 28, 2022/);assert.match(geologyHtml,/Weber County Planning/);
+assert.match(ui.detail(p,'ov-sewer'),/tel:8017453435/);
+assert(!ui.detail(project('224410005'),'ov-water').includes('14305604-HOA1'),'Do not send unrelated parcels to Cobabe');
+console.log('PASS: every missing Cobabe instrument has an explicit source route; rendered actions preserve parcel isolation and authority limits');
