@@ -42,6 +42,8 @@ jobs:
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact/zip" > /tmp/discovery-state.zip
             unzip -q /tmp/discovery-state.zip -d .discovery-state
           fi
+      - name: Restore newer reviewed metadata baseline
+        run: node scripts/restore-discovery-baseline.js .discovery-state
       - name: Process bounded discovery batch
         run: node scripts/run-discovery-production.js
         env:

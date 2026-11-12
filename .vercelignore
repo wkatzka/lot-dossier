@@ -9,3 +9,6 @@ Cobabe-Public-Discovery-*.zip
 .discovery-state/**
 
 .discovery-metadata/**
+
+# Scheduler metadata is not needed by serverless functions.
+data/discovery-checkpoints/**

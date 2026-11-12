@@ -1,5 +1,10 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const D=require('../lib/record-discovery-engine'),{run}=require('./run-discovery-production');
+const {extendProfile}=require('./run-discovery-production');
+const base={id:'fixture',endDate:'2026-11-12',hosts:['example.org'],seeds:[{url:'https://example.org/a'}]},state=D.create(base);
+assert.equal(extendProfile(state,base,{...base,hosts:[]}),null,'Removing a host must start a new scope');
+const extended=extendProfile(state,base,{...base,hosts:[...base.hosts,'other.example'],seeds:[...base.seeds,{url:'https://other.example/b'}]});
+assert(extended);assert.equal(state.profileRevisions.length,1);assert.equal(state.profileHash,D.create(extended).profileHash);
 (async()=>{
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'cornerpin-production-test-')),cwd=process.cwd(),originalRun=D.run,originalNow=Date.now;let time=1000000,calls=[];
  try{

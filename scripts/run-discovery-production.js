@@ -1,6 +1,19 @@
 /* Bounded, restartable worker. State is restored/persisted by the Actions artifact workflow. */
 const fs=require('node:fs'),path=require('node:path');
 const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish'),M=require('../lib/discovery-metadata');
+const crypto=require('node:crypto');
+function extendProfile(state,active,profile){
+ const rest=p=>JSON.stringify({...p,endDate:undefined,hosts:undefined,seeds:undefined});
+ const subset=(a,b)=>(a||[]).every(x=>(b||[]).some(y=>JSON.stringify(x)===JSON.stringify(y)));
+ if(rest(active)!==rest(profile)||!subset(active.hosts,profile.hosts)||!subset(active.seeds,profile.seeds))return null;
+ const next={...profile,endDate:active.endDate};
+ const nextHash=crypto.createHash('sha256').update(JSON.stringify(next)).digest('hex');
+ if(nextHash!==state.profileHash){
+  (state.profileRevisions||=[]).push({previousHash:state.profileHash,nextHash,checkedAt:new Date().toISOString(),reason:'Additive reviewed hosts/seeds; existing results retained; new seeds are queued by the engine.'});
+  state.profileHash=nextHash;
+ }
+ return next;
+}
 async function run({root='.discovery-state',minutes=15,profileId=''}={}){
  if(!Number.isFinite(minutes)||minutes<1||minutes>20)throw Error('Worker time must be 1–20 minutes');
  const deadline=Date.now()+minutes*60000, reports=[];
@@ -16,6 +29,10 @@ async function run({root='.discovery-state',minutes=15,profileId=''}={}){
   const persisted=path.join(dir,'profile.json');
   let active=fs.existsSync(persisted)?JSON.parse(fs.readFileSync(persisted)):profile;
   const signature=p=>JSON.stringify({...p,endDate:undefined});
+  if(state&&signature(active)!==signature(profile)){
+   const extended=extendProfile(state,active,profile);
+   if(extended){active=extended;fs.writeFileSync(manifest,JSON.stringify(state));}
+  }
   if(state&&(signature(active)!==signature(profile)||(state.coverage.pending===0&&Date.now()-Date.parse(state.startedAt)>7*86400000))){
    // The preceding Actions artifact retains older cycles; bound the active checkpoint to two cycles.
    fs.rmSync(dir+'-previous',{recursive:true,force:true});
@@ -42,4 +59,4 @@ async function run({root='.discovery-state',minutes=15,profileId=''}={}){
  return reports;
 }
 if(require.main===module)run({minutes:Number(process.env.DISCOVERY_MINUTES||15),profileId:process.env.DISCOVERY_PROFILE||''}).catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={run};
+module.exports={run,extendProfile};

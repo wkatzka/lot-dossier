@@ -14,4 +14,8 @@ try{
  const published=fs.readFileSync(path.join(tmp,'.discovery-metadata',profile.id,'manifest.json'),'utf8'),result=JSON.parse(published);
  assert(!/RAW_|SECRET_/.test(published));assert.equal(result.documents[0].urls[0],'https://example.org/public.pdf?edition=2');assert.equal(result.documents[0].sha256,'a'.repeat(64));assert.equal(result.coverage.publicRouteChecksComplete,false);assert.equal(result.jobs[0].status,'source_error');assert(!fs.existsSync(path.join(tmp,'.discovery-metadata',profile.id,'blobs')));
  console.log('PASS: hosted checkpoint retains hashes and unresolved work but excludes bytes, extracted text, response bodies and signed-query secrets, including task keys.');
+ const {restore}=require('./restore-discovery-baseline'),baseline=path.join(tmp,'.discovery-metadata'),restored=path.join(tmp,'restore');
+ assert.deepEqual(restore(restored,baseline),[profile.id]);
+ const file=path.join(restored,profile.id,'manifest.json'),latest=JSON.parse(fs.readFileSync(file));latest.updatedAt='2099-01-01T00:00:00Z';fs.writeFileSync(file,JSON.stringify(latest));
+ assert.deepEqual(restore(restored,baseline),[],'A baseline cannot overwrite newer scheduled progress');
 }finally{fs.rmSync(tmp,{recursive:true,force:true});}

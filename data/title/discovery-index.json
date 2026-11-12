@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T17:39:40.835Z",
+  "generatedAt": "2026-11-12T18:55:01.465Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T17:39:40.828Z",
+      "checkedAt": "2026-11-12T18:53:21.582Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -22,103 +22,12 @@
           },
           {
             "route": "parcel_and_parent_records",
-            "jobs": 48,
-            "completed": 26,
+            "jobs": 167,
+            "completed": 150,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "0bc2a4ac09c9ce43ce02",
-                "status": "queued"
-              },
-              {
-                "id": "98bdbfb3e8d7b1f59bd3",
-                "status": "queued",
-                "url": "https://webercountyutah.gov/parcelsearch/ownership-info.php?id=220210006"
-              },
-              {
-                "id": "b320d3ba23e9f7445875",
-                "status": "queued",
-                "url": "https://webercountyutah.gov/parcelsearch/ownership-info.php?id=220210048"
-              },
-              {
-                "id": "e2270516148c82aeb0dc",
-                "status": "queued"
-              },
-              {
-                "id": "7b63ffeaadfe94c2c349",
-                "status": "queued"
-              },
-              {
-                "id": "65db3209dace8153edfe",
-                "status": "queued"
-              },
-              {
-                "id": "4f17e59410aa3de685c5",
-                "status": "queued"
-              },
-              {
-                "id": "6f3c63559075312705b4",
-                "status": "queued"
-              },
-              {
-                "id": "05d5afc354c390008e44",
-                "status": "queued"
-              },
-              {
-                "id": "de3e4233bef5bf88508c",
-                "status": "queued"
-              },
-              {
-                "id": "8bf669f6e717f4c3d12b",
-                "status": "queued"
-              },
-              {
-                "id": "61b2084d055ad15731a9",
-                "status": "queued"
-              },
-              {
-                "id": "d4e5ad91b1b0db5ebd9c",
-                "status": "queued"
-              },
-              {
-                "id": "141a2d3caa9c50098d22",
-                "status": "queued"
-              },
-              {
-                "id": "40e756ef24b0481a82b7",
-                "status": "queued"
-              },
-              {
-                "id": "d87de5a423a479b5b707",
-                "status": "queued"
-              },
-              {
-                "id": "b023c8febd7e1f365d16",
-                "status": "queued"
-              },
-              {
-                "id": "a5d8001f2259e382ac7a",
-                "status": "queued"
-              },
-              {
-                "id": "946001553fa9899d6c11",
-                "status": "queued"
-              },
-              {
-                "id": "f52167b47d3af58a42d1",
-                "status": "queued"
-              },
-              {
-                "id": "3e3ce5ec13680f99066f",
-                "status": "queued"
-              },
-              {
-                "id": "0d6d0eeea52881edb2aa",
-                "status": "queued"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "planning_case_files",
@@ -131,1429 +40,74 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 76,
-            "completed": 24,
+            "jobs": 163,
+            "completed": 162,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "6e208e9b09ffccf3e9c4",
-                "status": "queued"
-              },
-              {
-                "id": "61949e5cee546f2148bb",
-                "status": "queued"
-              },
-              {
-                "id": "03d72df5f4b41141e8d0",
-                "status": "queued"
-              },
-              {
-                "id": "5d36148ea4df10ba8e75",
-                "status": "queued"
-              },
-              {
-                "id": "09a28b3123ab244d8c17",
-                "status": "queued"
-              },
-              {
-                "id": "409eb51e7710a0acb634",
-                "status": "queued"
-              },
-              {
-                "id": "b9f9816d2eaed0c28a34",
-                "status": "queued"
-              },
-              {
-                "id": "0027f975be3d455de9d4",
-                "status": "queued"
-              },
-              {
-                "id": "aec3c53db15f1ce89945",
-                "status": "queued"
-              },
-              {
-                "id": "19d9c6758829ef8b4d44",
-                "status": "queued"
-              },
-              {
-                "id": "4f041ce5dcb68597a8d8",
-                "status": "queued"
-              },
-              {
-                "id": "86be8fbe43dca97793cf",
-                "status": "queued"
-              },
-              {
-                "id": "5a1c91cad01f849daa38",
-                "status": "queued"
-              },
-              {
-                "id": "f99deea3860171d314b7",
-                "status": "queued"
-              },
-              {
-                "id": "c66e931445b0cea69e06",
-                "status": "queued"
-              },
-              {
-                "id": "b134977e438baccc1c9b",
-                "status": "queued"
-              },
-              {
-                "id": "c3f7d526a1703f34b4cf",
-                "status": "queued"
-              },
-              {
-                "id": "83e45f98e6ffa6342c47",
-                "status": "queued"
-              },
-              {
-                "id": "7c9582c4ddb933683412",
-                "status": "queued"
-              },
-              {
-                "id": "13787ff8a52ff0036253",
-                "status": "queued"
-              },
-              {
-                "id": "ba64d7304792d7fbbb88",
-                "status": "queued"
-              },
-              {
-                "id": "a6af8165b2cbe5c119f4",
-                "status": "queued"
-              },
-              {
-                "id": "10d0454ae0abe52ea721",
-                "status": "queued"
-              },
-              {
-                "id": "9f3650d8e320121cfa7a",
-                "status": "queued"
-              },
-              {
-                "id": "d8fbf8816d1d746e3b5e",
-                "status": "queued"
-              },
-              {
-                "id": "ccbef7a4017df702a2e7",
-                "status": "queued"
-              },
-              {
-                "id": "bc37f62e9f41935d0498",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/land_use_codes/chapter-108-2-architectural-landscape-and-screening-design-standards-for-commercial-multi-family-and-manufacturing/"
-              },
-              {
-                "id": "2daf874ff96a71443b0e",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/10/Chapter-108-2-Architectural-Landscape-And-Screening-Design-Standards.pdf"
-              },
-              {
-                "id": "295172a4e8a544604c73",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/land_use_codes/108-1-design-review/"
-              },
-              {
-                "id": "e31e1813fd4456c09e7c",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/06/FINAL_Chapter-108-1-Design-Review.pdf"
-              },
-              {
-                "id": "202ba65a93dd2cf1af3c",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/wp-content/uploads/2026/04/OrdinanceAmendment_108-1_Design_Review.pdf"
-              },
-              {
-                "id": "a28a4d50ba63aa8cb8a6",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "4367e2d721aff7f822c5",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "1abee3293f7be445ed34",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "74805e1e28214d5578e8",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "51d5c4254d2451ef5663",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "7ae09e61a9560557330f",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "634aff009bbd32b0a279",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "a875c6fa49ce71877628",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "cce94c56128657066733",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "bfe72117d38c44d9e676",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "d613fbc637ab6078465e",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "a8a2678ac89e59e4dad4",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "d42f1bf392a8477e2d78",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "93f87bf2895ea77754d4",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "a709894c1ab2e55bcf67",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "4aafe4b8590bc1df384a",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "9aae5d1bdb6eb5f71d1f",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "5cfb6778290ed51a5ed5",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "ab60a033d9037eea6e9c",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              },
-              {
-                "id": "c70be2910ffe9541485b",
-                "status": "queued",
-                "url": "https://ogdenvalley.gov/"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "public_notice_attachments",
-            "jobs": 27,
-            "completed": 3,
+            "jobs": 220,
+            "completed": 220,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "e49f649a2acb6215019f",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1113409.html"
-              },
-              {
-                "id": "21d74969ec8535bc9fdd",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1113971.html"
-              },
-              {
-                "id": "85d47c59c594572b378a",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1107107.html"
-              },
-              {
-                "id": "09dce0f6a7493b3f4464",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1088769.html"
-              },
-              {
-                "id": "bd21d0df703e890060e0",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1059309.html"
-              },
-              {
-                "id": "8af8df37006cf51a55ca",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1051949.html"
-              },
-              {
-                "id": "cd2ecfc3d65bbdd11433",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1044363.html"
-              },
-              {
-                "id": "1d7434d712dfeaf4aba7",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1046351.html"
-              },
-              {
-                "id": "7232536f6a3efc87ebb3",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1025505.html"
-              },
-              {
-                "id": "4a76ce0241f723cf6840",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1023929.html"
-              },
-              {
-                "id": "85be8933b080111de47e",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1029669.html"
-              },
-              {
-                "id": "22c8edcdb42fc9c4f7c2",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/1000809.html"
-              },
-              {
-                "id": "12027a9a0359d9a31470",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/998803.html"
-              },
-              {
-                "id": "41dab9ee503dd56b8546",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/989687.html"
-              },
-              {
-                "id": "6df50125f0dc22d22e46",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/988815.html"
-              },
-              {
-                "id": "a1cd9b12e128392a17ca",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/901085.html"
-              },
-              {
-                "id": "921144e3af26b9bfe9bc",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/844723.html"
-              },
-              {
-                "id": "11ffc077aed04ce33576",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/831017.html"
-              },
-              {
-                "id": "52fffb6fb7c10fda285c",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/832743.html"
-              },
-              {
-                "id": "6e024f7a2a0ed434884c",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/825411.html"
-              },
-              {
-                "id": "6a496d27aa69f4264b11",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/825387.html"
-              },
-              {
-                "id": "b8daa8cbc2dfa4adb04c",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/820287.html"
-              },
-              {
-                "id": "83c1888e7141d016c33d",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/788539.html"
-              },
-              {
-                "id": "24dd09143dbb945bacc1",
-                "status": "queued",
-                "url": "https://www.utah.gov/pmn/sitemap/notice/782789.html"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "association_libraries",
-            "jobs": 260,
-            "completed": 162,
+            "jobs": 270,
+            "completed": 270,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "e6c00889716f7ee7a1d8",
-                "status": "queued"
-              },
-              {
-                "id": "cc253396f9438f2223c2",
-                "status": "queued"
-              },
-              {
-                "id": "49052a48e2eb5c346739",
-                "status": "queued"
-              },
-              {
-                "id": "47d927e36a06343ff2cf",
-                "status": "queued"
-              },
-              {
-                "id": "bddb108c91f49a8e8317",
-                "status": "queued"
-              },
-              {
-                "id": "ab57692623ca0acab0ee",
-                "status": "queued"
-              },
-              {
-                "id": "29c154dce109cbb41dca",
-                "status": "queued"
-              },
-              {
-                "id": "32888cbdb5e1b10eff1b",
-                "status": "queued"
-              },
-              {
-                "id": "070eb3648a7d70f36576",
-                "status": "queued"
-              },
-              {
-                "id": "875b3fd6be8032236b99",
-                "status": "queued"
-              },
-              {
-                "id": "1818d5c4eae51d87e867",
-                "status": "queued"
-              },
-              {
-                "id": "0f3c55e0b160a1a7cb32",
-                "status": "queued"
-              },
-              {
-                "id": "a903f136a6f87341ed50",
-                "status": "queued"
-              },
-              {
-                "id": "19af2ae004a515a61e38",
-                "status": "queued"
-              },
-              {
-                "id": "19509bd05c4ce4ae67de",
-                "status": "queued"
-              },
-              {
-                "id": "0ddd8219001bfb9e9465",
-                "status": "queued"
-              },
-              {
-                "id": "81c03ee57c7dc466ae4c",
-                "status": "queued"
-              },
-              {
-                "id": "2d69c4e9c329b7f1dbc8",
-                "status": "queued"
-              },
-              {
-                "id": "2368cefec9b67c9a287b",
-                "status": "queued"
-              },
-              {
-                "id": "e0080492227d8f7696eb",
-                "status": "queued"
-              },
-              {
-                "id": "77289a2bb54f83785ad8",
-                "status": "queued"
-              },
-              {
-                "id": "1f93102cdacabec15dea",
-                "status": "queued"
-              },
-              {
-                "id": "79a8af2a602792f546b5",
-                "status": "queued"
-              },
-              {
-                "id": "6d765fbf77eb5e9ae56b",
-                "status": "queued"
-              },
-              {
-                "id": "f90c2f38c13dee7a06dd",
-                "status": "queued"
-              },
-              {
-                "id": "4ad314bd229273fb8898",
-                "status": "queued"
-              },
-              {
-                "id": "a1c3c5c982e08c7b9baf",
-                "status": "queued"
-              },
-              {
-                "id": "cc22eda53c69530427e5",
-                "status": "queued"
-              },
-              {
-                "id": "5a91e3fb453e204d8c4c",
-                "status": "queued"
-              },
-              {
-                "id": "e385f1daf21272684eb3",
-                "status": "queued"
-              },
-              {
-                "id": "d0caa86d10538d4ea427",
-                "status": "queued"
-              },
-              {
-                "id": "cc883646f110658acc02",
-                "status": "queued"
-              },
-              {
-                "id": "34dc62c5b1cb6886a9c3",
-                "status": "queued"
-              },
-              {
-                "id": "eedf39dcc89dae27c4a8",
-                "status": "queued"
-              },
-              {
-                "id": "5f975f65281b950abc03",
-                "status": "queued"
-              },
-              {
-                "id": "5fbc8357c272473f6fd8",
-                "status": "queued"
-              },
-              {
-                "id": "938513e8f263ee7decd1",
-                "status": "queued"
-              },
-              {
-                "id": "b5908b81ee9b64a8ee28",
-                "status": "queued"
-              },
-              {
-                "id": "fe419cae9f296499cfb2",
-                "status": "queued"
-              },
-              {
-                "id": "24c7deb6d65ed255b3e5",
-                "status": "queued"
-              },
-              {
-                "id": "3100edb39ea7eb412596",
-                "status": "queued"
-              },
-              {
-                "id": "fac2153513af30c2bc5a",
-                "status": "queued"
-              },
-              {
-                "id": "67e68d5a55a17f27b4a7",
-                "status": "queued"
-              },
-              {
-                "id": "0880715add7c63de04ce",
-                "status": "queued"
-              },
-              {
-                "id": "92b15b467da1c1f4d63a",
-                "status": "queued"
-              },
-              {
-                "id": "841c5cf2041858366c20",
-                "status": "queued"
-              },
-              {
-                "id": "f177edd21841f08a0052",
-                "status": "queued"
-              },
-              {
-                "id": "42f97c2fd03c54790386",
-                "status": "queued"
-              },
-              {
-                "id": "56e1c6d8e89aeef5c35e",
-                "status": "queued"
-              },
-              {
-                "id": "5610f881a263970294b6",
-                "status": "queued"
-              },
-              {
-                "id": "c30e208eb999d2fc46c2",
-                "status": "queued"
-              },
-              {
-                "id": "17b75f25dd6c7f48dca3",
-                "status": "queued"
-              },
-              {
-                "id": "7726d32d81523df17154",
-                "status": "queued"
-              },
-              {
-                "id": "20c274d7d341a8498012",
-                "status": "queued"
-              },
-              {
-                "id": "831acbebd12208376fd0",
-                "status": "queued"
-              },
-              {
-                "id": "16f0eaf0f80f6438c2ce",
-                "status": "queued"
-              },
-              {
-                "id": "eb3bdbfacab2365f6bc3",
-                "status": "queued"
-              },
-              {
-                "id": "fb9bed169a47ba18645a",
-                "status": "queued"
-              },
-              {
-                "id": "47fedf5f6e950fbfcabe",
-                "status": "queued"
-              },
-              {
-                "id": "5c6ef5bc228c5cb38215",
-                "status": "queued"
-              },
-              {
-                "id": "c881835ed282cc8257a8",
-                "status": "queued"
-              },
-              {
-                "id": "acbd350fd9544a861912",
-                "status": "queued"
-              },
-              {
-                "id": "015ed18c968787b9438c",
-                "status": "queued"
-              },
-              {
-                "id": "19b72f6be3c9301fc803",
-                "status": "queued"
-              },
-              {
-                "id": "42e478a7bea62c25c591",
-                "status": "queued"
-              },
-              {
-                "id": "2d2cbcf92ed8d4b6905a",
-                "status": "queued"
-              },
-              {
-                "id": "9478ece64049c5ce081f",
-                "status": "queued"
-              },
-              {
-                "id": "8706ef1945ba4fb1512e",
-                "status": "queued"
-              },
-              {
-                "id": "68a53a518c8278b2abde",
-                "status": "queued"
-              },
-              {
-                "id": "09db9f24700f33e1a456",
-                "status": "queued"
-              },
-              {
-                "id": "169a75e3947c78a3dbe3",
-                "status": "queued"
-              },
-              {
-                "id": "dcc84147ed1bfbf47c37",
-                "status": "queued"
-              },
-              {
-                "id": "df62d3e4231abf28fd1c",
-                "status": "queued"
-              },
-              {
-                "id": "97865d67da20f317a247",
-                "status": "queued"
-              },
-              {
-                "id": "599a4e61fd7de0c72750",
-                "status": "queued"
-              },
-              {
-                "id": "6db7ea97fac189088732",
-                "status": "queued"
-              },
-              {
-                "id": "f2bc696d027514425e2f",
-                "status": "queued"
-              },
-              {
-                "id": "f6323db1d224e77b7fec",
-                "status": "queued"
-              },
-              {
-                "id": "94a897f946884d482193",
-                "status": "queued"
-              },
-              {
-                "id": "13ead0ecefd957391248",
-                "status": "queued"
-              },
-              {
-                "id": "5f274da224c9c507d9a0",
-                "status": "queued"
-              },
-              {
-                "id": "b28864333f32805cda76",
-                "status": "queued"
-              },
-              {
-                "id": "402a283ba094c728cdd8",
-                "status": "queued"
-              },
-              {
-                "id": "8be5b6d9241c39e80123",
-                "status": "queued"
-              },
-              {
-                "id": "fca5bc26f2f56f09cf78",
-                "status": "queued"
-              },
-              {
-                "id": "88b28707db7f643b979c",
-                "status": "queued"
-              },
-              {
-                "id": "e5081cdd58d7a644696e",
-                "status": "queued"
-              },
-              {
-                "id": "1fc0b6f005f165f4ac1a",
-                "status": "queued"
-              },
-              {
-                "id": "9afbb8f7dcc96f5d78c0",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "8d8e4ddb48dfce081f5f",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "cd1fb74719906fc9f583",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "d98861ae592d782c4b39",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "57957e11d34f3dfccf90",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "79b3bd0eae0be02000e8",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "e923fe48af3ee0064b05",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "42cc71334980ebb1213e",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "fe6c8941778d08d8a024",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              },
-              {
-                "id": "602c2de1be92575493ec",
-                "status": "queued",
-                "url": "https://wolfcreekresortmasterhoa.com/"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "developer_libraries",
-            "jobs": 44,
-            "completed": 7,
+            "jobs": 45,
+            "completed": 45,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "713290ff1ee556f24883",
-                "status": "queued",
-                "url": "https://rangerealtyco.com/home-search/listings?sortBy=LIST_PRICE&sortDirection=DESC&propertyType=%5B%22CONDO%22%2C%22CO_OP%22%2C%22MANUFACTURED_MOBILE%22%2C%22MULTI_FAMILY%22%2C%22RESIDENTIAL%22%2C%22TOWNHOUSE%22%2C%22OTHER%22%5D&listingStatus=%5B%22ACTIVE%22%2C%22PENDING%22%2C%22ACTIVE_UNDER_CONTRACT%22%5D&center=%7B%22lat%22%3A41.32421335388517%2C%22lng%22%3A-111.72122616055397%7D&zoom=11&boundary=%5B%5B%5B41.53117908179022%2C-112.13046688321022%5D%2C%5B41.53117908179022%2C-111.31198543789772%5D%2C%5B41.116588182099896%2C-111.31198543789772%5D%2C%5B41.116588182099896%2C-112.13046688321022%5D%2C%5B41.53117908179022%2C-112.13046688321022%5D%5D%5D&omnibox=&keyword=&page=1&limit=10&isLease=false"
-              },
-              {
-                "id": "cd77f59ea741d1cb84b6",
-                "status": "queued",
-                "url": "https://rangerealtyco.com/home-search/listings?sortBy=LIST_PRICE&sortDirection=DESC&propertyType=%5B%22LAND%22%5D&listingStatus=%5B%22ACTIVE%22%2C%22PENDING%22%2C%22ACTIVE_UNDER_CONTRACT%22%5D&center=%7B%22lat%22%3A41.32421335388517%2C%22lng%22%3A-111.72122616055397%7D&zoom=11&boundary=%5B%5B%5B41.53117908179022%2C-112.13046688321022%5D%2C%5B41.53117908179022%2C-111.31198543789772%5D%2C%5B41.116588182099896%2C-111.31198543789772%5D%2C%5B41.116588182099896%2C-112.13046688321022%5D%2C%5B41.53117908179022%2C-112.13046688321022%5D%5D%5D&omnibox=&keyword=&page=1&limit=10&isLease=false"
-              },
-              {
-                "id": "235c63eec809d3ab9101",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/16"
-              },
-              {
-                "id": "4575696ce9b94c82b059",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/8"
-              },
-              {
-                "id": "e9761ce89ed8159971d2",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/21"
-              },
-              {
-                "id": "ce9f8b3cef5f3849cfe5",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/"
-              },
-              {
-                "id": "f3d3ae872b6eb2403ab2",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/22"
-              },
-              {
-                "id": "acdf460cbd08ee136dfe",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/7"
-              },
-              {
-                "id": "eb041670c20ef80850a5",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/24"
-              },
-              {
-                "id": "1672ec8b45477f3f6a77",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/14"
-              },
-              {
-                "id": "ad5be010e52775673d12",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/28"
-              },
-              {
-                "id": "7f626661b1d6cdbbf15d",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/6"
-              },
-              {
-                "id": "5a61ec7664758719cd3c",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/23"
-              },
-              {
-                "id": "edb6d904cb8f83843d02",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/17"
-              },
-              {
-                "id": "9aabf009f12c560f11e3",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/2"
-              },
-              {
-                "id": "5dcba018f49024b9b8e5",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/32"
-              },
-              {
-                "id": "eeb5f5860d5f5ce74b5e",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/5"
-              },
-              {
-                "id": "a6c68738f0ba242ea8bf",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/30"
-              },
-              {
-                "id": "4e442f430e3b9bc2e5b4",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/18"
-              },
-              {
-                "id": "b70de7ce3193f106ef0a",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/privacy-policy"
-              },
-              {
-                "id": "1e85314ebe3a2a4ba143",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/27"
-              },
-              {
-                "id": "b3388d598e3618e8f505",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/31"
-              },
-              {
-                "id": "4c4b004c7dd8453aa80b",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/9"
-              },
-              {
-                "id": "ffcff3099a02491fd9f3",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/20"
-              },
-              {
-                "id": "68b3e9a930f97f4a327e",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/3"
-              },
-              {
-                "id": "61ec4f4e77edf64091ec",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/25"
-              },
-              {
-                "id": "5ad7f07392a4d45f071e",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/29"
-              },
-              {
-                "id": "2318d73999e22544d858",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/1"
-              },
-              {
-                "id": "ba527c277f0c9f84722e",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/13"
-              },
-              {
-                "id": "125b958c2a8f472d2e54",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/10"
-              },
-              {
-                "id": "d22a125c7a4eee796d39",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/4"
-              },
-              {
-                "id": "144dfa33516f9f3c6522",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/15"
-              },
-              {
-                "id": "21bc9eb2893ae5e1ab4e",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/26"
-              },
-              {
-                "id": "24de6a073fc0e9c96231",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/11"
-              },
-              {
-                "id": "841fdcba79764c507d40",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/19"
-              },
-              {
-                "id": "e40d8e0e11fa65577be5",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/12"
-              },
-              {
-                "id": "bf7d6e71ffce2621b205",
-                "status": "queued",
-                "url": "https://www.cobaberanch.com/33"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "released_records_archive",
-            "jobs": 52,
-            "completed": 16,
+            "jobs": 421,
+            "completed": 257,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "ccab9a00784d6e2b48e8",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "de2c13b04a57efcb0341",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "3547124f9c3d17cb98e9",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "b8ff82a6166a32bdb22b",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "0bd2a37c915a63d030ea",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "25cf4ae1b5da3fb07926",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "9957cdc98b1b863ab7f0",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "4d66a1eae75bd18e546d",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "fbe3298427a79139a21e",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "43f536b31f508b3d1e59",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "70fffebac1cf200bfded",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "9ff2120e49469df908ae",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "c3f5738f9315008f7757",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "fbdb990b2e4f0e6ca525",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "e1988ac820b31db55205",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "4f16e530bc5afe05a8d2",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "c39f1b50aa9bcdcf5945",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "4b3489e8cd9787e5a40f",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "b5bdab6d17897f5dceb6",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/documents/39962260"
-              },
-              {
-                "id": "6514ddbcb278d213d4dc",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/documents/41613911"
-              },
-              {
-                "id": "95871d63eff81405f396",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "077a0cc30e6b605f3e8d",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "eaa79ebdc362faf90bc9",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "f4874d21fd9abcc0379f",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "550a8262a5c7dba5046c",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "b536681de9bf5e9f154a",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "0d519bc85b5fd780ac8b",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "3634d6c8d1ebea461208",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "5469e52d4c1c86466de0",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "6c9ffd1ad5f6ac114c25",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "d44114752100de10c66d",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "77e6cdecf2a94d5dd4ca",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "9cbf50f66d3629afa21f",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "bb1f2d7224c40497f805",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "69f00fe8992d76962ed2",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              },
-              {
-                "id": "314f4734a7857677372b",
-                "status": "queued",
-                "url": "https://webercountyut.nextrequest.com/"
-              }
-            ],
+            "unresolved": [],
             "unreviewedLeads": 0,
-            "complete": false
+            "complete": true
           },
           {
             "route": "public_mirrors_and_archives",
-            "jobs": 46,
-            "completed": 5,
+            "jobs": 84,
+            "completed": 83,
             "restricted": 0,
-            "unresolved": [
-              {
-                "id": "57bd352218d05f9fb878",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20211130034935id_/http://cobaberanch.com/"
-              },
-              {
-                "id": "baeacd45c08366295c82",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312233647id_/https://www.cobaberanch.com/1"
-              },
-              {
-                "id": "45f0963f70c1d5bc0264",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616221232id_/https://www.cobaberanch.com/10"
-              },
-              {
-                "id": "34a6b304ad82a224842e",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616214808id_/https://www.cobaberanch.com/11"
-              },
-              {
-                "id": "edab795ea3e533705a0a",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616210940id_/https://www.cobaberanch.com/12"
-              },
-              {
-                "id": "69568bee4ce4574fb792",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616212521id_/https://www.cobaberanch.com/13"
-              },
-              {
-                "id": "1b3d1dd9a2fd31069d3a",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616213355id_/https://www.cobaberanch.com/14"
-              },
-              {
-                "id": "e73414addb56c29b3e56",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616221610id_/https://www.cobaberanch.com/15"
-              },
-              {
-                "id": "2e3e0bef28dfe9048d4b",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616222308id_/https://www.cobaberanch.com/16"
-              },
-              {
-                "id": "3906ab88966fe456fd88",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616220833id_/https://www.cobaberanch.com/17"
-              },
-              {
-                "id": "7497e59267ce4569a497",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616221549id_/https://www.cobaberanch.com/18"
-              },
-              {
-                "id": "f7ab6f2e663a7ff245a2",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616220040id_/https://www.cobaberanch.com/19"
-              },
-              {
-                "id": "c05d933b221ee5f38645",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312220547id_/https://www.cobaberanch.com/2"
-              },
-              {
-                "id": "c62585c4a3f5b6b12da7",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616220748id_/https://www.cobaberanch.com/20"
-              },
-              {
-                "id": "47e53f7ae630f6abb321",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616214345id_/https://www.cobaberanch.com/21"
-              },
-              {
-                "id": "bf1f9a36c5e928bffdc5",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616215120id_/https://www.cobaberanch.com/22"
-              },
-              {
-                "id": "d6ceb3889b9a3b5cc2c9",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616205646id_/https://www.cobaberanch.com/23"
-              },
-              {
-                "id": "6aba5e0d5f0005240077",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616210753id_/https://www.cobaberanch.com/24"
-              },
-              {
-                "id": "f3d4ca0f5b1efa74698c",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616221913id_/https://www.cobaberanch.com/25"
-              },
-              {
-                "id": "d434de4ee2c4d9c743df",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616222610id_/https://www.cobaberanch.com/26"
-              },
-              {
-                "id": "67ff7628b09890c75563",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616214553id_/https://www.cobaberanch.com/27"
-              },
-              {
-                "id": "91a02ce1d2a9a1fe1996",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616215308id_/https://www.cobaberanch.com/28"
-              },
-              {
-                "id": "119fc2f7a78b41814503",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616214725id_/https://www.cobaberanch.com/29"
-              },
-              {
-                "id": "ee5fb6a318b4f1bf6c8d",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312222409id_/https://www.cobaberanch.com/3"
-              },
-              {
-                "id": "ffe32c0cf6665b373a75",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616215426id_/https://www.cobaberanch.com/30"
-              },
-              {
-                "id": "f93ad41ae82f7f4b2055",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616222435id_/https://www.cobaberanch.com/31"
-              },
-              {
-                "id": "6f94a36e28fb898d3931",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616204806id_/https://www.cobaberanch.com/32"
-              },
-              {
-                "id": "22d3d458692a19fe04f8",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260616222013id_/https://www.cobaberanch.com/33"
-              },
-              {
-                "id": "e4f2a60f024f432585f5",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312224613id_/https://www.cobaberanch.com/4"
-              },
-              {
-                "id": "e6aad698854ceb060399",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312230259id_/https://www.cobaberanch.com/5"
-              },
-              {
-                "id": "51b0b648e004236aed54",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312231836id_/https://www.cobaberanch.com/6"
-              },
-              {
-                "id": "f0aab508d17767d48007",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312233335id_/https://www.cobaberanch.com/7"
-              },
-              {
-                "id": "4da03c9b45fc9e553267",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312220214id_/https://www.cobaberanch.com/8"
-              },
-              {
-                "id": "c0a89dfa5e2d258aee6f",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312222027id_/https://www.cobaberanch.com/9"
-              },
-              {
-                "id": "3def6b8803d30112ae5b",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20220109180156id_/http://cobaberanch.com/favicon.ico"
-              },
-              {
-                "id": "b07d5a19183e6ec57433",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312221810id_/https://www.cobaberanch.com/privacy-policy"
-              },
-              {
-                "id": "13fde6dbb6d13546fe2a",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20211130034935id_/http://cobaberanch.com/robots.txt"
-              },
-              {
-                "id": "cc8e4b07f85d75eb3b61",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312215429id_/https://www.cobaberanch.com/thehomes"
-              },
-              {
-                "id": "54b8488416c351e2bc58",
-                "status": "queued",
-                "url": "https://web.archive.org/web/20260312224636id_/https://www.cobaberanch.com/theland-1"
-              },
-              {
-                "id": "b2d9b112870bac7c4dcc",
-                "status": "queued",
-                "url": "https://weber-county-hive.github.io/Transparency/weber-fire-district-growth-part-2.html"
-              },
-              {
-                "id": "1e2b4e4764748eeb498a",
-                "status": "queued",
-                "url": "https://weber-county-hive.github.io/Transparency/weber-fire-district-growth-part-4.html"
-              }
-            ],
-            "unreviewedLeads": 1,
-            "complete": false
+            "unresolved": [],
+            "unreviewedLeads": 0,
+            "complete": true
           }
         ],
-        "pending": 309,
-        "unreadDocuments": 37,
-        "documents": 87,
-        "publicRouteChecksComplete": false
+        "pending": 0,
+        "unreadDocuments": 0,
+        "documents": 153,
+        "publicRouteChecksComplete": true
       },
-      "contactFallbackEligible": false,
+      "contactFallbackEligible": true,
       "documents": [
         {
           "sha256": "f047869afa901decb2e73dd1221e77edbb8fcde45a5fa75d9337bfd304476d21",
           "urls": [
             "https://www.webercountyutah.gov/commission/documents/uploads/5-29-25%20--%20CC%20Staff%20Report%20WATTR%20-%20Cobabe%20DA%20Amendment.pdf",
-            "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf",
-            "https://www.webercountyutah.gov/Transparency/commission_meetings.php"
+            "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf"
           ],
           "pages": 175,
-          "unreadPages": [
-            40,
-            41,
-            46,
-            52,
-            96,
-            97,
-            98,
-            99,
-            100,
-            101,
-            102,
-            106,
-            107,
-            108,
-            137,
-            139,
-            140,
-            141,
-            148,
-            149,
-            156,
-            157,
-            158,
-            159,
-            173,
-            174
-          ],
+          "unreadPages": [],
           "applicability": "unverified",
           "matchingPages": [
             1,
@@ -1697,6 +251,19 @@
           "route": "adopted_agreements_and_exhibits"
         },
         {
+          "sha256": "ee617a9306693b801c90051cec8b8e5d795a7ae5d2c0c6d65d0cb5d49fa63b16",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
           "sha256": "e2c774d46a9c4030ea4fa65e3198c85f7db3891e24df88f4d780384be522dd6f",
           "urls": [
             "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf"
@@ -1712,6 +279,7 @@
         {
           "sha256": "e9aa2435bb2cfccbc3351e10eb6ca23c44a7e15ad6843038528fd910f8ddc952",
           "urls": [
+            "https://www.utah.gov/pmn/files/1372723.pdf",
             "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf"
           ],
           "pages": 2,
@@ -1720,7 +288,124 @@
           "matchingPages": [
             2
           ],
-          "route": "adopted_agreements_and_exhibits"
+          "route": "public_notice_attachments"
+        },
+        {
+          "sha256": "22a9fdaece6b15756795b093e0dd4e34a175455f9508a90692caf34e7d53df60",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-021.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "ca7217a9bec5e45657df90af83017cc632f21c2ed92fbf6a21de4bdce4212f2e",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-022.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "4360005829134a34fda37063f05ab578e24e20e435cbd1d4a5fdeafc19a831fe",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-023.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "ca307da280a36df9ff0623255842b18e2fdabc8e572d01ec3cfdefbbf3594805",
+          "urls": [
+            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-024.tif"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "604913f024fb7c266218b23f2e04241b8f4173677401eafe7b3458437ce3e2d8",
+          "urls": [
+            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/22-021.PDF"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "251387f07d66dcde5fd0e5c78c31811e8c93d524d2aca035a0f9a6b9e7ae6724",
+          "urls": [
+            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/2017/22-021.PDF"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "124b57519c5b1afc945773c0d87360ed2576ed12fbde457aa55effc2eb59349c",
+          "urls": [
+            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/2016/22-021.PDF"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "8d587cf6f1c5be2d56ea0849036d659e12ee8243a490908d4b355b74c2c616bf",
+          "urls": [
+            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/2015/22-021.PDF"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
+        },
+        {
+          "sha256": "369e646c1ef5c59cff65840f5c0c4fec1dcbf229190849523e6214b7a62d0a7b",
+          "urls": [
+            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/2014/22-021.PDF"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            1
+          ],
+          "route": "parcel_and_parent_records"
         },
         {
           "sha256": "6dcdef172cb5db51ff6304388266589cc7e1670eb8ad821be9e92cc997ae98a0",
@@ -1748,111 +433,6 @@
             4
           ],
           "route": "association_libraries"
-        },
-        {
-          "sha256": "ee617a9306693b801c90051cec8b8e5d795a7ae5d2c0c6d65d0cb5d49fa63b16",
-          "urls": [
-            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "22a9fdaece6b15756795b093e0dd4e34a175455f9508a90692caf34e7d53df60",
-          "urls": [
-            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-021.tif"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "ca7217a9bec5e45657df90af83017cc632f21c2ed92fbf6a21de4bdce4212f2e",
-          "urls": [
-            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-022.tif"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "4360005829134a34fda37063f05ab578e24e20e435cbd1d4a5fdeafc19a831fe",
-          "urls": [
-            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-023.tif"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "ca307da280a36df9ff0623255842b18e2fdabc8e572d01ec3cfdefbbf3594805",
-          "urls": [
-            "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-024.tif"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "604913f024fb7c266218b23f2e04241b8f4173677401eafe7b3458437ce3e2d8",
-          "urls": [
-            "https://webercountyutah.gov/mounts/surveyorimages/Published%20Data/Platmaps/22-021.PDF"
-          ],
-          "pages": 1,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            1
-          ],
-          "route": "parcel_and_parent_records",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
-        },
-        {
-          "sha256": "f5c924c30e6e12dd13418b7d3003c50bf11c047434712a6a8161ce2b3dc5b287",
-          "urls": [
-            "https://www.webercountyutah.gov/commission/documents/uploads/F2%20%20WC%20Warrant%20Report%20-%202025-11-26.pdf"
-          ],
-          "pages": 9,
-          "unreadPages": [],
-          "applicability": "unverified",
-          "matchingPages": [
-            8
-          ],
-          "route": "adopted_agreements_and_exhibits",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
         },
         {
           "sha256": "330da101bbbf3c3428f1be92cf37f4ef5a330c0dc627a1178b41614e05ceb1db",
@@ -1888,9 +468,7 @@
             133,
             135
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "ffca5ab19854038d5c66d32e70dbf87c3e8aa92ffb1ea9c52bb0cd16a3195747",
@@ -1908,9 +486,7 @@
             10,
             7
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "fd0c6ddd5f32f01fd0af4d7481c775da7c702476a8ba35ea05d3b682b77dfcff",
@@ -1932,9 +508,7 @@
             202,
             251
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "7564388b0661dcdcb4d84950fbc30c782c882522de7cc65f6727378d3ebc3f0f",
@@ -1947,9 +521,7 @@
           "matchingPages": [
             2
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "605ffdffed17740391fc1620bf58d39e049537bd0e103971b3d52de588877bf1",
@@ -1963,9 +535,7 @@
             2,
             3
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "2bcb740a74765928fe75b735b82b73cd31f0406e5dcb3cb6610803881e45bbf0",
@@ -1978,9 +548,7 @@
           "matchingPages": [
             2
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "18f84c4a812d2553c7700cd9260159d16ec0bac1585ef09869b4dbda39b181dd",
@@ -2189,14 +757,13 @@
             253,
             254
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "d68f0302dc01e792fc01f7d84befe9cfa56ef0548de198b59c538fccaf3caad6",
           "urls": [
-            "https://www.utah.gov/pmn/files/1260845.pdf"
+            "https://www.utah.gov/pmn/files/1260845.pdf",
+            "https://www.webercountyutah.gov/planning/documents/uploads/Online%20Posting%20-%20Cobabe.pdf"
           ],
           "pages": 1,
           "unreadPages": [],
@@ -2204,9 +771,7 @@
           "matchingPages": [
             1
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "149a8f08e8889ec97c046fc70ee678df4fbb6e76b430047ab22b8b9d1452bf1d",
@@ -2219,9 +784,7 @@
           "matchingPages": [
             2
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "da6a1fb1e2ed4625529a0725903641819b1cb4a120cfe78230be85a2e997777b",
@@ -2245,9 +808,7 @@
             31,
             34
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "56ccc63e3cb1583fc35fa52dd0cb6374e5413228a6ef2953d1a2f83cbac6b009",
@@ -2260,9 +821,7 @@
           "matchingPages": [
             2
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
         },
         {
           "sha256": "7a8b6666ca9f17a9b365eb849a7fe984ecd5b451c1173cc9784b3e8a9a3a942f",
@@ -2275,9 +834,20 @@
           "matchingPages": [
             1
           ],
-          "route": "public_notice_attachments",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T16:19:23.042Z"
+          "route": "public_notice_attachments"
+        },
+        {
+          "sha256": "f5c924c30e6e12dd13418b7d3003c50bf11c047434712a6a8161ce2b3dc5b287",
+          "urls": [
+            "https://www.webercountyutah.gov/commission/documents/uploads/F2%20%20WC%20Warrant%20Report%20-%202025-11-26.pdf"
+          ],
+          "pages": 9,
+          "unreadPages": [],
+          "applicability": "unverified",
+          "matchingPages": [
+            8
+          ],
+          "route": "adopted_agreements_and_exhibits"
         }
       ],
       "legalApplicabilityEstablished": false,

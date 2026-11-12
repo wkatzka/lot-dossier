@@ -8,6 +8,8 @@ const c=E.forProject(p);for(const x of c.chain)for(const id of x.sources)assert(
 assert.match(c.chain.find(x=>x.id==='agreement').finding,/3372687.*3372667/);assert.match(c.chain.find(x=>x.id==='timing').finding,/No retrieved applicable original/);
 const rules=A.rules(p);assert(!rules.some(x=>x.id==='covenants'));for(const id of ['cobabe-agreement-chain','cobabe-architectural-chain']){const r=rules.find(x=>x.id===id);assert.equal(r.stage,'verify');assert.equal(r.applicability,'verify');assert(r.blocksSubmission);}
 assert(A.blockers(p).some(x=>/approval timing is not established/.test(x)));
+const vested=project();vested.application.areaMap.layers.push({id:'ov-zoning',state:'checked',features:[{name:'AV-3',attributes:{ZONE_NAME:'AV-3'}}]});vested.application.ruleScope={work:'new-home',frontSetback:20,rearSetback:20};
+const comparison=A.rules(vested).find(r=>r.id==='ov-dimensions-AV-3');assert(comparison);assert.equal(comparison.applicability,'verify');assert.equal(comparison.stage,'verify');assert(comparison.evidenceCheck,'Vested lot must not be declared noncompliant solely against city baseline');
 assert.throws(()=>W.apply(p,{type:'rule_review',id:'cobabe-architectural-chain',state:'approved',reviewer:'Test',note:'Crawler finished'}),/evidence/);
 p=W.apply(p,{type:'rule_review',id:'cobabe-architectural-chain',state:'not-applicable',reviewer:'Test reviewer',note:'Synthetic test only: applicable original reviewed',url:'https://example.org/record'});
 assert(!A.blockers(p).some(x=>x.startsWith('Resolve Cobabe architectural')));p.planVersion++;assert(A.blockers(p).some(x=>x.startsWith('Resolve Cobabe architectural')));

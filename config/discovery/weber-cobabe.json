@@ -224,6 +224,21 @@
       "route": "adopted_agreements_and_exhibits",
       "url": "https://weber.municipalcodeonline.com/Docs/Read?type=ordinances",
       "page": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/uploads/",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/wolfcreek/2002_Wolf_Creek_Zoning_Development_Agreement.pdf",
+      "maxDepth": 1
     }
   ],
   "wordpress": [

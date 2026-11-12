@@ -1,0 +1,269 @@
+{
+  "id": "weber-cobabe-2026-11-12",
+  "county": "Weber",
+  "parcelId": "224410004",
+  "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
+  "startDate": "2000-01-01",
+  "endDate": "2026-11-12",
+  "routes": [
+    "recorder_index",
+    "parcel_and_parent_records",
+    "planning_case_files",
+    "adopted_agreements_and_exhibits",
+    "public_notice_attachments",
+    "association_libraries",
+    "developer_libraries",
+    "released_records_archive",
+    "public_mirrors_and_archives"
+  ],
+  "terms": [
+    "Cobabe",
+    "3372687",
+    "224410004",
+    "220210006",
+    "220210048",
+    "2025-11",
+    "2624950",
+    "architectural",
+    "design review",
+    "3372667"
+  ],
+  "noticeTerms": [
+    "Cobabe Ranch",
+    "3372687",
+    "3372667"
+  ],
+  "archiveTerms": [
+    "Cobabe",
+    "3372687",
+    "Wolf Creek",
+    "224410004",
+    "220210006",
+    "220210048",
+    "2025-11",
+    "3372667"
+  ],
+  "hosts": [
+    "www.webercountyutah.gov",
+    "webercountyutah.gov",
+    "frontier.co.weber.ut.us",
+    "www.utah.gov",
+    "ogdenvalley.gov",
+    "wolfcreekresortmasterhoa.com",
+    "www.cobaberanch.com",
+    "cobaberanch.com",
+    "webercountyut.nextrequest.com",
+    "web.archive.org",
+    "weber-county-hive.github.io",
+    "entitiesandboundaries.utah.gov",
+    "nextrequestdev.s3.amazonaws.com",
+    "archive.org",
+    "index.commoncrawl.org",
+    "rangerealtyco.com",
+    "weber.municipalcodeonline.com",
+    "s3-us-west-2.amazonaws.com"
+  ],
+  "seeds": [
+    {
+      "route": "recorder_index",
+      "url": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
+      "maxDepth": 1
+    },
+    {
+      "route": "parcel_and_parent_records",
+      "url": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
+      "mode": "attachments",
+      "maxDepth": 2
+    },
+    {
+      "route": "parcel_and_parent_records",
+      "url": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=220210006",
+      "mode": "attachments",
+      "maxDepth": 2
+    },
+    {
+      "route": "parcel_and_parent_records",
+      "url": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=220210048",
+      "mode": "attachments",
+      "maxDepth": 2
+    },
+    {
+      "route": "planning_case_files",
+      "url": "https://frontier.co.weber.ut.us/p/Public/List",
+      "maxDepth": 1
+    },
+    {
+      "route": "planning_case_files",
+      "url": "https://frontier.co.weber.ut.us/p/Project/Index/21920",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
+      "maxDepth": 2
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/meetings-and-financials/",
+      "mode": "library",
+      "maxDepth": 1
+    },
+    {
+      "route": "developer_libraries",
+      "url": "https://www.cobaberanch.com/sitemap.xml",
+      "mode": "attachments",
+      "maxDepth": 3
+    },
+    {
+      "route": "developer_libraries",
+      "url": "https://www.cobaberanch.com/",
+      "mode": "attachments",
+      "maxDepth": 2,
+      "libraryPrefix": "https://www.cobaberanch.com/"
+    },
+    {
+      "route": "public_mirrors_and_archives",
+      "url": "https://weber-county-hive.github.io/Transparency/weber-hive-then-vs-now-part-2.html",
+      "maxDepth": 2
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/2234358-first-amendment-9-Jan-07.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment-of-Master-CCRs-water-issues-03132013.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Design-Review-Board-Application-4-15.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/5-29-25%20--%20CC%20Staff%20Report%20WATTR%20-%20Cobabe%20DA%20Amendment.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "parcel_and_parent_records",
+      "url": "https://webercountyutah.gov/mounts/ded_plats/Book_101/101-020.tif",
+      "maxDepth": 1
+    },
+    {
+      "route": "association_libraries",
+      "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://webercountyutah.gov/commission/documents/minutes/min_06102025.pdf",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/commission/documents/uploads/Cobabe%20DA%20Amendment.pdf",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "route": "planning_case_files",
+      "url": "https://frontier.co.weber.ut.us/p/Project/DownloadFile?ProjectDocumentId=114603",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "route": "planning_case_files",
+      "url": "https://frontier.co.weber.ut.us/p/Public",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "route": "developer_libraries",
+      "url": "https://rangerealtyco.com/neighborhoods/cobabe-ranch",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/2025/01/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
+      "depth": 0,
+      "mode": "attachments",
+      "maxDepth": 1
+    },
+    {
+      "kind": "municipal-index",
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://weber.municipalcodeonline.com/Docs/Read?type=ordinances",
+      "page": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/uploads/",
+      "maxDepth": 1
+    },
+    {
+      "route": "adopted_agreements_and_exhibits",
+      "url": "https://www.webercountyutah.gov/planning/documents/wolfcreek/2002_Wolf_Creek_Zoning_Development_Agreement.pdf",
+      "maxDepth": 1
+    }
+  ],
+  "wordpress": [
+    {
+      "url": "https://ogdenvalley.gov",
+      "route": "adopted_agreements_and_exhibits"
+    },
+    {
+      "url": "https://wolfcreekresortmasterhoa.com",
+      "route": "association_libraries",
+      "terms": [
+        "Cobabe",
+        "2624950",
+        "Second Amendment",
+        "3372687",
+        "3372667"
+      ]
+    }
+  ],
+  "releasedArchives": [
+    "https://webercountyut.nextrequest.com"
+  ],
+  "archiveIndexes": [
+    "https://web.archive.org/cdx/search/cdx?url=cobaberanch.com/*&output=json&filter=statuscode:200&filter=mimetype:application/pdf&collapse=urlkey",
+    "https://web.archive.org/cdx/search/cdx?url=*.cobaberanch.com/*&output=json&filter=statuscode:200&collapse=urlkey",
+    "https://web.archive.org/cdx/search/cdx?url=wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment*&output=json&filter=statuscode:200&collapse=digest"
+  ]
+}
