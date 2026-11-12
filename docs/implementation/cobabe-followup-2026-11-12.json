@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-12",
+  "overallExhaustionEstablished": false,
+  "routes": [
+    {
+      "route": "County planning GIS Development Agreements index, complete attribute inventory",
+      "url": "https://maps.webercountyutah.gov/arcgis/rest/services/planning_layers/MapServer/20/query?where=1%3D1&outFields=OBJECTID%2Cname%2Clink%2Cnumber%2Clink2%2Clink2_no%2Clink2_title&returnGeometry=false&f=json&resultRecordCount=2000",
+      "recordCount": 32,
+      "exceededTransferLimit": false,
+      "terms": [
+        "cobabe",
+        "3372687",
+        "3372667",
+        "wolf",
+        "eden"
+      ],
+      "matches": 0,
+      "sha256": "d58d7eedfb4b974953e050718aeeb36672c071bc5c6361de1be65b1b79cf81cb",
+      "conclusion": "No target hit in this layer. This index does not establish all county holdings. No attachments or related-record tables advertised."
+    },
+    {
+      "route": "Cross-project publication through exact amendment-number web search",
+      "query": "\"2624950\" Wolf Creek",
+      "url": "https://www.webercountyutah.gov/planning/documents/uploads/2025-OVPC%20July%2022%20Packet_Amended.pdf",
+      "sha256": "8e4f6f8f9ef791da9eee1d0533c782c5fa461b0bd67af4ea776a9fcb995d3e00",
+      "inspection": "Extracted complete packet text; inspected original PDF page 5 visually. Agreement exhibits concern The Exchange proposal and 2023 combined predecessor. Neither disputed recording number occurs in extracted text. Image-only recording stamps cannot be excluded by text search.",
+      "finding": "Staff report PDF page 5 (printed page 3) says separate Cobabe and Eagle Crest agreements were executed earlier in 2025, superseding the combined agreement. This supports a supersession lead, not the operative text, exact recording identity or current architectural delegation.",
+      "nextSpecificDependency": "Identify executed Cobabe agreement by its original index record and exhibits; do not use The Exchange proposal for Cobabe."
+    }
+  ]
+}

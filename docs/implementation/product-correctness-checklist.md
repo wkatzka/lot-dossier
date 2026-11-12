@@ -45,7 +45,7 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 ### Release and independent validation
 
 - [-] **18. Validate realistic project journeys** (all findings). Cobabe + a second OVC property + Sunridge: who approves what/when, utilities, competing evidence, review closure, plan changes, readiness and exports. Verify authoritative answers where accessible; list unresolved instruments without claiming search exhaustion. Use synthetic projects for destructive/mutating scenarios. Depends on 01–17.
-- [-] **19. Deploy verified increments and check production**. Preserve live/rollback deployments, publish a coherent tested release, inspect actual deployed behavior and record URL/version/results. Local task completion is not production completion. Incremental releases may occur earlier when self-contained; do not deploy unfinished schema migrations. Depends on a release-ready set of tasks.
+- [x] **19. Deploy verified increments and check production**. Preserve live/rollback deployments, publish a coherent tested release, inspect actual deployed behavior and record URL/version/results. Local task completion is not production completion. Incremental releases may occur earlier when self-contained; do not deploy unfinished schema migrations. Depends on a release-ready set of tasks.
 - [-] **20. Validate actual user value**. Observe builder click-through against predetermined questions; measure whether the correct next action is identifiable and whether contradictory/irrelevant information interferes. Customer sessions require participant availability; do not substitute passing code tests. Depends on 18–19.
 
 ## Progress log
@@ -127,3 +127,11 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - Independent production inspection did expose confusing presentation: the suggested action used internal research language and cut off the governing-document paragraph mid-sentence. Replaced that summary with a complete explanation of the unknown reviewer and three distinct stages, and a named evidence button. No approval requirement was inferred or waived.
 - Plan refinement within Task 20: use concrete actions and observe the result, rather than asking the user to interpret audit terminology. No expansion of scope. Tasks 18 and 20 remain open; substantive Cobabe authority/timing and search exhaustion are still attempted but unresolved.
 - Focused information-priority and area-rule regressions and build passed after the clarity change. Production verification of that follow-up is pending.
+
+
+### Checkpoint 9 — Release check complete; evidence and participant limits retained
+
+- Clarity release `d8ff744` is live at https://lot-dossier-assistant.vercel.app/platform.html. Vercel deployment `AgV7bXA6bxyiEd9V7vMxUkUfDzub` succeeded. Browser reload shows the complete plain-language Cobabe explanation; its named button opens Rules & Approvals with the cited originals and exact missing instruments. Existing production/rollback versions were retained.
+- Task 19 complete for this tested increment. Task 18 remains attempted but unresolved on actual governing authority/timing and city text conflicts. Task 20 remains attempted but unresolved: participant did not understand the test request, and no successful independent click-through is claimed.
+- Additional public-route results are recorded separately in `cobabe-followup-2026-11-12.json`: the complete 32-record county GIS agreement index has no target match; July 22 county packet p. 5 supports staff-reported supersession but does not supply the executed Cobabe text. Neither establishes overall search exhaustion or paid-only custody.
+- Next evidence work is still instrument-specific: original index identity for both agreement numbers; complete executed agreement and exhibits; lot-specific declaration coverage and current architectural delegation. Full city use/exception interpretation also remains unfinished as identified in the gap audit; the implementation checklist does not certify that broader capability.
