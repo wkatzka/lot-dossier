@@ -133,6 +133,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--api", help="deployed base URL for the emailable single-file build")
     a = ap.parse_args()
-    write(os.path.join(ROOT, "public", "index.html"), build(""))
+    app = build("")
+    write(os.path.join(ROOT, "public", "index.html"), app)
+    # Dedicated platform entry retains the same origin, storage and auth session.
+    entry = """<script>(async()=>{const view=new URLSearchParams(location.search).get('view');if(!['projects','account'].includes(view))return;try{await window.CornerpinAccount.ready;}catch(_){}if(view==='account')window.CornerpinAccount.open();else document.getElementById('home-projects').click();})();</script>"""
+    write(os.path.join(ROOT, "public", "platform.html"), app[:app.rfind('</body>')] + entry + app[app.rfind('</body>'):])
+    write(os.path.join(ROOT, "public", "welcome.html"), read(WEB, "landing.html"))
+    write(os.path.join(ROOT, "public", "assets", "landing.css"), read(WEB, "landing.css"))
+    write(os.path.join(ROOT, "public", "assets", "landing.js"), read(WEB, "landing.js"))
     if a.api:
         write(os.path.join(ROOT, "dist", "Cornerpin.html"), build(a.api.rstrip("/"), inline_assets=True))
