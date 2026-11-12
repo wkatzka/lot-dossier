@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T17:39:40.838Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43270939104",
+  "updatedAt": "2026-11-12T17:51:55.241Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43273279630",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
@@ -5155,6 +5155,2321 @@
           "sha256": "57423f305f68c6869b0f67628176674f74c15814891639d87287b5c63784df5b",
           "urls": [
             "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/MHOA-2018-draft-budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        }
+      ]
+    },
+    {
+      "id": "ogden-valley-published-neighborhood-libraries",
+      "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
+      "checkedAt": "2026-11-12T17:51:55.231Z",
+      "coverage": {
+        "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
+        "routes": [
+          {
+            "route": "neighborhood_libraries",
+            "jobs": 446,
+            "completed": 110,
+            "restricted": 1,
+            "unresolved": [
+              {
+                "id": "508de5c7281cccb6d02e",
+                "status": "source_error",
+                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf-Creek-Master-Plan-Illustrative-050316-1000w.jpg",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "4b3f46fdd9da2a468c37",
+                "status": "source_error",
+                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/MHOA-2021-Approved-Budget.xlsx",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "437119eafcfcef6b88bc",
+                "status": "queued"
+              },
+              {
+                "id": "d90a0372e285a964bd24",
+                "status": "queued"
+              },
+              {
+                "id": "8da67fe6325ed52f1e66",
+                "status": "queued"
+              },
+              {
+                "id": "7a4a2596d114f88a2648",
+                "status": "queued"
+              },
+              {
+                "id": "5c6ee187fa3bcb944e76",
+                "status": "queued"
+              },
+              {
+                "id": "32f6de0535300e61b45c",
+                "status": "queued"
+              },
+              {
+                "id": "53826d32235edd39ecd2",
+                "status": "queued"
+              },
+              {
+                "id": "a401288ec7bf5e61a3ea",
+                "status": "queued"
+              },
+              {
+                "id": "5a2434468c0d44d4ce8f",
+                "status": "queued"
+              },
+              {
+                "id": "fadbc1bd5ae0c4f1af55",
+                "status": "queued"
+              },
+              {
+                "id": "7d31d63f3b04d7fcf65e",
+                "status": "queued"
+              },
+              {
+                "id": "56f3be0431e92e9a4aac",
+                "status": "queued"
+              },
+              {
+                "id": "9fde69b5e5f34efd2c37",
+                "status": "queued"
+              },
+              {
+                "id": "73da0e2c8b803aae175c",
+                "status": "queued"
+              },
+              {
+                "id": "a8d9ef1fa764e3d1084b",
+                "status": "queued"
+              },
+              {
+                "id": "d2ca608688e8aee07710",
+                "status": "queued"
+              },
+              {
+                "id": "8650a24729e335349305",
+                "status": "queued"
+              },
+              {
+                "id": "3333589b7598cc6e79b3",
+                "status": "queued"
+              },
+              {
+                "id": "44256cb3c327ac8a8066",
+                "status": "queued"
+              },
+              {
+                "id": "7f4616622d53ac5d8798",
+                "status": "queued"
+              },
+              {
+                "id": "b5279979f58b0623118a",
+                "status": "queued"
+              },
+              {
+                "id": "b2915626a73fa64a9cd8",
+                "status": "queued"
+              },
+              {
+                "id": "4bcd92da406f1f0d2401",
+                "status": "queued"
+              },
+              {
+                "id": "00ad510a558daa69cb07",
+                "status": "queued"
+              },
+              {
+                "id": "65d0f71534ef7d66fa8a",
+                "status": "queued"
+              },
+              {
+                "id": "42cadc682eafdf3fc773",
+                "status": "queued"
+              },
+              {
+                "id": "c9a6f8538c9b5dfa7b4d",
+                "status": "queued"
+              },
+              {
+                "id": "8921a9319bda23053c5c",
+                "status": "queued"
+              },
+              {
+                "id": "ab2002075b9a0c0a4789",
+                "status": "queued"
+              },
+              {
+                "id": "d56b7f9f5f8bf3d4fcee",
+                "status": "queued"
+              },
+              {
+                "id": "2c8c8f495ee66d891717",
+                "status": "queued"
+              },
+              {
+                "id": "d0a8fb29bb2447513806",
+                "status": "queued"
+              },
+              {
+                "id": "01301f48c8a00f052377",
+                "status": "queued"
+              },
+              {
+                "id": "37ef8439915af4af6501",
+                "status": "queued"
+              },
+              {
+                "id": "961410fe1d4f5fe9dab1",
+                "status": "queued"
+              },
+              {
+                "id": "10bd243ef856312f2c05",
+                "status": "queued"
+              },
+              {
+                "id": "1e2c98399baf3a2c1941",
+                "status": "queued"
+              },
+              {
+                "id": "60a895cbd14b68dc07b1",
+                "status": "queued"
+              },
+              {
+                "id": "0b985fff606c2d499784",
+                "status": "queued"
+              },
+              {
+                "id": "54c4cb6e29bf710cf2eb",
+                "status": "queued"
+              },
+              {
+                "id": "67b7bacdca9eb5360d30",
+                "status": "queued"
+              },
+              {
+                "id": "2a69720cef67571d651b",
+                "status": "queued"
+              },
+              {
+                "id": "14b8327906180cd9f04a",
+                "status": "queued"
+              },
+              {
+                "id": "d2a38b336e696ee63bbc",
+                "status": "queued"
+              },
+              {
+                "id": "1906c757b1e61cea1e3e",
+                "status": "queued"
+              },
+              {
+                "id": "d605d473c6a6ce118bef",
+                "status": "queued"
+              },
+              {
+                "id": "10056c13c33b8922b860",
+                "status": "queued"
+              },
+              {
+                "id": "2cac277e91d7f7e9b30a",
+                "status": "queued"
+              },
+              {
+                "id": "e876243cf202c2761cae",
+                "status": "queued"
+              },
+              {
+                "id": "93ae922176adbddbfd11",
+                "status": "queued"
+              },
+              {
+                "id": "18174d398e39ff3e4aba",
+                "status": "queued"
+              },
+              {
+                "id": "0b2ac6f37a57ab48f489",
+                "status": "queued"
+              },
+              {
+                "id": "19767afe186c95b1d662",
+                "status": "queued"
+              },
+              {
+                "id": "6d8c43e62d2ef8f9c696",
+                "status": "queued"
+              },
+              {
+                "id": "cbfed89b3873044f265d",
+                "status": "queued"
+              },
+              {
+                "id": "18e38b0a751f7df3708e",
+                "status": "queued"
+              },
+              {
+                "id": "49778dbbd5544fc993e0",
+                "status": "queued"
+              },
+              {
+                "id": "ad5f38d08694bedd1eac",
+                "status": "queued"
+              },
+              {
+                "id": "3c5bd2945a6cac67f57f",
+                "status": "queued"
+              },
+              {
+                "id": "01e5f35fd08251413164",
+                "status": "queued"
+              },
+              {
+                "id": "04e97e94da848ffca057",
+                "status": "queued"
+              },
+              {
+                "id": "e39f6d21a35e902c4bfc",
+                "status": "queued"
+              },
+              {
+                "id": "d57f6701ef83885993c2",
+                "status": "queued"
+              },
+              {
+                "id": "c20ee77580c92aec3be2",
+                "status": "queued"
+              },
+              {
+                "id": "5b8ac77d8bfab351b2d9",
+                "status": "queued"
+              },
+              {
+                "id": "daa6cb267938a70ab45e",
+                "status": "queued"
+              },
+              {
+                "id": "677d042a98dbe2076248",
+                "status": "queued"
+              },
+              {
+                "id": "ca35d5cf3baa8cb4b086",
+                "status": "queued"
+              },
+              {
+                "id": "f938422ce519a0c96c91",
+                "status": "queued"
+              },
+              {
+                "id": "e6c00889716f7ee7a1d8",
+                "status": "queued"
+              },
+              {
+                "id": "cc253396f9438f2223c2",
+                "status": "queued"
+              },
+              {
+                "id": "49052a48e2eb5c346739",
+                "status": "queued"
+              },
+              {
+                "id": "67e68d5a55a17f27b4a7",
+                "status": "queued"
+              },
+              {
+                "id": "0880715add7c63de04ce",
+                "status": "queued"
+              },
+              {
+                "id": "92b15b467da1c1f4d63a",
+                "status": "queued"
+              },
+              {
+                "id": "841c5cf2041858366c20",
+                "status": "queued"
+              },
+              {
+                "id": "f177edd21841f08a0052",
+                "status": "queued"
+              },
+              {
+                "id": "47d927e36a06343ff2cf",
+                "status": "queued"
+              },
+              {
+                "id": "bddb108c91f49a8e8317",
+                "status": "queued"
+              },
+              {
+                "id": "ab57692623ca0acab0ee",
+                "status": "queued"
+              },
+              {
+                "id": "29c154dce109cbb41dca",
+                "status": "queued"
+              },
+              {
+                "id": "32888cbdb5e1b10eff1b",
+                "status": "queued"
+              },
+              {
+                "id": "070eb3648a7d70f36576",
+                "status": "queued"
+              },
+              {
+                "id": "875b3fd6be8032236b99",
+                "status": "queued"
+              },
+              {
+                "id": "1818d5c4eae51d87e867",
+                "status": "queued"
+              },
+              {
+                "id": "0f3c55e0b160a1a7cb32",
+                "status": "queued"
+              },
+              {
+                "id": "a903f136a6f87341ed50",
+                "status": "queued"
+              },
+              {
+                "id": "19af2ae004a515a61e38",
+                "status": "queued"
+              },
+              {
+                "id": "19509bd05c4ce4ae67de",
+                "status": "queued"
+              },
+              {
+                "id": "0ddd8219001bfb9e9465",
+                "status": "queued"
+              },
+              {
+                "id": "81c03ee57c7dc466ae4c",
+                "status": "queued"
+              },
+              {
+                "id": "2d69c4e9c329b7f1dbc8",
+                "status": "queued"
+              },
+              {
+                "id": "2368cefec9b67c9a287b",
+                "status": "queued"
+              },
+              {
+                "id": "e0080492227d8f7696eb",
+                "status": "queued"
+              },
+              {
+                "id": "77289a2bb54f83785ad8",
+                "status": "queued"
+              },
+              {
+                "id": "1f93102cdacabec15dea",
+                "status": "queued"
+              },
+              {
+                "id": "79a8af2a602792f546b5",
+                "status": "queued"
+              },
+              {
+                "id": "6d765fbf77eb5e9ae56b",
+                "status": "queued"
+              },
+              {
+                "id": "f90c2f38c13dee7a06dd",
+                "status": "queued"
+              },
+              {
+                "id": "4ad314bd229273fb8898",
+                "status": "queued"
+              },
+              {
+                "id": "a1c3c5c982e08c7b9baf",
+                "status": "queued"
+              },
+              {
+                "id": "cc22eda53c69530427e5",
+                "status": "queued"
+              },
+              {
+                "id": "5a91e3fb453e204d8c4c",
+                "status": "queued"
+              },
+              {
+                "id": "e385f1daf21272684eb3",
+                "status": "queued"
+              },
+              {
+                "id": "d0caa86d10538d4ea427",
+                "status": "queued"
+              },
+              {
+                "id": "cc883646f110658acc02",
+                "status": "queued"
+              },
+              {
+                "id": "34dc62c5b1cb6886a9c3",
+                "status": "queued"
+              },
+              {
+                "id": "eedf39dcc89dae27c4a8",
+                "status": "queued"
+              },
+              {
+                "id": "5f975f65281b950abc03",
+                "status": "queued"
+              },
+              {
+                "id": "5fbc8357c272473f6fd8",
+                "status": "queued"
+              },
+              {
+                "id": "938513e8f263ee7decd1",
+                "status": "queued"
+              },
+              {
+                "id": "b5908b81ee9b64a8ee28",
+                "status": "queued"
+              },
+              {
+                "id": "fe419cae9f296499cfb2",
+                "status": "queued"
+              },
+              {
+                "id": "42f97c2fd03c54790386",
+                "status": "queued"
+              },
+              {
+                "id": "56e1c6d8e89aeef5c35e",
+                "status": "queued"
+              },
+              {
+                "id": "5610f881a263970294b6",
+                "status": "queued"
+              },
+              {
+                "id": "c30e208eb999d2fc46c2",
+                "status": "queued"
+              },
+              {
+                "id": "17b75f25dd6c7f48dca3",
+                "status": "queued"
+              },
+              {
+                "id": "7726d32d81523df17154",
+                "status": "queued"
+              },
+              {
+                "id": "20c274d7d341a8498012",
+                "status": "queued"
+              },
+              {
+                "id": "831acbebd12208376fd0",
+                "status": "queued"
+              },
+              {
+                "id": "16f0eaf0f80f6438c2ce",
+                "status": "queued"
+              },
+              {
+                "id": "eb3bdbfacab2365f6bc3",
+                "status": "queued"
+              },
+              {
+                "id": "fb9bed169a47ba18645a",
+                "status": "queued"
+              },
+              {
+                "id": "da031ddedf7a694d8f10",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/login/?v=f"
+              },
+              {
+                "id": "b12861c45c40e91ce583",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/login/?v=u"
+              },
+              {
+                "id": "71d4bfe607fbce7fbee4",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Governing/Highlands%20HOA%20Rules%20%26%20Regulations%20May%202023.pdf"
+              },
+              {
+                "id": "3acad0e316a55bfbb285",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/1%20-%202023-02-04%20Highlands%20AC%20Guidelines.pdf"
+              },
+              {
+                "id": "eecc6ad96a20df9af875",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/2%20-%20Highlands_AC_Fee_Schedule_Feb%202023.pdf"
+              },
+              {
+                "id": "1c460164e78c34c3c64f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/1%20-%202026-08-24%20%20Building%20Guidelines.pdf"
+              },
+              {
+                "id": "8a6a22c8dfeda3f50125",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/2%20-%202026-03-26%20Fee%20Schedule.pdf"
+              },
+              {
+                "id": "bcff05302805ddb1b538",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/3%20-%20Highlands%20Home%20Rental%20Policy%20May%202023.pdf"
+              },
+              {
+                "id": "26920236def4e58bd9e6",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/4%20-%20Exterior%20Lighting%20Guidelines.pdf"
+              },
+              {
+                "id": "71ed58f2536e72c65bcf",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%201%20Building%20Pads.pdf"
+              },
+              {
+                "id": "e3b8b2e63667ae313879",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%202%20Building%20Pads.pdf"
+              },
+              {
+                "id": "aab317cc9227b8d7c427",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%203%20Building%20Pads.pdf"
+              },
+              {
+                "id": "f35440c857c6420395e0",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%204%20Building%20Pads.pdf"
+              },
+              {
+                "id": "dc766c3dbd5a2d5eea11",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%205%20Building%20Pads.pdf"
+              },
+              {
+                "id": "e49d4fe077cedae97d44",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%206%20Building%20Pads.pdf"
+              },
+              {
+                "id": "5b9a618fdea61a37cd81",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%207%20Building%20Pads.pdf"
+              },
+              {
+                "id": "4a61e88a432fee62a0df",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%208%20Building%20Pads.pdf"
+              },
+              {
+                "id": "216c84b223c14aec2f13",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/Phase%209%20Plat.pdf"
+              },
+              {
+                "id": "81c3817a447028415313",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/1%29%20CCRs%20incl%20Orig%20Declaration%20thru%207th%20Amend.pdf"
+              },
+              {
+                "id": "7179d23f0c4f474da107",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/2%29%20CCRs%202012-11-07%20Eighth%20Amend.pdf"
+              },
+              {
+                "id": "e45493d40e1db8d6f935",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/3%29%20CCRs%202021-07-30%20Ninth%20Amend.pdf"
+              },
+              {
+                "id": "c3e6ff42d44d4c7c2652",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/4%29%20CCRs%202023-04-11%20Tenth%20Amend.pdf"
+              },
+              {
+                "id": "883cfda57245882ca824",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/5%29%20By-Laws%20ExhB%202002-06-06.pdf"
+              },
+              {
+                "id": "b294b5ff231bdd63b9fd",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/6%29%20By-Laws%202012-11-07%20First%20Amend.pdf"
+              },
+              {
+                "id": "88b8a7cf52ce28b997b8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/7%29%20Articles%20of%20Incorp%202007-08-02.pdf"
+              },
+              {
+                "id": "fa56e03eb03177eb27fb",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/Wolf%20Creek%20Master%20HOA%20CC%26Rs.pdf"
+              },
+              {
+                "id": "a4413f9fafc2d32bc5fc",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/Wolf%20Creek%20Master%20HOA%20CC%26Rs%20First%20Amend.pdf"
+              },
+              {
+                "id": "6513ba97ce8d1ae983c8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Legal/Wolf%20Creek%20Master%20HOA%20CC%26Rs%20Second%20Amend.pdf"
+              },
+              {
+                "id": "cd6ad15ce04af4800601",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Governing/Annual%20Assessment%20Collection%20Policy%202022.pdf"
+              },
+              {
+                "id": "c03d8f266b2057c48ea7",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Governing/Exterior%20Lighting%20Letter.pdf"
+              },
+              {
+                "id": "38cea6801f61f0296116",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Governing/For-Sale%20Signs%20Restrictions%20-%20WC%20Master%20HOA.pdf"
+              },
+              {
+                "id": "e46b1c89863b34fbc937",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Governing/Highlands%20Home%20Rental%20Policy%20May%202023.pdf"
+              },
+              {
+                "id": "820f0311ba3514d8e911",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2017/2017-04-14%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "0096541fc7486aff4ba1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2017/2017-06-25%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "a76b93a0438151645a96",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2017/2017-10-11%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "48facacf6ecbbca3fd8b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2017/2017-12-26%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "2558f09cfd4df74a4388",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-03-19%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "85cc3ff6b894b7424019",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-06-07%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "d0ea4619737c1006b812",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-09-05%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "26dd5a053ab03c9594c2",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-11-07%20Board%20Meeting%20Notice.pdf"
+              },
+              {
+                "id": "6457c405668762da9da8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-11-07%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9cb2b194bfe730b9634e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9198b423b69cdea25e67",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2018/2018-12-27%20HOA%20Annual%20Mtg%20Agenda.pdf"
+              },
+              {
+                "id": "78f52a4a1b2fcaa98995",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-02-13%20Board%20Meeting%20Notice.pdf"
+              },
+              {
+                "id": "2ace417d61e19c8a0444",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-02-13%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9be21ddfe5308ad7e16f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-05-22%20Board%20Meeting%20Notice.pdf"
+              },
+              {
+                "id": "e3cba387366054113988",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-05-22%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "a49ce7006462df5a2581",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-10-17%20Board%20Meeting%20Notice.pdf"
+              },
+              {
+                "id": "e2ff2040369757faaa01",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-10-17%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "2593b173abcb4fae5c32",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "ddd91992bf886f767621",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2019/2019-12-27%20HOA%20Annual%20Mtg%20Agenda.pdf"
+              },
+              {
+                "id": "3ec1b5eebac9a5b5636d",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2020/2020-02-27%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "7bd063c3f12bd16b033b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2020/2020-06-16%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "607e34fafcf77ba75f1c",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2020/2020-10-13%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "4870d134b9d6a6fb9969",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2020/2020-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "6ac03cbe07adc784ea53",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2020/2021%20Budget.pdf"
+              },
+              {
+                "id": "f286febe97f0e1e528fb",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2021/2021-02-22%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "4e7f9160030a0ff36203",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2021/2021-07-27%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "1fd2f2dafe24da58e680",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2021/2021-10-22%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "7eb7374ab6a99eaedae1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2021/2021-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "18dd7a07d944a7f8129b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2022/2022-02-21%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "8a18e4f5e615bc4d61c3",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2022/2022-06-29%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "4a08aca1846d022046f3",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2022/2022-10-13%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "3ca997fd5407ce29188f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2023/2023-01-04%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "646d6162e4ced7349df1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2023/2023-04-03%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "d720cd5bab55a0a28ece",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2023/2023-05-01%20Highlands%20HOA%20Open%20Forum%20Minutes.pdf"
+              },
+              {
+                "id": "56e7a67eec360e1f2db9",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2023/2023-10-10%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9e623558a3ce8b80a3c6",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2024/2024-01-04%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "4dae8f9a27ae50d13fda",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2024/2024-04-23%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "671e7ef3cc6ba7544edf",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2024/2024-07-11%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "91c91b6a171138c84bbf",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2024/2024-10-23%20Highlands%20HOA%20Board%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "213c73baaac4e2b49ac3",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2024/2024-12-08%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "5d98a97a5c9332112154",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2025/Annual%20Meeting%20Minutes%2020251208.pdf"
+              },
+              {
+                "id": "b9fe11ae203966e8bfe1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2025/HOA%20Board%20Meeting%2020250317.pdf"
+              },
+              {
+                "id": "e8ea106a9342889f18ea",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2025/HOA%20Board%20Meeting%2020250721.pdf"
+              },
+              {
+                "id": "f9953246491357b449db",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2025/HOA%20Board%20Meeting%2020251009.pdf"
+              },
+              {
+                "id": "f93d640106972983a725",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2026/Annual%20Meeting%20Minutes%20Draft%2020260924.pdf"
+              },
+              {
+                "id": "59ce48d8418aebd4369f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2026/HOA%20Board%20Meeting%2020260326.pdf"
+              },
+              {
+                "id": "137a2bc59eb84668b765",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2026/HOA%20Board%20Meeting%2020260622.pdf"
+              },
+              {
+                "id": "12589b6ff5c835baafae",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/2026/HOA%20Board%20Meeting%2020261005%20Draft.pdf"
+              },
+              {
+                "id": "ab9931847caed1aa37c0",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/Past%20Annual%20Meetings/2013-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "b64d05a1bb2dc0c803ff",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/Past%20Annual%20Meetings/2014-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "df4ec31a7933195c2be0",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/Past%20Annual%20Meetings/2015-12-27%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "ab269afcd908d8771fb2",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/Past%20Annual%20Meetings/2016-12-28%20Highlands%20HOA%20Annual%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "573c49ab4968f8956ddc",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Board/Roles%20Responsibilities%20and%20Payment%20Procedures.pdf"
+              },
+              {
+                "id": "67c480f30cfceacf7a0f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-02-09%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "24346a12214eb4f069fb",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-04-18%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f59d5a4eba7ad2c0a47a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-05%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "14d7d6f1d334c127d158",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-06%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "ce5fc373437d9195bc28",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-08-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "1e80b98e610ff6f82401",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-09-21%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "078a9645952b5bca213c",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2017/2017-11-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "94ae5150ec3233d47e1f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-02-22%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "a1c63b4d311706ac50e8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-03-22%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "23dac99d20a67d6cc133",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-05-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "55b3b70b37ecf0d3e41a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-06-27%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "6695a6a8bba4e7c6b697",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-07-19%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "b7932c75bddcda64607f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-08-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "6671e32b5580ce3178fb",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-09-20%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "d63f89c2bf830b7f6a8a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-10%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "ac18795aad020db4366c",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2018/2018-11%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "54baf4794ae932a70fa5",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-04%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "8ca40755b8396db8ecc2",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-05%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f7e445e5ecf71a91ff15",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-06%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "aacdbe522b2ae6614f6e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-07%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "abfebb6d40ae71c98243",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-08%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9090311e1d5cb4184fa6",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-09%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "5b3df11ed64b3aefa9b1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-10%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "8c57bc99aa97bc0bcb42",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-11%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "1933433094ff0bff2442",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2019/2019-12%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "d2fae07067cdcbaa3381",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-01-23%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "ecbd587504d8386b55bb",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-02-23%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "1900134af71b7e2a33b5",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-03-19%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "dee96a6730e29720628e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-04-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "b04b37cfcf6738ad48df",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-05%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "4c3b68b2510c31042fef",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-06-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "6a965264b1e2e5f1fbfe",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-07-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "e2ad66f43f6657707e22",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-08-20%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "73c1bc5e47f6dc34d648",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-09-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f93546703f08b9d3ddff",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-10%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "0e04ec07f9b4f1f70117",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-11%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "700ae7205e143512ec4d",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2020/2020-12%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "815276461e787c32f35e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-01%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "209a3705176c0593332b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-02-18%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "8fbb73b628091dcc59fe",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-03%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "2f72c697b2af10edefc4",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-04-15%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "96b8e354f36e404e6fff",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-05-20%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "c9982a9fcd7e5f0f404a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-06-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "3f8c8c37e436bb99fc55",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-07-22%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "be64d4ea12506c1586ac",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-09-23%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "0d00f1e1fd4ba6200a2c",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-10-21%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9a2e0627e5343c194e9b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-11-18%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "defbfa56c9b312f7e383",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2021/2021-12-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "6772a97f63d86795146f",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-01-27%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "0cf59aaaea5e9817d4c5",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-02-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "d68e8245e94d2ebb28c1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-03-17%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "7c80f6cec6d06552196b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-04%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "3edbed7ede7c4b47a61e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-05-19%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f5239b72f0633e9760e1",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-06%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "09422f7d3fa2fffa336a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-07%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "b5445c8486fc8d7a74f6",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-08-18%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f8fe9643887d1225e70e",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-09-15%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "0f3f8cc9b85d3de1f37c",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-10-20%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "e172aa7294d5abc63ab8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-11-10%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "262b58d04851ae182081",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2022/2022-12-15%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "9f87dcf1dfb1b564ca81",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2023/2023-01%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "2477894200c137d3a036",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2023/2023-02%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "17b9d446777cd3b2ca81",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2023/2023-03-16%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "5b7ddfc1229f861b9faa",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2023/2023-04-20%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "bf24139107ca18728736",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2024/2024-01%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "736ace48f2f75f343242",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/AC/2024/2024-02%20Highlands%20AC%20Meeting%20Minutes.pdf"
+              },
+              {
+                "id": "f0db047162a67af21f3a",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/1%20-%202023%20HOA%20annual%20assessment.pdf"
+              },
+              {
+                "id": "2877759b2fae50b23ffc",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2017%20Year-End.pdf"
+              },
+              {
+                "id": "7e1892b9383fb21717bf",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2018%20Year-End.pdf"
+              },
+              {
+                "id": "50c2076e95f667aee478",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2019%20Year-End.pdf"
+              },
+              {
+                "id": "12f3b78186dc81c609d5",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2020%20Year%20End.pdf"
+              },
+              {
+                "id": "3d02ad577620a55f9696",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2021%20Budget.pdf"
+              },
+              {
+                "id": "20dd7c28fb86da505bb8",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2022%20Budget.pdf"
+              },
+              {
+                "id": "b472a126ff0c23d11bd7",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2023%20Budget.pdf"
+              },
+              {
+                "id": "154223649e2543939082",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Financials/2024%20Budget.pdf"
+              },
+              {
+                "id": "55bf11adc4f7471d90fc",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Emerg%20Response%20Presentation%20Dec2018.pdf"
+              },
+              {
+                "id": "ccaa5348de66c12bd288",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=1&year=2021"
+              },
+              {
+                "id": "f4285070412946fdc194",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=10&year=2021"
+              },
+              {
+                "id": "30fa097e6858b400661b",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=12&year=2021"
+              },
+              {
+                "id": "27b0ad52f24350f1e5f9",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=2&year=2020"
+              },
+              {
+                "id": "2883d4780e0437696db5",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=12&year=2020"
+              },
+              {
+                "id": "865914a81546cdbad7e7",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=1&year=2019"
+              },
+              {
+                "id": "cc2cd7ddbc00c3fed4f9",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=6&year=2019"
+              },
+              {
+                "id": "8e2684261d2ef99da908",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=12&year=2019"
+              },
+              {
+                "id": "57bf9268d0cd41c7654d",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=7&year=2018"
+              },
+              {
+                "id": "80b76ffb38a533a12d69",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=9&year=2018"
+              },
+              {
+                "id": "778d19b31f067bf99217",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/news-articles/?view=archive&month=11&year=2018"
+              },
+              {
+                "id": "9a41d4df2cabd4f3bd57",
+                "status": "queued",
+                "url": "https://www.highlandsedenut.com/login/?redirect=%2Fadmin2%2Fadminfiles%2Fdefault.php"
+              },
+              {
+                "id": "24c7deb6d65ed255b3e5",
+                "status": "queued"
+              },
+              {
+                "id": "3100edb39ea7eb412596",
+                "status": "queued"
+              },
+              {
+                "id": "fac2153513af30c2bc5a",
+                "status": "queued"
+              },
+              {
+                "id": "47fedf5f6e950fbfcabe",
+                "status": "queued"
+              },
+              {
+                "id": "5c6ef5bc228c5cb38215",
+                "status": "queued"
+              },
+              {
+                "id": "c881835ed282cc8257a8",
+                "status": "queued"
+              },
+              {
+                "id": "acbd350fd9544a861912",
+                "status": "queued"
+              },
+              {
+                "id": "015ed18c968787b9438c",
+                "status": "queued"
+              },
+              {
+                "id": "19b72f6be3c9301fc803",
+                "status": "queued"
+              },
+              {
+                "id": "42e478a7bea62c25c591",
+                "status": "queued"
+              },
+              {
+                "id": "2d2cbcf92ed8d4b6905a",
+                "status": "queued"
+              },
+              {
+                "id": "9478ece64049c5ce081f",
+                "status": "queued"
+              },
+              {
+                "id": "8706ef1945ba4fb1512e",
+                "status": "queued"
+              },
+              {
+                "id": "68a53a518c8278b2abde",
+                "status": "queued"
+              },
+              {
+                "id": "09db9f24700f33e1a456",
+                "status": "queued"
+              },
+              {
+                "id": "169a75e3947c78a3dbe3",
+                "status": "queued"
+              },
+              {
+                "id": "dcc84147ed1bfbf47c37",
+                "status": "queued"
+              },
+              {
+                "id": "df62d3e4231abf28fd1c",
+                "status": "queued"
+              },
+              {
+                "id": "97865d67da20f317a247",
+                "status": "queued"
+              },
+              {
+                "id": "599a4e61fd7de0c72750",
+                "status": "queued"
+              },
+              {
+                "id": "6db7ea97fac189088732",
+                "status": "queued"
+              },
+              {
+                "id": "f2bc696d027514425e2f",
+                "status": "queued"
+              },
+              {
+                "id": "f6323db1d224e77b7fec",
+                "status": "queued"
+              },
+              {
+                "id": "94a897f946884d482193",
+                "status": "queued"
+              },
+              {
+                "id": "13ead0ecefd957391248",
+                "status": "queued"
+              },
+              {
+                "id": "5f274da224c9c507d9a0",
+                "status": "queued"
+              },
+              {
+                "id": "b28864333f32805cda76",
+                "status": "queued"
+              },
+              {
+                "id": "402a283ba094c728cdd8",
+                "status": "queued"
+              },
+              {
+                "id": "8be5b6d9241c39e80123",
+                "status": "queued"
+              },
+              {
+                "id": "fca5bc26f2f56f09cf78",
+                "status": "queued"
+              },
+              {
+                "id": "88b28707db7f643b979c",
+                "status": "queued"
+              },
+              {
+                "id": "e5081cdd58d7a644696e",
+                "status": "queued"
+              },
+              {
+                "id": "1fc0b6f005f165f4ac1a",
+                "status": "queued"
+              },
+              {
+                "id": "63e3eb4672376079dff6",
+                "status": "queued",
+                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/Letter-to-Owners-Outside-of-NHOAs-12_2021_Template.pdf"
+              },
+              {
+                "id": "8ac45dc73b2cfa9cd4fe",
+                "status": "queued",
+                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/MHOA-Letter-To-Owners-2021-1.pdf"
+              },
+              {
+                "id": "bda0a43716a1a6a1cd09",
+                "status": "queued",
+                "url": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/MHOA-Letter-To-Owners-2020-1.pdf"
+              }
+            ],
+            "unreviewedLeads": 7,
+            "complete": false
+          }
+        ],
+        "pending": 333,
+        "unreadDocuments": 16,
+        "documents": 66,
+        "publicRouteChecksComplete": false
+      },
+      "legalApplicabilityEstablished": false,
+      "documents": [
+        {
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          ],
+          "pages": 87,
+          "unreadPages": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "390dd3631f78d2c49317eab4249c130be8e678026714a674f763168257ee4235",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Master-CCRs-Exhibit-B-Rules-and-Regs.pdf"
+          ],
+          "pages": 5,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "85fa191060ac9ac768d3171d34b8a02ad18feed59d25dd7be8549b4f61a0ad79",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/2234358-first-amendment-9-Jan-07.pdf"
+          ],
+          "pages": 18,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7acfa022e1d72b5cd4be4ba812c300714acf6b2327d6c397e306a3c084f0cb94",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment-of-Master-CCRs-water-issues-03132013.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [
+            1,
+            2,
+            3
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "55418659da0baa2968531c30a4965c1c5f55988f1378e18369a22d62c7c70b0d",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf"
+          ],
+          "pages": 15,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b852aa8ccbd836d7d66c72e9d07914b81f9efe78d71ca6f3f90660c582cb2cec",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/28063159master_hoa_enforcement_resolution.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "45b980f26b877b2a06a2150b2a57e3795e5b4777569868a3df2c7064bde7f696",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/259699resolution_-_restrictions_and_rules_amendment_-_for_sale_and_for_lease_signs.pdf"
+          ],
+          "pages": 5,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
+          ],
+          "pages": 48,
+          "unreadPages": [
+            1,
+            25
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "ab77505dd5f318f47a275ba0b04a9340afdfdb2e8e878b869e714e524b45fc25",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Design-Review-Board-Application-4-15.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [
+            1
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8f534812eb7d2babbd9c18582e005f29df26dd0aa7b0899135bcf546b9544873",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2023-Budget-Final.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3fb02eda3debb11d888ef413f7f2f1a0d12f866f4aa5e8158f95445d6df04396",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/2022-Approved-Budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c36a1ebb07ded469c9352cff67da621651a9c33bbb418f2c22c02ca2e9d98d9c",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/12/MHOA-2019-draft-budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "70cb798489b3d330ef9ab4028b8ede9b6ddf00ac276d90ceae5f84fd14fb5efc",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/04/MHOA-2018-approved-budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "140dc218741b84f01f8783509bd6951104318dd5a060ff9a63bcc7d926b07e91",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/01/MHOA-2017-budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "15257761b7f87f77a34eb43f616b43e92e8d2d48fa2e4d1960bf1531c4c5a6b7",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/MHOA-2016-budget-final.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "4d3afa0b11328d732ff01c13a5e4e5e54fb5d9a1b5d1141ceb4b137c31d94d79",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2025/07/Master-HOA-Board-Meeting-Minutes-January-7-2025.doc"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2d1726eb321c071a276863de5feca6fe6d58204985ca5ed1882a79d47804aefd",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2025/07/Master-HOA-Board-Meeting-Minutes-December-18-2024.doc"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "16f9cf8ca545f4337296a237cc41b8b1062c2f93f0f15e6e6853c102f7a38e3f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2025/07/Master-HOA-Board-Meeting-Minutes-October-302024.doc"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "a62f3d62629d1eed63f3dabeea5fb2682863abea75e09d9a8f433c612cc2a065",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2025/07/Master-HOA-Board-Meeting-Minutes-April-14-2024.doc"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fce0dd7ae0dddd118db7664c8a5f21565236a041c4c78f19fa5b7956ca6c265a",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2025/07/Master-HOA-Board-Meeting-Minutes-February-14-2024.doc"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e2c774d46a9c4030ea4fa65e3198c85f7db3891e24df88f4d780384be522dd6f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/2022-Annual-Meeting-Minutes.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8540ab5548a79ebe93638fd27c6dc4c561bfb2c92dc9a01232690b2855b9e36f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/December-2022-Minutes.docx"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "6dcdef172cb5db51ff6304388266589cc7e1670eb8ad821be9e92cc997ae98a0",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/MHOA-Q3-2022-Aug-9-2022-minutes.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d287eca52154a438f3972b57be9ca2f764b2bfc8009320ff2d58f6e74882fc3c",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/February-2022-Minutes.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "a2a9a4b27856f1ee35b50f95f7f97632ed8ea931cd9ce513b94a5d42fdfb4911",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2023/03/Annual-Meeting-2021.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "eb31860fa9b1b52915807acd173d570dcc4f954bf49122a9f512b8c6b36c80f9",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/November-2021-Meeting-DRAFT.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [
+            4
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "71d9e6bfcd64d7943950ad873e5736a6e32854e6bbe584e69c56ac3a10ee8296",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/MHOA-Minutes-Aug-24th-2021-.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "51b5f05bb64d7d19965f4c09ae2a600f1c8560e1b0dc5d52c8a4ed3c2c016703",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/MHOA-Q1-March-30-2021.pages-1.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "47e268af36bef90faab16fa593261705da00f88f976e379b4485b5cd447afb24",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2021/12/MHOA-Annual-Meeting-Minutes-Dec-30-2020.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "dae38bd3d2b9255aebb4c40e2d181cdadaeb18743beef958567b66eb50d11d0c",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/MHOA-Minutes-September-10-2020.pdf"
+          ],
+          "pages": 5,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "53661cb6aaec8228f97d18530fc5b827d0b6788a74248d68d03187729c61dcf6",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/MHOA-Minutes-June-30-2020.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d3602390c544b3511a2be66f62140d814c0c58bcdeaf036cdb5cb50b22fed782",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/MHOA-Minutes-May-19-2020.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "ec7a9c1242e1a225c2a873eb0440b106084bdba6df75a7a422f758d4491eca02",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2020/12/Master-HOA-Financials-Q1-2020.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [
+            1,
+            2,
+            3
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "8dedd05473e3216438dd9a481af223c963bc7a05aa51efb16023242ee9f8d182",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2019/01/MHOA-Minutes-Dec-14-2018.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "94ad21f47f321699e75d1a0760e24b84e21cf62406fb4bdcdbba49527874e618",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/12/Master-HOA-Board-Meeting-Minutes-October-30-2018.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7ef34b80d58737f84eed3a8c73df0e14fb722a0eeb90d8de74fce9886f123754",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/10/MHOA-Minutes-Jun-26-2018.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3c156576537f9eac7466325f65ef7272aea0c3269e04e4c46c720004f864fd9d",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/10/MHOA-Minutes-Mar-27-2018.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "9ac88ccd66dd6f9f1ff54d9395f2cfb9cdec175328185588bfb572998fb459a8",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/04/WLFCRK-MSTR-HOA-2017.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5f6c5941dad8bd26a316b9f76042f02a4f0f0fa6669dffed56f7a716a622a78c",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2018/04/MHOA-minutes-Dec-2017.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c8829cde98a24d53b8d0bed09c43e5b89f05f7c8396b3aeb686298f30adcfbed",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/Financials-3Q_2017.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5cee2698cce1a3e4e8ec9cb615506e01c5da8c34f6aafae47dcc3cf9539a9206",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/MHOA-minutes-Oct-11-2017.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "6d061877240fbdabb137d706c4d2e9ac7f5a94496d9aa1f892d143abf44ee7d8",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/MHOA-minutes-June21-2017.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "22d3cef0491752e9012407688c624c7906b6df541ffa514bbb249db2aac429fa",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/06/MHOA-minutes-March-8-2017.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "32b2ba38bc4b6c0376b311e44c119c9d62db4ab09e444d763be3df9e32ddf4ba",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/06/MHOA-minutes-Jan11-2017.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "5ce50523f9bde3f17f85fe53f147dc9663bf4a181555d2925e23d249484be534",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Jan-12-2016-minutes.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "02f1bd1b734140040b94fbfec992aff9b341ae16d032711e551142a948ea68c4",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-April-12-2016.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "7121f6b0545804529c6dd9b2b1ff74f3afe65283a38b8f6fb7b3474e5658907c",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-July-11-2016.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "0a6185ac7138a3588a66544a802a535a4279a422d2310f2602204fde76a89af1",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-October-11-2016.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "6b66bec44fc9422287341a7bf04cec18c01b445a51f75227cf8b90cbefa8a8b4",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/01/WCMHOA-Minutes-December-30-2016.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d31cc9fd82502d1612b80c7bbf78148502f513edcfb6c26d63e24607e8b0f688",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/01/Wolfcreek-Mstr-Assoc-financials-Dec-2016.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "15e0a6af81a731e20a6432ea4bcee6c6a50823d89b806a38d5952c435f7b0cd8",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-1-8-2015.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "ff0715131baf2adb2c99e8547a7b75adf2f3dc64b834d1b0f058fae9e1ce2f5d",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/MHOA-meeting-minutes-April-22-2015.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "fa02de2b180494debcc803fb6891bf112b485a154d75df137e33305ffed9bd86",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-July-22-minutes-8-3-15.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "df6dea42f487717086ca1238dd3e8a8858e1b5656e9b576a98654c6111fb9364",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/08/WCMHOAJuly22minutes8-3-15.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "2a54b8a72be4d5a79543409da07fa0d559aefdbb725adc2050e668750df199fa",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-October-26-2015-minutes.pdf",
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/08/WCMHOA-October26-2015-minutes.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "12fe9cfe1abb3a44780a1adc92753392759087f0287936853b2267ab47fd30be",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Dec-29-2015-minutes-1-10-16-review.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "caf8733045932f0c57004669000a1a0746266c3563494c4d3a8f38e51b651e8b",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/wcresort-2015-financials.pdf"
+          ],
+          "pages": 6,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "e653a003ebb212c9fbbe06d3ab4194b39e9b437fd658078a54964e2a648c06eb",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-Organizing-meeting-1-7-14-1.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "d232fea73d1fcba7f00e35dc2e7338a2fe8c7704f65a00d9d1697cfc4d6cb157",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-4-8-14.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "507420113d2a00caea85c836e67170e9575f2274c2876370c7396c5fd50b1c39",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-7-15-14.pdf"
+          ],
+          "pages": 2,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "c384b5315439ad0a08792d38db5397eebf041964b8259f32967e40a8538ae805",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/08/WCMHOA-Minutes10-14-14.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "3c578cbf1e2c9fb87616accd44f189ae620837a68eda8ced23075f5ec6450dcb",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-10-14-14.pdf"
+          ],
+          "pages": 3,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "b23b4583264187b19981f26a0b608ef7c25026a05e0609440d913556ba471a33",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-Minutes-12-29-14-Final.pdf"
+          ],
+          "pages": 4,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "51fdf358d525b424d243466e053a5b84ea0841dd95630bf9cd2707b7c28e341f",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/WCMHOA-2014-Financial-Report-CPA.pdf"
+          ],
+          "pages": 8,
+          "unreadPages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "57423f305f68c6869b0f67628176674f74c15814891639d87287b5c63784df5b",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2017/11/MHOA-2018-draft-budget.pdf"
+          ],
+          "pages": 1,
+          "unreadPages": [],
+          "applicability": "unverified"
+        },
+        {
+          "sha256": "835ff14160818a1e0fb494f248191485b80e7b53c91d067d23e0ab845ea4859b",
+          "urls": [
+            "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Information-about-Short-Term-and-Long-Term-Rentals.pdf"
           ],
           "pages": 1,
           "unreadPages": [],
