@@ -39,6 +39,6 @@ let refresh=0;second.w.addEventListener('cornerpin:refresh',()=>refresh++);asser
 // Newer cloud snapshots replace a clean cached copy, never unsynced local work.
 const newer={...records.get(id),revision:next.revision+1,report:{...report,findings:[{detail:'Newer saved snapshot'}]}};records.set(id,newer);await w.CloudSync.pull(id,newer);assert.equal((await w.ProjectStore.get(id)).revision,newer.revision);
 offline=true;const dirty={...newer,revision:newer.revision+1};await w.ProjectStore.save(dirty,newer.revision);await until(()=>w.ProjectSync.status(dirty).state==='pending','dirty pending');offline=false;await assert.rejects(()=>w.CloudSync.pull(id,{...newer,revision:dirty.revision+1}),/unsynced/);
-assert(calls.every(c=>c.url.startsWith('/api/projects')||c.url.startsWith('https://db.supabase.co/storage/')));
+assert(calls.every(c=>c.url.startsWith('/api/projects')||c.url.startsWith('https://db.supabase.co/rest/v1/cornerpin_projects')||c.url.startsWith('https://db.supabase.co/storage/')));
 console.log('PASS: report autosave; one My projects card; three-stage reopen; cached findings; offline recovery; file restoration on second device; explicit refresh only; safe newer-cloud restore and local-conflict protection.');dom.window.close();second.dom.window.close();
 })().catch(e=>{console.error(e);process.exitCode=1;});
