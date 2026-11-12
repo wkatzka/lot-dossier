@@ -36,3 +36,13 @@ Scope: source acquisition → saved documents → site evidence → proposed-wor
 ## Validation
 
 Build, document information-flow regression, site-document reader, native city forms, workspace persistence/navigation, and concern navigation. Browser checks cover Site Review → Documents, scan-independent raw PDF viewing, source links, visible analysis/applicability, and document grouping. Source link URL composition is tested; remote archive availability is not assumed from a stored link.
+
+## Narrative flow implementation
+
+- Overview now recommends one next action from recorded lifecycle state: issuance, actionable corrections, submitted/awaiting-feedback records, site concerns, stale answers, site questions, scope selection, or application/handoff review. Other work remains accessible; the recommendation does not block navigation or certify readiness.
+- Each site finding can open public-record investigation with its topic, title and question preserved in tab history. A contextual header and per-record actions return to that exact finding, including after reload. Candidate documents are not presented as automatically matched sources. Opening another project resets the context.
+- Document results state a next action based on the real analysis states: unscanned, different property, unclear relevance, matched evidence, or no claims. No analysis automatically closes a finding.
+- Site Review offers an explicit continuation to Permit Preparation while preserving unresolved questions.
+- Permit drafts lead with named required-answer gaps, stale answers, suggested answers and existing package blockers. Actions focus the first relevant field or the existing package checklist. Optional/conditional blanks remain distinct from required gaps; final authority requirements and general confirmation remain outside these computed checks.
+- Verified with synthetic end-to-end browser navigation: Overview → Water service finding → Documents → reload → exact Water service return → Permit Preparation → required Builder Valuation field; application → public records → return to application. Mobile width 390px has no horizontal page overflow and restores finding focus.
+- `test-narrative-flow.js` checks state-specific recommendations, return targeting, actual parcel-match enum values and honest readiness language. Existing workspace persistence, concern navigation, document flow and screen redesign checks also pass.

@@ -21,7 +21,7 @@
     const packet=root.querySelector('#packet');if(packet)packet.remove();
     const picker=document.createElement('section');picker.className='report-picker cp-panel';picker.innerHTML='<div class="cp-panel-head"><h2>Findings by topic</h2><p>Review open questions and compare their sources.</p></div><div class="topic-filters"><label>Search topics or evidence<input type="search" id="topic-search" placeholder="Search topics or evidence…"></label><label>Status<select id="topic-status"><option value="">All statuses</option><option value="flag">Concerns</option><option value="watch">Review</option><option value="verify">Verify</option><option value="ok">No issue identified</option></select></label><span role="status" id="topic-count"></span></div><div class="topic-table-scroll"><table class="topic-table"><thead><tr><th>Topic</th><th>Concerns</th><th>Review</th><th>Verify</th><th>No issue identified</th><th>Evidence</th><th></th></tr></thead><tbody></tbody></table></div>';
     const summary=root.querySelector('.hero2');if(!summary)return;const heading=document.createElement('div');heading.className='cp-page-heading';heading.innerHTML='<div><h2>Site review</h2><p>Public evidence, mapped conditions, and the questions still to resolve.</p></div><button type="button" class="site-records-link">Public records &amp; documents →</button>';heading.querySelector('button').addEventListener('click',()=>window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'documents',section:'site',anchor:'public-records'}})));summary.before(heading);summary.after(picker);
-    const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','region');panel.tabIndex=-1;picker.after(panel);
+    const panel=document.createElement('div');panel.className='report-category-panel';panel.id='report-category-panel';panel.setAttribute('role','region');panel.tabIndex=-1;picker.after(panel);const onward=document.createElement('section');onward.className='cp-next site-onward';onward.innerHTML='<div><h3>Next: prepare the proposed work</h3><p>Use the site findings to inform your plans and permit scope. Unresolved site questions remain open when you move to permit preparation.</p></div><button type="button">Continue to Permit Preparation →</button>';onward.querySelector('button').addEventListener('click',()=>window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'filing'}})));panel.after(onward);
     const chips=picker.querySelector('tbody');const resources=document.createElement('nav');resources.className='topic-resources';resources.setAttribute('aria-label','Related site information');picker.append(resources);
     categories.forEach(c=>{
       c.nodes.forEach(n=>panel.appendChild(n));
@@ -78,6 +78,11 @@
       while(item.firstChild)button.append(item.firstChild);item.append(button);
       disclosure(button,categories.filter(c=>c.key===item.dataset.concernCategory));
     });
+    categories.filter(c=>!c.resource).forEach(c=>c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads')).forEach((row,index)=>{
+      const b=document.createElement('button');b.type='button';b.className='investigate-evidence';b.textContent='Investigate with public records →';
+      b.addEventListener('click',()=>window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'documents',section:'site',anchor:'public-records',investigation:{category:c.key,index,title:row.querySelector('.item')?.textContent||c.label,question:row.querySelector('h4')?.textContent||'',label:c.label}}})));
+      row.append(b);
+    }));
     if(categories.length)select(categories[0]);
     root.querySelectorAll('a[href="#packet"]').forEach(a=>{a.textContent='Open permit preparation →';});
   }
@@ -85,5 +90,6 @@
     const a=e.target.closest('#rv a[href="#packet"]');if(!a)return;e.preventDefault();
     window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'filing'}}));
   });
-  window.ReportCategories={mount};
+  function resume(root,context){const button=Array.from(root.querySelectorAll('[data-category]')).find(n=>n.tagName==='BUTTON'&&n.dataset.category===context.category);if(!button)return false;button.click();const rows=Array.from(root.querySelectorAll('.report-category-panel .frow')).filter(n=>!n.closest('.source-leads')&&!n.closest('[hidden]'));const row=rows.find(n=>n.querySelector('.item')?.textContent===context.title)||rows[context.index];if(row){row.tabIndex=-1;row.focus({preventScroll:true});row.scrollIntoView({block:'start',behavior:'auto'});}return !!row;}
+  window.ReportCategories={mount,resume};
 })();
