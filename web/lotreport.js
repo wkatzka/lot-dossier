@@ -2198,6 +2198,21 @@
         f.headline=(f.headline||'').replace(/^Sewered: (.*) serves the subdivision$/,'Subdivision sewer reference: $1; lot connection unverified').replace('Septic likely required; soils rated','Wastewater system unverified; soils rated');
         f.next_step='Confirm the applicable wastewater system and lot-specific service or onsite approval requirements before budgeting sewer or septic work.';
       }
+      if(f.item==='Other statewide requirements'){
+        f.status='verify';f.headline='Check project-specific code and readiness requirements';
+        f.detail='A general statewide summary does not establish an exemption for this project. Check the current adopted code, local amendments, building use and design conditions for radon, fire protection, electrical and energy provisions.';
+        f.next_step='Reconcile the applicable provisions with the building official and the design documents.';
+      }
+      if(f.item==='Wood-burning fireplaces' && /No state ban|No statewide ban/.test(f.headline||'')){
+        f.status='verify';f.headline='Fireplace and fuel-system requirements need project review';
+        f.detail='A broad state-policy summary does not establish permission for this proposed appliance. Check the current code, local air-quality restrictions, applicable covenants and manufacturer installation requirements.';
+        f.next_step='Verify the proposed appliance and applicable restrictions before specifying it.';
+      }
+      if(f.item==='Ground snow load' && /required for homes here/.test(f.headline||'')){
+        f.status='verify';f.headline=f.headline.replace('required for homes here','reported ground-load reference; design load unverified');
+        f.detail=(f.detail||'')+' This source reference is not the final roof design load. The responsible designer must verify the location, adopted criteria, exposure, elevation and applicable design factors.';
+        f.next_step='Confirm the site-specific design criteria and structural calculation basis.';
+      }
       if(f.item==='Permit packet'){
         f.status='verify';f.detail='Source materials and drafts do not establish application completeness. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.';
         f.next_step='Review Rules & Approvals and the application checklist before scheduling the filing.';

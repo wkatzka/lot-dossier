@@ -301,7 +301,8 @@
     var a = r.parcel.attrs, f = LR.reviewFindings(r.findings), plan = r.plan;
     var reviewProject=window.SiteDecisions && window.SiteDecisions.forReport(r);
     var count = function (s) { return f.filter(function (x) { return x.status === s && !sourceLead(x) && (!reviewProject || window.SiteDecisions.inScope(reviewProject,x)) && !(reviewProject && window.SiteDecisions.status(reviewProject,x).closed); }).length; };
-    var costs = rollup(f);
+    var activeFinding=function(x){return !reviewProject||(window.SiteDecisions.inScope(reviewProject,x)&&!window.SiteDecisions.status(reviewProject,x).closed);};
+    var costs = rollup(f.filter(function(x){return !reviewProject||window.SiteDecisions.inScope(reviewProject,x);}));
     var row = function (x) {
       var src = x.source ? (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.source) + '</a>' : esc(x.source)) : '';
       var k = itemKey(x), st = (state && state[k]) || { status: 'todo', files: [] }, chk = '';
@@ -313,7 +314,7 @@
             ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
             '</div><label class="chk-attach">Attach file<input type="file" multiple></label><p class="hint">Attachments add evidence. Review it before marking this item Done.</p><ul class="chk-list"></ul></div>';
       }
-      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
+      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(decision.reviewer?'<p>Reviewed by '+esc(decision.reviewer)+' · '+esc(decision.at)+'</p><p>'+esc(decision.basis)+'</p><ul>'+(decision.references||[]).map(function(ref){return '<li>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'">Original source</a>':esc(ref.name)+' · SHA-256 '+esc(ref.hash))+'</li>';}).join('')+'</ul>':'')+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
       return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(decision.state):STATUS[x.status]) + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
         (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
         (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
@@ -325,9 +326,9 @@
       if (!fs.length) return '';
       return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.filter(function(x){return !sourceLead(x);}).map(row).join('') + (fs.some(sourceLead)?'<details class="source-leads"><summary>'+fs.filter(sourceLead).length+' unverified record leads — not confirmed restrictions</summary><p>These references may concern earlier or neighboring land. They are excluded from the concern totals and action checklist until their applicability is established.</p>'+fs.filter(sourceLead).map(row).join('')+'</details>':'') + '</section>';
     }).join('');
-    var flags = f.filter(function (x) { return !sourceLead(x) && (x.status === 'flag' || (x.status === 'verify' && ['Culinary water','Fire hydrant'].includes(x.item))); });
+    var flags = f.filter(function (x) { return !sourceLead(x) && activeFinding(x) && (x.status === 'flag' || (x.status === 'verify' && ['Culinary water','Fire hydrant'].includes(x.item))); });
     var top = flags.length ? flags.map(function (x) { return '<li data-concern-category="' + esc(x.section) + '"><span class="priority-status priority-' + x.status + '">' + (x.status === 'flag' ? 'Concern' : x.status === 'watch' ? 'Review' : 'Verify') + '</span> <b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
-    var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step; })
+    var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step && activeFinding(x); })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
     var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
     var contacts = ((r.facts || {}).contacts || []).slice().sort(function (p, q) { return Object.keys(KIND).indexOf(p.kind) - Object.keys(KIND).indexOf(q.kind); });

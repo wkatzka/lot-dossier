@@ -43,7 +43,7 @@ function apply(p,a,now){
  if(previous)ledger.history.push({at:now,type:'decision-superseded',id:a.id,decision:previous});
  ledger.items[a.id]={state:a.state,reviewer:clean(a.reviewer),basis:clean(a.basis),conclusion:clean(a.conclusion),scope:clean(a.scope),conflicts:clean(a.conflicts),missing:clean(a.missing),references,fingerprint:fingerprint(p,f),at:now};return ledger;
 }
-function inScope(p,f){return f.section!=='pool'||p.application.researchScope?.pool==='included';}
+function inScope(p,f){if(f.section==='pool')return p.application.researchScope?.pool==='included';if(f.item==='Wood-burning fireplaces')return p.application.researchScope?.fireplace==='included';return true;}
 function openFindings(p,findings){return (findings||p.report.findings||[]).filter(f=>inScope(p,f)&&!status(p,finding(p,id(f))||f).closed);}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function panel(p,key){

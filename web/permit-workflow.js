@@ -154,7 +154,7 @@
         required(p.application.team?.[a.role]&&a.license===p.application.team[a.role].license,'Team license changed; repeat lookup.');p.application.team[a.role].licenseCheck={at:now,summary:clean(a.summary),source:'https://services.commerce.utah.gov/cbr/'};event(p,a.type,'Public registry response retained; not a full license verification.',now);break;
       }
       case 'research_scope': {
-        required(['included','excluded','unknown'].includes(a.pool),'Choose the pool scope.');p.application.researchScope={...p.application.researchScope,pool:a.pool};invalidate(p);event(p,a.type,'Optional pool research scope updated.',now);break;
+        required(['included','excluded','unknown'].includes(a.pool),'Choose the pool scope.');if(a.fireplace!==undefined)required(['included','excluded','unknown'].includes(a.fireplace),'Choose the fireplace scope.');p.application.researchScope={...p.application.researchScope,pool:a.pool,...(a.fireplace!==undefined?{fireplace:a.fireplace}:{})};invalidate(p);event(p,a.type,'Optional research scope updated.',now);break;
       }
       case 'filing_scope': {
         const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
