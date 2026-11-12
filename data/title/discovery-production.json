@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T18:55:01.468Z",
-  "runUrl": null,
+  "updatedAt": "2026-11-12T18:59:30.014Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43285284973",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
       "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
-      "checkedAt": "2026-11-12T18:55:01.376Z",
+      "checkedAt": "2026-11-12T18:58:37.824Z",
       "coverage": {
         "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
         "routes": [
@@ -2570,14 +2570,14 @@
     {
       "id": "ogden-valley-city-public-coverage",
       "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-      "checkedAt": "2026-11-12T18:55:01.412Z",
+      "checkedAt": "2026-11-12T18:58:40.728Z",
       "coverage": {
         "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
         "routes": [
           {
             "route": "adopted_code",
-            "jobs": 188,
-            "completed": 188,
+            "jobs": 194,
+            "completed": 194,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -3064,7 +3064,7 @@
     {
       "id": "ogden-valley-published-neighborhood-libraries",
       "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
-      "checkedAt": "2026-11-12T18:55:01.423Z",
+      "checkedAt": "2026-11-12T18:58:40.734Z",
       "coverage": {
         "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
         "routes": [
@@ -5109,7 +5109,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T18:55:01.451Z",
+      "checkedAt": "2026-11-12T18:59:30.003Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5142,8 +5142,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 163,
-            "completed": 162,
+            "jobs": 183,
+            "completed": 182,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5160,8 +5160,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 270,
-            "completed": 270,
+            "jobs": 280,
+            "completed": 280,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -5178,8 +5178,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 421,
-            "completed": 257,
+            "jobs": 491,
+            "completed": 327,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -6126,14 +6126,18 @@
         },
         {
           "sha256": "795d2cbdf23a486020bbadc6015ad85021636c0166b76e745b75bc263f815f08",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/39962260/download"
+          ],
           "pages": 4,
           "unreadPages": [],
           "applicability": "unverified"
         },
         {
           "sha256": "f2525c5c754cfb900c416d51efec8c3869370a257915fe3a9dc41cd1002cc9af",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/41613911/download"
+          ],
           "pages": 10,
           "unreadPages": [],
           "applicability": "unverified"
@@ -6437,7 +6441,9 @@
         },
         {
           "sha256": "e7fa0c04cd2e058dc3782572ae21306bbcb320a0906d0596288978e638c4d5f0",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/59568010/download"
+          ],
           "pages": 1,
           "unreadPages": [],
           "applicability": "unverified"
@@ -6446,6 +6452,8 @@
           "sha256": "3f84534641be66a97b638f144ebe19057f556543456d0d0f72b239ae0f1817ac",
           "urls": [
             "https://webercountyut.nextrequest.com/documents/59318687/download",
+            "https://webercountyut.nextrequest.com/documents/59318687/download",
+            "https://webercountyut.nextrequest.com/documents/58628434/download",
             "https://webercountyut.nextrequest.com/documents/58628434/download"
           ],
           "pages": 1,
@@ -6454,7 +6462,9 @@
         },
         {
           "sha256": "98d47fb4c1dae9a9cacaa9079ddd0d0683479e49aff6382a660146fdb48edb44",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/58628433/download"
+          ],
           "pages": 1,
           "unreadPages": [],
           "applicability": "unverified"
@@ -6462,6 +6472,7 @@
         {
           "sha256": "4211490fcdd686ba0d53bfe569e225ac962566973537ff5333870f4c0762eb9e",
           "urls": [
+            "https://webercountyut.nextrequest.com/documents/58223157/download",
             "https://webercountyut.nextrequest.com/documents/58223157/download"
           ],
           "pages": 1,
@@ -6470,7 +6481,9 @@
         },
         {
           "sha256": "0967d66f736acb0aec305dec6ba6b6a0995e9c9ee46dbfa0bd6be70b16a5bdfe",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/58223158/download"
+          ],
           "pages": 2,
           "unreadPages": [],
           "applicability": "unverified"
@@ -6479,6 +6492,8 @@
           "sha256": "dac2af16121eb89fa8a9cf0d1bf3bfc771e5b6a2a4fde38e8332d8077bf3728f",
           "urls": [
             "https://webercountyut.nextrequest.com/documents/55370747/download",
+            "https://webercountyut.nextrequest.com/documents/55370747/download",
+            "https://webercountyut.nextrequest.com/documents/55370748/download",
             "https://webercountyut.nextrequest.com/documents/55370748/download"
           ],
           "pages": 1,
@@ -6488,6 +6503,7 @@
         {
           "sha256": "8c811e80c26519fd6deffcfb755abaeb6325374ae289b4ff0cb3e4624139ae6a",
           "urls": [
+            "https://webercountyut.nextrequest.com/documents/55209222/download",
             "https://webercountyut.nextrequest.com/documents/55209222/download"
           ],
           "pages": 1,
@@ -6497,6 +6513,7 @@
         {
           "sha256": "5b8316a1c94f355037768bd98e2f088af2ffcc7e5a8e2f018f71e327ed499d8e",
           "urls": [
+            "https://webercountyut.nextrequest.com/documents/47058689/download",
             "https://webercountyut.nextrequest.com/documents/47058689/download"
           ],
           "pages": 1,
@@ -6505,28 +6522,36 @@
         },
         {
           "sha256": "b1affc8e281e703d8686bc0e362ceeed1009e049d5647003b5f81377610d542e",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/47045503/download"
+          ],
           "pages": 14,
           "unreadPages": [],
           "applicability": "unverified"
         },
         {
           "sha256": "390b53b6e840aef51b6f0db8eccbadbc93bc69ffb087c4f7cff78f3a758284fa",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/46935872/download"
+          ],
           "pages": 2,
           "unreadPages": [],
           "applicability": "unverified"
         },
         {
           "sha256": "a23d80fbdfc181bf380f45a93a44b2995b62841dbcd9a4a3ea3bddb39a7dd895",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/46935873/download"
+          ],
           "pages": 19,
           "unreadPages": [],
           "applicability": "unverified"
         },
         {
           "sha256": "a02f1f348bb697185f5087279dcadfe1f643c97f1a78f16a43ce34cead2d1676",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/46935874/download"
+          ],
           "pages": 50,
           "unreadPages": [
             1,
@@ -6539,7 +6564,9 @@
         },
         {
           "sha256": "91f827e2a3043f425e0c43108decdb5c2d77f90e0fe0d3f6eb9492493df884f4",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/46950555/download"
+          ],
           "pages": 414,
           "unreadPages": [
             1,
@@ -6685,7 +6712,9 @@
         },
         {
           "sha256": "0016353ea82fc23a1153dcafb787d6f73594c20a3214d78c869ee75d6949de4d",
-          "urls": [],
+          "urls": [
+            "https://webercountyut.nextrequest.com/documents/46950554/download"
+          ],
           "pages": 9,
           "unreadPages": [
             1,
@@ -6697,6 +6726,7 @@
         {
           "sha256": "eea9e0933f06b37b843ef0e0391b1cf4d070dc2480df35ad6f7288beece26bdd",
           "urls": [
+            "https://webercountyut.nextrequest.com/documents/44262770/download",
             "https://webercountyut.nextrequest.com/documents/44262770/download"
           ],
           "pages": 1,
