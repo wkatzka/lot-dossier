@@ -6,9 +6,21 @@
       "route": "EMMA district disclosures",
       "identifier": "CUSIP 977695AA3 / security AA41E7C488F2B40019D6F65F0100011FE",
       "url": "https://emma.msrb.org/Security/Details/AA41E7C488F2B40019D6F65F0100011FE",
-      "result": "User authorized terms acceptance. Browser inventory lists April 1 2025 official statement and quarterly filings through June 30 2026, including revised filing posted November 10 2026.",
+      "result": "User-authorized EMMA terms accepted. Quarterly report P11995876-P11520838-P11975960 inspected directly in browser on November 12 2026 after keyboard zoom/sidebar controls restored readability. Report dated August 7 2026, quarter ending June 30 2026, 14 pages.",
       "documentUrl": "https://emma.msrb.org/P11995876-P11520838-P11975960.pdf",
-      "limit": "PDF viewer failed to render reliably. Full content not reviewed. Automated download rejected by approval review under accepted terms; no alternate programmatic retrieval attempted. Inventory does not establish that missing agreement is contained in any filing."
+      "limit": "Manual browser inspection only. Programmatic downloading was rejected previously under the accepted terms; it was not retried. This negative finding concerns this 14-page filing only, not all EMMA disclosures.",
+      "contentReview": {
+        "pages1to3": "Report identification and developer-supplied development table. Phase 1 Cobabe row lists zoning completed and 9 planned / 9 fully platted lots; this is not dwelling permit or ARC approval. Page 3 is intentionally blank.",
+        "pages4to8": "Reporting form, fund balances, financial-report attachment checklist, assessments and certification signed John Lewis for district and Eden Valley Opportunity LLC. No architectural delegation or executed development-agreement exhibit.",
+        "pages9to14": "Exhibit A: financial statement cover, balance sheet, general fund, debt service fund and capital projects fund.",
+        "finding": "This specific quarterly filing does not supply the missing approval instrument or timing. Not promoted as approval evidence."
+      }
+    },
+    {
+      "route": "EMMA original offering statement",
+      "url": "https://emma.msrb.org/P11835978-P11407161-P11849256.pdf",
+      "result": "Attempted normal browser viewing in a new tab, reloaded once, then opened in the previously working quarterly-report tab. Blank viewer / broken PDF icon; contents not inspected.",
+      "limit": "Browser rendering failure does not prove document unavailability or search exhaustion. No programmatic download attempted."
     },
     {
       "route": "MuniOS public search",

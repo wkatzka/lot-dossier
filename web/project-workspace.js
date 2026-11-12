@@ -19,7 +19,7 @@
     try{await saveCityPage();if(action==='projects')await list();else window.dispatchEvent(new CustomEvent('cornerpin:home'));window.scrollTo(0,0);}catch(err){message(err.message);}
   });
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const human = s => String(s || '').replace(/_/g, ' ');
+  const human = s => ['needs_review','needs-review'].includes(s) ? 'Unresolved — check the source and supporting documents below' : String(s || '').replace(/_/g, ' ');
   const button = (action, text, id) => '<button type="button" data-action="' + action + '" data-id="' + esc(id || '') + '">' + esc(text) + '</button>';
   const field = (name, label, value, type) => '<label>' + esc(label) + '<input name="' + name + '" type="' + (type || 'text') + '" value="' + esc(value || '') + '"></label>';
   const area = (name, label, value) => '<label>' + esc(label) + '<textarea name="' + name + '">' + esc(value || '') + '</textarea></label>';

@@ -15,7 +15,7 @@
         'City section 108-7-18 permits permanent in-ground pools as accessory uses subject to its conditions. Equipment enclosures follow accessory-building setbacks. The applicable zone and recorded restrictions must still be reconciled with a surveyed layout; house setbacks alone do not clear a pool.',
         'Ogden Valley City LUC 108-7-18 · checked 2026-11-07', code);
       add('Pool safety and lighting', 'verify', 'City publishes a 6 ft fence or qualifying power safety cover requirement',
-        'The city text specifies a substantial enclosure with a locked gate, or a code-compliant power safety cover, and lighting directed away from adjoining properties. The selected barrier/cover design still needs review against the applicable state pool code.',
+        'The city text specifies a substantial enclosure with a locked gate, or a code-compliant power safety cover, and lighting directed away from adjoining properties. Use the linked city provision and the state pool-code source below to check the selected barrier/cover design with Ogden Valley City building review.',
         'Ogden Valley City LUC 108-7-18 · checked 2026-11-07', code);
       add('Pool permit preparation', 'verify', 'City building review route identified; pool-specific fee and submission checklist not verified',
         'Carry this parcel and its dossier evidence into the city application. Prepare a dimensioned pool/deck/equipment layout, structural design, grading/drainage, electrical bonding and safety details. These are preparation items, not a verified city pool checklist. The existing house permit packet does not include a completed pool application.',
