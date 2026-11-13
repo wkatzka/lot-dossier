@@ -196,3 +196,15 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .rules-table td:first-child{width:23%}.rules-table td:nth-child(4){width:38%}.rules-table td p{margin:0 0 8px;font-size:13px;line-height:1.5}
 @media(max-width:800px){.rules-scope .pw-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.rules-scope .pw-grid{grid-template-columns:1fr}}
+
+/* Project answer card: distilled answer first, sources as citations, details folded. */
+.cp-answer{padding:20px 24px;margin:0 0 16px;background:var(--cp-surface);border:1px solid var(--cp-line);border-left:4px solid var(--cp-primary);border-radius:var(--cp-radius,8px)}
+.cp-answer-tier-sources,.cp-answer-tier-contacts{border-left-color:var(--cp-muted)}
+.cp-answer .cp-eyebrow{margin:0 0 8px}
+.cp-answer-grid{display:grid;grid-template-columns:max-content 1fr;gap:8px 16px;margin:0 0 12px}
+.cp-answer-grid dt{font-weight:650}.cp-answer-grid dd{margin:0;max-width:72ch}
+.cp-answer-sources small,.cp-answer small{color:var(--cp-muted);line-height:1.6}
+.cp-answer-note{font-style:italic;color:var(--cp-muted);margin:4px 0}
+.cp-answer>button{margin-top:8px}
+.cp-research-details{margin-top:8px}.cp-research-details>summary{cursor:pointer;font-weight:600;padding:8px 0}
+@media (max-width:640px){.cp-answer-grid{grid-template-columns:1fr}.cp-answer-grid dt{margin-top:6px}}

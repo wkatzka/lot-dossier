@@ -14,7 +14,7 @@ console.log('PASS: cross-document explanations require existing original evidenc
  }});assert(called);assert.equal(output.findings[0].citations[0].source,doc.source);
  await assert.rejects(S.synthesize([doc],{}, {key:'test',request:async()=>({ok:true,json:async()=>({stop_reason:'max_tokens'})})}),/did not finish/);
  const html=require('../web/title-research-view').investigationPanel({automation:{status:'complete_with_gaps'},synthesis:output,interpretations:[doc],investigation:{questions:[]}});
- assert(html.includes('What this means for your project'));assert(html.includes('Specific evidence still needed'));assert(html.includes('original.pdf#page=2'));
+ assert(html.includes('Approvals for this lot')&&html.includes('Who approves')&&html.indexOf('Approvals for this lot')<html.indexOf('Sources and research details'),'The distilled answer leads; details are folded below it');assert(html.includes('Specific evidence still needed'));assert(html.includes('original.pdf#page=2'));
  console.log('PASS: bounded synthesis response, private-field exclusion, original links in live UI, and rejection of truncated model output.');
 })().catch(e=>{console.error(e);process.exitCode=1});
 
