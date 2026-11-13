@@ -93,3 +93,7 @@ Still to do after it completes: proof script, manual review vs originals, signed
 **Update 16:30 UTC:** user approved +$3 for Nov 13 only (`db/ai-budget-2026-11-13-topup.sql`). Version 3 explanation published 16:22 and passes the production proof and manual review (see acceptance report, "Narrow acceptance pass"). Remaining: signed-in production check (user sign-in needed), optional UI collapse of details, fresh-address clean run and real-user comprehension (unclaimed).
 
 **Update ~16:45 UTC:** signed-in production check passed (see acceptance report). Open: surface the short answer on Overview / collapse detail links; fresh-address clean run; real-user comprehension.
+
+## Answer-first presentation (2026-11-13 ~17:00 UTC)
+
+User's product rule: show the distilled, project-specific bits front and centre with their source documents as citations; if nothing can be distilled, the detailed source documents are the main finding; if no documents are found, point to the organisation, website and contact information. Implemented as `answerCard` / `mountOverviewAnswer` in `web/title-research-view.js` (Overview placeholder in `web/project-overview.js`, mount in `web/project-workspace.js`, styles in `web/design-system.css`), tested by `scripts/test-answer-card.js`, verified signed-in in production. Open: shorten the distilled lines (needs a paid regeneration), and apply the same rule to Site Review and the older Rules sections.
