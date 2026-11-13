@@ -103,3 +103,6 @@ Next steps state the user's and Cornerpin's parts. "Copy recovered; match to rec
 
 ## Site findings answer first (2026-11-13 ~20:30 UTC)
 `web/site-answer.js` leads Site Review and the Overview with the few findings that matter (deterministic ranking, merged duplicates, sources as citations, fallbacks to sources then recorded contacts). Tests `scripts/test-site-answer.js`; verified signed-in in production.
+
+## Project intent and the proposed staged flow (2026-11-13 ~21:30 UTC)
+`web/project-intent.js` asks "What are you planning?" after the address, ranked by fit with the lot's records, and stores the plan (`project_intent` command). User direction for the next stage: preliminary pass → intent confirmation → targeted deep research per plan → re-run targeted research when the plan changes. Not started; needs a plan-to-research mapping and gating of the full dossier and the background approval investigation.
