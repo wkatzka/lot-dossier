@@ -1,0 +1,81 @@
+# Cornerpin automatic-investigation handoff
+
+Continue the existing objective, not a new audit: finish automatic investigation and document interpretation for newly searched addresses, deploy, and verify a defensible production answer. Do not recrawl or re-interpret everything. The remaining failure is final answer reconciliation, not source discovery.
+
+## Repository and live result
+
+- Repo: `/Users/wkatzka/Desktop/BlackPine/lot-dossier`, branch `main`, GitHub `wkatzka/lot-dossier`.
+- Live app: https://lot-dossier-assistant.vercel.app/platform.html
+- Unconfigured acceptance address: **3459 N Wind River Ct, Eden, UT**, parcel **222320023**, Trappers Ridge Phase 4 Lot 68, Ogden Valley City.
+- Actual browser search created job `ca12cf9a-c654-479a-a158-94be612b1523`. No parcel-specific profile or curated answer was inserted.
+- Public result: https://lot-dossier-assistant.vercel.app/api/public-research?format=investigation&county=Weber&parcelId=222320023
+- At 2026-11-13 06:10:56 UTC it reached `complete_with_gaps`, zero pending source checks, zero unread originals, 70 interpretation chunks, 51 original documents.
+- `scripts/verify-automatic-investigation-production.js` **PASSED** against production. Its JSON proof is `docs/implementation/automatic-investigation-production-proof.json`. This is technical acceptance, NOT final semantic acceptance.
+- Latest deployed implementation commit before this handoff: `fd93476`; subsequent changes are evidence/checklist/handoff artifacts and stronger acceptance assertions.
+
+## Exact remaining defect: final synthesis falsely describes recovered material as missing
+
+Read `proof.synthesis` in the proof JSON. Human review after the passing script found:
+1. The Trappers Ridge finding says “Design and Construction Guidelines and ACC provisions are not supplied.” Separate Guidelines may still be missing, but **Article 6 ACC provisions are present**, including PDF page 30 appointment/composition and page 31 Board plan approval. Interpretation authorityChanges already include page 30; do not call these provisions absent.
+2. The master finding says “Master Declaration's Exhibit A ... not supplied.” The complete 87-page PDF was retrieved/read. Inspect the actual exhibit and determine what property coverage remains unresolved. **Not recovered**, **recovered but not reconciled**, and **does not establish this lot's coverage** must be distinct.
+3. The summary begins with generic “nothing ... shows any approval ... obtained” and inspections, rather than the practical plan-approval answer. Lead with the supported neighborhood Board construction gate, the conditional master DRB submission language, and the exact missing recorded declaration. Keep inspections secondary.
+4. Do not invent a conflict merely because Board, ACC, and DRB appear in different clauses. Reconcile their actual roles; preserve genuine uncertainty in the unsigned copy/current appointment.
+
+The current synthesis receives validated snippets plus earlier chunk-specific `missingDocuments` but insufficient whole-document inventory. Merely prompting it not to repeat stale gaps did not solve this. Supply a grounded inventory of recovered pages/sections/exhibits and resolved internal references, and reconcile stale chunk limitations before publishing. A retrieved exhibit may still fail to prove applicability; do not turn retrieval into legal clearance. Avoid manually seeding parcel-specific conclusions.
+
+## Primary evidence already independently checked
+
+See `docs/implementation/automatic-investigation-independent-checks.json` and the acceptance report for URLs, hashes and page checks.
+
+- Neighborhood declaration: SHA `10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7`, 103 pages. Page 30 Article 6, page 31 Board written plan approval before construction, page 32 section 6.8 Board enforcement with ACC recommendations, page 78 blank execution/signatures, page 79 Phase 4 exhibit. Do not equate this unsigned public copy with the recorded instrument.
+- First amendment: SHA `b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda`, 8 pages. Recorded Entry **3277834**, March 28, 2023 (filename says 2022). Page 1 identifies underlying Declaration **2957404**, recorded December 17, 2018. Page 6 includes Phase 4 Lots 46–68. Page 5 preserves unaffected terms. Production interpretation correctly retains these leads; its excerpt of the lot range is shorter than the full paragraph, so verify full page when reconciling phase coverage.
+- Second amendment: SHA `a21765e8967b91addfca64365686a82cb46905dc07d43927f86a128d9afe2e9c`, 7 pages. Unsigned/unrecorded-looking public copy: blank recorder field, signatures and acknowledgments. Fee provisions are not a plan-approval prerequisite. Production correctly labels `proposal_or_draft` and returns no approval requirements.
+- Master declaration: SHA `c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054`, 87 pages. Page 10 architectural succession to Association/DRB on declarant termination.
+- Master termination: SHA `55418659da0baa2968531c30a4965c1c5f55988f1378e18369a22d62c7c70b0d`, 15 pages; Entry 2628422 recorded April 3, 2013, page 2 terminates declarant powers and preserves other covenants. Master developer is not automatically the neighborhood developer Eden Village LLC.
+- 2010 master guidelines: SHA `d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d`; page 7 private review before County submission, page 42 before commencement, page 43 developer review. Historical County language does not prove current Ogden Valley City intake policy.
+- City checklist: SHA `1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064`; heading page 1 and conditional water/sewer submission items page 2. Unknown work type must remain conditional.
+
+Independent originals/text/rendered pages are in `/tmp/cornerpin-acceptance/`, including `trappers-native-reading.json` (array of all 103 native page texts). These are verification artifacts, not manually seeded production findings. Durable shared public readings are also in private Supabase `research_readings`, keyed by SHA and reader_version=1. Use existing authorized Cornerpin tooling; do not use another project's credentials or print secrets.
+
+## Relevant implementation
+
+- `lib/automatic-investigation.js`: leased orchestration, source/interpretation checkpoints, bounded retries and final synthesis.
+- `lib/approval-document-interpreter.js`: exact source quotation, authority, timing, property scope, supporting evidence and authority-change validation.
+- `lib/investigation-synthesis.js`: final explanation from evidence IDs. Default 5,000 output tokens; orchestration retries at 10,000 then 15,000 after truncation. Current second attempt succeeded.
+- `lib/local-document-references.js`: resolves a bare Article reference only against a substantive same-original heading; stores source-page receipts.
+- `lib/quotation-layout.js`: restores PDF layout whitespace to an exact original span, preserving letters/punctuation and recording receipts; no dropped words or joined numeric tokens accepted. One-time targeted recovery already ran.
+- `lib/native-text-quality.js`, `lib/document-copy-resolution.js`, `lib/reading-copy.js`: corrupted-text OCR, exact truncated-prefix proof for two archive copies, bounded one-bit CCITT reading. All recovered originals are now read; do not redo this work.
+- `web/title-research-view.js`: live results and final “What this means for your project”. Final browser check of the completed synthesis is still outstanding.
+- `db/automatic-investigations.sql`: private queue and minute scheduler. Function-only 15s DB timeout; do not broaden privileges.
+
+## Budget: explicit user authorization already granted
+
+User approved: **“Allow up to $10 today, then restore $5/day.”**
+- Applied and verified the **November 13, 2026 Eastern only** $10 total shared ceiling in `db/ai-budget-2026-11-13-approved.sql`.
+- Every other date automatically uses $5. The permanent default `db/ai-budget.sql` stays $5.
+- Full-context reservations, authentication and uncertain-call retention remain unchanged. Do not reset reservations, raise the ceiling again, or lower safety bounds.
+- At the earlier pause $2.801668 had settled; additional calls occurred after approval. Read the current ledger for the final amount rather than quoting that stale subtotal.
+- An audited checkpoint migration resumed the same job after approval. No source text or conclusions were inserted.
+
+## Finish these steps
+
+- [ ] Inspect recovered ACC provisions and master Exhibit A directly, then fix generic whole-document reconciliation so stale single-chunk “not supplied” statements cannot survive when the relevant material is present.
+- [ ] Add semantic acceptance assertions for that defect, not merely counters/citation IDs. Keep explicit legal applicability and current-recording gaps.
+- [ ] Regenerate only the final synthesis from retained evidence/index after deploying the fix. The job is terminal; use a narrowly audited reset of only synthesis state with no document reinterpretation or source recrawl. Record the reason and retain the prior synthesis in history.
+- [ ] Run the production proof script again, manually check all five findings and four directions against originals, and ensure current Board/ACC/master/municipal stages are accurately distinguished.
+- [ ] Verify the actual signed-in UI and original-document links; save a final screenshot and replace the existing **partial** screenshot as final proof. Do not use `automatic-investigation-partial-production.png` as proof of finished synthesis QA.
+- [ ] Finalize the acceptance report and checklist, commit only relevant files, push, and verify the final Vercel deployment.
+- [ ] Report the automatic capability, actual limitations, observed first-run latency and current API spend honestly. This run required engineering recovery; it was not a clean uninterrupted first run.
+
+## Tests and artifacts
+
+Relevant passing tests: `test-automatic-investigation`, `test-investigation-synthesis`, `test-investigation-budget-pause`, `test-ai-budget`, `test-reading-copy`, `test-original-acquisition`, `test-quotation-layout`, `test-local-document-references`, `test-quoted-property-coverage`, `test-interpretation-context`, `test-document-copy-resolution`, `test-native-text-quality`, `test-research-outcomes`.
+
+Production proof command:
+`node scripts/verify-automatic-investigation-production.js docs/implementation/automatic-investigation-production-proof.json`
+
+Run `python3 build.py` after UI changes. Existing Vercel deployment follows main pushes. Keep unrelated dirty research/UX files intact; never `git add .`. There are historical ZIPs and unrelated modified Cobabe research documents in the worktree.
+
+## Scope and honest stopping criteria
+
+The user wants defensible answers, not crawler counts. Passing technical acceptance alone was insufficient here. Finish the remaining semantic and browser verification before declaring this capability accepted. Do not describe this as resolving all Cobabe evidence or the whole platform audit. Cobabe's separate missing executed agreement/current ARC authority and the failed real-user comprehension check remain open in `product-correctness-checklist.md`. No outreach, emails, purchases, or new credentials are authorized. Preserve all user decisions/approvals; this investigation only supplies evidence and conditional findings.

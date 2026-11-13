@@ -284,3 +284,19 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - [ ] On November 13 Eastern, the existing $5 guard paused further interpretation at $2.801668 charged because another full-context reservation cannot fit. Fifteen recovered documents still need interpretation (including the two neighborhood amendments), followed by reference follow-up, synthesis and final browser proof. No final acceptance artifact was emitted; the production acceptance script correctly fails `retry_wait`.
 - [ ] Explicit user approval requested for a one-day $10 total shared cap, automatically reverting to $5 on November 14 Eastern. A dated SQL change is prepared locally but NOT applied. Until approval, production remains at $5 and scheduled to resume at `2026-11-14T05:00:00Z`. No reservation reset or budget bypass.
 - Tasks 21/22 remain attempted but incomplete; final paid interpretation is blocked by the existing budget until an approved allowance or reset. Cobabe missing originals and real-user comprehension remain separately unresolved.
+
+
+### Checkpoint 27 — User-approved bounded budget continuation
+
+- [x] User explicitly approved “Allow up to $10 today, then restore $5/day.” Applied the dated November 13 Eastern exception; the database function uses $5 for every other date. Existing authentication, full-context reservation, settlement and uncertain-call retention remain unchanged.
+- [x] Resumed the existing checkpoint with an audited migration recording the previous pause and approval reason. No source findings, page text, search outcomes or approvals were inserted. The scheduler reclaimed the job and resumed interpretation.
+- [x] Removed hard-coded $5 wording from transient pause messages so they do not misstate a date-specific approved allowance. The permanent default budget script remains $5.
+- [ ] Finish remaining interpretations, references, final synthesis and terminal production/browser acceptance. Tasks 21/22 remain open until those checks pass.
+
+
+### Checkpoint 28 — Technical acceptance passed; semantic QA caught remaining gaps
+
+- [x] At 06:10:56 UTC, the unconfigured-address job finished `complete_with_gaps`, with zero pending sources and zero unread originals. The strengthened production script passed and emitted `automatic-investigation-production-proof.json`. The bounded second synthesis attempt succeeded.
+- [ ] Human review rejected full completion: the synthesis incorrectly says ACC provisions and the master Exhibit A were not supplied despite recovered documents/sections. It also leads with generic caveats and inspection detail instead of the practical approval sequence. These are unfinished reconciliation/presentation behaviors, not proven missing-source dependencies.
+- [ ] Fix whole-document evidence reconciliation, regenerate only synthesis, extend semantic checks, and perform final browser verification. Do not repeat the crawl or all paid interpretations.
+- [x] Prepared `CLAUDE-HANDOFF-automatic-investigation.md` at the user's usage/handoff checkpoint, with exact remaining steps, artifacts, deployed code and approved budget limits. Tasks 21/22 remain partially verified, not fully accepted.

@@ -24,6 +24,15 @@ async function main(){
  assert(neighborhood.some(x=>x.requirements.some(r=>r.page===31&&r.stage==='construction'&&/board/i.test(r.authority))),'The neighborhood Board construction gate must survive quotation validation');
  assert(neighborhood.every(x=>x.documentStatus!=='recording_or_adoption_identified'),'The recovered unsigned neighborhood copy must not be presented as a proven executed/recorded instrument');
  assert(chainCitations.some(c=>c.sha256===neighborhoodHash),'The final answer must consider the recovered neighborhood original, not only the master documents');
+ const amendmentHash='b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda';
+ const amendment=d.interpretations.find(x=>x.sha256===amendmentHash);assert(amendment&&amendment.documentStatus==='recording_or_adoption_identified');
+ assert(amendment.supportingEvidence.some(x=>x.page===1&&x.quote.includes('3277834')),'The actual recording stamp must be retained');
+ assert(amendment.supportingEvidence.some(x=>x.page===6&&/Lots 46 through 68/i.test(x.quote)),'The recovered lot-range exhibit must be retained');
+ assert(amendment.missingDocuments.some(x=>x.identifier.includes('2957404')),'The exact underlying declaration reference must survive validation');
+ assert(chainCitations.some(c=>c.sha256===amendmentHash),'The final answer must use the recorded amendment, not ignore it');
+ assert(JSON.stringify(d.synthesis).includes('2957404'),'The user must receive the exact recorded-declaration target');
+ const second=d.interpretations.find(x=>x.sha256==='a21765e8967b91addfca64365686a82cb46905dc07d43927f86a128d9afe2e9c');
+ assert(second&&['proposal_or_draft','not_established'].includes(second.documentStatus));assert.equal(second.requirements.length,0,'Unsigned fee provisions must not become a plan-approval prerequisite');
  const city=requirements.filter(x=>x.source.includes('OgdenValley_PermitSubmissionRequirements.pdf'));
  for(const authority of ['Water Company','Sewer Company'])assert(city.some(x=>x.authority===authority&&x.stage==='submission'&&x.page===2&&x.stagePage===1));
  const guidelines=requirements.filter(x=>x.source.includes('Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf'));
