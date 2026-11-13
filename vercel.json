@@ -30,7 +30,7 @@
     },
     "api/public-research.js": {
       "maxDuration": 300,
-      "includeFiles": "{lib/discovery-native-reader.js,lib/original-reader-worker.js,node_modules/@napi-rs/**,node_modules/tesseract.js/**,node_modules/tesseract.js-core/**,node_modules/pdfjs-dist/legacy/build/**}"
+      "includeFiles": "{lib/discovery-native-reader.js,lib/original-reader-worker.js,lib/recording-stamp-worker.js,node_modules/@napi-rs/**,node_modules/tesseract.js/**,node_modules/tesseract.js-core/**,node_modules/pdfjs-dist/legacy/build/**}"
     },
     "api/original-document.js": {
       "maxDuration": 180,
