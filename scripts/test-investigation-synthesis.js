@@ -17,3 +17,8 @@ console.log('PASS: cross-document explanations require existing original evidenc
  assert(html.includes('What this means for your project'));assert(html.includes('Specific evidence still needed'));assert(html.includes('original.pdf#page=2'));
  console.log('PASS: bounded synthesis response, private-field exclusion, original links in live UI, and rejection of truncated model output.');
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+const scoped=structuredClone(doc);scoped.requirements[0].applicability='subdivision_identified';scoped.requirements[0].applicabilityPage=9;scoped.requirements[0].applicabilityBasis='All lots in Example Ridge are described in this exhibit.';
+scoped.supportingEvidence=[{kind:'execution_status',source:doc.source,sha256:'a'.repeat(64),page:8,quote:'Executed on the ____ day of __________, 2018.'}];
+const scopedItems=S.evidence([scoped,scoped]);assert.equal(scopedItems.length,3);const coverage=scopedItems.find(x=>x.type==='property_scope');assert.equal(coverage.page,9);const linked=S.validate({findings:[{text:'The exhibit describes the subdivision.',limitations:'Current effect is unverified.',evidenceIds:[coverage.id]}],missingEvidence:[]},scopedItems);assert.equal(linked.findings[0].citations[0].page,9);
+scoped.requirements[0].applicability='unresolved';assert(!S.evidence([scoped]).some(x=>x.type==='property_scope'));
