@@ -1,0 +1,72 @@
+[
+  {
+    "original": "city-submission",
+    "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+    "pdfPages": [
+      1,
+      2
+    ],
+    "verification": "Independent Poppler text matches both requirement quotations and timing heading; rendered pages inspected."
+  },
+  {
+    "original": "master-design-guidelines",
+    "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
+    "pdfPages": [
+      7,
+      42,
+      43
+    ],
+    "verification": "Independent Poppler text matches all four published requirement quotations; rendered operative pages inspected."
+  },
+  {
+    "original": "master-declaration",
+    "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+    "pdfPages": [
+      10
+    ],
+    "verification": "Rendered original succession and architectural-review clauses inspected independently."
+  },
+  {
+    "original": "termination",
+    "sha256": "55418659da0baa2968531c30a4965c1c5f55988f1378e18369a22d62c7c70b0d",
+    "pdfPages": [
+      1,
+      2,
+      3
+    ],
+    "verification": "Rendered recording stamp, operative termination/savings clauses and acknowledgment inspected independently."
+  },
+  {
+    "original": "trappers-2018",
+    "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf",
+    "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+    "pdfPages": [
+      31,
+      78,
+      79
+    ],
+    "verification": "Independent Poppler extraction and rendered page inspection: section 6.4 requires Board written plan approval before construction; Exhibit A expressly lists Phase 4 Entry 2099635 Book 61 Page 60; signature/date blocks on PDF page 78 are blank. This public copy does not establish execution or current recorded effect."
+  },
+  {
+    "original": "trappers-first-amendment-recorded-2023",
+    "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf",
+    "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+    "pdfPages": [
+      1,
+      5,
+      6
+    ],
+    "verification": "Independent rendered pages show recording Entry 3277834 on March 28, 2023 despite the filename referring to 2022. Page 1 identifies the 2018 declaration as Entry 2957404, recorded December 17, 2018. Page 5 preserves terms not modified by this amendment and makes effectiveness depend on recordation. Page 6 expressly covers Lots 46 through 68, Phase 4, Entry 2099635 Book 61 Page 60. The amendment supplies a recording reference and parcel-range evidence; it does not by itself prove that the unsigned online 2018 text is identical to the recorded original."
+  },
+  {
+    "original": "trappers-second-amendment-unsigned-copy",
+    "source": "https://web.archive.org/web/20240715031127id_/https://trappersridgehoa.com/wp-content/uploads/2024/01/Second-Amendment-to-Amended-Restated-Trappers-Ridge-CCRs-Reinvestment-FeeAug-2023.pdf",
+    "sha256": "a21765e8967b91addfca64365686a82cb46905dc07d43927f86a128d9afe2e9c",
+    "pdfPages": [
+      1,
+      4,
+      5
+    ],
+    "verification": "Independent Poppler extraction and rendered pages: page 1 references Declaration Entry 2957404 but has a blank recorder area. Page 4 makes effectiveness depend on recording, preserves unaffected terms, and has blank date/signature blocks. Page 5 has blank acknowledgments. This public copy does not establish execution or recording. Its operative subject is a reinvestment fee; it does not itself add a construction-plan approval requirement."
+  }
+]

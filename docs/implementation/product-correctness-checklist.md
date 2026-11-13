@@ -242,3 +242,45 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - [x] Named code references now generate source-catalog / official-site / released-record / public-notice follow-up work. Shared neighborhood source leads are independent of addresses; directory membership remains a candidate, not proof of covenant coverage.
 - [ ] Finish the live run, independently validate the final authority/timing quotations, check surviving failures and concrete next-document directions, and retain a production proof record. No queued/run-in-progress completion claim.
 - [ ] Full lot-specific controlling declaration/amendment/delegation chain remains dependent on the originals actually recovered. Trappers Ridge home page and known declaration route deny automated access; that does not prove recorder custody, absence elsewhere, or exemption. Cobabe's separately listed missing instruments remain unresolved.
+
+### Checkpoint 22 — Production recovery, cross-document explanation and shared readings
+
+- The unconfigured-address production test exposed a public-notice date-splitting operation that could exceed a worker lifetime. Date windows now checkpoint between requests; generic referenced instrument names are qualified to the property/jurisdiction. Superseded broad queries retain the refinement reason and replacement ID, not a fabricated negative result. The minute scheduler reclaimed the saved job after the prior worker lease expired, without manually changing its research outcome.
+- Added a final cross-document explanation grounded in validated excerpt IDs. It reconciles authority changes and timing clauses, names specific missing evidence, links originals and remains conditional. It cannot record approval, establish exemption or certify parcel applicability. Unsupported citation IDs and truncated responses are rejected.
+- Added private public-reading reuse by exact source hash and reader version. Changed source bytes and incomplete page ranges cannot reuse a reading; OCR provenance and original PDF links survive. Parcel-specific conclusions are not reused as other parcels' answers.
+- Independently downloaded and checked the city checklist, master guidelines, declaration succession clause and termination instrument. The succession clause on declaration PDF page 10 and termination/savings clauses on termination PDF page 2 support a conditional association/DRB chain; they do not alone prove Lot 68's membership or present appointment.
+- Deployment and final acceptance verification are still underway. Tasks 21/22 must not be closed on the basis of these implementation commits alone. The final proof script requires the live new-address job to finish with zero queued checks and a cited cross-document explanation. Cobabe missing originals and the prior real-user comprehension failure remain distinct open items.
+
+
+### Checkpoint 23 — Archived neighborhood original and truthful budget recovery
+
+- [x] The production worker found the Trappers Ridge 2018 declaration/bylaws through the public archive alternative after the direct website denied access. All 103 pages have machine-readable text. Independent rendered-page checks found the Board approval clause, Phase 4 coverage exhibit and blank signature blocks. This narrows the missing evidence to an executed/recorded version and later changes; it does not prove the archived copy is controlling.
+- [x] Long-document interpretation now keeps original definitions, scope exhibits and execution pages available across chunks. No manual interpretation or parcel-specific conclusion was inserted into the production job.
+- [x] Fixed duplicate cumulative query storage, retained sanitized complete search receipts, and verified successful production checkpoint writes after the prior storage failures.
+- [x] Preserved the $5 daily AI cap and conservative reservation. Added explicit reset-time status, continued non-AI source discovery/retries during the pause, and prevented budget denial from exhausting interpretation/synthesis repair attempts.
+- [ ] Final terminal run, automatic interpretation of the recovered neighborhood copy, cross-document synthesis and production acceptance proof remain in progress. The job's paid interpretation is scheduled to resume after midnight Eastern. Tasks 21/22 are not marked complete while that work is pending.
+
+
+### Checkpoint 24 — Read damaged and scanned archive originals
+
+- [x] Automatically reconciled two truncated archive downloads with larger copies of the same original URL. All 1,048,576 bytes of each damaged copy match the complete copy's prefix; receipts retain both hashes, URLs and sizes. No filename-only equivalence or removal of the failed-source history.
+- [x] Detected corrupt embedded OCR in the first amendment and re-read the affected pages with local Tesseract, independently of the paid interpretation budget. The independently rendered original is recorded in 2023 despite its 2022 filename, references Declaration Entry 2957404, and expressly lists Phase 4 Lots 46–68.
+- [x] Fixed the bounded one-bit CCITT scan path. All four actual incorporation pages read locally with OCR confidence 93–94; broader oversized encodings remain rejected. Commit 20d2600 deployed successfully. The scheduled production retry completed all four pages by 04:50:50 UTC without any manual requeue or evidence insertion.
+- [ ] Final interpretation, cross-document answer and terminal production/browser proof remain open. The daily cap is unchanged; no source text, approval finding or parcel-specific conclusion was manually inserted.
+
+
+### Checkpoint 25 — Interpretation recovery against actual originals
+
+- [x] Midnight budget reset resumed the existing job automatically; no manual restart or cap increase. The first neighborhood chunk retained its blank execution-date clause and Phase 4 exhibit.
+- [x] Same-original bare article references now resolve against a substantive heading with a source-page receipt. Table-of-contents mentions, unread pages, external instrument names and recording numbers do not qualify.
+- [x] The real declaration exposed internal PDF word spacing (for example “a ny”). Quote alignment now restores the source span only when the character and punctuation sequence matches; it retains a normalization receipt and rejects omitted words, changed authority names and joined numeric tokens. Targeted failed chunks are re-read once; no per-parcel findings were inserted.
+- [ ] Remaining chunks, amendments, final synthesis and browser proof are still running. This is implementation recovery, not completion of Tasks 21/22 or resolution of Cobabe’s separate missing instruments.
+
+
+### Checkpoint 26 — Verified clause; budget decision required for final acceptance
+
+- [x] Production now retains the source-supported Board written-plan approval on PDF page 31 with construction timing, `documentStatus=not_established`, and zero rejected statements in that chunk. It agrees with independently inspected pages.
+- [x] The full 103-page neighborhood declaration has been interpreted. Source reading is complete with zero unread documents and zero queued source checks. Independent inspection also distinguishes the recorded first amendment from the unsigned second-amendment copy.
+- [ ] On November 13 Eastern, the existing $5 guard paused further interpretation at $2.801668 charged because another full-context reservation cannot fit. Fifteen recovered documents still need interpretation (including the two neighborhood amendments), followed by reference follow-up, synthesis and final browser proof. No final acceptance artifact was emitted; the production acceptance script correctly fails `retry_wait`.
+- [ ] Explicit user approval requested for a one-day $10 total shared cap, automatically reverting to $5 on November 14 Eastern. A dated SQL change is prepared locally but NOT applied. Until approval, production remains at $5 and scheduled to resume at `2026-11-14T05:00:00Z`. No reservation reset or budget bypass.
+- Tasks 21/22 remain attempted but incomplete; final paid interpretation is blocked by the existing budget until an approved allowance or reset. Cobabe missing originals and real-user comprehension remain separately unresolved.
