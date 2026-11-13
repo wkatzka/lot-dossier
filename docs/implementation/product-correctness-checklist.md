@@ -191,3 +191,11 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - Live/export regression verifies five topic contexts, original page links, partial-report limits, conditional utility evidence, current association contact and agreement conflict; rejects mismatched parcels and conflicting identity; proves saved-report nonmutation. Existing approval-evidence and narrative-flow regressions and build passed.
 - Public OpenGov search completed with user CAPTCHA assistance. Address 5241 E Cobabe Ranch Rd maps to location 146889; Details explicitly shows MBL 224410004, Records shows no records at this location. This is a verified bounded negative result for the new county building portal, not proof of no older/private records or permit exemption. Exact receipt saved in the original-submission ledger.
 - Release verification pending. Tasks 18 and 20 remain unresolved for the substantive dependencies already listed; this fixes an actual cross-surface evidence gap within Tasks 07–08/15, not a replacement for recovering the missing originals.
+
+
+### Checkpoint 16 — Published evidence changes invalidate dependent decisions
+
+- Found a second propagation gap: site-review fingerprints included saved findings/documents but not the newly published original-evidence context. Added source findings, missing dependencies and original hashes/locators to affected review fingerprints. Earlier decisions remain recorded but become stale when their relevant originals change; unrelated topic reviews remain current.
+- The review workspace now presents the current originals and exact missing evidence alongside the prior decision, so renewal is informed. Source matching is limited to affected finding types; a changed geologic excerpt does not invalidate an unrelated FEMA finding or utility review.
+- End-to-end synthetic Cobabe test: resolve a geologic question, confirm a dependent valuation answer, change the published geologic evidence, then verify the site review and answer become stale and handoff reports the stale answer. Prior history is unchanged. Site-decisions, answer-reviews and report-corrections checks passed; build passed. Updated an older test assertion to the already-deployed actionable readiness wording.
+- Production release verification pending. No real project review, answer, approval or filing was changed by the tests.

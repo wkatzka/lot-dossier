@@ -35,3 +35,33 @@ console.log('PASS: one-time upgrade reopens legacy geotechnical applicability an
 
 let pool=W.create({parcel:{county:'Example',id:'scope',attrs:{}},facts:{},findings:[{section:'pool',item:'Pool location',status:'verify'},{section:'water',item:'Water service',status:'verify'}]});assert.equal(O.summary(pool).siteOpen,1);pool=W.apply(pool,{type:'research_scope',pool:'included'});assert.equal(O.summary(pool).siteOpen,2);pool=W.apply(pool,{type:'research_scope',pool:'excluded'});assert.equal(O.summary(pool).siteOpen,1);assert.equal(pool.report.findings.length,2);
 console.log('PASS: undecided/excluded pool research remains accessible without inflating open project work.');
+
+
+// Published original evidence must invalidate dependent site reviews, not just rule reviews.
+const evidenceData=require('../lib/approval-evidence-data'),hazard=evidenceData.cases[0].chain.find(x=>x.id==='hazards');
+let cobabe=W.create({parcel:{county:'Weber',id:'224410004',attrs:{PARCEL_ID:'224410004'}},facts:{jurisdiction:'Ogden Valley City'},findings:[{section:'geo',item:'Landslides',status:'verify',headline:'Map screening'},{section:'utilities',item:'Power',status:'verify',headline:'Provider confirmation'},{section:'geo',item:'Flood zone',status:'verify',headline:'FEMA panel'}]});
+for(const f of cobabe.report.findings)cobabe=W.apply(cobabe,{...decision,id:D.id(f)});
+assert(cobabe.report.findings.every(f=>D.status(cobabe,f).closed));
+const C=require('../web/city-application');
+cobabe=W.apply(cobabe,{type:'city_application',permitType:'1'});
+const valuation=()=>C.rows(cobabe,'1').find(r=>r.name==='builder_valuation');
+cobabe=W.apply(cobabe,{type:'city_application',permitType:'1',fieldKey:valuation().key,value:'500000',basis:'Synthetic estimate dependent on site conditions'});
+cobabe=W.apply(cobabe,{type:'filing_scope',permitType:'1'});
+cobabe=W.apply(cobabe,{type:'answer_review',permitType:'1',fieldKey:valuation().key,state:'confirmed',reviewer:'Synthetic reviewer',reason:'Synthetic cost estimate based on reviewed site conditions',locator:'Fixture estimate page 1',siteQuestion:D.id(cobabe.report.findings[0]),expected:C.Reviews.fingerprint(cobabe,valuation()),confirmed:true});
+assert.equal(valuation().review.state,'confirmed');
+const stored=JSON.stringify(cobabe.siteReviews),originalFinding=hazard.finding;
+try{
+ hazard.finding+=' Synthetic newly identified scope conflict.';
+ assert.equal(D.status(cobabe,cobabe.report.findings[0]).state,'stale');
+ assert.equal(D.status(cobabe,cobabe.report.findings[1]).closed,true,'Unrelated topic review stays current');
+ assert.equal(D.status(cobabe,cobabe.report.findings[2]).closed,true,'FEMA finding is not invalidated by geologic-report context');
+ assert.equal(valuation().review.state,'stale','Dependent permit answer must reopen');
+ assert(W.blockers(cobabe,'initial').some(x=>/Valuation.*stale answer/i.test(x)),'Handoff must see the stale linked answer');
+ assert.match(D.panel(cobabe,D.id(cobabe.report.findings[0])),/Synthetic newly identified scope conflict/);
+ assert.match(D.panel(cobabe,D.id(cobabe.report.findings[0])),/#page=106/);
+ assert.equal(JSON.stringify(cobabe.siteReviews),stored,'Prior review and citations remain unchanged');
+}finally{hazard.finding=originalFinding;}
+const legacyCobabe=structuredClone(cobabe),gf=legacyCobabe.report.findings[0];
+legacyCobabe.siteReviews.items[D.id(gf)].fingerprint=JSON.stringify({finding:gf,scope:{},plan:null});
+assert.equal(D.status(legacyCobabe,gf).state,'stale','Old review without current-source binding needs renewed consideration');
+console.log('PASS: changed published originals reopen affected site reviews and show new evidence; unrelated topics and review history remain intact.');

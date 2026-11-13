@@ -17,7 +17,7 @@ console.log('PASS: blank/unconfirmed answers rejected, permit isolation, value a
 
 assert(C.readiness(p,'1').unreviewed.some(r=>r.name==='builder_valuation'));
 assert(W.blockers(p,'initial').includes('Designate the permit worksheet for this filing.'));
-p=W.apply(p,{type:'filing_scope',permitType:'1'});assert(W.blockers(p,'initial').some(x=>/Builder.*Valuation.*review/i.test(x)));
+p=W.apply(p,{type:'filing_scope',permitType:'1'});assert(W.blockers(p,'initial').some(x=>/Builder.*Valuation.*stale answer/i.test(x)));
 p=W.apply(p,{type:'city_application',permitType:'1',fieldKey:row().key,value:'',basis:''});assert(W.blockers(p,'initial').some(x=>/Valuation.*missing/i.test(x)));
 p=W.apply(p,{type:'city_application',permitType:'2'});assert.equal(p.application.filingPermitType,'1','Opening a worksheet must not change filing identity');
 const filed=structuredClone(p);filed.application.reference='TEST';assert.throws(()=>W.apply(filed,{type:'filing_scope',permitType:'2'}),/existing filing/);
