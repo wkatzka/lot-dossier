@@ -15,6 +15,9 @@ const checklistPages=[{page:1,text:'Ogden Valley City Building Permit Submission
 const checklistClause={...requirement,authority:'Water Company',authorityQuote:checklistPages[1].text,authorityPage:2,quote:checklistPages[1].text,page:2,stage:'submission',stageQuote:checklistPages[0].text,stagePage:1,applicabilityQuote:checklistPages[0].text,applicabilityPage:1,appliesWhen:'New dwelling with water service'};
 assert.equal(I.validate({...parsed,requirements:[checklistClause]},checklistPages,target,{...doc,urls:['https://ogdenvalley.gov/checklist.pdf']}).requirements[0].stage,'submission');
 assert.equal(I.validate({...parsed,requirements:[checklistClause]},checklistPages,target,doc).requirements[0].stage,'timing_unresolved','A private checklist heading does not establish municipal intake');
+const inspectionText='Beacon Code Consultants: This inspection must be passed prior to installing insulation.';
+const inspection=I.validate({...parsed,requirements:[{...requirement,authority:'Beacon Code Consultants',authorityQuote:inspectionText,quote:inspectionText}]},[{page:1,text:inspectionText}],target,doc);
+assert.equal(inspection.requirements[0].stage,'construction_inspection','In-progress inspections do not become pre-permit approvals');
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
