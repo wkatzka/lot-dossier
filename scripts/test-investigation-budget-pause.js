@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 (async()=>{
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,synthesize:Y.synthesize};let saved,claims=0,calls=0;
  const profile={id:'budget',county:'Weber',parcelId:'000000001',hosts:['example.org'],terms:['Example'],identityTerms:['Example'],routes:['association_libraries'],seeds:[],references:[]};
- const state=D.create(profile),hash='a'.repeat(64);state.documents=[{sha256:hash,urls:['https://example.org/terms.pdf'],pages:1,unreadPages:[],route:'association_libraries'}];state.jobs=[{id:'lookup',kind:'page',url:'https://example.org/library',route:'association_libraries',status:'queued'}];
+ const state=D.create(profile),hash='a'.repeat(64);state.documents=[{sha256:hash,urls:['https://example.org/terms.pdf'],pages:1,unreadPages:[],route:'association_libraries'}];state.jobs=[{id:'lookup',kind:'ocr',documentHash:hash,url:'https://example.org/library',route:'association_libraries',status:'queued'}];
  let checkpoint={target:{county:'Weber',parcelId:'000000001',subdivision:'Example Ridge',municipality:'Example'},profile,state,interpretations:[],interpreted:{},pageTexts:{[hash]:{sha256:hash,pages:[{page:1,text:'Architectural approval is required.'}]}},errors:[]};
  const until=new Date(Date.now()+3600000).toISOString();
  try{
