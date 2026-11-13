@@ -47,7 +47,7 @@ async function run({root='.discovery-state',minutes=15,profileId=''}={}){
    if(jobs%10===0)console.log(JSON.stringify({profile:active.id,checkpoint:jobs,pending:state.coverage.pending}));
   }while(state.coverage.pending&&Date.now()<profileDeadline);
   if(active.parcelId)P.publish(active,state,'data/title/discovery-index.json');
-  const report={id:active.id,scope:active.scope,checkedAt:state.updatedAt,coverage:M.publicCoverage(state.coverage),
+  const report={id:active.id,scope:active.scope,checkedAt:state.updatedAt,coverage:M.publicCoverage(state.coverage),investigation:state.investigation,
    legalApplicabilityEstablished:false,documents:state.documents.map(d=>({sha256:d.sha256,urls:d.urls.filter(M.stableUrl),pages:d.pages,unreadPages:d.unreadPages||[],applicability:'unverified'}))};
   reports.push(report);console.log(JSON.stringify({profile:active.id,jobs,pending:state.coverage.pending,documents:state.documents.length}));
   if(Date.now()>=deadline)break;

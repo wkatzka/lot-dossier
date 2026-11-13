@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T23:23:58.086Z",
+  "generatedAt": "2026-11-13T00:58:05.704Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T23:21:20.712Z",
+      "checkedAt": "2026-11-12T18:53:21.582Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -34,18 +34,37 @@
             "jobs": 4,
             "completed": 2,
             "restricted": 1,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "d967b16d0fe52ea7a1e8",
+                "status": "access_restricted",
+                "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "cafeab21ff051a19c187",
+                "status": "not_found",
+                "url": "https://frontier.co.weber.ut.us/p/Public"
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 234,
-            "completed": 233,
+            "jobs": 163,
+            "completed": 162,
             "restricted": 0,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "cb66fa0ce45f5a0c27fe",
+                "status": "not_found",
+                "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/2025/01/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           },
           {
             "route": "public_notice_attachments",
@@ -58,8 +77,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 250,
-            "completed": 250,
+            "jobs": 270,
+            "completed": 270,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -67,8 +86,8 @@
           },
           {
             "route": "developer_libraries",
-            "jobs": 43,
-            "completed": 43,
+            "jobs": 45,
+            "completed": 45,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -76,8 +95,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 334,
-            "completed": 171,
+            "jobs": 421,
+            "completed": 257,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -95,8 +114,258 @@
         ],
         "pending": 0,
         "unreadDocuments": 0,
-        "documents": 154,
-        "publicRouteChecksComplete": true
+        "documents": 153,
+        "publicRouteChecksComplete": false
+      },
+      "investigation": {
+        "schemaVersion": 1,
+        "evaluatedAt": "2026-11-13T00:58:05.697Z",
+        "questions": [
+          {
+            "id": "architectural-authority",
+            "question": "Who must approve the plans, and before which permit stage?",
+            "instrument": "the declaration covering this parcel, its amendments and current architectural-review delegation",
+            "instrumentId": "architectural-authority-chain",
+            "status": "investigation_incomplete",
+            "scopeBasis": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
+            "routes": [
+              {
+                "route": "recorder_index",
+                "source": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "5973bb2a4052ff5bd0bd",
+                    "route": "recorder_index",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
+                    "checkedAt": "2026-11-12T16:46:22.329Z",
+                    "sourceHash": "a01825641a1f6189db3273a17b59f3da7ca3395a4d0de8cce2cf07e6fea188e2",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "parcel_and_parent_records",
+                "source": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "35c12796ad3a68ff5d00",
+                    "route": "parcel_and_parent_records",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
+                    "checkedAt": "2026-11-12T16:46:24.505Z",
+                    "sourceHash": "28b36f71bbdfd5d51a8c2de5ee032cf88d2eaacc70b05407a82494c26a224a7e",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "planning_case_files",
+                "source": "https://frontier.co.weber.ut.us/p/Public/List",
+                "custodian": "frontier.co.weber.ut.us",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "d967b16d0fe52ea7a1e8",
+                    "route": "planning_case_files",
+                    "kind": "page",
+                    "status": "access_restricted",
+                    "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                    "checkedAt": "2026-11-12T16:46:28.752Z",
+                    "sourceHash": "a3de61cab57636cdcd55bcf7936da275cdd7f9e42b048acad18a8ed343db360d",
+                    "outcome": "source_check_unfinished"
+                  }
+                ]
+              },
+              {
+                "route": "adopted_agreements_and_exhibits",
+                "source": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "ed42900fa49d719658f1",
+                    "route": "adopted_agreements_and_exhibits",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
+                    "checkedAt": "2026-11-12T16:46:42.676Z",
+                    "sourceHash": "2e41ab3ee7173a4b59dddc38ad8e5cdd4a90984a2f2568808e63bf0cf3e7f4dc",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "public_notice_attachments",
+                "source": "https://www.utah.gov/pmn/search.html",
+                "custodian": "public_notice_attachments",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "notice_agenda",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "association_libraries",
+                "source": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
+                "custodian": "wolfcreekresortmasterhoa.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "f32b23754e6184abfadc",
+                    "route": "association_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
+                    "checkedAt": "2026-11-12T16:46:42.849Z",
+                    "sourceHash": "5342ce16ebac7c9382491442f4029719eb484c5aee3a3736187242f39c72e703",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "developer_libraries",
+                "source": "https://www.cobaberanch.com/sitemap.xml",
+                "custodian": "www.cobaberanch.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "db431ff6e2ff6685a73b",
+                    "route": "developer_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.cobaberanch.com/sitemap.xml",
+                    "checkedAt": "2026-11-12T16:46:43.791Z",
+                    "sourceHash": "8c54d966c9842fe8d335d76b9a7713fc856da0c72c5606c226d3f8983234a5f3",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "released_records_archive",
+                "custodian": "released_records_archive",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "public_mirrors_and_archives",
+                "source": "https://weber-county-hive.github.io/Transparency/weber-hive-then-vs-now-part-2.html",
+                "custodian": "weber-county-hive.github.io",
+                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "4d736422a2b1805042f5",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://weber-county-hive.github.io/Transparency/weber-hive-then-vs-now-part-2.html",
+                    "checkedAt": "2026-11-12T16:46:44.257Z",
+                    "sourceHash": "e71d5fcf8b6dd9ee24b4ed9265732c82cb3148747715ceb18a2f7adcb78944bd",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              }
+            ],
+            "references": [
+              {
+                "label": "Cobabe Ranch Owners Association · registered contact",
+                "url": "https://services.commerce.utah.gov/hoa/",
+                "purpose": "Find registration 14305604-HOA1. Ask for the declaration covering Phase 1 Lot 4 and the current architectural committee appointment. John Lewis is the registered president, not a confirmed plan reviewer. Phone: 801-745-3737; email: accounting@wolfcreekresort.com.",
+                "verifiedAt": "2026-11-12",
+                "validUntil": "2026-12-12T00:00:00.000Z",
+                "verificationUrl": "https://services.commerce.utah.gov/hoa/",
+                "holdingsEstablished": false
+              }
+            ],
+            "nextAction": "Reconcile the retrieved candidates with the requested instrument, property and amendments.",
+            "fallbackEligible": false,
+            "coverageComplete": false,
+            "pendingChecks": 0,
+            "unreadDocuments": 0,
+            "openLeads": 0,
+            "unresolvedCandidates": 141,
+            "unreconciledSearches": 0,
+            "barriers": [
+              {
+                "id": "d967b16d0fe52ea7a1e8",
+                "route": "planning_case_files",
+                "kind": "page",
+                "status": "access_restricted",
+                "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                "checkedAt": "2026-11-12T16:46:28.752Z",
+                "sourceHash": "a3de61cab57636cdcd55bcf7936da275cdd7f9e42b048acad18a8ed343db360d"
+              }
+            ]
+          }
+        ],
+        "contactFallbackEligible": false,
+        "limitation": "These decisions cover the named questions, sources, identifiers and dates. They do not establish absence of a requirement or exhaustive internet coverage."
       },
       "contactFallbackEligible": false,
       "documents": [
@@ -885,7 +1154,9 @@
             94,
             95
           ],
-          "route": "adopted_agreements_and_exhibits"
+          "route": "adopted_agreements_and_exhibits",
+          "fromPreviousPass": true,
+          "previousCheckedAt": "2026-11-12T23:21:20.712Z"
         }
       ],
       "legalApplicabilityEstablished": false,

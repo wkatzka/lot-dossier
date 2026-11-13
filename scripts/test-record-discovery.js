@@ -25,7 +25,7 @@ const D=require('../lib/record-discovery-engine'),PMN=require('../lib/pmn');
   s.externalLeads=[];s.jobs[0].status='rate_limited';
   assert.equal(D.summarize(s,profile).publicRouteChecksComplete,false);
   assert.equal(s.contactFallbackEligible,false);
-  s.jobs.forEach(j=>j.status='complete');s.jobs[0].status='access_restricted';assert.equal(D.summarize(s,profile).publicRouteChecksComplete,true);assert.equal(s.contactFallbackEligible,false,'Completed queue plus restricted service does not establish instrument custody');
+  s.jobs.forEach(j=>j.status='complete');s.jobs[0].status='access_restricted';assert.equal(D.summarize(s,profile).publicRouteChecksComplete,false);assert.equal(s.contactFallbackEligible,false,'Completed queue plus restricted service does not establish instrument custody');
   const mi=D.create(profile),mj=D.add(mi,{kind:'municipal-index',url:'https://example.org/Docs/Read?type=ordinances',route:profile.routes[0],page:1});
   await D.processJob(mi,profile,mj,store,{fetch:async url=>({url,status:200,type:'application/json',bytes:Buffer.from(JSON.stringify({Data:[{Number:'2025-11',URL:'https://example.org/Cobabe.pdf'}],Total:21}))})});
   assert.equal(mj.status,'complete');assert(mi.jobs.some(x=>x.kind==='municipal-index'&&x.page===2));assert(mi.jobs.some(x=>x.url==='https://example.org/Cobabe.pdf'));
