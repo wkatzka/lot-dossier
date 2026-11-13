@@ -74,6 +74,13 @@
       "result": "Visually reviewed Phase 2 sheet S1: note 1 repeats 3372687; note 3 names Wester Geologic February 28 2022 report; note 5 references historical power easements 379388 and 493375. No new operative architectural instrument identified on this sheet.",
       "limit": "Phase 2 is not Lot 4 Phase 1. A repeated plat citation does not independently authenticate the disputed recorder number. Not substituted into Lot 4 conditions.",
       "recording": "Entry 3425450, July 14 2026, Book 102 pp54\u201358; visually checked stamp"
+    },
+    {
+      "route": "Contemporary financing article to original roadshow",
+      "discoveryUrl": "https://www.utahmoneywatch.com/breaking-news-two-utah-entities-are-seeking-a-combined-total-of-over-107-million-for-real-estate-work-in-weber-and-summit-counties-respectively/",
+      "url": "https://roadshow.munios.com/roadshow-viewer.aspx?e=MAMCO&ref=utahmoneywatch.com&z=MAMCO",
+      "result": "Normal browser navigation redirected to https://www.munios.com/ and visibly reported Roadshow has expired. Article offering-document link resolves to previously checked MAMCO notice.",
+      "limit": "Expired presentation route only. Contents unreviewed; does not establish absence of a public offering-statement mirror or needed legal instruments."
     }
   ],
   "productionDiscovery": {
