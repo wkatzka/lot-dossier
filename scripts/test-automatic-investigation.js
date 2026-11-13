@@ -59,3 +59,5 @@ assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '
   console.log('PASS: exact original quotations, authority and parcel checks, stage isolation, durable checkpoint publication, idle workers, deduplicated enqueue and live interpretation rendering.');
  }finally{S.rpc=old.rpc;D.run=old.run;I.interpret=old.interpret;P.identity=old.identity;P.profile=old.profile;}
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+assert.equal(I.refineTiming({stage:'timing_unresolved',quote:'As a general rule, if work is covered or concealed, it must be inspected prior to covering.'}).stage,'construction_inspection');
