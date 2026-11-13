@@ -50,6 +50,12 @@ rejects(d=>d.missingEvidence[0].dependency='retrieved_unread',/retrieved but unr
 rejects(d=>{d.missingEvidence[1].dependency='copy_recovered_equivalence_unverified';d.missingEvidence[1].evidenceIds=[tDate];},/every cited original bears a recorder stamp/,'Equivalence doubt about a recorded original');
 rejects(d=>d.missingEvidence[0].question='',/specific question/,'A next action without its question');
 rejects(d=>d.answer.nextActionIndex=7,/select one of the listed next actions/,'A short answer without a real next action');
+// A comparison task against recovered material is not a claim that the material is missing,
+// but the same document named as not retrieved is.
+{const I=require('../lib/document-inventory'),inv={[h('m')]:{entries:[{kind:'exhibit',number:'A',page:53}]}},titles={[h('m')]:['Master Declaration for Wolf Creek Resort']};
+ const dir=dep=>({findings:[],missingEvidence:[{document:'Wolf Creek Master Declaration Exhibit A legal descriptions and any recorded Supplemental Declaration for Phase 4',dependency:dep,action:'Compare the Phase 4 plat with the recovered exhibit.'}]});
+ assert.deepEqual(I.staleClaims(dir('read_applicability_unresolved'),inv,titles),[]);
+ assert.equal(I.staleClaims(dir('not_retrieved'),inv,titles).length,1,'Naming a recovered exhibit as not retrieved is rejected');}
 console.log('PASS: answers that misstate recovered recording identifiers/dates, conflate execution or filename dates, drop unsigned-copy limits, conflate stages, erase institutional roles, or mis-classify next actions are rejected; the corrected answer passes.');
 // Recorder-stamp parsing never guesses.
 assert.equal(R.strictDate('28-MAR-23 302 PM').iso,'2023-03-28');assert.equal(R.strictDate('26-4AR-23 302 PM'),null,'OCR-garbled months are not repaired by guessing');assert.equal(R.strictDate('31-FEB-23'),null);
