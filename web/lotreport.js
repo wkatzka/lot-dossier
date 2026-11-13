@@ -2027,6 +2027,7 @@
     var base=apiBase(), ctl=new AbortController(), timer=setTimeout(function(){ctl.abort();},240000), data;
     try {
       if(base==null)throw new Error('Public document service unavailable');
+      if(ctx.parcel.county==='Weber'){try{var started=await fetch(base+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:ctx.parcel.county,parcelId:ctx.parcel.id}),signal:ctl.signal});var job=await started.json();ctx.facts.automaticInvestigation=started.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){ctx.facts.automaticInvestigation={error:e.message};}}
       var response=await fetch(base+'/api/public-research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rings:ctx.parcel.rings,county:ctx.parcel.county,parcelId:ctx.parcel.id}),signal:ctl.signal});
       if(!response.ok)throw new Error('Public research HTTP '+response.status);data=await response.json();if(data.error)throw new Error(data.error);
     } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
