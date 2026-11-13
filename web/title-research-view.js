@@ -19,7 +19,7 @@ function compareTarget(d,m){
 function comparisonFor(project,t){return t&&(project?.application?.recordedComparisons||[]).find(x=>x.entry===t.entry&&x.referenceSha===t.referenceSha);}
 function roles(d,m,project){
  const t=m.dependency==='copy_recovered_equivalence_unverified'?compareTarget(d,m):null;
- if(t)return {you:'Get a copy of '+esc(m.document)+' from '+(holders(d,m.document+' '+m.action,{recorded:true})||'the county recorder')+', then upload it here.',
+ if(t)return {you:'Get '+esc(/^(a |an |the )?(recorder-stamped |recorded |certified )?copy of /i.test(m.document)?m.document.replace(/^(a |an |the )/i,'').replace(/^/,'a '):'a copy of '+m.document)+' from '+(holders(d,m.document+' '+m.action,{recorded:true})||'the county recorder')+', then upload it here.',
   cornerpin:'Checks the recorder stamp and entry number, compares sections '+esc(t.sections.join(', '))+' with the copy already retrieved, and updates this answer.',target:t,
   upload:project?'<label class="cp-upload">Upload the recorded copy (PDF)<input type="file" accept="application/pdf" data-recorded-upload data-entry="'+esc(t.entry)+'" data-reference="'+esc(t.referenceSha)+'" data-sections="'+esc(t.sections.join(','))+'"></label><span class="cp-upload-status" role="status" aria-live="polite"></span>':''};
  if(m.dependency==='not_retrieved'||m.dependency==='copy_recovered_equivalence_unverified')return {you:'Get '+esc(m.document)+' from '+(holders(d,m.document+' '+m.action,{recorded:/\b(entry|recorded|supplemental declaration|plat)\b/i.test(m.document+' '+m.action)})||'the organisation that holds it')+' and add it under Documents.',cornerpin:'Keeps it with this project. It does not yet read new uploads into this answer.'};
