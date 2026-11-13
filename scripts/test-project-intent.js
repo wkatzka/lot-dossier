@@ -28,7 +28,7 @@ assert(!s.plans.some(p=>['addition','remodel','pool','replace-home'].includes(p.
 s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>p.id==='new-home')&&s.plans.some(p=>p.id==='remodel'));assert(/does not say whether there is a house/.test(I.card(unknown)));
 // Every plan maps to real city permit types.
 for(const [id,p] of Object.entries(I.PLANS))assert(p.typeIds.every(t=>C.catalog.types.some(x=>x.value===t)),id+' maps to catalog types');
-const card=I.card(built);assert(/What are you planning\?/.test(card)&&/not a prediction/.test(card)&&/More options/.test(card)&&/data-intent="evaluate"/.test(card));
+const card=I.card(built);assert(/What are you planning\?/.test(card)&&/not a prediction/.test(card)&&/More options/.test(card)&&/data-intent-confirm="evaluate"/.test(card));
 assert(!I.suggest(built).plans.find(p=>p.id==='remodel').reasons.some(r=>r.source),'General statements carry no source');assert(/County parcel record/.test(I.card(built)),'The house fact cites the parcel record');
 console.log('PASS: plans ranked by fit with the lot\'s own records — built vs vacant from the parcel record, sourced reasons, constrained options explained, nothing presumed when unknown.');
 // Saving the choice fills the existing scope and worksheets and removes nothing.
@@ -58,9 +58,11 @@ console.log('PASS: site findings re-rank for the chosen plan.');
  window.ProjectWorkspace={project:()=>proj,commit:async c=>{commits.push(c);proj={...proj,application:{...proj.application,intent:{plan:c.plan,label:c.label}}};}};
  document.body.innerHTML='<div id="site-intent">'+IJ.card(built,{project:proj})+'</div>';
  document.querySelector('[data-intent="remodel"]').dispatchEvent(new window.MouseEvent('click',{bubbles:true}));
+ assert(/Your permits/.test(document.body.textContent)&&!commits.length,'Picking a main permit shows add-ons before saving');
+ document.querySelector('[data-intent-confirm="remodel"]').dispatchEvent(new window.MouseEvent('click',{bubbles:true}));
  for(let i=0;i<20&&!commits.length;i++)await new Promise(r=>setTimeout(r,5));await new Promise(r=>setTimeout(r,5));
  assert.equal(commits[0].type,'project_intent');assert.equal(commits[0].plan,'remodel');
- assert(/Planning: Remodel inside the house/.test(document.body.textContent),'The chooser becomes a one-line summary');
+ assert(/Planning: Remodel/.test(document.body.textContent),'The chooser becomes a one-line summary');
  document.querySelector('[data-intent-change]').dispatchEvent(new window.MouseEvent('click',{bubbles:true}));
  assert(/What are you planning\?/.test(document.body.textContent),'Change reopens the choices');
  console.log('PASS: choosing a plan saves it through the workspace and collapses to a one-line summary that can be changed.');

@@ -1488,7 +1488,9 @@
     });
 
     // Fee figures vs. the city's agendas: anything adopted after the records we hold makes the numbers suspect.
-    var recs = kbx && kbx.records, wd = ctx.watch ? await ctx.watch : null, wl = wd && wd.items;
+    var recs = kbx && kbx.records;
+    if (!ctx.watch && recs && ctx.facts.jurisdiction) ctx.watch = apiGet('/api/watch?entity=' + encodeURIComponent(ctx.facts.jurisdiction) + '&since=' + recs.since, 60000);
+    var wd = ctx.watch ? await ctx.watch : null, wl = wd && wd.items;
     var feeRow = ctx.findings.filter(function (x) { return x.item === 'Permit & impact fees'; })[0];
     if (recs && feeRow) {
       if (!wl) feeRow.detail += ' (Could not check the city\'s agendas for newer fee actions this time.)';
@@ -1602,7 +1604,8 @@
     ['building', 'planning', 'office'].forEach(function (k) { if (c[k]) ctx.facts.contacts.push(Object.assign({ kind: k, source: c.source, asOf: c.asOf }, c[k])); });
     var rq = ctx.facts.kb && ctx.facts.kb.records;
     // Check the city's agendas for fee actions newer than the records we hold (read back in check_documents).
-    if (rq) ctx.watch = apiGet('/api/watch?entity=' + encodeURIComponent(juris) + '&since=' + rq.since, 60000);
+    // Started here only when the documents step runs in this pass; otherwise check_documents starts it.
+    if (rq && (!ctx.steps || ctx.steps.indexOf('check_documents') !== -1)) ctx.watch = apiGet('/api/watch?entity=' + encodeURIComponent(juris) + '&since=' + rq.since, 60000);
     if (rq && rq.unposted && rq.unposted.length) {
       var body = 'Under the Utah Government Records Access and Management Act (Utah Code 63G-2-204), I am requesting copies of the following ' + juris + ' records:\n\n' +
         rq.unposted.map(function (u, i) { return (i + 1) + '. ' + u; }).join('\n\n') +
@@ -2109,29 +2112,38 @@
     if(parcel.county!=='Weber')return {status:'unsupported',message:'Automatic original-document investigation currently covers Weber County.'};
     try{var response=await fetch((apiBase()||'')+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:parcel.county,parcelId:parcel.id}),signal:AbortSignal.timeout(30000)});var job=await response.json();return response.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){return {error:e.message};}
   }
-  async function run(parcel, plan, costs, onStep, documents) {
-    var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: {},
+  // opts.steps: run only these step ids (in STEPS order); opts.prior: a report from an earlier pass to
+  // build on (its facts feed later steps; its findings are kept except for steps re-run here).
+  // opts.investigate: also queue the background plan-approval investigation.
+  async function run(parcel, plan, costs, onStep, documents, opts) {
+    opts = opts || {}; var prior = opts.prior || null;
+    var selected = opts.steps ? STEPS.filter(function (s) { return opts.steps.indexOf(s[0]) !== -1; }) : STEPS, ids = selected.map(function (s) { return s[0]; });
+    var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: prior ? JSON.parse(JSON.stringify(prior.facts || {})) : {}, steps: opts.steps ? ids : null,
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
-    ctx.facts.automaticInvestigation=await queueInvestigation(parcel);
-    if (ctx.grid.length >= 4) {ctx.elevation = lidarSamples(ctx.grid);ctx.elevationComparison=epqsSamples(ctx.grid.filter(function(_,i){return i%Math.max(1,Math.ceil(ctx.grid.length/24))===0;}));}
-    var findings = [];
+    if (opts.investigate) ctx.facts.automaticInvestigation = await queueInvestigation(parcel);
+    if (ctx.grid.length >= 4 && (ids.indexOf('check_slope') !== -1)) {ctx.elevation = lidarSamples(ctx.grid);ctx.elevationComparison=epqsSamples(ctx.grid.filter(function(_,i){return i%Math.max(1,Math.ceil(ctx.grid.length/24))===0;}));}
+    var findings = prior ? (prior.findings || []).filter(function (f) { return !(f.step && (ids.indexOf(f.step) !== -1 || f.step === '_post')); }) : [];
     ctx.findings = findings;
     // Start the slow document lookup now so it runs alongside the map checks (jurisdiction resolves early; refine later).
     // A plan revision reuses this property's retrieved documents, including missing-record outcomes.
     // It does not claim to refresh title evidence or silently repeat the slow document downloads.
-    ctx.docs = documents ? Promise.resolve(documents) : fetchDocs(parcel, null);
-    for (var i = 0; i < STEPS.length; i++) {
-      var id = STEPS[i][0];
+    var priorDocs = documents || (prior && prior.documents) || null;
+    ctx.docs = ids.indexOf('check_documents') === -1 ? Promise.resolve(priorDocs) : (documents ? Promise.resolve(documents) : fetchDocs(parcel, ctx.facts.jurisdiction || null));
+    for (var i = 0; i < selected.length; i++) {
+      var id = selected[i][0];
       onStep && onStep(id, 'running');
-      try { var got = await C[id](ctx); for (var g = 0; g < got.length; g++) findings.push(got[g]); onStep && onStep(id, 'done'); }
+      try { var got = await C[id](ctx); for (var g = 0; g < got.length; g++) { got[g].step = id; findings.push(got[g]); } onStep && onStep(id, 'done'); }
       catch (e) {
         onStep && onStep(id, 'failed');
-        findings.push(F('land', STEPS[i][1], 'verify', 'Automated check failed', String(e && e.message || e).slice(0, 300)));
+        var failed = F('land', selected[i][1], 'verify', 'Automated check failed', String(e && e.message || e).slice(0, 300)); failed.step = id; findings.push(failed);
       }
     }
+    var now = new Date().toISOString(); ctx.facts.stepsRun = Object.assign({}, (prior && prior.facts && prior.facts.stepsRun) || (prior ? STEPS.reduce(function (m, s) { m[s[0]] = prior.date || now; return m; }, {}) : {}));
+    ids.forEach(function (id) { ctx.facts.stepsRun[id] = now; });
     var areas=[{name:'Parcel record',value:Number(parcel.attrs.PARCEL_ACRES),url:parcel.attrs.ASSESSOR_SRC||lirUrl(parcel.county),basis:'Published parcel acreage'},
       {name:'GIS parcel boundary',value:ctx.facts.lot_sf/43560,url:lirUrl(parcel.county),basis:'Calculated from mapped outer boundary; holes and survey accuracy unresolved'},
       {name:'Recorded plat extraction',value:Number((ctx.facts.parcelDoc||{}).acres),url:'https://webercountyutah.gov/parcelsearch/ownership-info.php?id='+encodeURIComponent(parcel.id),basis:'Machine-read plat acreage; confirm lot attribution against original sheets'}].filter(function(m){return Number.isFinite(m.value)&&m.value>0;});
+    var postStart=findings.length; // summary findings below are recomputed on every pass
     if(Number.isFinite(ctx.facts.water_table_in) && ctx.facts.boreholes && Number.isFinite(ctx.facts.boreholes.gwMin)){
       findings.push(F('geo','Groundwater source comparison','verify','Mapped seasonal depth '+(ctx.facts.water_table_in/12).toFixed(2)+' ft · nearby boring minimum '+ctx.facts.boreholes.gwMin+' ft',
         'Absolute difference '+Math.abs(ctx.facts.water_table_in/12-ctx.facts.boreholes.gwMin).toFixed(2)+' ft. USDA SSURGO estimates mapped seasonal groundwater; UGS archives measurements at nearby borings, potentially at different dates and locations. These are not matched site measurements, so agreement or disagreement cannot establish groundwater beneath the proposed building. See the separately cited Soils and Nearby test borings findings.','USDA SSURGO and UGS boring archive','https://borehole.geology.utah.gov/'));
@@ -2139,6 +2151,7 @@
     ctx.facts.areaSources=areas;
     areas.forEach(function(m){findings.push(F('land','Lot area · '+m.name,'verify',m.value.toFixed(4)+' acres ('+Math.round(m.value*43560)+' sq ft)',m.basis+'. Values are retained separately to compare source agreement; no value establishes a surveyed legal area.',m.name,m.url));});
     if(areas.length>1){var values=areas.map(function(m){return m.value;});findings.push(F('land','Lot area source comparison','verify','Source spread '+((Math.max.apply(null,values)-Math.min.apply(null,values))*43560).toFixed(1)+' sq ft','Compare the individually cited parcel, GIS and available plat measurements above. Parcel records and GIS can share an upstream source; matching values are not independent confirmation.'));}
+    for (var q = postStart; q < findings.length; q++) findings[q].step = '_post';
     return { findings: reviewFindings(findings), facts: ctx.facts, documents: await ctx.docs };
   }
 
@@ -2252,5 +2265,5 @@
       return f;
     });
   }
-  root.LotReport = { reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
+  root.LotReport = { reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, queueInvestigation: queueInvestigation, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -7,18 +7,21 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const link=(url,text)=>/^https?:\/\//.test(url||'')?'<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(text)+'</a>':esc(text);
 // Plans → City Inspect permit types and approval-rule scope. typeIds must exist in the city catalog.
+// Each option is centred on a permit; add-ons are the permits commonly filed alongside it.
+const ACCESSORY=['pool','garage','deck','retaining-wall','solar'],INTERIOR=['remodel','basement','adu'];
 const PLANS={
- 'new-home':{label:'Build a new home',typeIds:['1'],scope:{work:'new-home'},exterior:true,footprint:true},
- 'replace-home':{label:'Tear down and rebuild',typeIds:['104','1'],scope:{work:'new-home',demolition:'yes'},exterior:true,footprint:true},
- 'addition':{label:'Add on to the house',typeIds:['3'],scope:{work:'addition'},exterior:true,footprint:true},
- 'remodel':{label:'Remodel inside the house',typeIds:['4'],scope:{work:'other'}},
- 'basement':{label:'Finish the basement',typeIds:['70'],scope:{work:'other'}},
- 'adu':{label:'Add an apartment inside the house (internal ADU)',typeIds:['102'],scope:{work:'other',adu:'yes'}},
- 'deck':{label:'Build a deck',typeIds:['74'],scope:{work:'other'},exterior:true},
- 'garage':{label:'Build a detached garage or outbuilding',typeIds:['96'],scope:{work:'addition'},exterior:true,footprint:true},
- 'pool':{label:'Add a pool',typeIds:['2'],scope:{work:'other'},pool:'included',exterior:true,footprint:true},
- 'solar':{label:'Add solar panels',typeIds:['8'],scope:{work:'other'},exterior:true},
- 'evaluate':{label:'Just evaluating the lot',typeIds:[],scope:{}}
+ 'new-home':{label:'New single-family home',short:'New home',permit:'Single Family Dwelling',typeIds:['1'],scope:{work:'new-home'},exterior:true,footprint:true,addOns:ACCESSORY},
+ 'replace-home':{label:'Tear down and build a new home',short:'Rebuild',permit:'Demolition + Single Family Dwelling',typeIds:['104','1'],scope:{work:'new-home',demolition:'yes'},exterior:true,footprint:true,addOns:ACCESSORY},
+ 'addition':{label:'Addition to the house',short:'Addition',permit:'Addition',typeIds:['3'],scope:{work:'addition'},exterior:true,footprint:true,addOns:['deck','remodel']},
+ 'remodel':{label:'Remodel inside the house',short:'Remodel',permit:'Remodel',typeIds:['4'],scope:{work:'other'},addOns:['basement','adu']},
+ 'basement':{label:'Basement finish',short:'Basement finish',permit:'Basement Finish',typeIds:['70'],scope:{work:'other'},addOns:['remodel','adu']},
+ 'adu':{label:'Apartment inside the house (internal ADU)',short:'Internal ADU',permit:'Internal ADU',typeIds:['102'],scope:{work:'other',adu:'yes'},addOns:['remodel','basement']},
+ 'deck':{label:'Deck',short:'Deck',permit:'Deck',typeIds:['74'],scope:{work:'other'},exterior:true,addOns:['pool','garage','retaining-wall','solar']},
+ 'garage':{label:'Detached garage',short:'Garage',permit:'Garage (Detached)',typeIds:['96'],scope:{work:'addition'},exterior:true,footprint:true,addOns:['pool','deck','retaining-wall','solar']},
+ 'pool':{label:'Pool',short:'Pool',permit:'Pool',typeIds:['2'],scope:{work:'other'},pool:'included',exterior:true,footprint:true,addOns:['deck','garage','retaining-wall','solar']},
+ 'retaining-wall':{label:'Retaining wall',short:'Retaining wall',permit:'Retaining Wall',typeIds:['6'],scope:{work:'other'},exterior:true,footprint:true,addOns:['deck','pool','garage']},
+ 'solar':{label:'Solar panels',short:'Solar',permit:'Solar',typeIds:['8'],scope:{work:'other'},exterior:true,addOns:['deck','pool','garage']},
+ 'evaluate':{label:'Just evaluating the lot',short:'Evaluating',permit:'',typeIds:[],scope:{},addOns:[]}
 };
 const FIT={good:'Good fit',possible:'Possible',constrained:'Constrained'};
 function facts(report){
@@ -33,7 +36,7 @@ function facts(report){
 }
 const r=(text,src)=>({text,source:src||null});
 // Fit and reasons for one plan on this lot.
-function assess(plan,F){
+function assess(plan,F,{asAddOn=false}={}){
  const reasons=[],small=F.sqft&&F.sqft<6000,setbacks=F.zone&&(F.zone.front||F.zone.rear)?F.zone:null;
  const lotLine=F.sqft?'Lot is about '+Math.round(F.sqft).toLocaleString('en-US')+' sq ft'+(F.acres?' ('+F.acres+' acre)':''):'';
  const houseLine=F.state==='improved'?'County record shows '+(F.houses>1?F.houses+' houses':'a house')+(F.built?' (built or updated '+F.built+')':'')+(F.improvement!=null?' worth about $'+Math.round(F.improvement/1000).toLocaleString('en-US')+'k':''):F.state==='vacant'?'County record shows no house on the lot':'';
@@ -41,7 +44,7 @@ function assess(plan,F){
  if(plan==='evaluate')return {fit:null,reasons:[r('See the site findings and approvals without choosing a project yet.')]};
  if(plan==='new-home'){if(F.state==='vacant'){fit='good';reasons.push(r(houseLine,F.parcelSrc));}else if(F.state==='improved'){fit='constrained';reasons.push(r(houseLine+'; a new home would mean replacing it.',F.parcelSrc));}}
  if(plan==='replace-home'){if(F.state!=='improved')return null;fit='constrained';reasons.push(r(houseLine+(F.built&&F.built>=new Date().getFullYear()-5?'; recently built':''),F.parcelSrc));}
- if(['addition','remodel','basement','adu','deck','garage','pool','solar'].includes(plan)&&F.state==='vacant')return null;
+ if(!asAddOn&&['addition','remodel','basement','adu','deck','garage','pool','solar','retaining-wall'].includes(plan)&&F.state==='vacant')return null;
  if(['remodel','basement','adu'].includes(plan)){fit='good';reasons.push(r('Work stays inside the existing house, so setbacks and most site hazards don\'t change.'));
   if(plan==='basement')fit='possible',reasons.push(r('Only if the house has an unfinished basement; the county parcel record does not say.'));
   if(plan==='adu')fit='possible',reasons.push(r('Check that zoning and the HOA covenants allow a second unit inside the house.',F.hoa?{label:F.hoa.source,url:F.hoa.url}:null));}
@@ -51,7 +54,7 @@ function assess(plan,F){
   if(F.landslide&&F.landslide.status==='flag')reasons.push(r('New footprint on mapped landslide ground likely needs geotechnical review.',{label:F.landslide.source,url:F.landslide.url}));
  }
  if(plan==='pool'){for(const x of F.poolFlags.slice(0,2))reasons.push(r(x.headline,{label:x.source,url:x.url}));if(F.poolFlags.length)fit='constrained';}
- if(['deck','solar'].includes(plan)){fit='possible';if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
+ if(['deck','solar','retaining-wall'].includes(plan)){fit='possible';if(F.slope&&plan==='retaining-wall')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): walls over the code height need engineering.',{label:F.slope.source,url:F.slope.url}));if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
  if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r('The lot is in an HOA; see Approvals for its rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
  if(plan==='new-home'&&F.state==='vacant'&&F.landslide?.status==='flag')reasons.push(r('Mapped landslide on the lot: plan for a geologic hazards study.',{label:F.landslide.source,url:F.landslide.url}));
  return {fit,reasons:reasons.filter(x=>x.text)};
@@ -63,25 +66,38 @@ function suggest(report){
  out.sort((x,y)=>ORDER[x.fit]-ORDER[y.fit]);
  return {lot:F,plans:out,evaluate:{id:'evaluate',...PLANS.evaluate,...assess('evaluate',F)}};
 }
-function command(id){const p=PLANS[id];if(!p)throw Error('Unknown plan');return {type:'project_intent',plan:id,label:p.label,typeIds:p.typeIds,scope:p.scope,pool:p.pool||null};}
+function command(id,addOns=[]){const p=PLANS[id];if(!p)throw Error('Unknown plan');const extra=addOns.filter(a=>p.addOns.includes(a)&&PLANS[a]);
+ const all=[p,...extra.map(a=>PLANS[a])],typeIds=[...new Set(all.flatMap(x=>x.typeIds))],scope={...p.scope};if(extra.some(a=>PLANS[a].scope.adu))scope.adu='yes';
+ return {type:'project_intent',plan:id,addOns:extra,label:[p.short||p.label,...extra.map(a=>PLANS[a].short.toLowerCase())].join(' + '),typeIds,scope,pool:all.some(x=>x.pool)?'included':null};}
 function basis(F){return F.state==='improved'?'This lot already has a house, so projects that change it are listed first.':F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
-function card(report,{project=null,limit=4}={}){
+const tag=fit=>fit?' <span class="cp-status cp-'+(fit==='good'?'ok':fit==='constrained'?'review':'neutral')+'">'+FIT[fit]+'</span>':'';
+const reasonList=(x,n=3)=>x.reasons.length?'<ul class="cp-intent-reasons">'+x.reasons.slice(0,n).map(z=>'<li>'+esc(z.text)+(z.source?.label?' <small>('+link(z.source.url,z.source.label)+')</small>':'')+'</li>').join('')+'</ul>':'';
+function card(report,{project=null,limit=4,selected=null}={}){
  const intent=project?.application?.intent,s=suggest(report);
- if(intent)return '<section class="cp-intent cp-intent-set" aria-label="Your project"><p><strong>Planning:</strong> '+esc(intent.label)+' <button type="button" data-intent-change>Change</button></p></section>';
- const row=x=>'<li><button type="button" class="cp-intent-option" data-intent="'+esc(x.id)+'"><span class="cp-intent-label">'+esc(x.label)+'</span>'+(x.fit?' <span class="cp-status cp-'+(x.fit==='good'?'ok':x.fit==='constrained'?'review':'neutral')+'">'+FIT[x.fit]+'</span>':'')+'</button>'+(x.reasons.length?'<ul class="cp-intent-reasons">'+x.reasons.slice(0,3).map(z=>'<li>'+esc(z.text)+(z.source?.label?' <small>('+link(z.source.url,z.source.label)+')</small>':'')+'</li>').join('')+'</ul>':'')+'</li>';
+ if(intent&&!selected)return '<section class="cp-intent cp-intent-set" aria-label="Your project"><p><strong>Planning:</strong> '+esc(intent.label)+' <button type="button" data-intent-change>Change</button></p></section>';
+ if(selected&&PLANS[selected]){const p=PLANS[selected],F=s.lot,main=s.plans.find(x=>x.id===selected)||{reasons:[],fit:null};
+  const addOns=p.addOns.map(id=>({id,...PLANS[id],...(assess(id,F,{asAddOn:true})||{fit:null,reasons:[]})}));
+  return '<section class="cp-answer cp-intent" aria-label="Choose permits"><p class="cp-eyebrow">Your permits</p><p><strong>'+esc(p.label)+'</strong> <small>(permit: '+esc(p.permit)+')</small>'+tag(main.fit)+'</p>'+reasonList(main,2)+
+   (addOns.length?'<fieldset class="cp-intent-addons"><legend>Also planning any of these? Each is its own permit.</legend>'+addOns.map(x=>'<label><input type="checkbox" data-addon="'+esc(x.id)+'"> '+esc(x.label)+tag(x.fit)+(x.reasons[0]?'<br><small>'+esc(x.reasons[0].text)+'</small>':'')+'</label>').join('')+'</fieldset>':'')+
+   '<p><button type="button" class="primary" data-intent-confirm="'+esc(selected)+'">Research these permits</button> <button type="button" data-intent-back>Back</button></p><p><small>Cornerpin then researches only what these permits need. You can change this later; only the extra research runs.</small></p></section>';}
+ const row=x=>'<li><button type="button" class="cp-intent-option" data-intent="'+esc(x.id)+'"><span class="cp-intent-label">'+esc(x.label)+'</span>'+tag(x.fit)+'</button>'+reasonList(x)+'</li>';
  const top=s.plans.slice(0,limit),rest=s.plans.slice(limit);
- return '<section class="cp-answer cp-intent" aria-label="What are you planning for this lot?"><p class="cp-eyebrow">What are you planning?</p><p>'+esc(basis(s.lot))+(s.lot.state!=='unknown'&&s.lot.parcelSrc.url?' <small>('+link(s.lot.parcelSrc.url,'County parcel record')+')</small>':'')+' Ranked by fit with this lot\'s records — not a prediction, and you can change it later.</p><ol class="cp-intent-list">'+top.map(row).join('')+'</ol>'+(rest.length?'<details><summary>More options</summary><ol class="cp-intent-list">'+rest.map(row).join('')+'</ol></details>':'')+'<p>'+'<button type="button" class="cp-intent-option" data-intent="evaluate">'+esc(s.evaluate.label)+'</button></p></section>';
+ return '<section class="cp-answer cp-intent" aria-label="What are you planning for this lot?"><p class="cp-eyebrow">What are you planning?</p><p>'+esc(basis(s.lot))+(s.lot.state!=='unknown'&&s.lot.parcelSrc.url?' <small>('+link(s.lot.parcelSrc.url,'County parcel record')+')</small>':'')+' Ranked by fit with this lot\'s records — not a prediction. Pick the main permit; you can add related permits next.</p><ol class="cp-intent-list">'+top.map(row).join('')+'</ol>'+(rest.length?'<details><summary>More options</summary><ol class="cp-intent-list">'+rest.map(row).join('')+'</ol></details>':'')+'<p>'+'<button type="button" class="cp-intent-option" data-intent-confirm="evaluate">'+esc(s.evaluate.label)+'</button> <small>Researches everything; slower.</small></p></section>';
 }
-// Choosing a plan saves it through the workspace and refreshes the cards that depend on it.
+// Picking a main permit shows its add-ons; confirming saves the bundle and asks the report to run
+// the research those permits need (web/app.js listens for cornerpin:research-permits).
 if(typeof document!=='undefined')document.addEventListener('click',async e=>{
- const W=root.ProjectWorkspace,change=e.target.closest?.('[data-intent-change]'),pick=e.target.closest?.('[data-intent]');
- if(!change&&!pick)return;const p=W?.project?.();if(!p)return;
- if(change){const box=change.closest('section');box.outerHTML=card(p.report,{project:{application:{}}});return;}
- const box=pick.closest('section');pick.disabled=true;
- try{await W.commit(command(pick.dataset.intent));const next=W.project();
-  for(const id of ['site-intent','overview-intent'])document.getElementById(id)?.replaceChildren(document.createRange().createContextualFragment(card(next.report,{project:next})));
+ const W=root.ProjectWorkspace,t=e.target,change=t.closest?.('[data-intent-change]'),pick=t.closest?.('[data-intent]'),back=t.closest?.('[data-intent-back]'),confirm=t.closest?.('[data-intent-confirm]');
+ if(!change&&!pick&&!back&&!confirm)return;const p=W?.project?.();const box=(change||pick||back||confirm).closest('section');
+ if(!p){box?.insertAdjacentHTML('beforeend','<p role="status">Saving this lot to a project… try again in a moment.</p>');return;}
+ if(change||back){box.outerHTML=card(p.report,{project:{application:{}}});return;}
+ if(pick){box.outerHTML=card(p.report,{project:{application:{}},selected:pick.dataset.intent});return;}
+ const id=confirm.dataset.intentConfirm,addOns=[...box.querySelectorAll('input[data-addon]:checked')].map(i=>i.dataset.addon);confirm.disabled=true;
+ try{const cmd=command(id,addOns);await W.commit(cmd);const next=W.project();
+  for(const el of ['site-intent','overview-intent'])document.getElementById(el)?.replaceChildren(document.createRange().createContextualFragment(card(next.report,{project:next})));
   const site=document.getElementById('site-answer');if(site&&root.SiteAnswer)site.innerHTML=root.SiteAnswer.card(next.report,{project:next,where:'site'});
- }catch(err){pick.disabled=false;box?.insertAdjacentHTML('beforeend','<p role="status">'+esc(err.message)+'</p>');}
+  root.dispatchEvent(new CustomEvent('cornerpin:research-permits',{detail:{typeIds:id==='evaluate'?['*']:cmd.typeIds,label:cmd.label}}));
+ }catch(err){confirm.disabled=false;box?.insertAdjacentHTML('beforeend','<p role="status">'+esc(err.message)+'</p>');}
 });
 const api={PLANS,facts,assess,suggest,command,card};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectIntent=api;
 })(typeof window!=='undefined'?window:globalThis);

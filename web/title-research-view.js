@@ -41,6 +41,8 @@ function citeList(cs){const docs=new Map();for(const c of cs||[]){const key=c.so
  return [...docs.values()].map(d=>esc(d.label)+' — '+d.pages.sort((a,b)=>a-b).map(n=>link(d.source+'#page='+n,'p. '+n)).join(', ')).join('<br>');}
 function answerCard(d,{detailsAction='',project=null}={}){
  const status=d?.automation?.status,working=['queued','running','retry_wait'].includes(status),s=d?.synthesis,a=s?.answer;
+ // Staged research: plan-approval research starts only once the chosen permits change the outside.
+ if(d?.status==='investigation_not_started'&&!d?.automation)return '<section class="cp-answer cp-answer-tier-contacts" aria-label="Approval answer for this project"><p class="cp-eyebrow">Approvals for this lot</p><p>Approval research hasn\'t started for this lot. It starts when you choose a permit that changes the outside of the house or the lot, or choose "Just evaluating".</p>'+detailsAction+'</section>';
  const head=(title,tone)=>'<section class="cp-answer'+(tone?' cp-answer-tier-'+tone:'')+'" aria-label="Approval answer for this project"><p class="cp-eyebrow">'+esc(title)+'</p>';
  const note=working?'<p class="cp-answer-note" role="status">Research is still running; this answer may change.</p>':(s?.superseded?'<p class="cp-answer-note" role="status">An updated answer is being checked against the sources.</p>':'');
  if(a){let next=s.missingEvidence?.[a.nextActionIndex],uncertain=esc(a.uncertainty),checked='';

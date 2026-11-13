@@ -105,7 +105,14 @@
   }
 
   /* ---------------- progress */
-  var steps = LR.STEPS.map(function (s) { return { id: s[0], label: s[1], state: 'pending' }; });
+  var RP = window.ResearchPlan;
+  var steps = [];
+  // The checklist shows only the steps this pass will run.
+  function setSteps(ids) { steps = LR.STEPS.filter(function (s) { return !ids || ids.indexOf(s[0]) !== -1; }).map(function (s) { return { id: s[0], label: s[1], state: 'pending' }; }); }
+  setSteps(RP ? RP.QUICK : null);
+  // Steps already researched for a report; legacy reports count as fully researched.
+  function researched(report) { return RP ? RP.stepsRun(report) : LR.STEPS.map(function (s) { return s[0]; }); }
+  function plannedTypeIds() { var p = window.ProjectWorkspace && window.ProjectWorkspace.project && window.ProjectWorkspace.project(); return p && p.application && p.application.intent ? p.application.intent.typeIds : null; }
   function renderSteps() {
     $('steps').innerHTML = steps.map(function (s) { return '<li class="' + s.state + '"><span class="ic" aria-hidden="true"></span>' + esc(s.label) + '</li>'; }).join('');
     var done = steps.filter(function (s) { return s.state === 'done' || s.state === 'failed'; }).length;
@@ -137,7 +144,7 @@
     var plan = null;
     readVersion++; readingPlan = false; extracted = null; selectedPlanFile = null; fillFields(null); setMode('none'); $('planfile').value = ''; $('parse').hidden = true;
     go.disabled = true;
-    steps.forEach(function (s) { s.state = 'pending'; });
+    setSteps(RP ? RP.QUICK : null);
     form.classList.add('off'); prog.classList.add('on');
     $('phase').textContent = 'Finding the parcel';
     $('found-title').textContent = 'Looking up ' + q + '…';
@@ -153,11 +160,12 @@
     var a = parcel.attrs;
     $('found-title').textContent = a.PARCEL_ADD || 'Parcel ' + parcel.id;
     $('found-sub').textContent = 'Parcel ' + parcel.id + ' · ' + parcel.county + ' County · ' + a.PARCEL_ACRES + ' acres' + (a.SUBDIV_NAME ? ' · ' + a.SUBDIV_NAME : '');
-    $('phase').textContent = 'Checking public records';
+    // First read only: enough to suggest which permits fit. Detailed research runs after the user chooses.
+    $('phase').textContent = 'Taking a first read of the lot';
     var res = await LR.run(parcel, plan, DATA.costs, function (id, state) {
       steps.forEach(function (s) { if (s.id === id) s.state = state; }); renderSteps();
-    });
-    $('phase').textContent = 'Report ready';
+    }, null, RP ? { steps: RP.QUICK } : { investigate: true });
+    $('phase').textContent = 'First read ready';
     last = { parcel: parcel, plan: plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: new Date() };
     window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
     showReport();
@@ -188,7 +196,7 @@
       var prior = last;
       var res = await LR.run(prior.parcel, plan, DATA.costs, function (id, state) {
         if (state === 'running') $('plan-update-status').textContent = 'Updating: ' + (LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1];
-      }, prior.documents);
+      }, prior.documents, { steps: researched(prior) });
       last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
       window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
       if (mode === 'upload' && selectedPlanFile) window.dispatchEvent(new CustomEvent('cornerpin:planfile', { detail: selectedPlanFile }));
@@ -546,11 +554,40 @@
   window.addEventListener('cornerpin:home', function () { showHome(); });
   window.addEventListener('cornerpin:refresh', async function(e){
     if(go.disabled)return;go.disabled=true;showHome();form.classList.add('off');prog.classList.add('on');
-    steps.forEach(function(s){s.state='pending';});renderSteps();$('phase').textContent='Refreshing public evidence';
-    var prior=e.detail;DATA.refreshNonce=Date.now();
-    try{var res=await LR.run(prior.parcel,prior.plan,DATA.costs,function(id,state){steps.forEach(function(s){if(s.id===id)s.state=state;});renderSteps();});
+    var prior=e.detail,scope=researched(prior),types=plannedTypeIds();setSteps(scope);renderSteps();$('phase').textContent='Refreshing public evidence';DATA.refreshNonce=Date.now();
+    try{var res=await LR.run(prior.parcel,prior.plan,DATA.costs,function(id,state){steps.forEach(function(s){if(s.id===id)s.state=state;});renderSteps();},null,{steps:scope,investigate:types?RP.needsApprovalResearch(types):scope.length===LR.STEPS.length});
       last={parcel:prior.parcel,plan:prior.plan,findings:res.findings,facts:res.facts||{},documents:res.documents,date:new Date()};window.dispatchEvent(new CustomEvent('cornerpin:report',{detail:last}));showReport();window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'overview'}}));
     }catch(err){fail('Refresh failed: '+err.message);}finally{delete DATA.refreshNonce;go.disabled=false;form.classList.remove('off');prog.classList.remove('on');}
+  });
+
+  // Targeted research for the chosen permits: only steps not already done, built on the first read.
+  var researching = false, pendingResearch = null;
+  function researchBar(text, done) {
+    var bar = document.getElementById('research-status');
+    if (!bar) { bar = document.createElement('div'); bar.id = 'research-status'; bar.setAttribute('role', 'status'); bar.setAttribute('aria-live', 'polite'); document.body.appendChild(bar); }
+    bar.textContent = text; bar.classList.toggle('done', !!done); bar.hidden = false;
+    if (done) setTimeout(function () { if (bar.textContent === text) bar.hidden = true; }, 8000);
+  }
+  window.addEventListener('cornerpin:research-permits', async function (e) {
+    if (!last || !RP) return;
+    if (researching) { pendingResearch = e.detail; return; }
+    var typeIds = e.detail.typeIds || [], label = e.detail.label || 'your permits';
+    var todo = RP.stepsFor(typeIds, researched(last)), prior = last.facts && last.facts.automaticInvestigation;
+    var investigate = RP.needsApprovalResearch(typeIds) && !(prior && !prior.error && prior.status !== 'unsupported');
+    if (!todo.length && !investigate) { researchBar('Already researched for ' + label + '.', true); return; }
+    researching = true; var n = 0;
+    researchBar('Researching for ' + label + '…');
+    try {
+      var res = await LR.run(last.parcel, last.plan, DATA.costs, function (id, state) {
+        if (state === 'running') { n++; researchBar('Researching for ' + label + ': ' + ((LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1]) + ' (' + n + ' of ' + todo.length + ')'); }
+      }, null, { steps: todo, prior: last, investigate: investigate });
+      last = { parcel: last.parcel, plan: last.plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: last.date, researchedAt: new Date() };
+      renderedReportKey = '';
+      window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
+      if (document.body.classList.contains('show-report') && !document.body.classList.contains('show-project')) showReport(true);
+      researchBar('Research for ' + label + ' is done' + (investigate ? '; approval research continues in the background.' : '.'), true);
+    } catch (ex) { researchBar('Research for ' + label + ' could not finish: ' + (ex.message || ex), true); }
+    finally { researching = false; if (pendingResearch) { var next = pendingResearch; pendingResearch = null; window.dispatchEvent(new CustomEvent('cornerpin:research-permits', { detail: next })); } }
   });
 
   $('rv-print').addEventListener('click', function () { window.print(); });

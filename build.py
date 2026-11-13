@@ -96,6 +96,7 @@ def build(api_base, inline_assets=False):
         "<script>\n" + read(WEB, "mineral-screen.js") + "\n</script>",
         "<script>\n" + read(WEB, "lotreport.js") + "\n</script>",
         "<script>\n" + read(WEB, "plan-measurements.js") + "\n" + read(ROOT, "lib", "plan-vectors.js") + "\n" + read(ROOT, "lib", "plan-calibration.js") + "\n" + read(WEB, "permit-facts.js") + "\n" + read(WEB, "planreader.js") + "\n</script>",
+        "<script>\n" + read(WEB, "research-plan.js") + "\n</script>",
         "<script>\n" + read(WEB, "app.js") + "\n</script>",
         "<script>\n" + read(WEB, "report-categories.js") + "\n" + read(WEB, "site-answer.js") + "\n" + read(WEB, "project-intent.js") + "\n</script>",
         "<script>\n" + read(WEB, "evidence-ledger.js") + "\n" + read(WEB, "permit-assistant.js") + "\n" + read(WEB, "site-decisions.js") + "\n" + read(WEB, "answer-reviews.js") + "\n" + read(WEB, "city-application.js") + "\n" + read(WEB, "ovc-code-sources.js") + "\n" + read(WEB, "approval-evidence.js") + "\n" + read(WEB, "ovc-rules.js") + "\n" + read(WEB, "area-rules.js") + "\n" + read(WEB, "permit-workflow.js") + "\n</script>",
