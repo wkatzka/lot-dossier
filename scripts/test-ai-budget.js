@@ -1,9 +1,12 @@
 const assert=require('node:assert/strict');
-const {budgetedRequest,reservation,usageCost}=require('../lib/ai-budget');
+const {budgetedRequest,reservation,usageCost,resetAt}=require('../lib/ai-budget');
 const url='https://api.anthropic.com/v1/messages';
 const options={body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:16000,messages:[]})};
 (async()=>{
  assert.equal(reservation(JSON.parse(options.body)),2257152);
+ assert.equal(resetAt(new Date('2026-11-13T03:00:00Z')),'2026-11-13T05:00:00.000Z');
+ assert.equal(resetAt(new Date('2026-03-08T06:00:00Z')),'2026-03-09T04:00:00.000Z');
+ assert.equal(resetAt(new Date('2026-11-01T05:00:00Z')),'2026-11-02T05:00:00.000Z');
  assert.throws(()=>reservation({model:'unknown',max_tokens:16000}));
  assert.equal(usageCost({input_tokens:100000,output_tokens:5000}),250000);
  assert.throws(()=>usageCost({input_tokens:-1,output_tokens:1}));
@@ -12,7 +15,7 @@ const options={body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:16000,m
  const request=async()=>{paid++;return new Response(JSON.stringify({usage:{input_tokens:100000,output_tokens:5000}}));};
  await budgetedRequest({request,account})(url,options);
  assert.equal(paid,1);assert.equal(calls[0][0],'reserve');assert.equal(calls[1][0],'settle');assert.equal(calls[1][2],250000);assert.equal(calls[0][1],calls[1][1]);
- await assert.rejects(budgetedRequest({request,account:async()=>({allowed:false})})(url,options),e=>e.status===429);assert.equal(paid,1);
+ await assert.rejects(budgetedRequest({request,account:async()=>({allowed:false})})(url,options),e=>e.status===429&&e.code==='AI_BUDGET_PAUSED'&&Number.isFinite(Date.parse(e.retryAt)));assert.equal(paid,1);
  await assert.rejects(budgetedRequest({request,account:async()=>{throw Error('database offline');}})(url,options));assert.equal(paid,1);
  calls=[];await assert.rejects(budgetedRequest({account,request:async()=>{throw Error('timeout');}})(url,options));assert.equal(calls.length,1);
  calls=[];await budgetedRequest({account,request:async()=>new Response('{}',{status:400})})(url,options);assert.equal(calls[1][2],0);
