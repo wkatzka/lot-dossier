@@ -7,6 +7,8 @@ async function main(){
  assert.equal(d.automation.id,'ca12cf9a-c654-479a-a158-94be612b1523');
  assert.equal(d.status,'complete_with_gaps','The acceptance investigation must finish; queued/running is not a passing result');
  assert.equal(d.coverage.pending,0);
+ assert.equal(d.coverage.unreadDocuments,0,'All recovered originals in this acceptance run must be read');
+ assert(d.searchLog?.operations?.length,'Search receipts must be accessible independently of the crawler queue');
  assert(d.synthesis?.findings?.length,'Completed investigation must explain the evidence across documents');
  assert(d.synthesis.findings.every(f=>f.citations?.length&&f.status==='conditional_source_synthesis')); 
 
@@ -16,6 +18,12 @@ async function main(){
  const chainCitations=d.synthesis.findings.flatMap(f=>f.citations);
  for(const hash of [declaration,termination])assert(chainCitations.some(c=>c.sha256===hash),'Cross-document explanation must cite both succession and termination originals');
  const requirements=d.interpretations.flatMap(x=>x.requirements);
+ const neighborhoodHash='10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7';
+ const neighborhood=d.interpretations.filter(x=>x.sha256===neighborhoodHash);
+ assert(neighborhood.length,'The archived neighborhood declaration must be interpreted');
+ assert(neighborhood.some(x=>x.requirements.some(r=>r.page===31&&r.stage==='construction'&&/board/i.test(r.authority))),'The neighborhood Board construction gate must survive quotation validation');
+ assert(neighborhood.every(x=>x.documentStatus!=='recording_or_adoption_identified'),'The recovered unsigned neighborhood copy must not be presented as a proven executed/recorded instrument');
+ assert(chainCitations.some(c=>c.sha256===neighborhoodHash),'The final answer must consider the recovered neighborhood original, not only the master documents');
  const city=requirements.filter(x=>x.source.includes('OgdenValley_PermitSubmissionRequirements.pdf'));
  for(const authority of ['Water Company','Sewer Company'])assert(city.some(x=>x.authority===authority&&x.stage==='submission'&&x.page===2&&x.stagePage===1));
  const guidelines=requirements.filter(x=>x.source.includes('Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf'));
