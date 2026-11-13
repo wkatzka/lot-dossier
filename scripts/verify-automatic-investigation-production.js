@@ -41,9 +41,28 @@ async function main(){
  assert(guidelines.some(x=>x.stage==='other_submission'&&x.page===7));
  assert(guidelines.every(x=>x.applicability!=='parcel_identified'),'Directory association is not proof of recorded lot membership');
  for(const x of requirements){assert(x.quote&&x.authorityQuote&&x.sha256&&x.page>0);assert.equal(x.reviewState,'source_supported_interpretation');}
+ // Semantic acceptance: the final answer must reconcile recovered material, not just cite IDs.
+ const syn=d.synthesis,INV=require('../lib/document-inventory'),masterHash=declaration;
+ assert.equal(syn.version,2,'Final explanation must come from the whole-document reconciliation version');assert(syn.semanticChecks?.passed,'Stale-gap and non-answer checks must have passed');
+ const titles={};for(const x of d.interpretations)(titles[x.sha256]||=[]).push(x.documentTitle);
+ const known={[masterHash]:{entries:[{kind:'exhibit',number:'A',page:53}]},[neighborhoodHash]:{entries:[{kind:'article',number:'6',page:30},{kind:'section',number:'6.3',title:'Architectural Control Committee',acronym:'ACC',page:30},{kind:'exhibit',number:'A',page:79}]}};
+ const stale=INV.staleClaims(syn,known,titles);assert.deepEqual(stale,[],'Recovered Article 6 ACC provisions and master Exhibit A must not be described as missing: '+JSON.stringify(stale));
+ const first=syn.findings[0];
+ assert(first.citations.some(c=>c.sha256===neighborhoodHash&&c.page===31)&&/board/i.test(first.text),'Finding 1 must lead with the neighborhood Board plan-approval gate (PDF page 31)');
+ assert(!first.citations.some(c=>/Required_Inspections/i.test(c.source)),'Inspections are secondary and must not lead the answer');
+ assert(!syn.findings.some(f=>/\b(nothing|no (?:document|evidence|original|record)s?)\b[^.]{0,90}\b(approvals?|permits?)\b[^.]{0,60}\b(obtained|granted|issued)\b/i.test(f.text)),'Generic "no approval obtained" statements are not a plan-approval answer');
+ const all=syn.findings.map(f=>f.text+' '+f.limitations).join(' ');
+ const exhibitFinding=syn.findings.find(f=>/Exhibit A/i.test(f.text+' '+f.limitations)&&f.citations.some(c=>c.sha256===masterHash)&&/(recovered|retrieved|read)/i.test(f.text+' '+f.limitations));
+ assert(exhibitFinding,'Master Exhibit A must be presented as recovered');
+ assert(/(does not (?:name|identify|list|mention)|metes and bounds|plat|parcel numbers|not establish)/i.test(exhibitFinding.text+' '+exhibitFinding.limitations),'Recovered master Exhibit A must keep the lot-coverage limitation');
+ assert(/(unsigned|not (?:signed|executed)|blank)/i.test(all)&&all.includes('2957404'),'Execution/recording gap for the neighborhood declaration must remain explicit');
+ assert(/(ACC|Architectural Control Committee)/.test(all)&&syn.findings.some(f=>f.citations.some(c=>c.sha256===neighborhoodHash&&[30,32].includes(c.page))),'ACC role must be described from Article 6 (pages 30/32)');
+ assert(!/reviewer is not reconciled/i.test(all),'Different roles of Board and ACC are not an invented conflict');
+ assert(/(DRB|Design Review Board)/.test(all)&&/(if|conditional|whether)/i.test(all),'Master DRB stage must stay conditional');
+ assert(/(work type|type of work|if the work|depends on the work|proposed work)/i.test(all),'Municipal submission items must stay conditional on work type');
  const anonymous=await fetch(BASE+'/api/public-research?action=worker',{method:'POST'});assert.equal(anonymous.status,401);
  const asset=await fetch(BASE+'/platform.html');assert.equal(asset.status,200);const html=await asset.text();assert(html.includes('Statements withheld because source validation failed'));assert(html.includes('Authority changes and amendments'));
- const proof={verifiedAt:new Date().toISOString(),base:BASE,automation:d.automation,target:d.target,status:d.status,coverage:d.coverage,questionOutcomes:d.investigation.questions,searchLog:d.searchLog,documents:d.documents,interpretations:d.interpretations,synthesis:d.synthesis,errors:d.errors,assetSha256:crypto.createHash('sha256').update(html).digest('hex'),workerRejectsAnonymous:true,limits:'A finished bounded automated investigation is not exhaustive public search or proof of current lot-specific private approval authority. Original quotations are independently checked separately.'};
+ const proof={semanticAcceptance:'Stale-gap, lead-answer, recovered-exhibit, conditional-stage and execution-gap assertions passed',verifiedAt:new Date().toISOString(),base:BASE,automation:d.automation,target:d.target,status:d.status,coverage:d.coverage,questionOutcomes:d.investigation.questions,searchLog:d.searchLog,documents:d.documents,interpretations:d.interpretations,synthesis:d.synthesis,errors:d.errors,assetSha256:crypto.createHash('sha256').update(html).digest('hex'),workerRejectsAnonymous:true,limits:'A finished bounded automated investigation is not exhaustive public search or proof of current lot-specific private approval authority. Original quotations are independently checked separately.'};
  if(process.argv[2])fs.writeFileSync(process.argv[2],JSON.stringify(proof,null,2)+'\n');
  console.log(JSON.stringify({status:'PASS',job:d.automation.id,address:d.target.address,requirements:requirements.length,documents:d.coverage.documents,unread:d.coverage.unreadDocuments,questionStatus:d.investigation.questions.map(q=>q.status)}));
 }
