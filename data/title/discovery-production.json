@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T23:23:58.089Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43328446906",
+  "updatedAt": "2026-11-13T17:51:08.057Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43476719264",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
       "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
-      "checkedAt": "2026-11-12T18:58:37.824Z",
+      "checkedAt": "2026-11-13T17:51:07.998Z",
       "coverage": {
         "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
         "routes": [
@@ -33,6 +33,69 @@
         "unreadDocuments": 0,
         "documents": 280,
         "publicRouteChecksComplete": true
+      },
+      "investigation": {
+        "schemaVersion": 1,
+        "evaluatedAt": "2026-11-13T17:51:07.981Z",
+        "questions": [
+          {
+            "id": "architectural-authority",
+            "question": "Who must approve the plans, and before which permit stage?",
+            "instrument": "the declaration covering this parcel, its amendments and current architectural-review delegation",
+            "instrumentId": "architectural-authority-chain",
+            "status": "investigation_incomplete",
+            "scopeBasis": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
+            "routes": [
+              {
+                "route": "public_notice_attachments",
+                "source": "https://www.utah.gov/pmn/search.html",
+                "custodian": "Utah Public Notice Website",
+                "basis": "County-derived subdivision phrase searched across the stated notice date range; notice coverage is not recorder-index coverage.",
+                "scope": "notice_agenda",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "agency_requirements",
+                "source": "https://ogdenvalley.gov/recorder/",
+                "custodian": "ogdenvalley.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley"
+                ],
+                "receipts": [
+                  {
+                    "id": "30555a44285270f0eb01",
+                    "route": "agency_requirements",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://ogdenvalley.gov/recorder/",
+                    "checkedAt": "2026-11-12T17:28:21.874Z",
+                    "sourceHash": "9463843d95d6051617af44dc6b887dede15d48c3d4bfb72d5ee1c1cda079a7ec",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              }
+            ],
+            "references": [],
+            "nextAction": "Reconcile the retrieved candidates with the requested instrument, property and amendments.",
+            "fallbackEligible": false,
+            "coverageComplete": false,
+            "pendingChecks": 0,
+            "unreadDocuments": 0,
+            "openLeads": 0,
+            "unresolvedCandidates": 280,
+            "unreconciledSearches": 0,
+            "barriers": []
+          }
+        ],
+        "contactFallbackEligible": false,
+        "limitation": "These decisions cover the named questions, sources, identifiers and dates. They do not establish absence of a requirement or exhaustive internet coverage."
       },
       "legalApplicabilityEstablished": false,
       "documents": [
@@ -2570,14 +2633,14 @@
     {
       "id": "ogden-valley-city-public-coverage",
       "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-      "checkedAt": "2026-11-12T18:58:40.728Z",
+      "checkedAt": "2026-11-13T17:51:08.010Z",
       "coverage": {
         "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
         "routes": [
           {
             "route": "adopted_code",
-            "jobs": 194,
-            "completed": 194,
+            "jobs": 176,
+            "completed": 176,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -2615,6 +2678,119 @@
         "unreadDocuments": 0,
         "documents": 49,
         "publicRouteChecksComplete": true
+      },
+      "investigation": {
+        "schemaVersion": 1,
+        "evaluatedAt": "2026-11-13T17:51:08.009Z",
+        "questions": [
+          {
+            "id": "architectural-authority",
+            "question": "Who must approve the plans, and before which permit stage?",
+            "instrument": "the declaration covering this parcel, its amendments and current architectural-review delegation",
+            "instrumentId": "architectural-authority-chain",
+            "status": "investigation_incomplete",
+            "scopeBasis": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
+            "routes": [
+              {
+                "route": "adopted_code",
+                "source": "https://ogdenvalley.gov/land-use/",
+                "custodian": "ogdenvalley.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley shoreline",
+                  "Ogden Valley design review"
+                ],
+                "receipts": [
+                  {
+                    "id": "2645afa42dbcf54de792",
+                    "route": "adopted_code",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://ogdenvalley.gov/land-use/",
+                    "checkedAt": "2026-11-12T16:45:54.059Z",
+                    "sourceHash": "dc02191c84794aeba8c56a8937798e3d9cea1016f9f6e24d08f94db14f3ed6b3",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "planning_requirements",
+                "source": "https://ogdenvalley.gov/planning/",
+                "custodian": "ogdenvalley.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley shoreline",
+                  "Ogden Valley design review"
+                ],
+                "receipts": [
+                  {
+                    "id": "bdfcec38204f15e1b40f",
+                    "route": "planning_requirements",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://ogdenvalley.gov/planning/",
+                    "checkedAt": "2026-11-12T16:45:55.194Z",
+                    "sourceHash": "0e17290bfdee37a0ef7111383958d6da7e9d59000f973cbc120bc3ea5425a05a",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "neighborhood_libraries",
+                "source": "https://wolfcreekresortmasterhoa.com/neighborhood-hoas/",
+                "custodian": "wolfcreekresortmasterhoa.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley shoreline",
+                  "Ogden Valley design review"
+                ],
+                "receipts": [
+                  {
+                    "id": "868436a501ebead0909e",
+                    "route": "neighborhood_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://wolfcreekresortmasterhoa.com/neighborhood-hoas/",
+                    "checkedAt": "2026-11-12T16:45:55.431Z",
+                    "sourceHash": "796c477a3a8a8aebc45308eafea03cd2a957bf4e07597dfdf7b953cc49d16133",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "public_notice_attachments",
+                "source": "https://www.utah.gov/pmn/search.html",
+                "custodian": "Utah Public Notice Website",
+                "basis": "County-derived subdivision phrase searched across the stated notice date range; notice coverage is not recorder-index coverage.",
+                "scope": "notice_agenda",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Ogden Valley shoreline",
+                  "Ogden Valley design review"
+                ],
+                "receipts": []
+              }
+            ],
+            "references": [],
+            "nextAction": "Reconcile the retrieved candidates with the requested instrument, property and amendments.",
+            "fallbackEligible": false,
+            "coverageComplete": false,
+            "pendingChecks": 0,
+            "unreadDocuments": 0,
+            "openLeads": 0,
+            "unresolvedCandidates": 49,
+            "unreconciledSearches": 0,
+            "barriers": []
+          }
+        ],
+        "contactFallbackEligible": false,
+        "limitation": "These decisions cover the named questions, sources, identifiers and dates. They do not establish absence of a requirement or exhaustive internet coverage."
       },
       "legalApplicabilityEstablished": false,
       "documents": [
@@ -3064,24 +3240,138 @@
     {
       "id": "ogden-valley-published-neighborhood-libraries",
       "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
-      "checkedAt": "2026-11-12T18:58:40.734Z",
+      "checkedAt": "2026-11-13T17:51:08.020Z",
       "coverage": {
         "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
         "routes": [
           {
             "route": "neighborhood_libraries",
-            "jobs": 740,
-            "completed": 728,
+            "jobs": 739,
+            "completed": 727,
             "restricted": 1,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "ee97db94f77da016856e",
+                "status": "access_restricted",
+                "url": "https://trappersridgehoa.com/",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "3acad0e316a55bfbb285",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/1%20-%202023-02-04%20Highlands%20AC%20Guidelines.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "eecc6ad96a20df9af875",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Building%20a%20House/2%20-%20Highlands_AC_Fee_Schedule_Feb%202023.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "636103a69a991c64f812",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Wolf%20Creek%20Water%20rates%202021.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "3c03889966815c5dc06c",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Wolf%20Creek%20Water%202021%20Fall%20Conservation%20Letter.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "a546808e6823bbae5281",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/WCWater%20Proposed%20Rate%20Incr%20for%202022.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "537b201c15a66e36c684",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Ogden%20Valley%20Garbage%20Contract%20Feb2020.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "ce58b3c318109214484e",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Wolf%20Creek%20Irrigation%202019%20rates.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "6c3dc8b1ec6074b98027",
+                "status": "not_found",
+                "url": "https://www.highlandsedenut.com/editor_upload/File/Misc/Jun2019%20Weber%20Planning%20public%20hearing.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           }
         ],
         "pending": 0,
         "unreadDocuments": 0,
         "documents": 224,
-        "publicRouteChecksComplete": true
+        "publicRouteChecksComplete": false
+      },
+      "investigation": {
+        "schemaVersion": 1,
+        "evaluatedAt": "2026-11-13T17:51:08.014Z",
+        "questions": [
+          {
+            "id": "architectural-authority",
+            "question": "Who must approve the plans, and before which permit stage?",
+            "instrument": "the declaration covering this parcel, its amendments and current architectural-review delegation",
+            "instrumentId": "architectural-authority-chain",
+            "status": "investigation_incomplete",
+            "scopeBasis": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
+            "routes": [
+              {
+                "route": "neighborhood_libraries",
+                "source": "https://wolfcreekresortmasterhoa.com/neighborhood-hoas/",
+                "custodian": "wolfcreekresortmasterhoa.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [],
+                "receipts": [
+                  {
+                    "id": "868436a501ebead0909e",
+                    "route": "neighborhood_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://wolfcreekresortmasterhoa.com/neighborhood-hoas/",
+                    "checkedAt": "2026-11-12T17:48:50.229Z",
+                    "sourceHash": "796c477a3a8a8aebc45308eafea03cd2a957bf4e07597dfdf7b953cc49d16133",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              }
+            ],
+            "references": [],
+            "nextAction": "Reconcile the retrieved candidates with the requested instrument, property and amendments.",
+            "fallbackEligible": false,
+            "coverageComplete": false,
+            "pendingChecks": 0,
+            "unreadDocuments": 0,
+            "openLeads": 0,
+            "unresolvedCandidates": 224,
+            "unreconciledSearches": 0,
+            "barriers": [
+              {
+                "id": "ee97db94f77da016856e",
+                "route": "neighborhood_libraries",
+                "kind": "page",
+                "status": "access_restricted",
+                "url": "https://trappersridgehoa.com/",
+                "checkedAt": "2026-11-12T17:48:51.180Z",
+                "sourceHash": "889403e5cfbb7981f7a26aced0d7492524e5397d6996f7fccd67562d2a4a71a3"
+              }
+            ]
+          }
+        ],
+        "contactFallbackEligible": false,
+        "limitation": "These decisions cover the named questions, sources, identifiers and dates. They do not establish absence of a requirement or exhaustive internet coverage."
       },
       "legalApplicabilityEstablished": false,
       "documents": [
@@ -5109,7 +5399,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T23:23:58.078Z",
+      "checkedAt": "2026-11-13T17:51:08.042Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5136,18 +5426,37 @@
             "jobs": 4,
             "completed": 2,
             "restricted": 1,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "d967b16d0fe52ea7a1e8",
+                "status": "access_restricted",
+                "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              },
+              {
+                "id": "cafeab21ff051a19c187",
+                "status": "not_found",
+                "url": "https://frontier.co.weber.ut.us/p/Public"
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           },
           {
             "route": "adopted_agreements_and_exhibits",
             "jobs": 234,
             "completed": 233,
             "restricted": 0,
-            "unresolved": [],
+            "unresolved": [
+              {
+                "id": "cb66fa0ce45f5a0c27fe",
+                "status": "not_found",
+                "url": "https://entitiesandboundaries.utah.gov/wp-content/uploads/2025/01/202871-WOLF-CREEK-INFRASTRUCTURE-FINANCING-DISTRICT-NO.-1.pdf",
+                "error": "Source retrieval or reading remains unresolved; retry or inspect the original source."
+              }
+            ],
             "unreviewedLeads": 0,
-            "complete": true
+            "complete": false
           },
           {
             "route": "public_notice_attachments",
@@ -5198,7 +5507,302 @@
         "pending": 0,
         "unreadDocuments": 0,
         "documents": 154,
-        "publicRouteChecksComplete": true
+        "publicRouteChecksComplete": false
+      },
+      "investigation": {
+        "schemaVersion": 1,
+        "evaluatedAt": "2026-11-13T17:51:08.029Z",
+        "questions": [
+          {
+            "id": "architectural-authority",
+            "question": "Who must approve the plans, and before which permit stage?",
+            "instrument": "the declaration covering this parcel, its amendments and current architectural-review delegation",
+            "instrumentId": "architectural-authority-chain",
+            "status": "investigation_incomplete",
+            "scopeBasis": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
+            "routes": [
+              {
+                "route": "recorder_index",
+                "source": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "5973bb2a4052ff5bd0bd",
+                    "route": "recorder_index",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
+                    "checkedAt": "2026-11-12T16:46:22.329Z",
+                    "sourceHash": "a01825641a1f6189db3273a17b59f3da7ca3395a4d0de8cce2cf07e6fea188e2",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "parcel_and_parent_records",
+                "source": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "35c12796ad3a68ff5d00",
+                    "route": "parcel_and_parent_records",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
+                    "checkedAt": "2026-11-12T16:46:24.505Z",
+                    "sourceHash": "28b36f71bbdfd5d51a8c2de5ee032cf88d2eaacc70b05407a82494c26a224a7e",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "planning_case_files",
+                "source": "https://frontier.co.weber.ut.us/p/Public/List",
+                "custodian": "frontier.co.weber.ut.us",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "d967b16d0fe52ea7a1e8",
+                    "route": "planning_case_files",
+                    "kind": "page",
+                    "status": "access_restricted",
+                    "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                    "checkedAt": "2026-11-12T16:46:28.752Z",
+                    "sourceHash": "a3de61cab57636cdcd55bcf7936da275cdd7f9e42b048acad18a8ed343db360d",
+                    "outcome": "source_check_unfinished"
+                  }
+                ]
+              },
+              {
+                "route": "adopted_agreements_and_exhibits",
+                "source": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
+                "custodian": "www.webercountyutah.gov",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "ed42900fa49d719658f1",
+                    "route": "adopted_agreements_and_exhibits",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
+                    "checkedAt": "2026-11-12T16:46:42.676Z",
+                    "sourceHash": "2e41ab3ee7173a4b59dddc38ad8e5cdd4a90984a2f2568808e63bf0cf3e7f4dc",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "public_notice_attachments",
+                "source": "https://www.utah.gov/pmn/search.html",
+                "custodian": "Utah Public Notice Website",
+                "basis": "County-derived subdivision phrase searched across the stated notice date range; notice coverage is not recorder-index coverage.",
+                "scope": "notice_agenda",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "association_libraries",
+                "source": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
+                "custodian": "wolfcreekresortmasterhoa.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "f32b23754e6184abfadc",
+                    "route": "association_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
+                    "checkedAt": "2026-11-12T16:46:42.849Z",
+                    "sourceHash": "5342ce16ebac7c9382491442f4029719eb484c5aee3a3736187242f39c72e703",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "developer_libraries",
+                "source": "https://www.cobaberanch.com/sitemap.xml",
+                "custodian": "www.cobaberanch.com",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
+                "scope": "instrument_inventory",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe Ranch",
+                  "3372687",
+                  "3372667"
+                ],
+                "receipts": [
+                  {
+                    "id": "db431ff6e2ff6685a73b",
+                    "route": "developer_libraries",
+                    "kind": "page",
+                    "status": "complete",
+                    "url": "https://www.cobaberanch.com/sitemap.xml",
+                    "checkedAt": "2026-11-12T16:46:43.791Z",
+                    "sourceHash": "8c54d966c9842fe8d335d76b9a7713fc856da0c72c5606c226d3f8983234a5f3",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              },
+              {
+                "route": "released_records_archive",
+                "source": "https://webercountyut.nextrequest.com/client/requests",
+                "custodian": "webercountyut.nextrequest.com",
+                "basis": "County parcel and subdivision identifiers searched in the custodian’s released requests index; unreleased records are outside this scope.",
+                "scope": "released_requests",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe",
+                  "3372687",
+                  "Wolf Creek",
+                  "224410004",
+                  "220210006",
+                  "220210048",
+                  "2025-11",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "released_records_archive",
+                "source": "https://webercountyut.nextrequest.com/client/documents",
+                "custodian": "webercountyut.nextrequest.com",
+                "basis": "County parcel and subdivision identifiers searched in the custodian’s released documents index; unreleased records are outside this scope.",
+                "scope": "released_documents",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe",
+                  "3372687",
+                  "Wolf Creek",
+                  "224410004",
+                  "220210006",
+                  "220210048",
+                  "2025-11",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "public_mirrors_and_archives",
+                "source": "https://web.archive.org/cdx/search/cdx",
+                "custodian": "Internet Archive",
+                "basis": "Exact public URL capture lookups for the planned archive alternatives. A zero result covers only that URL and archive index, not other mirrors or recorder custody.",
+                "scope": "archived_url",
+                "complete": false,
+                "missingIdentifiers": [
+                  "cobaberanch.com/*",
+                  "*.cobaberanch.com/*",
+                  "wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment*"
+                ],
+                "receipts": [
+                  {
+                    "id": "3c996ce0d122266debf0",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "archive",
+                    "status": "complete",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=cobaberanch.com/*&output=json&filter=statuscode:200&filter=mimetype:application/pdf&collapse=urlkey",
+                    "checkedAt": "2026-11-12T17:18:29.757Z",
+                    "sourceHash": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+                    "outcome": "source_results_require_reconciliation"
+                  },
+                  {
+                    "id": "80ff72a8ee0f974ae682",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "archive",
+                    "status": "complete",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=*.cobaberanch.com/*&output=json&filter=statuscode:200&collapse=urlkey",
+                    "checkedAt": "2026-11-12T17:18:53.276Z",
+                    "sourceHash": "45197fa528d7b85b9e1c9cc997a58ffde6428de42127dd5c7a08e40928679ee9",
+                    "outcome": "source_results_require_reconciliation"
+                  },
+                  {
+                    "id": "c0f6cd727243dd21e6cd",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "archive",
+                    "status": "complete",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment*&output=json&filter=statuscode:200&collapse=digest",
+                    "checkedAt": "2026-11-12T17:38:06.551Z",
+                    "sourceHash": "626c29589badd30008e0cc9ed555d5ccb1f269be3924449bae6f21025fa25203",
+                    "outcome": "source_results_require_reconciliation"
+                  }
+                ]
+              }
+            ],
+            "references": [
+              {
+                "label": "Cobabe Ranch Owners Association · registered contact",
+                "url": "https://services.commerce.utah.gov/hoa/",
+                "purpose": "Find registration 14305604-HOA1. Ask for the declaration covering Phase 1 Lot 4 and the current architectural committee appointment. John Lewis is the registered president, not a confirmed plan reviewer. Phone: 801-745-3737; email: accounting@wolfcreekresort.com.",
+                "verifiedAt": "2026-11-12",
+                "validUntil": "2026-12-12T00:00:00.000Z",
+                "verificationUrl": "https://services.commerce.utah.gov/hoa/",
+                "holdingsEstablished": false
+              }
+            ],
+            "nextAction": "Reconcile the retrieved candidates with the requested instrument, property and amendments.",
+            "fallbackEligible": false,
+            "coverageComplete": false,
+            "pendingChecks": 0,
+            "unreadDocuments": 0,
+            "openLeads": 0,
+            "unresolvedCandidates": 142,
+            "unreconciledSearches": 0,
+            "barriers": [
+              {
+                "id": "d967b16d0fe52ea7a1e8",
+                "route": "planning_case_files",
+                "kind": "page",
+                "status": "access_restricted",
+                "url": "https://frontier.co.weber.ut.us/p/Public/List",
+                "checkedAt": "2026-11-12T16:46:28.752Z",
+                "sourceHash": "a3de61cab57636cdcd55bcf7936da275cdd7f9e42b048acad18a8ed343db360d"
+              }
+            ]
+          }
+        ],
+        "contactFallbackEligible": false,
+        "limitation": "These decisions cover the named questions, sources, identifiers and dates. They do not establish absence of a requirement or exhaustive internet coverage."
       },
       "legalApplicabilityEstablished": false,
       "documents": [

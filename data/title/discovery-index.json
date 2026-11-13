@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T00:58:05.704Z",
+  "generatedAt": "2026-11-13T17:51:08.056Z",
   "records": [
     {
       "county": "Weber",
       "parcelId": "224410004",
       "profileId": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-12T18:53:21.582Z",
+      "checkedAt": "2026-11-12T23:21:20.712Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -52,8 +52,8 @@
           },
           {
             "route": "adopted_agreements_and_exhibits",
-            "jobs": 163,
-            "completed": 162,
+            "jobs": 234,
+            "completed": 233,
             "restricted": 0,
             "unresolved": [
               {
@@ -77,8 +77,8 @@
           },
           {
             "route": "association_libraries",
-            "jobs": 270,
-            "completed": 270,
+            "jobs": 250,
+            "completed": 250,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -86,8 +86,8 @@
           },
           {
             "route": "developer_libraries",
-            "jobs": 45,
-            "completed": 45,
+            "jobs": 43,
+            "completed": 43,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -95,8 +95,8 @@
           },
           {
             "route": "released_records_archive",
-            "jobs": 421,
-            "completed": 257,
+            "jobs": 334,
+            "completed": 171,
             "restricted": 0,
             "unresolved": [],
             "unreviewedLeads": 0,
@@ -114,12 +114,12 @@
         ],
         "pending": 0,
         "unreadDocuments": 0,
-        "documents": 153,
+        "documents": 154,
         "publicRouteChecksComplete": false
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-13T00:58:05.697Z",
+        "evaluatedAt": "2026-11-13T17:51:08.049Z",
         "questions": [
           {
             "id": "architectural-authority",
@@ -133,7 +133,7 @@
                 "route": "recorder_index",
                 "source": "https://www.webercountyutah.gov/Recorder_Surveyor/abstract_title_reg.php",
                 "custodian": "www.webercountyutah.gov",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -158,7 +158,7 @@
                 "route": "parcel_and_parent_records",
                 "source": "https://www.webercountyutah.gov/parcelsearch/ownership-info.php?id=224410004",
                 "custodian": "www.webercountyutah.gov",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -183,7 +183,7 @@
                 "route": "planning_case_files",
                 "source": "https://frontier.co.weber.ut.us/p/Public/List",
                 "custodian": "frontier.co.weber.ut.us",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -208,7 +208,7 @@
                 "route": "adopted_agreements_and_exhibits",
                 "source": "https://www.webercountyutah.gov/Transparency/commission_meetings.php",
                 "custodian": "www.webercountyutah.gov",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -232,8 +232,8 @@
               {
                 "route": "public_notice_attachments",
                 "source": "https://www.utah.gov/pmn/search.html",
-                "custodian": "public_notice_attachments",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "custodian": "Utah Public Notice Website",
+                "basis": "County-derived subdivision phrase searched across the stated notice date range; notice coverage is not recorder-index coverage.",
                 "scope": "notice_agenda",
                 "complete": false,
                 "missingIdentifiers": [
@@ -247,7 +247,7 @@
                 "route": "association_libraries",
                 "source": "https://wolfcreekresortmasterhoa.com/hoa-documents/",
                 "custodian": "wolfcreekresortmasterhoa.com",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -272,7 +272,7 @@
                 "route": "developer_libraries",
                 "source": "https://www.cobaberanch.com/sitemap.xml",
                 "custodian": "www.cobaberanch.com",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
+                "basis": "Configured source route; instrument-level coverage must be established separately. Visiting this page alone does not establish a searched inventory.",
                 "scope": "instrument_inventory",
                 "complete": false,
                 "missingIdentifiers": [
@@ -295,38 +295,79 @@
               },
               {
                 "route": "released_records_archive",
-                "custodian": "released_records_archive",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
-                "scope": "instrument_inventory",
+                "source": "https://webercountyut.nextrequest.com/client/requests",
+                "custodian": "webercountyut.nextrequest.com",
+                "basis": "County parcel and subdivision identifiers searched in the custodian’s released requests index; unreleased records are outside this scope.",
+                "scope": "released_requests",
                 "complete": false,
                 "missingIdentifiers": [
-                  "Cobabe Ranch",
+                  "Cobabe",
                   "3372687",
+                  "Wolf Creek",
+                  "224410004",
+                  "220210006",
+                  "220210048",
+                  "2025-11",
+                  "3372667"
+                ],
+                "receipts": []
+              },
+              {
+                "route": "released_records_archive",
+                "source": "https://webercountyut.nextrequest.com/client/documents",
+                "custodian": "webercountyut.nextrequest.com",
+                "basis": "County parcel and subdivision identifiers searched in the custodian’s released documents index; unreleased records are outside this scope.",
+                "scope": "released_documents",
+                "complete": false,
+                "missingIdentifiers": [
+                  "Cobabe",
+                  "3372687",
+                  "Wolf Creek",
+                  "224410004",
+                  "220210006",
+                  "220210048",
+                  "2025-11",
                   "3372667"
                 ],
                 "receipts": []
               },
               {
                 "route": "public_mirrors_and_archives",
-                "source": "https://weber-county-hive.github.io/Transparency/weber-hive-then-vs-now-part-2.html",
-                "custodian": "weber-county-hive.github.io",
-                "basis": "Configured source route; instrument-level coverage must be established separately.",
-                "scope": "instrument_inventory",
+                "source": "https://web.archive.org/cdx/search/cdx",
+                "custodian": "Internet Archive",
+                "basis": "Exact public URL capture lookups for the planned archive alternatives. A zero result covers only that URL and archive index, not other mirrors or recorder custody.",
+                "scope": "archived_url",
                 "complete": false,
-                "missingIdentifiers": [
-                  "Cobabe Ranch",
-                  "3372687",
-                  "3372667"
-                ],
+                "missingIdentifiers": [],
                 "receipts": [
                   {
-                    "id": "4d736422a2b1805042f5",
+                    "id": "3c996ce0d122266debf0",
                     "route": "public_mirrors_and_archives",
-                    "kind": "page",
+                    "kind": "archive",
                     "status": "complete",
-                    "url": "https://weber-county-hive.github.io/Transparency/weber-hive-then-vs-now-part-2.html",
-                    "checkedAt": "2026-11-12T16:46:44.257Z",
-                    "sourceHash": "e71d5fcf8b6dd9ee24b4ed9265732c82cb3148747715ceb18a2f7adcb78944bd",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=cobaberanch.com/*&output=json&filter=statuscode:200&filter=mimetype:application/pdf&collapse=urlkey",
+                    "checkedAt": "2026-11-12T17:18:29.757Z",
+                    "sourceHash": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+                    "outcome": "source_results_require_reconciliation"
+                  },
+                  {
+                    "id": "80ff72a8ee0f974ae682",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "archive",
+                    "status": "complete",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=*.cobaberanch.com/*&output=json&filter=statuscode:200&collapse=urlkey",
+                    "checkedAt": "2026-11-12T17:18:53.276Z",
+                    "sourceHash": "45197fa528d7b85b9e1c9cc997a58ffde6428de42127dd5c7a08e40928679ee9",
+                    "outcome": "source_results_require_reconciliation"
+                  },
+                  {
+                    "id": "c0f6cd727243dd21e6cd",
+                    "route": "public_mirrors_and_archives",
+                    "kind": "archive",
+                    "status": "complete",
+                    "url": "https://web.archive.org/cdx/search/cdx?url=wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Second-Amendment*&output=json&filter=statuscode:200&collapse=digest",
+                    "checkedAt": "2026-11-12T17:38:06.551Z",
+                    "sourceHash": "626c29589badd30008e0cc9ed555d5ccb1f269be3924449bae6f21025fa25203",
                     "outcome": "source_results_require_reconciliation"
                   }
                 ]
@@ -349,7 +390,7 @@
             "pendingChecks": 0,
             "unreadDocuments": 0,
             "openLeads": 0,
-            "unresolvedCandidates": 141,
+            "unresolvedCandidates": 142,
             "unreconciledSearches": 0,
             "barriers": [
               {
@@ -1154,9 +1195,7 @@
             94,
             95
           ],
-          "route": "adopted_agreements_and_exhibits",
-          "fromPreviousPass": true,
-          "previousCheckedAt": "2026-11-12T23:21:20.712Z"
+          "route": "adopted_agreements_and_exhibits"
         }
       ],
       "legalApplicabilityEstablished": false,
