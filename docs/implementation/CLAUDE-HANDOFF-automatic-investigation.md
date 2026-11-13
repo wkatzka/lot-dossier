@@ -83,3 +83,9 @@ The user wants defensible answers, not crawler counts. Passing technical accepta
 ## Status after continuation (2026-11-13 ~07:30 UTC)
 
 Completed per `automatic-investigation-production.md` → "Whole-document reconciliation and final semantic acceptance". Commits `43aef97`, `2a32fda`, `c444529`, `3797d23` plus docs. Production proof PASSES with semantic assertions. Residuals: termination direction partly redundant (entry 2628422 already on retrieved original); signed-in account view not separately exercised; Cobabe items unchanged.
+
+## Narrow acceptance pass (2026-11-13 ~07:50 UTC) — in progress, budget-paused
+
+Deployed `1f816cb`, `1df0558`: recorder-stamp receipts (`lib/recording-stamp.js`; identifier from stored stamp text, date only from a strict stamp date re-read on the same stamp — verified against rendered originals: termination E# 2628422 recorded 03-Apr-13; First Amendment E# 3277834 recorded 28-MAR-23, stored OCR had "26-4AR-23"), short answer (approver / when / uncertainty / one next action), next-action dependency classes, and evidence-contradiction checks (`lib/answer-checks.js`, `scripts/test-answer-checks.js`).
+Regeneration requested via audited one-row SQL at 07:36 UTC. First attempt was refused by a guard false positive (a comparison task naming recovered Exhibit A; fixed in `1df0558`). The retry was then paused by the approved $10 Nov 13 ceiling ($7.94 settled; next full-context reservation does not fit). **Not raised.** Job resumes automatically at 2026-11-14 05:00 UTC under the $5/day default. Until then the public result has no explanation (the labelled prior-explanation fallback applies from the next save).
+Still to do after it completes: proof script, manual review vs originals, signed-in production check (user must sign in), report/checklist. A fresh-address clean run and real-user comprehension remain unclaimed; a fresh run needs its own budget day.
