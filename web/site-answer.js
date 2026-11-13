@@ -15,9 +15,13 @@ function open(report,project){
 }
 // The same finding from several sources (e.g. slope from two elevation services) is one finding.
 function merge(findings){const groups=new Map();for(const f of findings){const k=f.status+'|'+f.section+'|'+base(f);if(!groups.has(k))groups.set(k,{...f,item:base(f)||f.item,sources:[]});const g=groups.get(k);if(f.source&&!g.sources.some(s=>s.label===f.source))g.sources.push({label:f.source,url:f.url});if(!g.next_step&&f.next_step)g.next_step=f.next_step;g.members=(g.members||[]).concat(f);}return [...groups.values()];}
+// The stated plan changes what matters: interior work leaves ground hazards mostly unchanged; a pool
+// or deck makes the pool screen and slope central. Without a plan, weights assume a new dwelling.
+const PLAN_WEIGHT={remodel:{geo:6,survey:6,utilities:1,permits:0,performance:0},basement:{geo:2,survey:6,permits:0,performance:0},adu:{geo:6,survey:6,utilities:0,septic:0,permits:1,ccr:0},solar:{geo:7,survey:7,utilities:0,permits:1,ccr:0},deck:{survey:0,geo:1,ccr:2},pool:{pool:0,survey:1,geo:1}};
 function summary(report,project,{limit=4}={}){
+ const plan=project?.application?.intent?.plan,w=k=>(PLAN_WEIGHT[plan]||{})[k]??WEIGHT[k]??11,rank=f=>f.status==='flag'&&w(f.section)>=6?RANK.watch:RANK[f.status],central=f=>Number((PLAN_WEIGHT[plan]||{})[f.section]===0); // a concern in a section this plan barely touches still shows, but does not lead
  // Within a status, findings with a concrete next step come first: they tell the user what to do.
- const list=merge(open(report,project).filter(f=>f.status in RANK)).sort((a,b)=>RANK[a.status]-RANK[b.status]||(!a.next_step)-(!b.next_step)||(WEIGHT[a.section]??11)-(WEIGHT[b.section]??11));
+ const list=merge(open(report,project).filter(f=>f.status in RANK&&(f.section!=='pool'||plan==='pool'||!plan))).sort((a,b)=>rank(a)-rank(b)||central(b)-central(a)||(!a.next_step)-(!b.next_step)||w(a.section)-w(b.section));
  const counts={flag:0,watch:0,verify:0};for(const f of list)counts[f.status]++;
  const top=list.filter(f=>f.status!=='verify').slice(0,limit);
  return {top,counts,verify:list.filter(f=>f.status==='verify'),total:list.length};
@@ -28,7 +32,8 @@ function card(report,{project=null,where='site'}={}){
  const review=f=>project&&D?'<button type="button" data-review-question="'+esc(D.id(f.members?.[0]||f))+'">Review</button>':'';
  const more=(s.counts.verify||s.counts.watch>s.top.filter(f=>f.status==='watch').length)?'<p><small>'+[s.counts.watch-s.top.filter(f=>f.status==='watch').length>0?(s.counts.watch-s.top.filter(f=>f.status==='watch').length)+' more to watch':'',s.counts.verify?s.counts.verify+' routine items to verify':''].filter(Boolean).join(' · ')+(where==='site'?' — listed in the sections below.':' — in Site Review.')+'</small></p>':'';
  const goSite=where==='overview'?'<button type="button" data-action="site">Open Site Review</button>':'';
- if(s.top.length)return head('Site findings that matter')+'<ol class="cp-site-list">'+s.top.map(f=>'<li><p><strong>'+esc(f.item)+'</strong>'+(f.status==='flag'?' <span class="cp-status cp-review">Concern</span>':' <span class="cp-status cp-neutral">Watch</span>')+'<br>'+esc(f.headline)+'</p><p><strong>What to do:</strong> '+esc(todo(f,project))+'</p><p><small>Source: '+(f.sources.length?f.sources.map(x=>link(x.url,x.label)).join(' · ')+(f.sources.length>1?' (agree)':''):'not recorded')+'</small> '+review(f)+'</p></li>').join('')+'</ol>'+more+goSite+'</section>';
+ const intent=project?.application?.intent;
+ if(s.top.length)return head('Site findings that matter'+(intent&&intent.plan!=='evaluate'?' for: '+intent.label.toLowerCase():''))+'<ol class="cp-site-list">'+s.top.map(f=>'<li><p><strong>'+esc(f.item)+'</strong>'+(f.status==='flag'?' <span class="cp-status cp-review">Concern</span>':' <span class="cp-status cp-neutral">Watch</span>')+'<br>'+esc(f.headline)+'</p><p><strong>What to do:</strong> '+esc(todo(f,project))+'</p><p><small>Source: '+(f.sources.length?f.sources.map(x=>link(x.url,x.label)).join(' · ')+(f.sources.length>1?' (agree)':''):'not recorded')+'</small> '+review(f)+'</p></li>').join('')+'</ol>'+more+goSite+'</section>';
  if(s.verify.length){const srcs=[...new Map(s.verify.filter(f=>f.source).map(f=>[f.source,f])).values()].sort((a,b)=>(WEIGHT[a.section]??11)-(WEIGHT[b.section]??11)).slice(0,5);
   return head('Nothing flagged — sources to verify','sources')+'<p>No site concern was flagged. '+s.verify.length+' items still need confirming against their sources; start with these:</p><ul>'+srcs.map(f=>'<li>'+esc(base(f)||f.item)+' — '+link(f.url,f.source)+'</li>').join('')+'</ul>'+goSite+'</section>';}
  const contacts=report?.facts?.contacts||[];

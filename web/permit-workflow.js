@@ -180,6 +180,17 @@
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
         invalidate(p); event(p, a.type, 'Application details updated.', now); break;
+      case 'project_intent': {
+        // The user's stated plan. Fills the matching rule scope and permit worksheet; removes nothing.
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        required(/^[a-z-]{3,20}$/.test(a.plan||'')&&clean(a.label)&&Array.isArray(a.typeIds)&&a.typeIds.length<=3&&a.typeIds.every(id=>C.catalog.types.some(t=>t.value===String(id))),'Choose a valid project.');
+        const sc=a.scope||{};required(sc.work===undefined||['','new-home','addition','commercial','other'].includes(sc.work),'Choose a valid project scope.');for(const k of ['adu','demolition'])required(sc[k]===undefined||['','yes','no'].includes(sc[k]),'Choose a valid '+k+' answer.');
+        p.application.intent={plan:a.plan,label:clean(a.label),typeIds:a.typeIds.map(String),chosenAt:now};
+        if(Object.keys(sc).length)p.application.ruleScope={...(p.application.ruleScope||{}),...sc};
+        if(a.pool)p.application.researchScope={...(p.application.researchScope||{}),pool:a.pool};
+        if(a.typeIds.length)p.application.permitSelections=Array.from(new Set([...(p.application.permitSelections||[]),...a.typeIds.map(String)]));
+        invalidate(p);event(p,a.type,'Project plan: '+clean(a.label)+'.',now);break;
+      }
       case 'recorded_comparison': {
         // Evidence only: compares a supplied recorded copy with a retrieved copy. No approval or decision.
         const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);

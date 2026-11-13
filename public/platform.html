@@ -1038,6 +1038,11 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .cp-site-list .cp-status{margin-left:6px;font-size:12px}.cp-site-list button{margin-left:8px;padding:2px 10px;font-size:13px}
 .cp-answer .cp-eyebrow{font-size:12px;letter-spacing:1.1px;font-weight:650;text-transform:uppercase;color:var(--cp-primary)}
 
+.cp-intent-list{list-style:none;margin:8px 0;padding:0}.cp-intent-list>li{margin:0 0 12px}
+.cp-intent-option{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-weight:600;text-align:left}
+.cp-intent-reasons{margin:6px 0 0 18px;padding:0;font-size:14px;color:var(--cp-muted)}.cp-intent-reasons li{margin:2px 0}
+.cp-intent-set{margin:0 0 12px}.cp-intent-set button{margin-left:8px;padding:2px 10px;font-size:13px}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -5294,7 +5299,7 @@ const api={version,fields,extract,validateModel,reconcile,available,selected,ret
     $('rv-body').innerHTML = reportHTML(last, null, false);
     if (window.ReportCategories) window.ReportCategories.mount($('rv-body'));
     // Answer first: the findings that matter for this lot, then the full report sections below.
-    if (window.SiteAnswer) { var wp=window.ProjectWorkspace&&window.ProjectWorkspace.project(), proj=wp&&wp.report&&wp.report.parcel&&last.parcel&&wp.report.parcel.id===last.parcel.id?wp:null, wrap=$('rv-body').querySelector('.wrap')||$('rv-body'), nav=wrap.querySelector('.report-section-nav'), html='<div id="site-answer">'+window.SiteAnswer.card(last,{project:proj,where:'site'})+'</div>'; if(nav)nav.insertAdjacentHTML('afterend',html); else wrap.insertAdjacentHTML('afterbegin',html); }
+    if (window.SiteAnswer) { var wp=window.ProjectWorkspace&&window.ProjectWorkspace.project(), proj=wp&&wp.report&&wp.report.parcel&&last.parcel&&wp.report.parcel.id===last.parcel.id?wp:null, wrap=$('rv-body').querySelector('.wrap')||$('rv-body'), nav=wrap.querySelector('.report-section-nav'), html=(window.ProjectIntent&&proj?'<div id="site-intent">'+window.ProjectIntent.card(last,{project:proj})+'</div>':'')+'<div id="site-answer">'+window.SiteAnswer.card(last,{project:proj,where:'site'})+'</div>'; if(nav)nav.insertAdjacentHTML('afterend',html); else wrap.insertAdjacentHTML('afterbegin',html); }
     }
     document.body.classList.add('show-report');
     $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
@@ -5474,9 +5479,13 @@ function open(report,project){
 }
 // The same finding from several sources (e.g. slope from two elevation services) is one finding.
 function merge(findings){const groups=new Map();for(const f of findings){const k=f.status+'|'+f.section+'|'+base(f);if(!groups.has(k))groups.set(k,{...f,item:base(f)||f.item,sources:[]});const g=groups.get(k);if(f.source&&!g.sources.some(s=>s.label===f.source))g.sources.push({label:f.source,url:f.url});if(!g.next_step&&f.next_step)g.next_step=f.next_step;g.members=(g.members||[]).concat(f);}return [...groups.values()];}
+// The stated plan changes what matters: interior work leaves ground hazards mostly unchanged; a pool
+// or deck makes the pool screen and slope central. Without a plan, weights assume a new dwelling.
+const PLAN_WEIGHT={remodel:{geo:6,survey:6,utilities:1,permits:0,performance:0},basement:{geo:2,survey:6,permits:0,performance:0},adu:{geo:6,survey:6,utilities:0,septic:0,permits:1,ccr:0},solar:{geo:7,survey:7,utilities:0,permits:1,ccr:0},deck:{survey:0,geo:1,ccr:2},pool:{pool:0,survey:1,geo:1}};
 function summary(report,project,{limit=4}={}){
+ const plan=project?.application?.intent?.plan,w=k=>(PLAN_WEIGHT[plan]||{})[k]??WEIGHT[k]??11,rank=f=>f.status==='flag'&&w(f.section)>=6?RANK.watch:RANK[f.status],central=f=>Number((PLAN_WEIGHT[plan]||{})[f.section]===0); // a concern in a section this plan barely touches still shows, but does not lead
  // Within a status, findings with a concrete next step come first: they tell the user what to do.
- const list=merge(open(report,project).filter(f=>f.status in RANK)).sort((a,b)=>RANK[a.status]-RANK[b.status]||(!a.next_step)-(!b.next_step)||(WEIGHT[a.section]??11)-(WEIGHT[b.section]??11));
+ const list=merge(open(report,project).filter(f=>f.status in RANK&&(f.section!=='pool'||plan==='pool'||!plan))).sort((a,b)=>rank(a)-rank(b)||central(b)-central(a)||(!a.next_step)-(!b.next_step)||w(a.section)-w(b.section));
  const counts={flag:0,watch:0,verify:0};for(const f of list)counts[f.status]++;
  const top=list.filter(f=>f.status!=='verify').slice(0,limit);
  return {top,counts,verify:list.filter(f=>f.status==='verify'),total:list.length};
@@ -5487,13 +5496,102 @@ function card(report,{project=null,where='site'}={}){
  const review=f=>project&&D?'<button type="button" data-review-question="'+esc(D.id(f.members?.[0]||f))+'">Review</button>':'';
  const more=(s.counts.verify||s.counts.watch>s.top.filter(f=>f.status==='watch').length)?'<p><small>'+[s.counts.watch-s.top.filter(f=>f.status==='watch').length>0?(s.counts.watch-s.top.filter(f=>f.status==='watch').length)+' more to watch':'',s.counts.verify?s.counts.verify+' routine items to verify':''].filter(Boolean).join(' · ')+(where==='site'?' — listed in the sections below.':' — in Site Review.')+'</small></p>':'';
  const goSite=where==='overview'?'<button type="button" data-action="site">Open Site Review</button>':'';
- if(s.top.length)return head('Site findings that matter')+'<ol class="cp-site-list">'+s.top.map(f=>'<li><p><strong>'+esc(f.item)+'</strong>'+(f.status==='flag'?' <span class="cp-status cp-review">Concern</span>':' <span class="cp-status cp-neutral">Watch</span>')+'<br>'+esc(f.headline)+'</p><p><strong>What to do:</strong> '+esc(todo(f,project))+'</p><p><small>Source: '+(f.sources.length?f.sources.map(x=>link(x.url,x.label)).join(' · ')+(f.sources.length>1?' (agree)':''):'not recorded')+'</small> '+review(f)+'</p></li>').join('')+'</ol>'+more+goSite+'</section>';
+ const intent=project?.application?.intent;
+ if(s.top.length)return head('Site findings that matter'+(intent&&intent.plan!=='evaluate'?' for: '+intent.label.toLowerCase():''))+'<ol class="cp-site-list">'+s.top.map(f=>'<li><p><strong>'+esc(f.item)+'</strong>'+(f.status==='flag'?' <span class="cp-status cp-review">Concern</span>':' <span class="cp-status cp-neutral">Watch</span>')+'<br>'+esc(f.headline)+'</p><p><strong>What to do:</strong> '+esc(todo(f,project))+'</p><p><small>Source: '+(f.sources.length?f.sources.map(x=>link(x.url,x.label)).join(' · ')+(f.sources.length>1?' (agree)':''):'not recorded')+'</small> '+review(f)+'</p></li>').join('')+'</ol>'+more+goSite+'</section>';
  if(s.verify.length){const srcs=[...new Map(s.verify.filter(f=>f.source).map(f=>[f.source,f])).values()].sort((a,b)=>(WEIGHT[a.section]??11)-(WEIGHT[b.section]??11)).slice(0,5);
   return head('Nothing flagged — sources to verify','sources')+'<p>No site concern was flagged. '+s.verify.length+' items still need confirming against their sources; start with these:</p><ul>'+srcs.map(f=>'<li>'+esc(base(f)||f.item)+' — '+link(f.url,f.source)+'</li>').join('')+'</ul>'+goSite+'</section>';}
  const contacts=report?.facts?.contacts||[];
  return head('Who to ask about this site','contacts')+(contacts.length?'<ul>'+contacts.slice(0,3).map(c=>'<li><strong>'+esc(c.name)+'</strong>'+(c.portal?' — '+link(c.portal,'online portal'):'')+(c.people||[]).slice(0,2).map(p=>'<br>'+esc(p.role)+(p.email?': '+esc(p.email):'')+(p.phone?' · '+esc(p.phone):'')).join('')+'</li>').join('')+'</ul>':'<p>No site findings were produced and no contacts are on file. Open Contacts for the building department and county offices.</p>')+goSite+'</section>';
 }
 const api={summary,card,merge};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SiteAnswer=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+/* "What are you planning?" — asked right after the address, with the projects that best fit this
+   lot ranked first. Fit comes only from this lot's records (county parcel record, zoning setbacks,
+   site findings), each reason with its source. It is not a prediction of what people file, and it
+   never decides for the user. The choice maps to the city's real permit types and the existing
+   rule scope so later pages can be specific. */
+(function(root){'use strict';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const link=(url,text)=>/^https?:\/\//.test(url||'')?'<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(text)+'</a>':esc(text);
+// Plans → City Inspect permit types and approval-rule scope. typeIds must exist in the city catalog.
+const PLANS={
+ 'new-home':{label:'Build a new home',typeIds:['1'],scope:{work:'new-home'},exterior:true,footprint:true},
+ 'replace-home':{label:'Tear down and rebuild',typeIds:['104','1'],scope:{work:'new-home',demolition:'yes'},exterior:true,footprint:true},
+ 'addition':{label:'Add on to the house',typeIds:['3'],scope:{work:'addition'},exterior:true,footprint:true},
+ 'remodel':{label:'Remodel inside the house',typeIds:['4'],scope:{work:'other'}},
+ 'basement':{label:'Finish the basement',typeIds:['70'],scope:{work:'other'}},
+ 'adu':{label:'Add an apartment inside the house (internal ADU)',typeIds:['102'],scope:{work:'other',adu:'yes'}},
+ 'deck':{label:'Build a deck',typeIds:['74'],scope:{work:'other'},exterior:true},
+ 'garage':{label:'Build a detached garage or outbuilding',typeIds:['96'],scope:{work:'addition'},exterior:true,footprint:true},
+ 'pool':{label:'Add a pool',typeIds:['2'],scope:{work:'other'},pool:'included',exterior:true,footprint:true},
+ 'solar':{label:'Add solar panels',typeIds:['8'],scope:{work:'other'},exterior:true},
+ 'evaluate':{label:'Just evaluating the lot',typeIds:[],scope:{}}
+};
+const FIT={good:'Good fit',possible:'Possible',constrained:'Constrained'};
+function facts(report){
+ const a=report?.parcel?.attrs||{},f=report?.facts||{},findings=report?.findings||[],n=v=>Number.isFinite(Number(v))?Number(v):null;
+ const houses=n(a.HOUSE_CNT),total=n(a.TOTAL_MKT_VALUE),land=n(a.LAND_MKT_VALUE),improvement=total!=null&&land!=null?total-land:null;
+ const built=n(a.BUILT_YR)||n(a.EFFBUILT_YR),acres=n(a.PARCEL_ACRES),sqft=Number(f.lot_sf)||(acres?acres*43560:null);
+ const state=houses>0||(improvement!=null&&total>0&&improvement>Math.max(25000,0.15*total))?'improved':houses===0&&improvement!=null&&improvement<=Math.max(25000,0.15*(total||0))?'vacant':'unknown';
+ const find=(re,section)=>findings.find(x=>(!section||x.section===section)&&re.test(x.item||''));
+ const parcelSrc={label:'County parcel record',url:findings.find(x=>x.item==='Assessor')?.url||findings.find(x=>x.item==='Parcel')?.url||null};
+ return {state,houses,built,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
+  hoa:find(/HOA registration|CC&Rs/i,'ccr'),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status))};
+}
+const r=(text,src)=>({text,source:src||null});
+// Fit and reasons for one plan on this lot.
+function assess(plan,F){
+ const reasons=[],small=F.sqft&&F.sqft<6000,setbacks=F.zone&&(F.zone.front||F.zone.rear)?F.zone:null;
+ const lotLine=F.sqft?'Lot is about '+Math.round(F.sqft).toLocaleString('en-US')+' sq ft'+(F.acres?' ('+F.acres+' acre)':''):'';
+ const houseLine=F.state==='improved'?'County record shows '+(F.houses>1?F.houses+' houses':'a house')+(F.built?' (built or updated '+F.built+')':'')+(F.improvement!=null?' worth about $'+Math.round(F.improvement/1000).toLocaleString('en-US')+'k':''):F.state==='vacant'?'County record shows no house on the lot':'';
+ let fit='possible';
+ if(plan==='evaluate')return {fit:null,reasons:[r('See the site findings and approvals without choosing a project yet.')]};
+ if(plan==='new-home'){if(F.state==='vacant'){fit='good';reasons.push(r(houseLine,F.parcelSrc));}else if(F.state==='improved'){fit='constrained';reasons.push(r(houseLine+'; a new home would mean replacing it.',F.parcelSrc));}}
+ if(plan==='replace-home'){if(F.state!=='improved')return null;fit='constrained';reasons.push(r(houseLine+(F.built&&F.built>=new Date().getFullYear()-5?'; recently built':''),F.parcelSrc));}
+ if(['addition','remodel','basement','adu','deck','garage','pool','solar'].includes(plan)&&F.state==='vacant')return null;
+ if(['remodel','basement','adu'].includes(plan)){fit='good';reasons.push(r('Work stays inside the existing house, so setbacks and most site hazards don\'t change.',F.parcelSrc));
+  if(plan==='basement')fit='possible',reasons.push(r('Only if the house has an unfinished basement; the county record does not say.',F.parcelSrc));
+  if(plan==='adu')fit='possible',reasons.push(r('Check that zoning and the HOA covenants allow a second unit inside the house.',F.hoa?{label:F.hoa.source,url:F.hoa.url}:null));}
+ if(PLANS[plan].footprint&&plan!=='new-home'&&plan!=='replace-home'){
+  if(small&&setbacks){fit='constrained';reasons.push(r(lotLine+'; '+setbacks.zone+' zoning sets '+setbacks.front+' ft front and '+setbacks.rear+' ft rear setbacks'+(F.platSetbacks?' (the subdivision plat may set different ones)':'')+', which leaves little room outside the house.',{label:'Zoning setbacks',url:setbacks.source}));}
+  else if(lotLine)reasons.push(r(lotLine+'.',F.parcelSrc));
+  if(F.landslide&&F.landslide.status==='flag')reasons.push(r('New footprint on mapped landslide ground likely needs geotechnical review.',{label:F.landslide.source,url:F.landslide.url}));
+ }
+ if(plan==='pool'){for(const x of F.poolFlags.slice(0,2))reasons.push(r(x.headline,{label:x.source,url:x.url}));if(F.poolFlags.length)fit='constrained';}
+ if(['deck','solar'].includes(plan)){fit='possible';if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
+ if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r('The lot is in an HOA; see Approvals for its rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
+ if(plan==='new-home'&&F.state==='vacant'&&F.landslide?.status==='flag')reasons.push(r('Mapped landslide on the lot: plan for a geologic hazards study.',{label:F.landslide.source,url:F.landslide.url}));
+ return {fit,reasons:reasons.filter(x=>x.text)};
+}
+const ORDER={good:0,possible:1,constrained:2};
+function suggest(report){
+ const F=facts(report),out=[];
+ for(const id of Object.keys(PLANS)){if(id==='evaluate')continue;const a=assess(id,F);if(a)out.push({id,...PLANS[id],...a});}
+ out.sort((x,y)=>ORDER[x.fit]-ORDER[y.fit]);
+ return {lot:F,plans:out,evaluate:{id:'evaluate',...PLANS.evaluate,...assess('evaluate',F)}};
+}
+function command(id){const p=PLANS[id];if(!p)throw Error('Unknown plan');return {type:'project_intent',plan:id,label:p.label,typeIds:p.typeIds,scope:p.scope,pool:p.pool||null};}
+function basis(F){return F.state==='improved'?'This lot already has a house, so projects that change it are listed first.':F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
+function card(report,{project=null,limit=4}={}){
+ const intent=project?.application?.intent,s=suggest(report);
+ if(intent)return '<section class="cp-intent cp-intent-set" aria-label="Your project"><p><strong>Planning:</strong> '+esc(intent.label)+' <button type="button" data-intent-change>Change</button></p></section>';
+ const row=x=>'<li><button type="button" class="cp-intent-option" data-intent="'+esc(x.id)+'"><span class="cp-intent-label">'+esc(x.label)+'</span>'+(x.fit?' <span class="cp-status cp-'+(x.fit==='good'?'ok':x.fit==='constrained'?'review':'neutral')+'">'+FIT[x.fit]+'</span>':'')+'</button>'+(x.reasons.length?'<ul class="cp-intent-reasons">'+x.reasons.slice(0,3).map(z=>'<li>'+esc(z.text)+(z.source?.label?' <small>('+link(z.source.url,z.source.label)+')</small>':'')+'</li>').join('')+'</ul>':'')+'</li>';
+ const top=s.plans.slice(0,limit),rest=s.plans.slice(limit);
+ return '<section class="cp-answer cp-intent" aria-label="What are you planning for this lot?"><p class="cp-eyebrow">What are you planning?</p><p>'+esc(basis(s.lot))+' Ranked by fit with this lot\'s records — not a prediction, and you can change it later.</p><ol class="cp-intent-list">'+top.map(row).join('')+'</ol>'+(rest.length?'<details><summary>More options</summary><ol class="cp-intent-list">'+rest.map(row).join('')+'</ol></details>':'')+'<p>'+'<button type="button" class="cp-intent-option" data-intent="evaluate">'+esc(s.evaluate.label)+'</button></p></section>';
+}
+// Choosing a plan saves it through the workspace and refreshes the cards that depend on it.
+if(typeof document!=='undefined')document.addEventListener('click',async e=>{
+ const W=root.ProjectWorkspace,change=e.target.closest?.('[data-intent-change]'),pick=e.target.closest?.('[data-intent]');
+ if(!change&&!pick)return;const p=W?.project?.();if(!p)return;
+ if(change){const box=change.closest('section');box.outerHTML=card(p.report,{project:{application:{}}});return;}
+ const box=pick.closest('section');pick.disabled=true;
+ try{await W.commit(command(pick.dataset.intent));const next=W.project();
+  for(const id of ['site-intent','overview-intent'])document.getElementById(id)?.replaceChildren(document.createRange().createContextualFragment(card(next.report,{project:next})));
+  const site=document.getElementById('site-answer');if(site&&root.SiteAnswer)site.innerHTML=root.SiteAnswer.card(next.report,{project:next,where:'site'});
+ }catch(err){pick.disabled=false;box?.insertAdjacentHTML('beforeend','<p role="status">'+esc(err.message)+'</p>');}
+});
+const api={PLANS,facts,assess,suggest,command,card};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectIntent=api;
 })(typeof window!=='undefined'?window:globalThis);
 
 </script>
@@ -6530,6 +6628,17 @@ const api={lookup,rules,blockers,reviewCurrent,reviewFingerprint,evidence:E,sour
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
         invalidate(p); event(p, a.type, 'Application details updated.', now); break;
+      case 'project_intent': {
+        // The user's stated plan. Fills the matching rule scope and permit worksheet; removes nothing.
+        const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
+        required(/^[a-z-]{3,20}$/.test(a.plan||'')&&clean(a.label)&&Array.isArray(a.typeIds)&&a.typeIds.length<=3&&a.typeIds.every(id=>C.catalog.types.some(t=>t.value===String(id))),'Choose a valid project.');
+        const sc=a.scope||{};required(sc.work===undefined||['','new-home','addition','commercial','other'].includes(sc.work),'Choose a valid project scope.');for(const k of ['adu','demolition'])required(sc[k]===undefined||['','yes','no'].includes(sc[k]),'Choose a valid '+k+' answer.');
+        p.application.intent={plan:a.plan,label:clean(a.label),typeIds:a.typeIds.map(String),chosenAt:now};
+        if(Object.keys(sc).length)p.application.ruleScope={...(p.application.ruleScope||{}),...sc};
+        if(a.pool)p.application.researchScope={...(p.application.researchScope||{}),pool:a.pool};
+        if(a.typeIds.length)p.application.permitSelections=Array.from(new Set([...(p.application.permitSelections||[]),...a.typeIds.map(String)]));
+        invalidate(p);event(p,a.type,'Project plan: '+clean(a.label)+'.',now);break;
+      }
       case 'recorded_comparison': {
         // Evidence only: compares a supplied recorded copy with a retrieved copy. No approval or decision.
         const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);
@@ -7101,7 +7210,7 @@ function summary(p){
 function render(p){const s=summary(p),b=(action,label,id)=>'<button type="button" data-action="'+action+'" data-id="'+esc(id||'')+'">'+esc(label)+'</button>',go=(id,label)=>b(id==='site'?'site':'tab',label,id),badge=(text,tone='neutral')=>'<span class="cp-status cp-'+tone+'">'+esc(text)+'</span>';
  const date=v=>v&&!isNaN(Date.parse(v))?new Date(/^\d{4}-\d{2}-\d{2}$/.test(v)?v+'T12:00:00':v).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'Date unavailable';
  const stage=(n,title,state,detail,id,action)=>'<li><span class="cp-stage-number">'+n+'</span><div><div class="cp-stage-title"><h3>'+title+'</h3>'+badge(state,state==='Needs attention'?'review':'neutral')+'</div><p>'+esc(detail)+'</p>'+go(id,action)+'</div></li>';
- return '<section class="cp-overview" aria-labelledby="overview-heading"><div class="cp-page-heading"><div><h2 id="overview-heading" tabindex="-1">Project overview</h2><p>What is known, what remains open, and where to continue.</p></div></div><div id="overview-answer"><p class="pw-muted" role="status">Loading the approval answer for this lot…</p></div>'+(root.SiteAnswer?'<div id="overview-site">'+root.SiteAnswer.card(p.report,{project:p,where:'overview'})+'</div>':'')+'<section class="cp-next" aria-labelledby="next-heading"><div><p class="cp-eyebrow">'+'Suggested next action'+'</p><h3 id="next-heading">'+esc(s.next.label)+'</h3><p>'+esc(s.next.reason)+'</p></div>'+(s.next.ruleId?b('open-rule-task',s.next.buttonLabel||'Open approval task',s.next.ruleId):s.next.questionId?'<button type="button" data-review-question="'+esc(s.next.questionId)+'">Review question →</button>':b(s.next.action==='work'?'overview-work':s.next.action==='site'?'site':'tab',s.next.action==='work'?'View outstanding work':(s.next.buttonLabel||'Continue →'),s.next.action))+'</section><ol class="cp-pipeline" aria-label="Project lifecycle">'+
+ return '<section class="cp-overview" aria-labelledby="overview-heading"><div class="cp-page-heading"><div><h2 id="overview-heading" tabindex="-1">Project overview</h2><p>What is known, what remains open, and where to continue.</p></div></div>'+(root.ProjectIntent?'<div id="overview-intent">'+root.ProjectIntent.card(p.report,{project:p})+'</div>':'')+'<div id="overview-answer"><p class="pw-muted" role="status">Loading the approval answer for this lot…</p></div>'+(root.SiteAnswer?'<div id="overview-site">'+root.SiteAnswer.card(p.report,{project:p,where:'overview'})+'</div>':'')+'<section class="cp-next" aria-labelledby="next-heading"><div><p class="cp-eyebrow">'+'Suggested next action'+'</p><h3 id="next-heading">'+esc(s.next.label)+'</h3><p>'+esc(s.next.reason)+'</p></div>'+(s.next.ruleId?b('open-rule-task',s.next.buttonLabel||'Open approval task',s.next.ruleId):s.next.questionId?'<button type="button" data-review-question="'+esc(s.next.questionId)+'">Review question →</button>':b(s.next.action==='work'?'overview-work':s.next.action==='site'?'site':'tab',s.next.action==='work'?'View outstanding work':(s.next.buttonLabel||'Continue →'),s.next.action))+'</section><ol class="cp-pipeline" aria-label="Project lifecycle">'+
  stage('01','Site Review',s.siteOpen?'Needs attention':(p.report.findings?.length?'Snapshot available':'Not assessed'),(root.SiteAnswer?(c=>[c.flag?c.flag+' concern'+(c.flag>1?'s':''):'',c.watch?c.watch+' to watch':'',c.verify?c.verify+' to verify':''].filter(Boolean).join(' · ')||'No open findings')(root.SiteAnswer.summary(p.report,p).counts):s.siteOpen+' findings need review or verification')+' · snapshot '+date(p.report.date),'site','Open Site Review')+
  stage('02','Permit Preparation',s.drafts.length?'In progress':'Not started',s.drafts.length+' selected draft(s) · '+s.reviewed.length+' / '+s.required.length+' required checklist items reviewed or waived','filing','Open Permit Preparation')+
  stage('03','Permit Management',p.issuance?'Issuance recorded':p.receipts.length?'Receipt recorded':'Not started',p.receipts.length?s.open.length+' open corrections · '+p.receipts.length+' recorded receipt(s)':'No filing receipt recorded. Drafts are not submissions.','management','Open Submissions & Review')+'</ol><div class="cp-overview-grid"><div><section class="cp-panel" id="overview-work" tabindex="-1"><div class="cp-panel-head"><h3>Outstanding work</h3><p>Groups may overlap; these are not independent risk counts.</p></div><div class="cp-priority-questions">'+s.approvalPriorities.map(r=>'<article class="cp-work-row"><div><h4>'+esc(r.title)+'</h4><p>'+esc(r.authority)+' · Timing unresolved</p><p>'+esc(r.trigger.slice(0,230))+(r.trigger.length>230?'…':'')+'</p></div>'+b('open-rule-task','Open this approval task',r.id)+'</article>').join('')+s.priorities.slice(0,s.approvalPriorities.length?1:3).map(f=>'<article class="cp-work-row"><div><h4>'+esc(f.item)+'</h4><p>'+esc(f.headline)+'</p><p>'+esc(D.status(p,f).missing||f.next_step||'Review the original evidence and parcel applicability before relying on this finding.')+'</p></div><button type="button" data-review-question="'+esc(D.id(f))+'">Review question</button></article>').join('')+'</div><div class="cp-metrics">'+[['flag','Concerns'],['watch','Review'],['verify','Verify']].map(([key,label])=>'<div class="cp-'+key+'"><strong>'+s.counts[key]+'</strong><span>'+label+'</span></div>').join('')+'</div>'+ (s.groups.length?s.groups.map(g=>'<div class="cp-work-row"><div><h4>'+esc(g.label)+'</h4><p>'+esc(g.detail)+'</p></div>'+go(g.action,g.action==='site'?'Open Site Review':g.action==='management'?'Open Submissions & Review':'Open Permit Preparation')+'</div>').join(''):'<p class="cp-panel-body">No open work identified by these summaries. This does not establish approval or application completeness.</p>')+'</section><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Recent project activity</h3>'+go('activity','View activity')+'</div><ul class="cp-activity">'+(p.events.slice(-3).reverse().map(e=>'<li><div>'+esc(e.text)+'<small>'+esc(e.actor?(e.provenance||e.actor):'Legacy event · actor not verified')+'</small></div><time datetime="'+esc(e.at)+'">'+esc(date(e.at))+'</time></li>').join('')||'<li>No project events recorded yet.</li>')+'</ul></section></div><aside><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Site at a glance</h3>'+go('site','Open map & evidence')+'</div><div id="overview-map" role="region" aria-label="Saved parcel map"><p>Parcel geometry is unavailable in this snapshot. Open Site Review for the available evidence.</p></div><p class="cp-panel-note">Findings from saved checks, not site clearance. Snapshot '+esc(date(p.report.date))+'.</p><div class="cp-panel-body">'+b('refresh-evidence','Refresh public evidence')+'</div></section><section class="cp-panel"><div class="cp-panel-head"><h3>Application drafts</h3></div>'+ (s.drafts.length?s.drafts.map(d=>'<div class="cp-draft"><h4>'+esc(d.label)+'</h4><p><strong>'+d.filled+' / '+d.total+'</strong> editable fields populated</p><progress value="'+d.filled+'" max="'+(d.total||1)+'" aria-label="'+esc(d.label)+' editable field population"></progress><p>'+d.suggested+' suggested · '+d.supplied+' supplied · '+d.confirmed+' confirmed · '+d.stale+' stale</p>'+b('prepare-permit','Open '+d.label+' draft',d.id)+'</div>').join(''):'<div class="cp-panel-body"><p>No permit scope selected.</p>'+go('filing','Choose permit scope')+'</div>')+'<p class="cp-panel-note">Population is not confirmation. Confirmed answers record a review of the saved value and evidence. Blank fields may be optional. Only the designated worksheet belongs to the tracked filing; other drafts are worksheets.</p></section><section class="cp-panel cp-panel-body"><h3>Optional work</h3><form data-command="research_scope"><label>Pool in this project?<select name="pool">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.pool||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><label>Wood-burning appliance?<select name="fireplace">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.fireplace||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><button type="submit">Save scope</button></form><p>Optional research stays available; it counts as open project work only when included.</p><h3>Project resources</h3><div class="cp-resource-links">'+go('rules','Rules & Approvals')+go('contacts','Contacts')+go('documents','Documents')+go('evidence','Record Review')+go('valuation','Valuation')+go('placement','Pool Planning')+go('filing','Plans, measurements & team')+'</div></section></aside></div></section>';
