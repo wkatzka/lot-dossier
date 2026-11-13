@@ -55,8 +55,10 @@ async function main(){
  const exhibitFinding=syn.findings.find(f=>/Exhibit A/i.test(f.text+' '+f.limitations)&&f.citations.some(c=>c.sha256===masterHash)&&/(recovered|retrieved|read)/i.test(f.text+' '+f.limitations));
  assert(exhibitFinding,'Master Exhibit A must be presented as recovered');
  assert(/(does not (?:name|identify|list|mention)|metes and bounds|plat|parcel numbers|not establish)/i.test(exhibitFinding.text+' '+exhibitFinding.limitations),'Recovered master Exhibit A must keep the lot-coverage limitation');
- assert(/(unsigned|not (?:signed|executed)|blank)/i.test(all)&&all.includes('2957404'),'Execution/recording gap for the neighborhood declaration must remain explicit');
+ const withDirections=all+' '+syn.missingEvidence.map(m=>m.document+' '+m.action).join(' ');
+ assert(/(unsigned|not (?:signed|executed)|blank)/i.test(withDirections)&&withDirections.includes('2957404'),'Execution/recording gap for the neighborhood declaration must remain explicit');
  assert(/(ACC|Architectural Control Committee)/.test(all)&&syn.findings.some(f=>f.citations.some(c=>c.sha256===neighborhoodHash&&[30,32].includes(c.page))),'ACC role must be described from Article 6 (pages 30/32)');
+ for(const x of d.interpretations.filter(x=>x.sha256===masterHash))for(const r of x.resolvedReferences||[])if(r.resolution==='recovered_in_same_original'&&/^Article/i.test(r.identifier))assert(r.resolvedPage<=52,'A declaration reference must not resolve into the attached By-Laws: '+r.identifier+' -> '+r.resolvedPage);
  assert(!/reviewer is not reconciled/i.test(all),'Different roles of Board and ACC are not an invented conflict');
  assert(/(DRB|Design Review Board)/.test(all)&&/(if|conditional|whether)/i.test(all),'Master DRB stage must stay conditional');
  assert(/(work type|type of work|if the work|depends on the work|proposed work)/i.test(all),'Municipal submission items must stay conditional on work type');

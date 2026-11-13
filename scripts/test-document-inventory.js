@@ -11,10 +11,12 @@ const neighborhood={sha256:'n'.repeat(64),pages:[
  {page:6,text:'Exhibit “A”\nAll of Lots 1 through 30, Example Ridge Phase 2, according to the official plat.\n'+filler}]};
 const master={sha256:'m'.repeat(64),pages:[
  {page:1,text:'The real property described in Exhibit A is subject to this Declaration.\n'+filler},
- {page:2,text:'ARTICLE IV ARCHITECTURAL STANDARDS\nNo activity shall commence until approved by the DRB.\n'+filler},
+ {page:2,text:'Article IV\nArchitecture and Landscaping\nNo activity shall commence until approved by the DRB.\n'+filler},
  {page:3,text:'EXHIBIT A\nLAND INITIALLY SUBMITTED\nPARCEL 1   22-006-0004\nBEGINNING AT A POINT WHICH IS ON THE SOUTH LINE OF SECTION 16; THENCE NORTH 89°27\'02" WEST 1316.85 FEET.\n'+filler},
  {page:4,text:'PARCEL 2   22-006-0015\nTHENCE SOUTH 00°20\'34" WEST ALONG THE SECTION LINE.\n'+filler},
- {page:5,text:'EXHIBIT B\nINITIAL RESTRICTIONS AND RULES\n'+filler}]};
+ {page:5,text:'EXHIBIT B\nINITIAL RESTRICTIONS AND RULES\n'+filler},
+ {page:6,text:'BY-LAWS\nARTICLE I\nNAME, PRINCIPAL OFFICE\nARTICLE II\nASSOCIATION: MEMBERSHIP\n'+filler},
+ {page:7,text:'ARTICLE IV\nOFFICERS\nOfficers of the Association shall be a President.\n'+filler}]};
 const target={parcelId:'222320023',subdivision:'Example Ridge At Wolf Creek Prud Ph 02',lot:'68',address:'1 Example Ct',municipality:'Example City'};
 const n=INV.build(neighborhood,{target}),m=INV.build(master,{target});
 const find=(inv,kind,number)=>inv.entries.find(e=>e.kind===kind&&e.number===number);
@@ -23,7 +25,11 @@ assert(!find(n,'article','8'),'A prose cross-reference such as "Article 8 of thi
 assert.equal(find(n,'section','6.3').acronym,'ACC','Defined committee acronym attaches to its section');
 assert.equal(find(n,'exhibit','A').page,6);assert(find(n,'exhibit','A').namesTargetSubdivision);assert(!find(n,'exhibit','A').namesTargetLot,'Lots 1 through 30 does not name lot 68');
 const mA=find(m,'exhibit','A');assert.equal(mA.page,3);assert.equal(mA.endPage,4);assert(mA.metesAndBounds);assert.equal(mA.parcelNumbers,2);assert(!mA.namesTargetParcel&&!mA.namesTargetSubdivision,'A recovered master exhibit that does not name the parcel must say so');
-assert.equal(find(m,'article','4').title,'ARCHITECTURAL STANDARDS','Roman numerals normalize');
+assert.equal(find(m,'article','4').title,'Architecture and Landscaping','A bare mixed-case Article heading with a title line is recognized and Roman numerals normalize');
+assert.equal(find(m,'article','4').page,2);assert.equal(m.parts.length,2,'Bundled bylaws restart article numbering as a separate part');
+assert.equal(INV.locate('Article IV',m,1).page,2,'A declaration reference resolves to the declaration article, not the bylaws article');
+assert.equal(INV.locate('Article IV',m,7).page,7,'A bylaws reference resolves within the bylaws');
+assert.equal(INV.locate('Article IV',{...m,parts:[]},1),null,'Ambiguous references without part scope stay unresolved');
 assert(find(n,'section','6.4').excerpt.includes('Board’s written approval'),'Approval section text is retained for role reconciliation after page text is released');
 console.log('PASS: inventory finds substantive articles, sections, defined committees and exhibits; ignores TOC and prose cross-references; records exhibit coverage facts.');
 
@@ -33,6 +39,8 @@ const interpretations=[
 const inventories={[master.sha256]:m,[neighborhood.sha256]:n};
 const recovered=INV.reconcile(structuredClone(interpretations),inventories);
 assert.deepEqual(recovered.map(r=>[r.identifier,r.resolvedPage]),[['Exhibit A',3]],'Only the recovered exhibit is reconciled; separate instruments remain missing');
+{const twice=structuredClone(interpretations);INV.reconcile(twice,inventories);const wrong=structuredClone(m);wrong.entries=wrong.entries.filter(e=>e.kind!=='exhibit');const again=INV.reconcile(twice,{[master.sha256]:wrong,[neighborhood.sha256]:n});
+ assert.equal(again.length,0);assert(twice[0].missingDocuments.some(r=>r.identifier==='Exhibit A'&&r.description==='Legal description; not supplied.'),'Re-running reconciliation with a corrected inventory restores unresolved references');}
 const titles={[master.sha256]:[interpretations[0].documentTitle],[neighborhood.sha256]:[interpretations[1].documentTitle]};
 const stale=INV.staleClaims({findings:[{text:'The Board approves plans.',limitations:'The Design and Construction Guidelines and ACC provisions are not supplied.'},{text:'Master authority.',limitations:"The master Declaration's Exhibit A and any Supplemental Declaration are not supplied."}],missingEvidence:[{document:'Wolf Creek Master Declaration Exhibit A and recorded Supplemental Declarations',action:'Check.'}]},inventories,titles);
 assert.deepEqual(stale.map(c=>[c.where,c.recovered]),[['finding 1 limitations','Section 6.3'],['finding 2 limitations','Exhibit A'],['direction 1 document','Exhibit A']]);
