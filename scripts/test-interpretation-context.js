@@ -1,5 +1,6 @@
 const assert=require('node:assert/strict'),C=require('../lib/interpretation-context');
 const pages=Array.from({length:110},(_,i)=>({page:i+1,text:'Ordinary document content '+(i+1)}));
+for(let i=20;i<45;i++)pages[i].text='Exhibit B\nAssessment table';
 pages[4].text='Association means and refers to Example Ridge Association.';
 pages[86].text='IN WITNESS WHEREOF, executed on the ____ day of _____, 2018. By: ____';
 pages[87].text='Exhibit A\nLegal Description\nThe real property subject to this declaration includes Example Ridge Phase 4.';
