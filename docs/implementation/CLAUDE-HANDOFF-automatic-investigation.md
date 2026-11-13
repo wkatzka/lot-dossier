@@ -91,3 +91,5 @@ Regeneration requested via audited one-row SQL at 07:36 UTC. First attempt was r
 Still to do after it completes: proof script, manual review vs originals, signed-in production check (user must sign in), report/checklist. A fresh-address clean run and real-user comprehension remain unclaimed; a fresh run needs its own budget day.
 
 **Update 16:30 UTC:** user approved +$3 for Nov 13 only (`db/ai-budget-2026-11-13-topup.sql`). Version 3 explanation published 16:22 and passes the production proof and manual review (see acceptance report, "Narrow acceptance pass"). Remaining: signed-in production check (user sign-in needed), optional UI collapse of details, fresh-address clean run and real-user comprehension (unclaimed).
+
+**Update ~16:45 UTC:** signed-in production check passed (see acceptance report). Open: surface the short answer on Overview / collapse detail links; fresh-address clean run; real-user comprehension.

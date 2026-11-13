@@ -315,7 +315,8 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - [x] Request for an already-recovered identifier removed; every next action has a document, question and dependency class.
 - [x] Approval-claim strength: unsigned-copy qualification, separate neighborhood/master/municipal tracks, construction vs submission/issuance, institutional role preserved, proportionate Board/ACC qualification (rejection tests in `scripts/test-answer-checks.js`).
 - [x] **This address's answer passes semantic review** (version 3, production proof PASS, manual review vs originals; residual: direction 2 bundles two dependencies).
-- [ ] **Signed-in production behavior** — pending user sign-in in the browser pane.
+- [x] **Signed-in production behavior passes**: correct account project and parcel 222320023, answer survives reload, 52 original-page links to 8 PDFs (served inline), no approvals or decisions changed (history unchanged since 01:44 UTC).
+- [ ] UI gap: the short answer is only in Rules & Approvals (below other sections); Overview's suggested next action comes from a different planner and does not reflect it.
 - [ ] **Fresh address completes without manual database intervention** — not claimed. This run needed audited checkpoint interventions and five synthesis regenerations. A clean run needs its own budget day under the $5 default (a long document set may pause overnight).
 - [ ] **Real-user comprehension** — not tested; not claimed.
 - [ ] Optional UI follow-up: collapse detailed findings and source links under the short answer.
