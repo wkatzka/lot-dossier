@@ -2030,7 +2030,7 @@
     var base=apiBase(), ctl=new AbortController(), timer=setTimeout(function(){ctl.abort();},240000), data;
     try {
       if(base==null)throw new Error('Public document service unavailable');
-      if(ctx.parcel.county==='Weber'){try{var started=await fetch(base+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:ctx.parcel.county,parcelId:ctx.parcel.id}),signal:ctl.signal});var job=await started.json();ctx.facts.automaticInvestigation=started.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){ctx.facts.automaticInvestigation={error:e.message};}}
+      if(ctx.facts.automaticInvestigation?.error)ctx.facts.automaticInvestigation=await queueInvestigation(ctx.parcel);
       var response=await fetch(base+'/api/public-research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rings:ctx.parcel.rings,county:ctx.parcel.county,parcelId:ctx.parcel.id}),signal:ctl.signal});
       if(!response.ok)throw new Error('Public research HTTP '+response.status);data=await response.json();if(data.error)throw new Error(data.error);
     } catch(e) {return [F('easements','Public record-chain research','verify','Public research source unavailable',String(e.message)+'; ownership and restriction completeness remain unresolved.')];}finally{clearTimeout(timer);}
@@ -2105,9 +2105,14 @@
     ['check_public_surveys', 'Public filed surveys'], ['check_public_research', 'Federal minerals, parent parcels & survey geometry'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
+  async function queueInvestigation(parcel){
+    if(parcel.county!=='Weber')return {status:'unsupported',message:'Automatic original-document investigation currently covers Weber County.'};
+    try{var response=await fetch((apiBase()||'')+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:parcel.county,parcelId:parcel.id}),signal:AbortSignal.timeout(30000)});var job=await response.json();return response.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){return {error:e.message};}
+  }
   async function run(parcel, plan, costs, onStep, documents) {
     var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: {},
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
+    ctx.facts.automaticInvestigation=await queueInvestigation(parcel);
     if (ctx.grid.length >= 4) {ctx.elevation = lidarSamples(ctx.grid);ctx.elevationComparison=epqsSamples(ctx.grid.filter(function(_,i){return i%Math.max(1,Math.ceil(ctx.grid.length/24))===0;}));}
     var findings = [];
     ctx.findings = findings;
