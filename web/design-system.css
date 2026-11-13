@@ -294,3 +294,16 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .cp-next-steps li{grid-template-columns:auto 1fr auto}
 .cp-next-steps .cp-who{margin-bottom:4px}
 @media (max-width:640px){.cp-contact-card{flex-direction:column}.cp-chip-open{margin-left:0}.cp-qcards{grid-template-columns:1fr}}
+/* Specificity fixes over generic .pw-card button/details styles */
+.pw-card.approval-task>button[data-id="overview"]{border:0;background:none;padding:0;box-shadow:none;color:var(--cp-primary);font-weight:600}
+.pw-card .cp-btn-primary,.cp-answer .cp-btn-primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
+.cp-chip-open{background:#fbecc8;color:#5c3d00}
+.pw-card details.cp-fine,.cp-contact-card details.cp-fine{border:0;background:none;padding:0;margin:8px 0 0}
+.pw-card details.cp-fine>summary{padding:0;font-weight:400}
+.pw-card details.cp-fine>summary::after{content:none}
+body details.cp-fine>summary{min-height:0;justify-content:flex-start}
+body details.cp-fine>summary::after{content:none}
+body details.cp-fine[open]>summary::after{content:none}
+.cp-record>summary::before,.cp-record[open]>summary::before{content:none}
+.cp-record>summary{align-items:center}
+.cp-record>summary>span{flex:1}

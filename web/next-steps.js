@@ -69,7 +69,7 @@ function steps(p,{limit=3}={}){
 }
 
 const WHO_TONE={You:'you',HOA:'other',City:'other',Cornerpin:'cornerpin'};
-function button(a){if(!a)return '';if(a.type==='scroll')return '<a class="btn" href="#'+esc(a.id)+'" data-scroll-to="'+esc(a.id)+'">'+esc(a.label)+'</a>';
+function button(a){if(!a)return '';if(a.type==='scroll')return '<button type="button" data-scroll-to="'+esc(a.id)+'">'+esc(a.label)+'</button>';
  if(a.type==='rule')return '<button type="button" data-action="open-rule-task" data-id="'+esc(a.id)+'">'+esc(a.label)+'</button>';
  if(a.type==='site')return '<button type="button" data-action="site">'+esc(a.label)+'</button>';
  if(a.type==='prepare-permit')return '<button type="button" data-action="prepare-permit" data-id="'+esc(a.id)+'">'+esc(a.label)+'</button>';
