@@ -16,7 +16,7 @@ module.exports=async(req,res)=>{
  if(req.method==='GET')return send(res,200,require('../data/title/discovery-production.json'));
  if(req.method!=='POST')return send(res,405,{error:'POST required'});
  try{let body=req.body;if(!body){let raw='';for await(const c of req){raw+=c;if(raw.length>250000)return send(res,413,{error:'Request too large'});}body=JSON.parse(raw);}else if(typeof body==='string')body=JSON.parse(body);
-  if(query(req).action==='investigate')return send(res,200,await require('../lib/automatic-investigation').enqueue(String(body.county||''),String(body.parcelId||'')));
+  if(query(req).action==='investigate')return send(res,200,await require('../lib/automatic-investigation').enqueue(String(body.county||''),String(body.parcelId||''),Array.isArray(body.typeIds)?body.typeIds.slice(0,6):undefined));
   send(res,200,await run(body));
  }catch(e){send(res,400,{error:e.message});}
 };

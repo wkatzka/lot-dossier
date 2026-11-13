@@ -1869,7 +1869,23 @@
     return o.join('');
   }
 
+  // One packet per planned permit. A new single-family home keeps the detailed packet below; other
+  // permits use web/permit-packet.js. Without a stated plan (older reports, "evaluate"), the home packet.
   C.check_permit_packet = async function (ctx) {
+    var permits = ctx.permits && ctx.permits.indexOf('*') === -1 ? ctx.permits : null, f = ctx.facts, out = [];
+    var wantHome = !permits || permits.indexOf('1') !== -1;
+    f.packets = {};
+    if (wantHome) { out = await sfdPacket(ctx); if (f.packet) { f.packet.permitType = '1'; f.packet.items.forEach(function (x) { x.permitType = '1'; x.id = '1:' + String(x.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60); }); f.packets['1'] = f.packet; } }
+    (permits || []).filter(function (t) { return t !== '1'; }).forEach(function (t) {
+      var pk = root.PermitPacket && root.PermitPacket.build(t, { facts: Object.assign({ parcelId: ctx.parcel.id }, f), findings: ctx.findings, kb: f.kb });
+      if (!pk) return; f.packets[t] = pk;
+      out.push(F('permits', 'Permit packet · ' + pk.label, 'verify', pk.ready + ' of ' + pk.needed + ' items ready for the ' + pk.label.toLowerCase() + ' permit', 'What the city\'s ' + pk.label + ' application asks for, the city rules for this work, and what this lot adds. Open Permit Preparation to work through it.', pk.source.label, pk.source.url));
+    });
+    if (!wantHome) { var first = (permits || []).map(function (t) { return f.packets[t]; }).filter(Boolean)[0]; f.packet = first || null; }
+    f.packetPermits = permits ? permits.slice().sort() : ['*'];
+    return out;
+  };
+  async function sfdPacket(ctx) {
     var f = ctx.facts, p = ctx.plan || {}, fp = p.footprint || {}, kb = f.kb, a = ctx.parcel.attrs, pd = f.parcelDoc || {};
     var hasPlan = !!(fp.residence_sf || fp.width_ft), juris = f.jurisdiction || 'the city';
     // Mailing form of the address: postal city and ZIP from the state ZIP areas (address points carry the municipality).
@@ -2108,9 +2124,9 @@
     ['check_public_surveys', 'Public filed surveys'], ['check_public_research', 'Federal minerals, parent parcels & survey geometry'], ['check_minerals', 'Mineral interests & title coverage'], ['check_pool', 'Pool feasibility'], ['check_plan_fit', 'Plan vs. lot conflicts'], ['check_permit_packet', 'Permit packet']
   ];
 
-  async function queueInvestigation(parcel){
+  async function queueInvestigation(parcel, typeIds){
     if(parcel.county!=='Weber')return {status:'unsupported',message:'Automatic original-document investigation currently covers Weber County.'};
-    try{var response=await fetch((apiBase()||'')+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:parcel.county,parcelId:parcel.id}),signal:AbortSignal.timeout(30000)});var job=await response.json();return response.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){return {error:e.message};}
+    try{var response=await fetch((apiBase()||'')+'/api/public-research?action=investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({county:parcel.county,parcelId:parcel.id,typeIds:Array.isArray(typeIds)?typeIds.filter(function(t){return t!=='*';}):undefined}),signal:AbortSignal.timeout(30000)});var job=await response.json();return response.ok?job:{error:job.error||'Automatic research could not start'};}catch(e){return {error:e.message};}
   }
   // opts.steps: run only these step ids (in STEPS order); opts.prior: a report from an earlier pass to
   // build on (its facts feed later steps; its findings are kept except for steps re-run here).
@@ -2120,7 +2136,8 @@
     var selected = opts.steps ? STEPS.filter(function (s) { return opts.steps.indexOf(s[0]) !== -1; }) : STEPS, ids = selected.map(function (s) { return s[0]; });
     var ctx = { parcel: parcel, plan: plan || {}, lat0: parcel.cy, grid: gridInside(parcel.rings, 60), facts: prior ? JSON.parse(JSON.stringify(prior.facts || {})) : {}, steps: opts.steps ? ids : null,
       cost: function (k) { return costs[k] ? Object.assign({ key: k }, costs[k]) : null; } };
-    if (opts.investigate) ctx.facts.automaticInvestigation = await queueInvestigation(parcel);
+    if (opts.investigate) ctx.facts.automaticInvestigation = await queueInvestigation(parcel, opts.permits);
+    ctx.permits = opts.permits || null;
     if (ctx.grid.length >= 4 && (ids.indexOf('check_slope') !== -1)) {ctx.elevation = lidarSamples(ctx.grid);ctx.elevationComparison=epqsSamples(ctx.grid.filter(function(_,i){return i%Math.max(1,Math.ceil(ctx.grid.length/24))===0;}));}
     var findings = prior ? (prior.findings || []).filter(function (f) { return !(f.step && (ids.indexOf(f.step) !== -1 || f.step === '_post')); }) : [];
     ctx.findings = findings;
@@ -2168,9 +2185,10 @@
     });
     p.rows=(p.rows||[]).map(function(row){return row[0]==='Fire sprinklers'?[row[0],'Requirement unresolved; confirm building access, hose route and fire flow with the fire authority','Mapped hydrant distance is screening evidence only']:row;});
     if(p.timeline&&p.timeline.status!=='unresolved')p.priorTimeline=p.priorTimeline||p.timeline;
-    p.timeline={status:'unresolved',dependencies:p.items.filter(function(x){return !['ready','na'].includes(x.status);}).map(function(x){return x.title;})};
+    p.timeline={status:'unresolved',dependencies:p.items.filter(function(x){return !['ready','na','rule'].includes(x.status);}).map(function(x){return x.title;})};
     p.ready=p.items.filter(function(x){return ['ready','drafted'].includes(x.status);}).length;
-    p.needed=p.items.filter(function(x){return !['na','optional'].includes(x.status);}).length;
+    p.needed=p.items.filter(function(x){return !['na','optional','rule'].includes(x.status);}).length;
+    p.letters=p.letters||[];
     return p;
   }
 

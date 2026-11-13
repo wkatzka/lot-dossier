@@ -44,7 +44,16 @@ const zones={
 };
 const fields={arterialCollector:'Abuts an arterial / collector street?',sideAbutment:'Side building wall abuts the adjoining building?',rearAbutment:'Rear building wall abuts the adjoining building?',sideMaintenanceContract:'Recorded perpetual side maintenance contract?',rearMaintenanceContract:'Recorded perpetual rear maintenance contract?',cornerLot:'Corner lot?',residentialAdjacency:'Adjacent to medium / low-density residential?',federalShorelineAdjacency:'Adjoins US Forest Service shoreline land?',water:'Water supply',wastewater:'Wastewater system',highwayChange:'New / changed state-highway access or land use along a highway?',streamWork:'Alter natural stream bed / banks?',wetlandFill:'Fill or dredge in wetlands / waters?',grading:'Grading or excavation?',rowWork:'Work in public right-of-way?',slope25:'Surveyed average natural slope at least 25%?',subdivision:'Create lots or amend a plat?',adu:'Accessory dwelling unit?',demolition:'Demolition?',specialUse:'Other use-specific permits (rental, business, signs, agriculture, resort)?'};
 // Explicit inputs are required; an omitted measurement is never treated as zero.
+// Accessory structures (pool equipment enclosure, garage, ground solar…) are checked against the
+// zone's transcribed accessory standards only (web/accessory-rules.js); other zones are not checked.
+function accessoryChecks(name,s){const AR=typeof module!=='undefined'&&module.exports?require('./accessory-rules'):root.AccessoryRules,z=AR&&AR.ZONES[name];if(!z)return [];
+ const has=k=>s[k]!==''&&s[k]!=null&&Number.isFinite(Number(s[k])),out=[];
+ if(has('sideSetback')&&Number(s.sideSetback)<z.side)out.push('sideSetback '+s.sideSetback+' is below '+z.side+' for an accessory building (1 ft is allowed only if it sits at least '+z.behindDistance+' ft behind the main building)');
+ if(has('rearSetback')&&Number(s.rearSetback)<z.rear)out.push('rearSetback '+s.rearSetback+' is below '+z.rear+' for an accessory building');
+ if(has('buildingHeight')&&Number(s.buildingHeight)>z.height)out.push('buildingHeight exceeds '+z.height+' for an accessory building');
+ return out;}
 function dimensionChecks(name,s){
+ if(s.work==='accessory')return accessoryChecks(name,s);
  const x=zones[name];if(!x||!['new-home','commercial','other'].includes(s.work))return [];
  const has=k=>s[k]!==''&&s[k]!=null&&Number.isFinite(Number(s[k]));
  const failures=[],min=(k,n)=>{if(n!=null&&has(k)&&Number(s[k])<n)failures.push(k+' '+s[k]+' is below '+n);},max=(k,n)=>{if(n!=null&&has(k)&&Number(s[k])>n)failures.push(k+' exceeds '+n);};

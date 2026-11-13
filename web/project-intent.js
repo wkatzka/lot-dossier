@@ -16,11 +16,11 @@ const PLANS={
  'remodel':{label:'Remodel inside the house',short:'Remodel',permit:'Remodel',typeIds:['4'],scope:{work:'other'},addOns:['basement','adu']},
  'basement':{label:'Basement finish',short:'Basement finish',permit:'Basement Finish',typeIds:['70'],scope:{work:'other'},addOns:['remodel','adu']},
  'adu':{label:'Apartment inside the house (internal ADU)',short:'Internal ADU',permit:'Internal ADU',typeIds:['102'],scope:{work:'other',adu:'yes'},addOns:['remodel','basement']},
- 'deck':{label:'Deck',short:'Deck',permit:'Deck',typeIds:['74'],scope:{work:'other'},exterior:true,addOns:['pool','garage','retaining-wall','solar']},
- 'garage':{label:'Detached garage',short:'Garage',permit:'Garage (Detached)',typeIds:['96'],scope:{work:'addition'},exterior:true,footprint:true,addOns:['pool','deck','retaining-wall','solar']},
- 'pool':{label:'Pool',short:'Pool',permit:'Pool',typeIds:['2'],scope:{work:'other'},pool:'included',exterior:true,footprint:true,addOns:['deck','garage','retaining-wall','solar']},
- 'retaining-wall':{label:'Retaining wall',short:'Retaining wall',permit:'Retaining Wall',typeIds:['6'],scope:{work:'other'},exterior:true,footprint:true,addOns:['deck','pool','garage']},
- 'solar':{label:'Solar panels',short:'Solar',permit:'Solar',typeIds:['8'],scope:{work:'other'},exterior:true,addOns:['deck','pool','garage']},
+ 'deck':{label:'Deck',short:'Deck',permit:'Deck',typeIds:['74'],scope:{work:'accessory'},exterior:true,addOns:['pool','garage','retaining-wall','solar']},
+ 'garage':{label:'Detached garage',short:'Garage',permit:'Garage (Detached)',typeIds:['96'],scope:{work:'accessory'},exterior:true,footprint:true,addOns:['pool','deck','retaining-wall','solar']},
+ 'pool':{label:'Pool',short:'Pool',permit:'Pool',typeIds:['2'],scope:{work:'accessory'},pool:'included',exterior:true,footprint:true,addOns:['deck','garage','retaining-wall','solar']},
+ 'retaining-wall':{label:'Retaining wall',short:'Retaining wall',permit:'Retaining Wall',typeIds:['6'],scope:{work:'accessory'},exterior:true,footprint:true,addOns:['deck','pool','garage']},
+ 'solar':{label:'Solar panels',short:'Solar',permit:'Solar',typeIds:['8'],scope:{work:'accessory'},exterior:true,addOns:['deck','pool','garage']},
  'evaluate':{label:'Just evaluating the lot',short:'Evaluating',permit:'',typeIds:[],scope:{},addOns:[]}
 };
 const FIT={good:'Good fit',possible:'Possible',constrained:'Constrained'};
@@ -54,7 +54,7 @@ function assess(plan,F,{asAddOn=false}={}){
   if(F.landslide&&F.landslide.status==='flag')reasons.push(r('New footprint on mapped landslide ground likely needs geotechnical review.',{label:F.landslide.source,url:F.landslide.url}));
  }
  if(plan==='pool'){for(const x of F.poolFlags.slice(0,2))reasons.push(r(x.headline,{label:x.source,url:x.url}));if(F.poolFlags.length)fit='constrained';}
- if(['deck','solar','retaining-wall'].includes(plan)){fit='possible';if(F.slope&&plan==='retaining-wall')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): walls over the code height need engineering.',{label:F.slope.source,url:F.slope.url}));if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
+ if(['deck','solar','retaining-wall'].includes(plan)){fit='possible';if(F.slope&&plan==='retaining-wall')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): the city\'s retaining-wall permit asks for engineering and stamped calculations.',{label:'Ogden Valley City permit form',url:null}));if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
  if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r('The lot is in an HOA; see Approvals for its rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
  if(plan==='new-home'&&F.state==='vacant'&&F.landslide?.status==='flag')reasons.push(r('Mapped landslide on the lot: plan for a geologic hazards study.',{label:F.landslide.source,url:F.landslide.url}));
  return {fit,reasons:reasons.filter(x=>x.text)};

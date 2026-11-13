@@ -196,7 +196,7 @@
       var prior = last;
       var res = await LR.run(prior.parcel, plan, DATA.costs, function (id, state) {
         if (state === 'running') $('plan-update-status').textContent = 'Updating: ' + (LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1];
-      }, prior.documents, { steps: researched(prior) });
+      }, prior.documents, { steps: researched(prior), permits: plannedTypeIds() });
       last = { parcel: prior.parcel, plan: plan, findings: res.findings, facts: res.facts, documents: res.documents, date: prior.date, planUpdatedAt: new Date() };
       window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));
       if (mode === 'upload' && selectedPlanFile) window.dispatchEvent(new CustomEvent('cornerpin:planfile', { detail: selectedPlanFile }));
@@ -387,12 +387,13 @@
   }
 
   // Permit packet: what we gathered, estimated or drafted for the building permit application.
-  var PK_STATUS = { ready: ['Ready', 'ok'], drafted: ['Drafted for you', 'ok'], partial: ['Partly there', 'watch'], pro: ['Needs a professional', 'verify'], you: ['Needs you', 'verify'], optional: ['Optional', 'muted'], na: ['Not needed', 'muted'] };
+  var PK_STATUS = { ready: ['Ready', 'ok'], drafted: ['Drafted for you', 'ok'], partial: ['Partly there', 'watch'], pro: ['Needs a professional', 'verify'], you: ['Needs you', 'verify'], optional: ['Optional', 'muted'], na: ['Not needed', 'muted'], rule: ['City rule', 'muted'] };
   function dataUri(type, text) { return 'data:' + type + ';charset=utf-8,' + encodeURIComponent(text); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50); }
   function packetSection(pk) {
-    if (!pk) return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
+    if (!pk) return '<section class="card packet" id="packet' + sfx + '"><div class="eyebrow">Next: the building permit</div><h2>Permit packet unavailable</h2><p>The permit preparation check did not finish. Your site findings are still available above. Generate the site report again to retry.</p></section>';
     pk = LR.reviewPacket(pk);
+    var sfx = pk.permitType && pk.permitType !== '1' ? '-' + pk.permitType : '';
     var pct = pk.needed ? Math.round(pk.ready / pk.needed * 100) : 0;
     var letterById = {}; pk.letters.forEach(function (l) { letterById[l.id] = l; });
     var appText = pk.rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
@@ -405,7 +406,7 @@
         acts.push('<a class="pk-btn ghost" href="#pk-letter-' + esc(l.id) + '">Read it</a>');
       }
       if (/site plan/i.test(it.title) && pk.sitePlan) acts.push('<a class="pk-btn" href="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '" download="draft-site-plan.svg">Download site plan</a>', '<a class="pk-btn ghost" href="#pk-siteplan">View</a>');
-      if (/^Application data/.test(it.title)) acts.push('<button type="button" class="pk-btn" data-copy="pk-app">Copy all</button>', '<a class="pk-btn ghost" href="#pk-app-table">View</a>');
+      if (/^Application data/.test(it.title)) acts.push('<button type="button" class="pk-btn" data-copy="pk-app' + sfx + '">Copy all</button>', '<a class="pk-btn ghost" href="#pk-app-table' + sfx + '">View</a>');
       if (it.link) acts.push('<a class="pk-btn ghost" href="' + esc(it.link) + '" target="_blank" rel="noopener">Template</a>');
       return '<li class="pk-item"><span class="pk-badge s-' + st[1] + '">' + esc(st[0]) + '</span><div><b>' + esc(it.title) + '</b>' +
         '<span class="pk-who">' + esc(it.who || '') + (it.why ? ' · ' + esc(it.why) : '') + (it.lead && it.lead[1] ? ' · typically ' + (it.lead[0] === it.lead[1] ? it.lead[1] : it.lead[0] + '-' + it.lead[1]) + ' business days' : '') + '</span>' +
@@ -416,15 +417,15 @@
         '<p class="pk-subj"><b>Subject:</b> ' + esc(l.subject) + '</p><pre>' + esc(l.body) + '</pre></details>';
     }).join('');
     var rows = pk.rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td><td class="pk-src">' + esc(r[2]) + '</td></tr>'; }).join('');
-    return '<section class="card packet" id="packet"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + esc(pk.jurisdiction) + '</h2>' +
+    return '<section class="card packet" id="packet' + sfx + '"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + (pk.label && pk.permitType !== '1' ? esc(pk.label) + ' · ' : '') + esc(pk.jurisdiction) + '</h2>' +
       '<p class="pk-sub">Review the source materials, applicable approvals and proposed-work answers before preparing a filing handoff.</p>' +
       '<div class="pk-meter"><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><span><b>' + pk.ready + ' of ' + pk.needed + '</b> source-packet items available or drafted — not application completeness</span></div>' +
       '<ol class="pk-timeline"><li><b>Resolve prerequisites</b> Confirm which approvals apply and whether they precede submission, issuance or construction.</li><li><b>Establish durations</b> Professional work and authority turnaround are not established for this project. No submission or issuance date is predicted.</li><li><b>Check review conditions</b> Statutory review periods depend on the application and applicable exceptions; they are not a project completion guarantee. <a href="https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html" target="_blank" rel="noopener">Utah Code §10-20-909</a></li></ol>' +
       (pk.portal ? '<p class="pk-portal">Submit through the <a href="' + esc(pk.portal) + '" target="_blank" rel="noopener">city permit portal</a>' + (pk.checklist ? ' · <a href="' + esc(pk.checklist) + '" target="_blank" rel="noopener">city submission checklist</a>' : '') + '.</p>' : '') +
       '<ol class="pk-items">' + items + '</ol>' +
-      '<h3 id="pk-app-table">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
-      '<div class="pk-acts"><button type="button" class="pk-btn" data-copy="pk-app">Copy all</button><a class="pk-btn ghost" href="' + esc(dataUri('text/plain', appText)) + '" download="permit-application-data.txt">Download</a></div>' +
-      '<textarea id="pk-app" hidden>' + esc(appText) + '</textarea><div class="pk-table"><table>' + rows + '</table></div>' +
+      '<h3 id="pk-app-table' + sfx + '">Application data</h3><p class="pk-note">Prefilled from the county record, the recorded plat, zoning, the hazard maps and your plan. Values marked as estimates are ours; check them before you sign.</p>' +
+      '<div class="pk-acts"><button type="button" class="pk-btn" data-copy="pk-app' + sfx + '">Copy all</button><a class="pk-btn ghost" href="' + esc(dataUri('text/plain', appText)) + '" download="permit-application-data.txt">Download</a></div>' +
+      '<textarea id="pk-app' + sfx + '" hidden>' + esc(appText) + '</textarea><div class="pk-table"><table>' + rows + '</table></div>' +
       (pk.sitePlan ? '<h3 id="pk-siteplan">Draft site plan</h3><p class="pk-note">Lot lines, setback limits, ' + (pk.sitePlan.fits === false ? 'the house envelope (it does not fit inside the setbacks as placed), ' : 'the house envelope placed closest to the street, ') + 'driveway and GIS elevation contours. Easements are not mapped or checked against the house or driveway; setback fit is not a buildability determination.</p>' +
         '<img class="pk-plan" alt="Draft site plan of the lot" src="' + esc(dataUri('image/svg+xml', pk.sitePlan.svg)) + '">' : '') +
       (letters ? '<h3>Drafted requests</h3><p class="pk-note">Written with this lot\'s details. Add your name and contact information, then send.</p>' + letters : '') +
@@ -555,7 +556,7 @@
   window.addEventListener('cornerpin:refresh', async function(e){
     if(go.disabled)return;go.disabled=true;showHome();form.classList.add('off');prog.classList.add('on');
     var prior=e.detail,scope=researched(prior),types=plannedTypeIds();setSteps(scope);renderSteps();$('phase').textContent='Refreshing public evidence';DATA.refreshNonce=Date.now();
-    try{var res=await LR.run(prior.parcel,prior.plan,DATA.costs,function(id,state){steps.forEach(function(s){if(s.id===id)s.state=state;});renderSteps();},null,{steps:scope,investigate:types?RP.needsApprovalResearch(types):scope.length===LR.STEPS.length});
+    try{var res=await LR.run(prior.parcel,prior.plan,DATA.costs,function(id,state){steps.forEach(function(s){if(s.id===id)s.state=state;});renderSteps();},null,{steps:scope,permits:types,investigate:types?RP.needsApprovalResearch(types):scope.length===LR.STEPS.length});
       last={parcel:prior.parcel,plan:prior.plan,findings:res.findings,facts:res.facts||{},documents:res.documents,date:new Date()};window.dispatchEvent(new CustomEvent('cornerpin:report',{detail:last}));showReport();window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'overview'}}));
     }catch(err){fail('Refresh failed: '+err.message);}finally{delete DATA.refreshNonce;go.disabled=false;form.classList.remove('off');prog.classList.remove('on');}
   });
@@ -579,14 +580,17 @@
     if (researching) { pendingResearch = e.detail; return; }
     var typeIds = e.detail.typeIds || [], label = e.detail.label || 'your permits';
     var todo = RP.stepsFor(typeIds, researched(last)), prior = last.facts && last.facts.automaticInvestigation;
-    var investigate = RP.needsApprovalResearch(typeIds) && !(prior && !prior.error && prior.status !== 'unsupported');
+    if (todo.indexOf('check_permit_packet') === -1 && RP.packetStale(last, typeIds)) todo.push('check_permit_packet');
+    // Always tell the server which permits are planned when they need approval research: it creates the
+    // investigation if needed, or records the permits (and refreshes a finished answer) on the existing one.
+    var investigate = RP.needsApprovalResearch(typeIds);
     if (!todo.length && !investigate) { researchBar('Already researched for ' + label + '.', true); return; }
     researching = true; var n = 0;
     researchBar('Researching for ' + label + '…');
     try {
       var res = await LR.run(last.parcel, last.plan, DATA.costs, function (id, state) {
         if (state === 'running') { n++; researchBar('Researching for ' + label + ': ' + ((LR.STEPS.find(function (s) { return s[0] === id; }) || [id, id])[1]) + ' (' + n + ' of ' + todo.length + ')'); }
-      }, null, { steps: todo, prior: last, investigate: investigate });
+      }, null, { steps: todo, prior: last, investigate: investigate, permits: typeIds });
       last = { parcel: last.parcel, plan: last.plan, findings: res.findings, facts: res.facts || {}, documents: res.documents, date: last.date, researchedAt: new Date() };
       renderedReportKey = '';
       window.dispatchEvent(new CustomEvent('cornerpin:report', { detail: last }));

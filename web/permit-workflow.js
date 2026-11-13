@@ -16,10 +16,14 @@
     return !!(ref && (doc(p, ref.documentId) || /^https:\/\//i.test(ref.url || '')));
   }
   function event(p, type, text, now, explicitActor) { const actor=explicitActor||(['migrate_site_reviews','public_owner','area_map','sync_report'].includes(type)?'system':type==='document_extraction'?'extraction':type==='review_round'?'import':'user');p.events.push({ id: id(), at: now, type, text, actor, provenance:({system:'System update',extraction:'Document extraction · not reviewer confirmation',ai:'AI extraction · not reviewer confirmation',import:'Imported correspondence · user checked',user:'User action'})[actor] }); }
+  // One checklist across every planned permit's packet. Packet items carry stable ids
+  // ("2:doc-site-plan"); older single-packet reports keep positional ids.
   function requirements(report) {
-    const items = (((report || {}).facts || {}).packet || {}).items || [];
+    const facts = (report || {}).facts || {}, packets = facts.packets && Object.keys(facts.packets).length ? Object.values(facts.packets) : facts.packet ? [facts.packet] : [];
+    const items = packets.flatMap(pk => (pk.items || []).map(x => ({ ...x, permitLabel: pk.label || '' })));
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
-      .concat(items.map((x, i) => ({ id: 'requirement-' + i, title: x.title, required: !['na', 'optional'].includes(x.status),
+      .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel,
+        required: !['na', 'optional', 'rule'].includes(x.status),
         state: 'missing', suggestedStatus: x.status, owner: x.who || '', source: x.why || '', sourceUrl: x.link || '',
         detail: x.detail || '', note: '', documentIds: [] })));
   }
@@ -78,7 +82,7 @@
         p.application.areaMap=clone(a.snapshot);invalidate(p);event(p,a.type,'Refreshed parcel boundary matches; approval decisions require renewed review.',now);break;
       }
       case 'rule_scope': {
-        required(['','new-home','addition','commercial','other'].includes(a.work)&&['','under-acre','one-acre'].includes(a.disturbance)&&['','yes','no'].includes(a.commonPlan),'Choose a valid project scope.');
+        required(['','new-home','addition','accessory','commercial','other'].includes(a.work)&&['','under-acre','one-acre'].includes(a.disturbance)&&['','yes','no'].includes(a.commonPlan),'Choose a valid project scope.');
         const scope={work:a.work,disturbance:a.disturbance,commonPlan:a.commonPlan};
         for(const k of ['arterialCollector','sideAbutment','rearAbutment','sideMaintenanceContract','rearMaintenanceContract','cornerLot','residentialAdjacency','federalShorelineAdjacency','highwayChange','streamWork','wetlandFill','grading','rowWork','slope25','subdivision','adu','demolition','specialUse']){required(['','yes','no',undefined].includes(a[k]),'Choose a valid '+k+' answer.');if(a[k]!==undefined)scope[k]=a[k];}
         for(const [k,opts] of Object.entries({water:['provider','well'],wastewater:['sewer','septic']})){required(a[k]===undefined||a[k]===''||opts.includes(a[k]),'Choose a valid '+k+' system.');if(a[k]!==undefined)scope[k]=a[k];}
@@ -102,7 +106,7 @@
         p.evidence = E.sync(p.evidence, a.report); p.report = clone(a.report); p.siteVersion++;
         const fresh = requirements(a.report);
         p.requirements = fresh.map(r => {
-          const prior = p.requirements.find(x => x.title === r.title);
+          const prior = p.requirements.find(x => x.id === r.id) || p.requirements.find(x => x.title === r.title && (x.permitType || '') === (r.permitType || ''));
           return prior ? Object.assign({}, prior, { state: 'needs_review', required: r.required, detail: r.detail, source: r.source, sourceUrl: r.sourceUrl }) : r;
         });
         invalidate(p); event(p, a.type, 'Site/plan snapshot updated. Requirement reviews and unsubmitted package approvals need renewal.', now); break;
@@ -184,7 +188,7 @@
         // The user's stated plan. Fills the matching rule scope and permit worksheet; removes nothing.
         const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
         required(/^[a-z-]{3,20}$/.test(a.plan||'')&&clean(a.label)&&Array.isArray(a.typeIds)&&a.typeIds.length<=6&&a.typeIds.every(id=>C.catalog.types.some(t=>t.value===String(id))),'Choose a valid project.');
-        const sc=a.scope||{};required(sc.work===undefined||['','new-home','addition','commercial','other'].includes(sc.work),'Choose a valid project scope.');for(const k of ['adu','demolition'])required(sc[k]===undefined||['','yes','no'].includes(sc[k]),'Choose a valid '+k+' answer.');
+        const sc=a.scope||{};required(sc.work===undefined||['','new-home','addition','accessory','commercial','other'].includes(sc.work),'Choose a valid project scope.');for(const k of ['adu','demolition'])required(sc[k]===undefined||['','yes','no'].includes(sc[k]),'Choose a valid '+k+' answer.');
         p.application.intent={plan:a.plan,addOns:Array.isArray(a.addOns)?a.addOns.filter(x=>/^[a-z-]{3,20}$/.test(x)).slice(0,5):[],label:clean(a.label),typeIds:a.typeIds.map(String),chosenAt:now};
         if(Object.keys(sc).length)p.application.ruleScope={...(p.application.ruleScope||{}),...sc};
         if(a.pool)p.application.researchScope={...(p.application.researchScope||{}),pool:a.pool};

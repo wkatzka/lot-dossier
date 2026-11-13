@@ -58,6 +58,27 @@ begin
    where id=(p_payload->>'id')::uuid and lease=(p_payload->>'lease')::uuid and lease_until>now() returning id,status into j.id,j.status;
   if not found then raise exception 'Research lease expired'; end if;
   return jsonb_build_object('saved',true,'status',j.status);
+ elsif p_action='set_permits' then
+  -- Record the user's planned permits. If the approvals answer is already finished, retire it to
+  -- history and request a synthesis-only regeneration for those permits (no re-crawl or re-reading).
+  -- Never while a worker holds the lease; at most one regeneration per 15 minutes; daily AI cap still applies.
+  select * into j from cornerpin_private.research_jobs where county=p_payload->>'county' and parcel_id=p_payload->>'parcelId' for update;
+  if not found then return null; end if;
+  if jsonb_typeof(p_payload->'plannedPermits'->'typeIds')<>'array' or jsonb_array_length(p_payload->'plannedPermits'->'typeIds')>6 then raise exception 'Invalid planned permits'; end if;
+  if j.checkpoint->'plannedPermits'->'typeIds' = p_payload->'plannedPermits'->'typeIds' then return jsonb_build_object('id',j.id,'unchanged',true); end if;
+  if j.lease_until is not null and j.lease_until>now() then return jsonb_build_object('id',j.id,'busy',true); end if;
+  if j.status='complete_with_gaps' and jsonb_typeof(j.checkpoint->'synthesis')='object'
+     and coalesce((j.checkpoint->'synthesisRegeneration'->>'pending')::boolean,false)=false
+     and coalesce((select max((e->>'retiredAt')::timestamptz) from jsonb_array_elements(coalesce(j.checkpoint->'synthesisHistory','[]'::jsonb)) e),'-infinity'::timestamptz)<now()-interval '15 minutes' then
+   update cornerpin_private.research_jobs set checkpoint=jsonb_set(jsonb_set(jsonb_set(jsonb_set(jsonb_set(checkpoint,'{plannedPermits}',p_payload->'plannedPermits'),
+     '{synthesisHistory}',coalesce(checkpoint->'synthesisHistory','[]'::jsonb)||jsonb_build_array(jsonb_build_object('synthesis',checkpoint->'synthesis','retiredAt',now(),'reason','Planned permits changed; permit-specific answer requested'))),
+     '{synthesis}','null'::jsonb),'{synthesisAttempts}','0'::jsonb),
+     '{synthesisRegeneration}',jsonb_build_object('pending',true,'requestedAt',now(),'scope','final synthesis only; planned permits changed','reason','Permit-specific approvals answer')),
+     status='queued',phase='synthesis_regeneration',available_at=now(),updated_at=now() where id=j.id;
+   return jsonb_build_object('id',j.id,'regenerating',true);
+  end if;
+  update cornerpin_private.research_jobs set checkpoint=jsonb_set(checkpoint,'{plannedPermits}',p_payload->'plannedPermits'),updated_at=now() where id=j.id;
+  return jsonb_build_object('id',j.id,'recorded',true);
  end if;
  raise exception 'Unknown research operation';
 end $$;

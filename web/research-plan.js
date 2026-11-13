@@ -10,19 +10,19 @@ const FOOTPRINT=['check_historic','check_faults','check_seismic','check_borehole
 // City Inspect permit type → the detailed research it needs (beyond the quick read).
 const STEPS_FOR={
  '1':ORDER,'104':ORDER,
- '3':[...FOOTPRINT,'check_performance','check_plan_fit'],
- '96':[...FOOTPRINT,'check_plan_fit'],
- '102':['check_water','check_districts','check_soils_septic','check_utilities','check_access_fire','check_performance','check_documents','check_snow','check_plan_fit'],
- '2':['check_soils_septic','check_boreholes','check_documents','check_utilities','check_public_surveys','check_plan_fit'],
- '74':['check_documents','check_soils_septic','check_snow','check_public_surveys','check_plan_fit'],
- '6':['check_documents','check_soils_septic','check_boreholes','check_public_surveys','check_plan_fit'],
- '8':['check_utilities','check_snow','check_plan_fit'],
- '4':['check_performance','check_snow','check_plan_fit'],
- '70':['check_performance','check_soils_septic','check_plan_fit'],
+ '3':[...FOOTPRINT,'check_performance','check_plan_fit','check_permit_packet'],
+ '96':[...FOOTPRINT,'check_plan_fit','check_permit_packet'],
+ '102':['check_water','check_districts','check_soils_septic','check_utilities','check_access_fire','check_performance','check_documents','check_snow','check_plan_fit','check_permit_packet'],
+ '2':['check_soils_septic','check_boreholes','check_documents','check_utilities','check_public_surveys','check_plan_fit','check_permit_packet'],
+ '74':['check_documents','check_soils_septic','check_snow','check_public_surveys','check_plan_fit','check_permit_packet'],
+ '6':['check_documents','check_soils_septic','check_boreholes','check_public_surveys','check_plan_fit','check_permit_packet'],
+ '8':['check_utilities','check_snow','check_plan_fit','check_permit_packet'],
+ '4':['check_performance','check_snow','check_plan_fit','check_permit_packet'],
+ '70':['check_performance','check_soils_septic','check_plan_fit','check_permit_packet'],
  '*':ORDER
 };
 // A step's inputs must have run first.
-const DEPS={check_documents:['check_jurisdiction','check_contacts'],check_public_research:['check_public_surveys','check_documents'],check_permit_packet:['check_jurisdiction','check_zoning','check_slope','check_ccr_permits','check_documents','check_water','check_utilities','check_soils_septic'],
+const DEPS={check_documents:['check_jurisdiction','check_contacts'],check_public_research:['check_public_surveys','check_documents'],check_permit_packet:['check_jurisdiction','check_zoning','check_ccr_permits'],
  check_pool:['check_zoning','check_slope','check_flood','check_liquefaction_groundwater'],check_ccr_permits:['check_jurisdiction'],check_zoning:['check_jurisdiction'],check_contacts:['check_jurisdiction'],check_plan_fit:['check_zoning','check_slope']};
 // Permits that change the outside of the house or the lot need the plan-approval (HOA/design review) research.
 const EXTERIOR=new Set(['1','104','3','96','102','2','74','6','8','*']);
@@ -31,9 +31,11 @@ function stepsFor(typeIds,alreadyRun=[]){
  const done=new Set(alreadyRun),want=close([...new Set((typeIds||[]).flatMap(t=>STEPS_FOR[String(t)]||[]))]);
  return ORDER.filter(id=>want.has(id)&&!done.has(id));
 }
+// The packet depends on which permits are planned, so it re-runs whenever that set changes.
+function packetStale(report,typeIds){const had=(report?.facts?.packetPermits||[]).join(','),want=(typeIds||[]).includes('*')?'*':[...new Set((typeIds||[]).map(String))].sort().join(',');return had!==want;}
 function needsApprovalResearch(typeIds){return (typeIds||[]).some(t=>EXTERIOR.has(String(t)));}
 // Reports saved before staging have no step record: treat them as fully researched.
 function stepsRun(report){const s=report?.facts?.stepsRun;return s?Object.keys(s):(report?.findings?.length?ORDER.slice():[]);}
 function notRun(report){const done=new Set(stepsRun(report));return ORDER.filter(id=>!done.has(id));}
-const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
+const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun,packetStale};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
 })(typeof window!=='undefined'?window:globalThis);
