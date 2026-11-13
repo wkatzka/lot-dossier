@@ -27,7 +27,8 @@ function roles(d,m,project){
  if(m.dependency==='retrieved_unread')return {you:'Nothing yet.',cornerpin:'Reads the retrieved document and updates this answer.'};
  return {you:esc(m.action),cornerpin:'Cannot settle this from the documents it has.'};
 }
-function rolesHtml(r){return '<p><strong>You:</strong> '+r.you+'</p><p><strong>Cornerpin:</strong> '+r.cornerpin+'</p>'+(r.upload||'');}
+const I=n=>(typeof module!=='undefined'&&module.exports?require('./icons'):root.CpIcons)?.icon(n)||'';
+function rolesHtml(r){return '<div class="cp-role"><span class="cp-role-icon">'+I('user')+'</span><p><strong>You:</strong> '+r.you+'</p></div><div class="cp-role cp-role-cp"><span class="cp-role-icon">'+I('search')+'</span><p><strong>Cornerpin:</strong> '+r.cornerpin+'</p></div>'+(r.upload||'');}
 const COMPARISON_TEXT={recorded_copy_matches:'matches the retrieved copy in every compared section',recorded_copy_minor_differences:'matches the retrieved copy apart from minor wording or scanning differences',recorded_copy_needs_review:'may differ from the retrieved copy on a material word — check the passages below',recorded_copy_differs:'differs from the retrieved copy — rely on the recorded wording',partially_compared:'was only partly compared; some sections were not found in your copy',sections_not_found:'did not contain the compared sections where expected',no_recorder_stamp:'shows no recorder stamp, so it is not shown to be the recorded instrument',different_entry:'carries a different recording entry number'};
 function comparisonHtml(x){
  const stamp=x.stamp?.entry?'Recorder stamp: Entry '+esc(x.stamp.entry)+(x.stamp.recordedOn?', recorded '+esc(x.stamp.recordedOn):'')+'.':'';
@@ -43,17 +44,25 @@ function answerCard(d,{detailsAction='',project=null}={}){
  const status=d?.automation?.status,working=['queued','running','retry_wait'].includes(status),s=d?.synthesis,a=s?.answer;
  // Staged research: plan-approval research starts only once the chosen permits change the outside.
  if(d?.status==='investigation_not_started'&&!d?.automation)return '<section class="cp-answer cp-answer-tier-contacts" aria-label="Approval answer for this project"><p class="cp-eyebrow">Approvals for this lot</p><p>Approval research hasn\'t started for this lot. It starts when you choose a permit that changes the outside of the house or the lot, or choose "Just evaluating".</p>'+detailsAction+'</section>';
- const head=(title,tone)=>'<section class="cp-answer'+(tone?' cp-answer-tier-'+tone:'')+'" aria-label="Approval answer for this project"><p class="cp-eyebrow">'+esc(title)+'</p>';
+ const head=(title,tone,chip)=>'<section class="cp-answer cp-answer-v2'+(tone?' cp-answer-tier-'+tone:'')+'" aria-label="Approval answer for this project"><div class="cp-ans-head"><span class="cp-ans-icon">'+I(tone==='contacts'?'users':tone==='sources'?'doc':'shield')+'</span><p class="cp-eyebrow">'+esc(title)+'</p>'+(chip?'<span class="cp-chip '+chip[1]+'">'+chip[0]+'</span>':'')+'</div>';
  const note=working?'<p class="cp-answer-note" role="status">Research is still running; this answer may change.</p>':(s?.superseded?'<p class="cp-answer-note" role="status">An updated answer is being checked against the sources.</p>':'');
  if(a){let next=s.missingEvidence?.[a.nextActionIndex],uncertain=esc(a.uncertainty),checked='';
   const t=next&&next.dependency==='copy_recovered_equivalence_unverified'?compareTarget(d,next):null,x=comparisonFor(project,t);
-  if(x){checked='<dt>Recorded copy</dt><dd>'+comparisonHtml(x)+'</dd>';
+  if(x){checked='<div class="cp-ans-row">'+I('doc')+'<div><p class="cp-ans-label">Recorded copy</p><div>'+comparisonHtml(x)+'</div></div></div>';
    // A full match settles this step; move on to the next open action.
    if(['recorded_copy_matches','recorded_copy_minor_differences'].includes(x.overall)){uncertain='Resolved for the compared sections: the recorded Entry '+esc(x.entry)+' matches the copy this answer relies on.';next=(s.missingEvidence||[]).find((m,i)=>i!==a.nextActionIndex&&m.dependency!=='copy_recovered_equivalence_unverified')||null;}}
   // Permit-specific line: the answer for the planned work, or an honest note that it is not specific yet.
   const intent=project?.application?.intent,planned=(s.plannedWork||[]).map(w=>String(w.typeId)).sort().join(','),wanted=(intent?.typeIds||[]).map(String).sort().join(',');
-  const forRow=a.forWork&&planned?'<dt>For your '+esc(intent&&planned===wanted?intent.label.toLowerCase():(s.plannedWork||[]).map(w=>w.label.toLowerCase()).join(' + '))+'</dt><dd>'+esc(a.forWork)+'</dd>':intent&&intent.typeIds?.length&&wanted!==planned&&intent.plan!=='evaluate'?'<dt>For your '+esc(intent.label.toLowerCase())+'</dt><dd>This answer covers the lot in general. Cornerpin updates it for your permits once approval research for them runs.</dd>':'';
-  return head('Approvals for this lot')+'<dl class="cp-answer-grid">'+forRow+'<dt>Who approves</dt><dd>'+esc(a.approver)+'</dd><dt>When</dt><dd>'+esc(a.when)+'</dd>'+checked+'<dt>Still uncertain</dt><dd>'+uncertain+'</dd>'+(next?'<dt>Next step</dt><dd>'+rolesHtml(roles(d,next,project))+'</dd>':'')+'</dl>'+note+'<p class="cp-answer-sources"><small>Sources: '+citeList(a.citations)+'</small></p>'+detailsAction+'</section>';}
+  const forLabel=a.forWork&&planned?'For your '+(intent&&planned===wanted?intent.label.toLowerCase():(s.plannedWork||[]).map(w=>w.label.toLowerCase()).join(' + ')):intent&&intent.typeIds?.length&&wanted!==planned&&intent.plan!=='evaluate'?'For your '+intent.label.toLowerCase():'';
+  const forText=a.forWork&&planned?esc(a.forWork):forLabel?'This answer covers the lot in general. Cornerpin updates it for your permits once approval research for them runs.':'';
+  const tile=(icon,label,html)=>'<div class="cp-ans-tile"><span class="cp-qicon">'+I(icon)+'</span><p class="cp-ans-label">'+label+'</p><p>'+html+'</p></div>';
+  const settled=/^Resolved/.test(uncertain);
+  return head('Approvals for this lot','',working?[I('clock')+'Research running','cp-chip-muted']:settled?[I('check')+'Checked','cp-chip-ok']:[I('alert')+'Not fully settled','cp-chip-open'])+
+   (forLabel?'<div class="cp-ans-lead"><p class="cp-ans-label">'+esc(forLabel)+'</p><p>'+forText+'</p></div>':'')+
+   '<div class="cp-ans-tiles">'+tile('users','Who approves',esc(a.approver))+tile('clock','When',esc(a.when))+'</div>'+checked+
+   '<div class="cp-ans-row cp-ans-uncertain">'+I(settled?'check':'alert')+'<div><p class="cp-ans-label">Still uncertain</p><p>'+uncertain+'</p></div></div>'+
+   (next?'<div class="cp-ans-next"><p class="cp-ans-label">'+I('arrow')+'Next step</p>'+rolesHtml(roles(d,next,project))+'</div>':'')+note+
+   '<div class="cp-ans-sources"><span class="cp-ans-label">Sources</span> '+citeList(a.citations)+'</div>'+detailsAction+'</section>';}
  const interps=(d?.interpretations||[]).filter(x=>(x.requirements||[]).length);
  if(interps.length){const byDoc=new Map();for(const x of interps){const k=x.source;if(!byDoc.has(k))byDoc.set(k,{title:x.documentTitle,source:k,pages:new Set(),count:0});const e=byDoc.get(k);for(const r of x.requirements){e.pages.add(r.page);e.count++;}}
   const docs=[...byDoc.values()].sort((x,y)=>y.count-x.count).slice(0,4);

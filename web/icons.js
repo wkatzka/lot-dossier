@@ -21,7 +21,15 @@ const P={
  send:'<path d="M21 3 3 10l7 3 3 7z"/><path d="m10 13 4-4"/>',
  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
  external:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
- arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ mountain:'<path d="m3 20 6-11 4 6 2-3 6 8z"/>',
+ droplet:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+ zap:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+ waves:'<path d="M2 8c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0M2 14c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0M2 20c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0"/>',
+ road:'<path d="M8 3 4 21M16 3l4 18M12 5v2M12 11v2M12 17v2"/>',
+ ruler:'<path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/>',
+ cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+ tree:'<path d="M12 22v-6M7 16h10l-3-4h2l-4-6-4 6h2z"/>'
 };
 function icon(name,cls=''){const d=P[name]||P.doc;return '<svg class="cp-icon'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'+d+'</svg>';}
 const api={icon,names:Object.keys(P)};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CpIcons=api;
