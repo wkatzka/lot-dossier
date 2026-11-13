@@ -59,13 +59,13 @@ User approved: **“Allow up to $10 today, then restore $5/day.”**
 
 ## Finish these steps
 
-- [ ] Inspect recovered ACC provisions and master Exhibit A directly, then fix generic whole-document reconciliation so stale single-chunk “not supplied” statements cannot survive when the relevant material is present.
-- [ ] Add semantic acceptance assertions for that defect, not merely counters/citation IDs. Keep explicit legal applicability and current-recording gaps.
-- [ ] Regenerate only the final synthesis from retained evidence/index after deploying the fix. The job is terminal; use a narrowly audited reset of only synthesis state with no document reinterpretation or source recrawl. Record the reason and retain the prior synthesis in history.
-- [ ] Run the production proof script again, manually check all five findings and four directions against originals, and ensure current Board/ACC/master/municipal stages are accurately distinguished.
-- [ ] Verify the actual signed-in UI and original-document links; save a final screenshot and replace the existing **partial** screenshot as final proof. Do not use `automatic-investigation-partial-production.png` as proof of finished synthesis QA.
-- [ ] Finalize the acceptance report and checklist, commit only relevant files, push, and verify the final Vercel deployment.
-- [ ] Report the automatic capability, actual limitations, observed first-run latency and current API spend honestly. This run required engineering recovery; it was not a clean uninterrupted first run.
+- [x] Inspect recovered ACC provisions and master Exhibit A directly, then fix generic whole-document reconciliation so stale single-chunk “not supplied” statements cannot survive when the relevant material is present.
+- [x] Add semantic acceptance assertions for that defect, not merely counters/citation IDs. Keep explicit legal applicability and current-recording gaps.
+- [x] Regenerate only the final synthesis from retained evidence/index after deploying the fix. The job is terminal; use a narrowly audited reset of only synthesis state with no document reinterpretation or source recrawl. Record the reason and retain the prior synthesis in history.
+- [x] Run the production proof script again, manually check all five findings and four directions against originals, and ensure current Board/ACC/master/municipal stages are accurately distinguished.
+- [~] (Anonymous device-saved workspace verified; signed-in account view not separately exercised.) Verify the actual signed-in UI and original-document links; save a final screenshot and replace the existing **partial** screenshot as final proof. Do not use `automatic-investigation-partial-production.png` as proof of finished synthesis QA.
+- [x] Finalize the acceptance report and checklist, commit only relevant files, push, and verify the final Vercel deployment.
+- [x] Report the automatic capability, actual limitations, observed first-run latency and current API spend honestly. This run required engineering recovery; it was not a clean uninterrupted first run.
 
 ## Tests and artifacts
 
@@ -79,3 +79,7 @@ Run `python3 build.py` after UI changes. Existing Vercel deployment follows main
 ## Scope and honest stopping criteria
 
 The user wants defensible answers, not crawler counts. Passing technical acceptance alone was insufficient here. Finish the remaining semantic and browser verification before declaring this capability accepted. Do not describe this as resolving all Cobabe evidence or the whole platform audit. Cobabe's separate missing executed agreement/current ARC authority and the failed real-user comprehension check remain open in `product-correctness-checklist.md`. No outreach, emails, purchases, or new credentials are authorized. Preserve all user decisions/approvals; this investigation only supplies evidence and conditional findings.
+
+## Status after continuation (2026-11-13 ~07:30 UTC)
+
+Completed per `automatic-investigation-production.md` → "Whole-document reconciliation and final semantic acceptance". Commits `43aef97`, `2a32fda`, `c444529`, `3797d23` plus docs. Production proof PASSES with semantic assertions. Residuals: termination direction partly redundant (entry 2628422 already on retrieved original); signed-in account view not separately exercised; Cobabe items unchanged.

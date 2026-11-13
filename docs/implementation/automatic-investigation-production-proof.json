@@ -1,12 +1,13 @@
 {
-  "verifiedAt": "2026-11-13T06:11:38.922Z",
+  "semanticAcceptance": "Stale-gap, lead-answer, recovered-exhibit, conditional-stage and execution-gap assertions passed",
+  "verifiedAt": "2026-11-13T07:13:13.227Z",
   "base": "https://lot-dossier-assistant.vercel.app",
   "automation": {
     "id": "ca12cf9a-c654-479a-a158-94be612b1523",
     "status": "complete_with_gaps",
     "phase": "finished",
     "createdAt": "2026-11-13T01:36:40.131477+00:00",
-    "updatedAt": "2026-11-13T06:10:56.06011+00:00"
+    "updatedAt": "2026-11-13T07:12:26.62849+00:00"
   },
   "target": {
     "lot": "68",
@@ -16883,17 +16884,25 @@
       "missingDocuments": [
         {
           "page": 45,
-          "quote": "other than those set forth in Exhibit B affecting activities on or use of the Private Amenities",
-          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
-          "identifier": "Exhibit B",
-          "description": "Use Restrictions and Rules referenced as the only ones the Association may promulgate affecting the Private Amenities; not on the supplied pages."
-        },
-        {
-          "page": 45,
           "quote": "upholding the Community-Wide Standard as it pertains to maintenance and the Design Guidelines",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Design Guidelines",
           "description": "Design Guidelines referenced in connection with the Community-Wide Standard; not supplied."
+        }
+      ],
+      "resolvedReferences": [
+        {
+          "page": 45,
+          "quote": "other than those set forth in Exhibit B affecting activities on or use of the Private Amenities",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+          "identifier": "Exhibit B",
+          "resolution": "recovered_in_same_original",
+          "description": "Use Restrictions and Rules referenced as the only ones the Association may promulgate affecting the Private Amenities; not on the supplied pages.",
+          "resolvedPage": 66,
+          "staleStatement": "Use Restrictions and Rules referenced as the only ones the Association may promulgate affecting the Private Amenities; not on the supplied pages.",
+          "resolutionQuote": "EXHIBIT B",
+          "resolvedEndPage": 70
         }
       ],
       "validationFailures": [],
@@ -17060,13 +17069,6 @@
           "description": "Master Declaration provisions referenced for approvals, including exterior construction compliance, and referenced as controlling over the Exhibit B rules."
         },
         {
-          "page": 74,
-          "quote": "(as Exhibit A to the Declaration may be amended from time to time)",
-          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
-          "identifier": "Exhibit A to the Declaration",
-          "description": "Land Use Plan, referenced as amendable and not supplied as text."
-        },
-        {
           "page": 66,
           "quote": "consistent with this Declaration and any Supplemental Declaration",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
@@ -17079,6 +17081,21 @@
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Articles",
           "description": "Articles of Incorporation, referenced for the initial Board, not supplied."
+        }
+      ],
+      "resolvedReferences": [
+        {
+          "page": 74,
+          "quote": "(as Exhibit A to the Declaration may be amended from time to time)",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+          "identifier": "Exhibit A to the Declaration",
+          "resolution": "recovered_in_same_original",
+          "description": "Land Use Plan, referenced as amendable and not supplied as text.",
+          "resolvedPage": 53,
+          "staleStatement": "Land Use Plan, referenced as amendable and not supplied as text.",
+          "resolutionQuote": "EXHIBIT A",
+          "resolvedEndPage": 65
         }
       ],
       "validationFailures": [],
@@ -18575,13 +18592,21 @@
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Recorded Supplemental Declarations",
           "description": "The Governing Documents include any Recorded Supplemental Declarations. None are supplied, including any covering Trappers Ridge Phase 4 Lot 68."
-        },
+        }
+      ],
+      "resolvedReferences": [
         {
           "page": 3,
           "quote": "A copy of the initial By-Laws is attached to this Declaration as Exhibit C.",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Exhibit C",
-          "description": "Initial By-Laws are referenced as an attachment and are not supplied."
+          "resolution": "recovered_in_same_original",
+          "description": "Initial By-Laws are referenced as an attachment and are not supplied.",
+          "resolvedPage": 71,
+          "staleStatement": "Initial By-Laws are referenced as an attachment and are not supplied.",
+          "resolutionQuote": "EXHIBIT C",
+          "resolvedEndPage": 87
         }
       ],
       "supportingEvidence": [
@@ -18763,13 +18788,6 @@
       "missingDocuments": [
         {
           "page": 6,
-          "quote": "The real property described in Exhibit A",
-          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
-          "identifier": "Exhibit A",
-          "description": "Legal description of the Property; needed to confirm whether Lot 68, Trappers Ridge at Wolf Creek PRUD Phase 4 is covered."
-        },
-        {
-          "page": 6,
           "quote": "by Recording one or more Supplemental Declarations,",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Supplemental Declarations",
@@ -18781,13 +18799,34 @@
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Design Guidelines",
           "description": "Guidelines with which work must comply under Article IV; not supplied."
+        }
+      ],
+      "resolvedReferences": [
+        {
+          "page": 6,
+          "quote": "The real property described in Exhibit A",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+          "identifier": "Exhibit A",
+          "resolution": "recovered_in_same_original",
+          "description": "Legal description of the Property; needed to confirm whether Lot 68, Trappers Ridge at Wolf Creek PRUD Phase 4 is covered.",
+          "resolvedPage": 53,
+          "staleStatement": "Legal description of the Property; needed to confirm whether Lot 68, Trappers Ridge at Wolf Creek PRUD Phase 4 is covered.",
+          "resolutionQuote": "EXHIBIT A",
+          "resolvedEndPage": 65
         },
         {
           "page": 6,
           "quote": "The initial restrictions and rules set forth in Exhibit B,",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Exhibit B",
-          "description": "Initial Restrictions and Rules; not supplied."
+          "resolution": "recovered_in_same_original",
+          "description": "Initial Restrictions and Rules; not supplied.",
+          "resolvedPage": 66,
+          "staleStatement": "Initial Restrictions and Rules; not supplied.",
+          "resolutionQuote": "EXHIBIT B",
+          "resolvedEndPage": 70
         }
       ],
       "supportingEvidence": [
@@ -19301,13 +19340,6 @@
       ],
       "missingDocuments": [
         {
-          "page": 15,
-          "quote": "approved in accordance with Article IV",
-          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
-          "identifier": "Article IV",
-          "description": "Article IV (architectural approval), which the page 14-15 clauses reference as the source of approval, was not on the supplied pages."
-        },
-        {
           "page": 14,
           "quote": "Supplemental Declaration or other declaration of covenants applicable to such",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
@@ -19320,6 +19352,21 @@
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "By-Laws",
           "description": "The By-Laws, which define the Class B Control Period and Board appointment, were not supplied."
+        }
+      ],
+      "resolvedReferences": [
+        {
+          "page": 15,
+          "quote": "approved in accordance with Article IV",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+          "identifier": "Article IV",
+          "resolution": "recovered_in_same_original",
+          "description": "Article IV (architectural approval), which the page 14-15 clauses reference as the source of approval, was not on the supplied pages.",
+          "resolvedPage": 9,
+          "staleStatement": "Article IV (architectural approval), which the page 14-15 clauses reference as the source of approval, was not on the supplied pages.",
+          "resolutionQuote": "Article IV",
+          "resolvedEndPage": 12
         }
       ],
       "supportingEvidence": [
@@ -19409,18 +19456,26 @@
       "authorityChanges": [],
       "missingDocuments": [
         {
-          "page": 18,
-          "quote": "long as Declarant owns any property described in Exhibit A of this Declaration (as it may be",
-          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
-          "identifier": "Exhibit A",
-          "description": "Exhibit A to the Declaration, referenced as describing the property subject to the Declaration. It was not supplied, so Lot 68, Trappers Ridge Phase 4 coverage is not confirmed."
-        },
-        {
           "page": 21,
           "quote": "of Article IV and the Design Guidelines from continuing or performing any further activities in",
           "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
           "identifier": "Design Guidelines",
           "description": "Design Guidelines referenced with Article IV, which govern architectural compliance. Their operative text was not supplied."
+        }
+      ],
+      "resolvedReferences": [
+        {
+          "page": 18,
+          "quote": "long as Declarant owns any property described in Exhibit A of this Declaration (as it may be",
+          "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+          "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf",
+          "identifier": "Exhibit A",
+          "resolution": "recovered_in_same_original",
+          "description": "Exhibit A to the Declaration, referenced as describing the property subject to the Declaration. It was not supplied, so Lot 68, Trappers Ridge Phase 4 coverage is not confirmed.",
+          "resolvedPage": 53,
+          "staleStatement": "Exhibit A to the Declaration, referenced as describing the property subject to the Declaration. It was not supplied, so Lot 68, Trappers Ridge Phase 4 coverage is not confirmed.",
+          "resolutionQuote": "EXHIBIT A",
+          "resolvedEndPage": 65
         }
       ],
       "supportingEvidence": [
@@ -22173,101 +22228,10 @@
     }
   ],
   "synthesis": {
-    "version": 1,
+    "version": 2,
     "findings": [
       {
-        "text": "Practical answer: nothing supplied shows that any approval has been obtained. The municipal side and the private HOA/DRB side are separate tracks. The city checklist item is conditional on work type. If the work is a single-family dwelling, duplex or townhouse, it lists a water will-serve letter or well permit and a sewer will-serve letter or septic approval at submission. Inspections come later and depend on the work: footing, foundation, four-way (rough), insulation, final.",
-        "status": "conditional_source_synthesis",
-        "citations": [
-          {
-            "page": 2,
-            "quote": "Water Company Will Serve Letter or Approved Well Permit",
-            "title": "Ogden Valley City Building Permit Submission Requirements",
-            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
-          },
-          {
-            "page": 2,
-            "quote": "Sewer Company Will Serve Letter or Approved Septic",
-            "title": "Ogden Valley City Building Permit Submission Requirements",
-            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
-          },
-          {
-            "page": 1,
-            "quote": "Ogden Valley City",
-            "title": "Ogden Valley City Building Permit Submission Requirements",
-            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
-          },
-          {
-            "page": 1,
-            "quote": "The footing inspection shall be made after the excavations are complete, forms are set, and reinforcing is in place and suspended.",
-            "title": "Beacon Code Consultants Required Inspections",
-            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
-          },
-          {
-            "page": 2,
-            "quote": "A power clearance will not be given until the four-way inspection has passed.",
-            "title": "Beacon Code Consultants Required Inspections",
-            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
-          }
-        ],
-        "limitations": "The proposed work is unknown, so these items may not apply. The checklist does not name the lot, and the will-serve providers are generic. The inspection list does not address permit submission or issuance, and the pages do not name Ogden Valley City, the parcel or the subdivision. The city's current checklist should be confirmed."
-      },
-      {
-        "text": "Trappers Ridge coverage: the recorded First Amendment (Weber County Recorder stamp, Entry 3277834) has an Exhibit A that lists Lots 46 through 68 of Phase 4. This supports Lot 68 being within the Trappers Ridge declaration that the amendment amends. That declaration is identified there as recorded December 17, 2018, Entry 2957404.",
-        "status": "conditional_source_synthesis",
-        "citations": [
-          {
-            "page": 6,
-            "quote": "All of Lots 46 through 68 and all Common Area as shown on Trappers Ridge at Wolf Creek",
-            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
-            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
-            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
-          },
-          {
-            "page": 1,
-            "quote": "3277834 PG 1 OF 8",
-            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
-            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
-            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
-          },
-          {
-            "page": 1,
-            "quote": "December 17, 2018 as Entry No. 2957404",
-            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
-            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
-            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
-          },
-          {
-            "page": 78,
-            "quote": "executed by its duly authorized o fficers on the ____day of",
-            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
-            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
-            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
-          },
-          {
-            "page": 76,
-            "quote": "This Declaration shall take effect immediately upon recording.",
-            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association (pages 60-79)",
-            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
-            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
-          },
-          {
-            "page": 29,
-            "quote": "in advance and in writing",
-            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
-            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
-            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
-          }
-        ],
-        "limitations": "The online 2018 Amended and Restated Declaration copy has a blank execution date, no signatures and no recording stamp, and it takes effect on recording. Citing the entry number establishes the reference, not that the unsigned copy is identical to the recorded instrument. The Second Amendment copy is an unsigned draft."
-      },
-      {
-        "text": "Trappers Ridge approvals are a private Board track. The unsigned online copy says the Board's written approval is needed before a new dwelling is commenced or an exterior change is made. It separately names the ACC for some items, and the Bylaws refer to a Design Review Board, so the reviewer is not reconciled. This Board/ACC is distinct from the Wolf Creek master DRB. The Trappers Ridge Declarant is Eden Village, LLC, not the master Declarant.",
+        "text": "If the work is a new Dwelling or new Owner Improvement/Amenity, the Trappers Ridge Declaration says construction may not commence until the builder has first obtained the Trappers Ridge Board's written approval of the plans and specifications. Exterior changes to a Dwelling or changes to an Owner Improvement/Amenity need the Board's prior written approval, and a Vacant Lot owner needs the Board's prior written consent before placing any improvement. This is a private gate on commencing construction, and the quotations do not tie it to permit submission. If the master documents also cover the lot, the 2010 Wolf Creek DRB Guidelines add a separate DRB application and approval before activities commence, and DRB review before submission to the County. The municipal permit stage is separate: Ogden Valley City's checklist asks for will-serve letters only for single-family, duplex or townhouse projects.",
         "status": "conditional_source_synthesis",
         "citations": [
           {
@@ -22285,16 +22249,79 @@
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           },
           {
-            "page": 29,
-            "quote": "if the temporary or permanent \nconstru ction, placement, or storage of the Owner Improvement/Amenity was not approved by the \nACC or the   Board in advance and in writing.",
+            "page": 31,
+            "quote": "Accordingly, the Owner \nof any Vacant Lot shall not construct , erect, install, maintain or   place on his or her Vacant Lot any \nimprovement of any kind whatsoever   (including, without limitation, any Dw elling or any Owner \nImprovement/Amenity )   without the   Board’s   prior written consent.",
             "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
             "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           },
           {
-            "page": 11,
-            "quote": "1.1   “ ACC ” means and refers to the Architectural Control Committee as more particularly",
-            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association (Exhibits A-C and Bylaws, pages 80-100)",
+            "page": 42,
+            "quote": "No activities shall commence on any portion of an Owner’s property until an application for approval has been submitted to and finally approved by the DRB",
+            "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
+            "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
+          },
+          {
+            "page": 7,
+            "quote": "the Design Review Board (hereinafter referred to as the DRB) will review and approve all proposed development plans and submittal documents prior to submission to the County.",
+            "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
+            "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
+          },
+          {
+            "page": 2,
+            "quote": "Water Company Will Serve Letter or Approved Well Permit",
+            "title": "Ogden Valley City Building Permit Submission Requirements",
+            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+          },
+          {
+            "page": 2,
+            "quote": "Sewer Company Will Serve Letter or Approved Septic",
+            "title": "Ogden Valley City Building Permit Submission Requirements",
+            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+          }
+        ],
+        "limitations": "The Trappers Ridge Declaration copy is unsigned and its recording is not shown on that copy. The Design and Construction Guidelines were not supplied. Master coverage of Lot 68 is unresolved. The DRB Guidelines refer to the County, not Ogden Valley City, so they do not set city intake policy. The city checklist names neither the lot nor the subdivision, and the proposed work is unknown."
+      },
+      {
+        "text": "Inside Trappers Ridge, the bodies named in different clauses have different roles. The ACC drafts the Design and Construction Guidelines and the Board approves them by majority. The ACC is appointed by the Board and may recommend on enforcement, while the Board alone enforces. Section 6.4 gives plan approval to the Board. Reviewer identity is unresolved only for Owner Improvements/Amenities: Section 5.7.4 says approval by the 'ACC or the Board', and the Bylaws give the Board power to appoint a 'Design Review Board' while the Declaration defines an ACC. No current appointees are shown.",
+        "status": "conditional_source_synthesis",
+        "citations": [
+          {
+            "page": 30,
+            "quote": "6 .2   Design and Construction   Guidelines",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 30,
+            "quote": "6 .3   Architectural Control Committee",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 32,
+            "quote": "6 .8   Enforcement/ Fines",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 31,
+            "quote": "construction of a ny   new Dwelling   or any new Owner I mprovements/Amenities   may not be \ncommenced   unless and until the builder of   the   new Dwelling   or new Owner Improvement/Amenity \nhas first obtained   the Board’s written approval of the   plans and specifications of the   new Dwelling   or \nOwner Improvement/Amenity .",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 29,
+            "quote": "if the temporary or permanent \nconstru ction, placement, or storage of the Owner Improvement/Amenity was not approved by the \nACC or the   Board in advance and in writing.",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
             "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           },
@@ -22306,29 +22333,106 @@
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           },
           {
-            "page": 13,
-            "quote": "Eden Village, LLC, a Utah limited liability company",
-            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "page": 11,
+            "quote": "1.1   “ ACC ” means and refers to the Architectural Control Committee as more particularly",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association (Exhibits A-C and Bylaws, pages 80-100)",
             "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           }
         ],
-        "limitations": "The Design and Construction Guidelines and ACC provisions are not supplied. No current ACC or DRB appointees are shown. Execution and recording of the 2018 copy are not established. This is not a municipal permit."
+        "limitations": "This rests on an unsigned Declaration copy. The Guidelines and any appointment records were not supplied. The Trappers Ridge ACC, DRB and Board are not the same as the Wolf Creek master DRB or Board."
       },
       {
-        "text": "Wolf Creek master authority: under the 2002 Master Declaration, Declarant (Wolf Creek Properties, LC) had sole architectural jurisdiction until delegation or termination. On termination, the Association acting through the DRB assumes jurisdiction. A March 2013 instrument terminates that master Declarant's rights, including Article IV, and ends Class B status. It leaves the other Declaration terms in force. That termination is not carried over to Eden Village or the Trappers Ridge Declaration.",
+        "text": "The supplied online Amended and Restated Declaration is unsigned, has a blank execution day and month, and takes effect only on recording, and this copy shows no recording stamp. A recorded First Amendment bears a Weber County Recorder stamp and Entry 3277834, and becomes effective on recordation. It refers to the Declaration recorded December 17, 2018 as Entry 2957404 and lists in its Exhibit A all of Lots 46 through 68 and the Common Area of Trappers Ridge Phase 4. That supports Lot 68 being within the Trappers Ridge project as described in that amendment. The Second Amendment copy is an unsigned draft and should not be treated as operative.",
         "status": "conditional_source_synthesis",
         "citations": [
           {
-            "page": 10,
-            "quote": "Unless and until such time as Declarant delegates all or a portion of its reserved rights to the DRB or Declarant’s rights under this Article terminate, Declarant shall have sole jurisdiction over architectural matters.",
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "page": 78,
+            "quote": "executed by its duly authorized o fficers on the ____day of",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 76,
+            "quote": "This Declaration shall take effect immediately upon recording.",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association (pages 60-79)",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "When recorded return to:",
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "10389c0d73cc30d408b13fc76bb216a252e53dac5ea9bc22b5c9fa79baa7f7c7",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "3277834 PG 1 OF 8",
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "LEANN H KILTS, WEBER CTY. RECORDER",
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "December 17, 2018 as Entry No. 2957404",
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
+          },
+          {
+            "page": 6,
+            "quote": "All of Lots 46 through 68 and all Common Area as shown on Trappers Ridge at Wolf Creek",
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
+          },
+          {
+            "page": 5,
+            "quote": "This Amendment shall become effective immediately upon its recordation in the official records of the Weber County Recorder’s Office.",
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "b8967517c1e638a8074a4cbf91679bb7a6265a512e23d829ba857b15eed45bda",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
+          },
+          {
+            "page": 6,
+            "quote": "All of Lots 46 through 68 and all Common Area as shown on Trappers Ridge at Wolf Creek P.R.U.D., Phase 4, which was recorded on April 28, 2005, as Entry No. 2099635 in Book 61 at Page 60 of the Official Records of the Recorder's Office of Weber County, State of Utah .",
+            "title": "Second Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "a21765e8967b91addfca64365686a82cb46905dc07d43927f86a128d9afe2e9c",
+            "source": "https://web.archive.org/web/20240715031127id_/https://trappersridgehoa.com/wp-content/uploads/2024/01/Second-Amendment-to-Amended-Restated-Trappers-Ridge-CCRs-Reinvestment-FeeAug-2023.pdf"
+          },
+          {
+            "page": 4,
+            "quote": "IN WITNESS WHEREOF, the Board has caused this Second Amendment to be executed, on behalf of the Association, by its duly executed President and Secretary on the day of , 20 23 .",
+            "title": "Second Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "sha256": "a21765e8967b91addfca64365686a82cb46905dc07d43927f86a128d9afe2e9c",
+            "source": "https://web.archive.org/web/20240715031127id_/https://trappersridgehoa.com/wp-content/uploads/2024/01/Second-Amendment-to-Amended-Restated-Trappers-Ridge-CCRs-Reinvestment-FeeAug-2023.pdf"
+          }
+        ],
+        "limitations": "A later instrument citing a recording number establishes the reference, not that the unsigned online copy is textually identical to the recorded Declaration. The recording date of the First Amendment is not shown in the excerpts. Exhibit B lists Lot 68 without a phase."
+      },
+      {
+        "text": "On the master layer, the Wolf Creek Declaration (made as of May 15, 2002; recorded Entry 1882728) gave the Declarant (Wolf Creek Properties, LC) architectural jurisdiction under Article IV and allowed delegation to a master DRB appointed by the master Board. A March 2013 Termination of Declarant Rights terminates the Declarant's Article IV, VI and X rights and says all other Declaration terms remain in force. Under the quoted succession clause, the master Association, acting through the DRB, then assumes architectural jurisdiction. That is a master-scope result only. The 2010 DRB Guidelines also require Master Developer review of DRB approvals, and the sources do not show whether that step survives the termination. Master coverage of Lot 68 is not established: master Exhibit A and the termination's Exhibit A are metes-and-bounds and parcel-number descriptions that do not name the lot or subdivision, and no Supplemental Declaration was supplied.",
+        "status": "conditional_source_synthesis",
+        "citations": [
+          {
+            "page": 1,
+            "quote": "is made as of May 15, 2002, by WOLF CREEK PROPERTIES, LC, a Utah limited liability company (“Declarant”).",
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort (Weber County Recorder Entry 1882728, Book 2275 Page 450)",
             "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
           },
           {
             "page": 10,
-            "quote": "Upon delegation by Declarant or upon expiration or termination of Declarant’s rights under this Article, the Association, acting through the DRB, shall assume jurisdiction over architectural matters.",
+            "quote": "Declarant may from time to time, but shall not be obligated to, delegate all or a portion of its reserved rights under this Article to (i) a design review board appointed by the Board (the “Design Review Board” or “DRB™), or (ii) a committee comprised of architects, engineers, or other persons who may or may not be Members of the Association.",
             "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
             "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
@@ -22348,39 +22452,25 @@
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf"
           },
           {
-            "page": 6,
-            "quote": "The real property described in Exhibit A, together with such additional property as is subjected to this Declaration in accordance with the provisions hereof in the future by Recording one or more Supplemental Declarations,",
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort (Weber County Recorder Entry 1882728, Book 2275 Page 450)",
-            "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
-          },
-          {
-            "page": 30,
-            "quote": "Declarant may from time to time subject to the provisions of this Declaration any additional property by Recording a Supplemental Declaration describing the additional property to be subjected.",
+            "page": 10,
+            "quote": "Upon delegation by Declarant or upon expiration or termination of Declarant’s rights under this Article, the Association, acting through the DRB, shall assume jurisdiction over architectural matters.",
             "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
             "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
-          }
-        ],
-        "limitations": "The master Declaration's Exhibit A and any Supplemental Declaration covering Phase 4 are not supplied, so master coverage of Lot 68 is not established. The termination's recording status and date are partly OCR-garbled, and the delegation instruments and current DRB appointees are not shown."
-      },
-      {
-        "text": "The 2010 Wolf Creek Design Guidelines say DRB approval is needed before activities commence and before plans go to the County, and that DRB decisions are subject to Master Developer review. If those guidelines apply to Lot 68, DRB approval would be a private step before plan submission. How that works after the 2013 termination of Declarant rights is unresolved.",
-        "status": "conditional_source_synthesis",
-        "citations": [
-          {
-            "page": 42,
-            "quote": "No activities shall commence on any portion of an Owner’s property until an application for approval has been submitted to and finally approved by the DRB",
-            "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
-            "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
           },
           {
-            "page": 7,
-            "quote": "the Design Review Board (hereinafter referred to as the DRB) will review and approve all proposed development plans and submittal documents prior to submission to the County.",
-            "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
-            "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
+            "page": 10,
+            "quote": "The DRB, when appointed, shall consist of at least three, but not more than seven, persons who shall serve and may be removed and replaced in the Board’s discretion.",
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          },
+          {
+            "page": 11,
+            "quote": "Except as otherwise specifically provided in the Design Guidelines, no activities shall commence on any portion of the Project until an application for approval has been submitted to and approved by the Reviewer.",
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
           },
           {
             "page": 43,
@@ -22395,17 +22485,99 @@
             "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
             "sha256": "d1a4679751d03b47b5f5e9c347ad020e7a7c8b89487bfd4972f779b97aa4d87d",
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
+          },
+          {
+            "page": 53,
+            "quote": "EXHIBIT A",
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort (recorded Oct. 18, 2002, Entry 1882728)",
+            "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          },
+          {
+            "page": 4,
+            "quote": "EXHIBIT A",
+            "title": "Termination of Declarant Rights Under Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "sha256": "55418659da0baa2968531c30a4965c1c5f55988f1378e18369a22d62c7c70b0d",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf"
+          },
+          {
+            "page": 30,
+            "quote": "additional property by Recording a Supplemental Declaration describing the additional property",
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "sha256": "c0d1021ce27731e086545cade74b9177382b8fabfc427fabb464397d83f1c054",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
           }
         ],
-        "limitations": "The guidelines do not name Phase 4 or Lot 68. Their submission language refers to Weber County, so it does not establish Ogden Valley City's current intake policy. They may have been amended. Master Developer review is stated without timing and depends on the Master Declaration."
+        "limitations": "The termination is dated 'as of' March 2013 and its recording entry is not shown in the excerpts. No DRB appointment or delegation instrument is shown. The master Exhibit A and termination Exhibit A were recovered but do not establish coverage of this lot, and a plat comparison is needed. Master documents are not tied to the Trappers Ridge Board or ACC."
+      },
+      {
+        "text": "Municipal items come later and apply only by work type. The will-serve letters or approved well or septic items belong to the permit submission for single-family, duplex or townhouse projects. The Beacon inspection list applies stage by stage and only if the work includes those elements, for example footings, foundation, insulation, or permanent power, and approved plans must be on site for inspections. Inspections follow permit issuance and construction start, so they are not a precondition to private approval.",
+        "status": "conditional_source_synthesis",
+        "citations": [
+          {
+            "page": 2,
+            "quote": "Water Company Will Serve Letter or Approved Well Permit",
+            "title": "Ogden Valley City Building Permit Submission Requirements",
+            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+          },
+          {
+            "page": 2,
+            "quote": "Sewer Company Will Serve Letter or Approved Septic",
+            "title": "Ogden Valley City Building Permit Submission Requirements",
+            "sha256": "1aff2d47649aa06e841518ece46e7413f20a2955c2aefc8ab862fe1af6c56064",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "THE APPROVED PLANS MUST BE ON-SITE FOR ALL INSPECTIONS",
+            "title": "Beacon Code Consultants Required Inspections",
+            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "The footing inspection shall be made after the excavations are complete, forms are set, and reinforcing is in place and suspended.",
+            "title": "Beacon Code Consultants Required Inspections",
+            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          },
+          {
+            "page": 1,
+            "quote": "The foundation inspection shall be made when forms, reinforcing steel, structural straps, anchor bolts, hold-downs, embeds, and piers are in place prior to placing concrete.",
+            "title": "Beacon Code Consultants Required Inspections",
+            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          },
+          {
+            "page": 2,
+            "quote": "The inspection is required after wall insulation has been installed and prior to placement of any drywall.",
+            "title": "Beacon Code Consultants Required Inspections",
+            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          },
+          {
+            "page": 2,
+            "quote": "The final inspection shall be made when the building is complete and ready for occupancy.",
+            "title": "Beacon Code Consultants Required Inspections",
+            "sha256": "78284d9feb9425bc119694da845d5eb36583910aa5312a31e0c1ce4d0cf908b1",
+            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
+          }
+        ],
+        "limitations": "The municipal sources do not name Lot 68, the parcel or the subdivision, and applicability depends on the work type and current city checklist. Neither source addresses the private approvals."
       }
     ],
-    "checkedAt": "2026-11-13T06:10:53.852Z",
+    "checkedAt": "2026-11-13T07:12:20.149Z",
     "limitation": "Explanation of the retrieved originals, not certification of current parcel applicability or approval. Missing instruments and source coverage remain open.",
+    "semanticChecks": {
+      "passed": true,
+      "attempts": 1,
+      "rejectedDrafts": 0
+    },
     "missingEvidence": [
       {
-        "action": "Locate the recorded Entry 2957404 instrument cited by the recorded First Amendment, and any published Design and Construction Guidelines or ACC procedures. Use them to confirm the approving body, the reviewer's current authority and the approval timing in place of the unsigned online copy.",
-        "document": "Executed and recorded Trappers Ridge Amended and Restated Declaration (Entry 2957404) and the Design and Construction Guidelines",
+        "action": "Pull the recorded instrument from the Weber County Recorder's public records. Confirm its execution date, recording stamp and wording of Sections 6.4, 5.7.4 and 6.3, and compare it with the unsigned online copy rather than assuming the two are identical.",
+        "document": "Recorded and executed Amended and Restated Declaration, Weber County Entry 2957404 (recorded December 17, 2018)",
         "citations": [
           {
             "page": 1,
@@ -22426,6 +22598,27 @@
             "page": 31,
             "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
             "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          }
+        ]
+      },
+      {
+        "action": "Search the Trappers Ridge HOA public document pages for the Guidelines and any recorded or adopted appointment of the ACC or a Design Review Board. This would settle whether the Board, the ACC or a DRB reviews owner plans under Section 5.7.4 and Section 6.4.",
+        "document": "Trappers Ridge Design and Construction Guidelines and any Board or ACC/DRB appointment or approval-procedure resolution",
+        "citations": [
+          {
+            "page": 30,
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 29,
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
+          },
+          {
+            "page": 96,
+            "title": "Amended and Restated Declaration of Covenants, Conditions, and Restrictions for Trappers Ridge Homeowners Association (Exhibits A-C and Bylaws, pages 80-100)",
+            "source": "https://web.archive.org/web/20201205084018id_/https://trappersridgehoa.com/wp-content/uploads/2019/01/FINAL-Trappers-Ridge-CCRs-Bylaws-10-16-18-3.pdf"
           },
           {
             "page": 11,
@@ -22435,40 +22628,35 @@
         ]
       },
       {
-        "action": "Check the Master Declaration's Exhibit A and recorded Supplemental Declarations to see whether Phase 4 Lot 68 is covered. Master DRB and Declarant provisions apply only if it is.",
-        "document": "Wolf Creek Master Declaration Exhibit A and any recorded Supplemental Declaration covering Trappers Ridge Phase 4",
+        "action": "Search Weber County recorded instruments for a Supplemental Declaration covering Phase 4. Compare the Phase 4 plat with the master Exhibit A and termination Exhibit A metes-and-bounds and parcel-number descriptions to see whether Lot 68 falls inside them.",
+        "document": "Recorded Supplemental Declaration, if any, subjecting Trappers Ridge Phase 4 to the Wolf Creek master Declaration, and the Phase 4 plat (Book 61, Page 60, Entry 2099635)",
         "citations": [
           {
+            "page": 53,
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort (recorded Oct. 18, 2002, Entry 1882728)",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          },
+          {
+            "page": 4,
+            "title": "Termination of Declarant Rights Under Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/Wolf-Creek-PropertiesTermination-of-Declarancy.pdf"
+          },
+          {
+            "page": 30,
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          },
+          {
             "page": 6,
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort (Weber County Recorder Entry 1882728, Book 2275 Page 450)",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
-          },
-          {
-            "page": 30,
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
-          },
-          {
-            "page": 30,
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
-          },
-          {
-            "page": 2,
-            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+            "title": "First Amendment to Amended and Restated Declaration of Covenants, Conditions and Restrictions for Trappers Ridge Homeowners Association",
+            "source": "https://web.archive.org/web/20240715041149id_/https://trappersridgehoa.com/wp-content/uploads/2023/04/2022-Trappers-Ridge-CCR-1st-Amendment.pdf"
           }
         ]
       },
       {
-        "action": "Find the current version of the Design Guidelines and the attached Application Checklist, and any applicable Neighborhood Declaration. Check whether Master Developer review and DRB approval still operate after the March 2013 termination.",
-        "document": "Current Wolf Creek Design Guidelines, Application Checklist and any Neighborhood Declaration",
+        "action": "Obtain the termination with its recording stamp and entry number from the Weber County Recorder's public records. Look for a master Association record of DRB appointment, and for any later instrument addressing the Master Developer review step in the Guidelines.",
+        "document": "Recorded copy of the 2013 Termination of Declarant Rights, and any master Board instrument appointing the DRB",
         "citations": [
-          {
-            "page": 43,
-            "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
-            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
-          },
           {
             "page": 2,
             "title": "Termination of Declarant Rights Under Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
@@ -22480,37 +22668,23 @@
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
           },
           {
-            "page": 42,
+            "page": 10,
+            "title": "Master Declaration of Covenants, Conditions and Restrictions for Wolf Creek Resort",
+            "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/10/1882728-18-Oct-2002.pdf"
+          },
+          {
+            "page": 43,
             "title": "Wolf Creek Utah Design Review Board Design Guidelines (Revised December 21, 2010)",
             "source": "https://wolfcreekresortmasterhoa.com/wp-content/uploads/2016/07/Wolf_Creek_Design_Guidelines_Revised_12-21-10.pdf"
           }
         ]
-      },
-      {
-        "action": "Review the city's current published submission checklist at the cited source against the actual project type. Also locate the zoning ordinance and adopted codes that the inspection list refers to without naming them.",
-        "document": "Current Ogden Valley City permit submission checklist for the actual work type, and the referenced zoning ordinance and adopted codes",
-        "citations": [
-          {
-            "page": 2,
-            "title": "Ogden Valley City Building Permit Submission Requirements",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/09/OgdenValley_PermitSubmissionRequirements.pdf"
-          },
-          {
-            "page": 1,
-            "title": "Beacon Code Consultants Required Inspections",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
-          },
-          {
-            "page": 2,
-            "title": "Beacon Code Consultants Required Inspections",
-            "source": "https://ogdenvalley.gov/wp-content/uploads/2026/05/Beacon_Code_Required_Inspections_List_UPDATED.pdf"
-          }
-        ]
       }
-    ]
+    ],
+    "inventoryDocuments": 26,
+    "recoveredReferences": 7
   },
   "errors": [],
-  "assetSha256": "a6c4535eaf8c3f7a3779d1077fbe25c098e197acc606d124250922e807343349",
+  "assetSha256": "eb402c658a9c645189fd95121f008da933618f027ddc44fa0ac7b78185490ac0",
   "workerRejectsAnonymous": true,
   "limits": "A finished bounded automated investigation is not exhaustive public search or proof of current lot-specific private approval authority. Original quotations are independently checked separately."
 }
