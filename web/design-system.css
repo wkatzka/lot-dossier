@@ -381,3 +381,4 @@ body details.cp-fine[open]>summary::after{content:none}
 .cp-intent-tile:hover,.cp-intent-tile:focus-within{border-color:var(--cp-primary)}
 .cp-clamp:not(.cp-clamp-open){display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 #project-workspace button.cp-more,html[data-theme] #project-workspace button.cp-more{border:0;background:none;padding:0;margin:-4px 0 10px;color:var(--cp-primary);font-weight:600;font-size:.88rem;box-shadow:none}
+#rv-body button.cp-more{border:0;background:none;padding:0;margin:-4px 0 10px;color:var(--cp-primary);font-weight:600;font-size:.88rem;box-shadow:none;cursor:pointer}

@@ -388,7 +388,7 @@
     if (!f.length) return [];
     var a = f[0].attributes; ctx.facts.prop_desc = a.PROP_DESC || ''; ctx.facts.assessed = a.TOT_MARKET; ctx.facts.owner = (a.NAME_ONE || '').trim();
     return [F('land', 'Assessor', 'ok', a.TaxYear + ' assessed market value $' + fmt(a.TOT_MARKET || 0),
-      'Owner of record: ' + (a.NAME_ONE || '').trim() + '. Property type: ' + a.PROP_DESC + '. Plat: ' + a.SUB_PHASE +
+      'Owner of record: ' + (a.NAME_ONE || '').trim() + '. Property type: ' + a.PROP_DESC + (a.SUB_PHASE ? '. Plat: ' + a.SUB_PHASE : '') +
       '. Assessed value lags the market; use it to sanity-check asking price, not as an appraisal. The county parcel page lists recorded documents and links the subdivision plat images.',
       'Weber County parcel record', 'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=' + encodeURIComponent(ctx.parcel.id))];
   };
