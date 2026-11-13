@@ -36,6 +36,8 @@ assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '
   }
  });
  assert.equal(identity.municipality,'Ogden Valley City');assert.equal(identity.municipalityAmbiguous,false);
+ const dynamicProfile=await P.profile({...target,countyRecord:{url:'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=000000002'}},{request:async()=>new Response('<html><body><a href="https://new-neighborhood.org/documents">Example Ridge HOA</a><a href="https://127.0.0.1/private">Example Ridge private</a></body></html>',{status:200,headers:{'content-type':'text/html'}})});
+ assert(dynamicProfile.hosts.includes('new-neighborhood.org'));assert(!P.HOSTS.includes('new-neighborhood.org'));assert(dynamicProfile.seeds.some(s=>s.url==='https://new-neighborhood.org/documents'));assert(!dynamicProfile.hosts.includes('127.0.0.1'));assert(dynamicProfile.discoveredHosts[0].source.includes('neighborhood-hoas'));
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
  let saved,claimCount=0;
  try{
