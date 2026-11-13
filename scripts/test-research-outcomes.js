@@ -28,7 +28,19 @@ const html=require('../web/title-research-view').investigationPanel({investigati
 assert(html.includes('Listed public routes checked'));assert(html.includes('Recorder document desk'));assert(html.includes('Custody of the missing document has not been established'));assert(!html.includes('<details'));
 const unknown=require('../lib/discovery-index').lookup('Weber','never-configured',now);assert.equal(unknown.status,'investigation_not_started');assert.equal(unknown.contactFallbackEligible,false);assert(!JSON.stringify(unknown).includes('Cobabe'));
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
-(async()=>{const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'outcomes-'));try{
+(async()=>{
+ const {JSDOM}=require('jsdom');
+ const dom=new JSDOM('<main id="fixture"></main>',{url:'https://example.org',runScripts:'outside-only'}),w=dom.window;
+ w.EvidenceLedger={discover:()=>({records:[],sources:[],gaps:[],runs:[]}),status:()=>({discovered:0,originals:0,open:0})};
+ w.eval(fs.readFileSync(path.join(__dirname,'../web/title-research-view.js'),'utf8'));
+ w.eval(fs.readFileSync(path.join(__dirname,'../web/research-workspace.js'),'utf8'));
+ const legacy={property:{county:'Weber',parcelId:'000000001'},report:{facts:{}},documents:[]},before=JSON.stringify(legacy);
+ w.document.getElementById('fixture').innerHTML=w.ResearchWorkspace.render('evidence',legacy);
+ assert(w.document.getElementById('research-outcomes'),'Older saved reports must always mount the live panel');
+ w.fetch=async()=>({ok:true,json:async()=>unknown});await w.TitleResearchView.mountInvestigation(legacy);
+ assert(w.document.body.textContent.includes('Background investigation has not started'));
+ assert.equal(JSON.stringify(legacy),before,'Live status must not rewrite the saved report');dom.window.close();
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'outcomes-'));try{
  const p={id:'fixture',scope:'test',routes:['association_libraries'],hosts:['example.org'],seeds:[],terms:['rule']};
  const s=D.create(p),j=D.add(s,{kind:'wordpress',route:'association_libraries',url:'https://example.org',term:'1234567',resource:'media',page:1});
  await D.processJob(s,p,j,tmp,{fetch:async url=>({url,status:200,type:'application/json',bytes:Buffer.from('[]'),retrievedAt:checkedAt})});assert.equal(j.searchReceipt.count,0);assert(j.searchReceipt.paginationComplete);
