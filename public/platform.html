@@ -3095,6 +3095,8 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
   };
 
   C.check_ccr_permits = async function (ctx) {
+    // Which permits the fee estimate was made for (research-plan re-runs this step when they change).
+    ctx.facts.feePermits = ctx.permits ? (ctx.permits.indexOf('*') !== -1 ? '*' : ctx.permits.map(String).filter(function (t, i, a) { return a.indexOf(t) === i; }).sort().join(',')) : '';
     var a = ctx.parcel.attrs, sub = a.SUBDIV_NAME, pud = /PUD/i.test(ctx.facts.prop_desc || ''), out = [], kb = ctx.facts.kb;
     var parcelPage = ctx.parcel.county === 'Weber' ? 'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=' + encodeURIComponent(ctx.parcel.id) : a.BOUNDARY_SRC;
     if (sub) {
@@ -3120,6 +3122,15 @@ const api={predict,diagnostics,subject};if(typeof module!=='undefined'&&module.e
         'As a floor, Weber County\'s published schedule (County Code 12-3-6 and 12-3-8) on ' + (hasPlan ? 'this plan (' + fmt(hs) + ' sq ft house' + (gs ? ' + ' + fmt(gs) + ' sq ft garage' : '') + ')' : 'a typical ' + fmt(hs) + ' sq ft house with an ' + fmt(gs) + ' sq ft garage') +
         ' gives a valuation of ' + money2(wb.valuation) + ' (ICC ' + BVD.asOf + ' rates: $' + BVD.r3 + '/sq ft house, $' + BVD.garage + '/sq ft garage), a permit fee of ' + money2(wb.permit) +
         ', plan review ' + money2(wb.planReview) + ', trade permits $350 and the 1% state surcharge: about ' + money2(wb.total) + '. Expect the city\'s total to be somewhat higher.';
+      // The estimate is for a new house. When the planned permits add no dwelling, say so instead of quoting it.
+      var planned = ctx.permits && ctx.permits.indexOf('*') === -1 ? ctx.permits.map(String) : null;
+      if (planned && planned.indexOf('1') === -1 && planned.indexOf('102') === -1) {
+        var types = ((window.LR_DATA && window.LR_DATA.cityInspect && window.LR_DATA.cityInspect.types) || []), work = planned.map(function (t) { var x = types.filter(function (y) { return y.value === t; })[0]; return x ? x.label.toLowerCase() : 'this work'; }).join(' + ');
+        out.push(F('permits', 'Permit & impact fees', 'verify', 'Fees for your ' + work + ': ask the building department',
+          'Cornerpin\'s fee estimate is for a new house and does not apply to a ' + work + '. Building permit and plan review fees follow ' + (pf ? pf.adopted : 'the city\'s fee schedule') + ' on the value of the work. The city\'s impact fees (' + list + '; ' + kb.impact[0][2] + '). The storm-drain fee is charged per unit of impervious area, so ask whether any of these apply and whether new paving or structures add units. Permits: ' + kb.permits,
+          juris + ' impact fee ordinance', kb.impactSrc, null,
+          'Ask the building department for the fee on a ' + work + ' at your estimated cost, then submit through the permit portal (checklist: ' + kb.submittal + ').'));
+      } else
       out.push(F('permits', 'Permit & impact fees', 'watch', 'Impact fees about $' + fmt(known + fire) + ' + building permit and plan review from about $' + fmt(wb.total),
         'Impact fees: ' + list + ' (' + kb.impact[0][2] + ', one storm-drain unit assumed; more impervious area means more units).' +
         (kb.fireImpact ? ' Plus $' + fire + ' fire impact fee: ' + kb.fireImpact[1] + '.' : '') + ' ' + bldTxt + ' Permits: ' + kb.permits,
@@ -4850,12 +4861,16 @@ function stepsFor(typeIds,alreadyRun=[]){
  return ORDER.filter(id=>want.has(id)&&!done.has(id));
 }
 // The packet depends on which permits are planned, so it re-runs whenever that set changes.
+const permitKey=typeIds=>(typeIds||[]).includes('*')?'*':[...new Set((typeIds||[]).map(String))].sort().join(',');
 function packetStale(report,typeIds){const had=(report?.facts?.packetPermits||[]).join(','),want=(typeIds||[]).includes('*')?'*':[...new Set((typeIds||[]).map(String))].sort().join(',');return had!==want;}
+// Steps whose output depends on the planned permits (fee estimate, packets): re-run when the set changes.
+const PERMIT_AWARE=['check_ccr_permits','check_permit_packet'];
+function rerunFor(report,typeIds){const out=[];if((report?.facts?.feePermits??'')!==permitKey(typeIds))out.push('check_ccr_permits');if(packetStale(report,typeIds))out.push('check_permit_packet');return out;}
 function needsApprovalResearch(typeIds){return (typeIds||[]).some(t=>EXTERIOR.has(String(t)));}
 // Reports saved before staging have no step record: treat them as fully researched.
 function stepsRun(report){const s=report?.facts?.stepsRun;return s?Object.keys(s):(report?.findings?.length?ORDER.slice():[]);}
 function notRun(report){const done=new Set(stepsRun(report));return ORDER.filter(id=>!done.has(id));}
-const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun,packetStale};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
+const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun,packetStale,rerunFor,PERMIT_AWARE,permitKey};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
 })(typeof window!=='undefined'?window:globalThis);
 
 </script>
@@ -5442,7 +5457,8 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
     if (researching) { pendingResearch = e.detail; return; }
     var typeIds = e.detail.typeIds || [], label = e.detail.label || 'your permits';
     var todo = RP.stepsFor(typeIds, researched(last)), prior = last.facts && last.facts.automaticInvestigation;
-    if (todo.indexOf('check_permit_packet') === -1 && RP.packetStale(last, typeIds)) todo.push('check_permit_packet');
+    RP.rerunFor(last, typeIds).forEach(function (id) { if (todo.indexOf(id) === -1) todo.push(id); });
+    todo = RP.ORDER.filter(function (id) { return todo.indexOf(id) !== -1; });
     // Always tell the server which permits are planned when they need approval research: it creates the
     // investigation if needed, or records the permits (and refreshes a finished answer) on the existing one.
     var investigate = RP.needsApprovalResearch(typeIds);
@@ -6754,7 +6770,8 @@ const api={lookup,rules,blockers,reviewCurrent,reviewFingerprint,evidence:E,sour
   // ("2:doc-site-plan"); older single-packet reports keep positional ids.
   function requirements(report) {
     const facts = (report || {}).facts || {}, packets = facts.packets && Object.keys(facts.packets).length ? Object.values(facts.packets) : facts.packet ? [facts.packet] : [];
-    const items = packets.flatMap(pk => (pk.items || []).map(x => ({ ...x, permitLabel: pk.label || '' })));
+    // City rules shape the design; they are shown in each packet, not filed or reviewed as documents.
+    const items = packets.flatMap(pk => (pk.items || []).filter(x => x.status !== 'rule').map(x => ({ ...x, permitLabel: pk.label || '' })));
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
       .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel,
         required: !['na', 'optional', 'rule'].includes(x.status),
@@ -7709,7 +7726,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   function draft(){const p=draftProject(),type=p.application.cityInspect?.typeId,t=window.CityApplication.catalog.types.find(t=>t.value===type);return '<div class="permit-draft-page"><div class="pw-actions">'+button('permit-hub','← Back to permit preparation')+'</div><section class="pw-card"><h2>'+esc(t?.label||'Permit')+' draft</h2><p>Review answers with their evidence. Nothing has been sent to the city.</p></section>'+window.PermitPrepUI.readiness(p)+window.CityApplication.render(p,cityPage)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.valuation(p)+'</div>';}
   function filing() {
     const p = project;
-    return '<section class="pw-card"><h2>Required approvals</h2><p>Check location-based requirements and retain the actual approval evidence before preparing the filing handoff.</p>'+button('tab','Review rules and approvals','rules')+'</section>'+(window.PermitPrepUI?window.PermitPrepUI.permits(p)+window.PermitPrepUI.plans(p)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.team(p):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section><section class="pw-card"><h2 id="filing-requirements" tabindex="-1">Filing requirements</h2><p>Site-review suggestions are not filing approvals. Record the current evidence and who reviewed each requirement. A waiver needs a documented basis.</p>' + p.requirements.map(r => '<details><summary>' + esc(r.title) + ' <span class="pw-status">— ' + esc(human(r.state)) + (r.required ? '' : ' · optional') + '</span></summary><p>' + esc(r.detail || r.source || '') + '</p>' + form('requirement', select('state','Review status',[['reviewed','Reviewed against evidence'],['waived','Not applicable / waived with reason'],['needs_review','Unresolved — check the requirement source and supporting documents']],r.state) + field('reviewer','Reviewed by',r.reviewer) + area('note','Review basis / waiver reason',r.note) + docs(r.documentIds) + field('url','Source HTTPS link',r.evidenceUrl || r.sourceUrl,'url'), 'Save requirement review',r.id) + '</details>').join('') + '</section>' + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + (((p.report.facts||{}).packets&&Object.keys(p.report.facts.packets).length)?Object.values(p.report.facts.packets).map(pk=>window.CornerpinReportViews.packet(pk)).join(''):window.CornerpinReportViews.packet((p.report.facts || {}).packet)) + '</div></details></section>' + packagePanel('initial') + '<p>Already filed? Record the receipt in Submissions &amp; Review.</p>';
+    return '<section class="pw-card"><h2>Required approvals</h2><p>Check location-based requirements and retain the actual approval evidence before preparing the filing handoff.</p>'+button('tab','Review rules and approvals','rules')+'</section>'+(window.PermitPrepUI?window.PermitPrepUI.permits(p)+window.PermitPrepUI.plans(p)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.team(p):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section><section class="pw-card"><h2 id="filing-requirements" tabindex="-1">Filing requirements</h2><p>Site-review suggestions are not filing approvals. Record the current evidence and who reviewed each requirement. A waiver needs a documented basis.</p>' + p.requirements.map((r, _i, all) => '<details><summary>' + (r.permitLabel && new Set(all.map(x => x.permitLabel).filter(Boolean)).size > 1 ? '<span class="pw-muted">' + esc(r.permitLabel) + ' · </span>' : '') + esc(r.title) + ' <span class="pw-status">— ' + esc(human(r.state)) + (r.required ? '' : ' · optional') + '</span></summary><p>' + esc(r.detail || r.source || '') + '</p>' + form('requirement', select('state','Review status',[['reviewed','Reviewed against evidence'],['waived','Not applicable / waived with reason'],['needs_review','Unresolved — check the requirement source and supporting documents']],r.state) + field('reviewer','Reviewed by',r.reviewer) + area('note','Review basis / waiver reason',r.note) + docs(r.documentIds) + field('url','Source HTTPS link',r.evidenceUrl || r.sourceUrl,'url'), 'Save requirement review',r.id) + '</details>').join('') + '</section>' + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + (((p.report.facts||{}).packets&&Object.keys(p.report.facts.packets).length)?Object.values(p.report.facts.packets).map(pk=>window.CornerpinReportViews.packet(pk)).join(''):window.CornerpinReportViews.packet((p.report.facts || {}).packet)) + '</div></details></section>' + packagePanel('initial') + '<p>Already filed? Record the receipt in Submissions &amp; Review.</p>';
   }
   function packagePanel(kind) {
     const p = project, blockers = W.blockers(p,kind), pkg = W.currentPackage(p,kind);

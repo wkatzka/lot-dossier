@@ -966,6 +966,8 @@
   };
 
   C.check_ccr_permits = async function (ctx) {
+    // Which permits the fee estimate was made for (research-plan re-runs this step when they change).
+    ctx.facts.feePermits = ctx.permits ? (ctx.permits.indexOf('*') !== -1 ? '*' : ctx.permits.map(String).filter(function (t, i, a) { return a.indexOf(t) === i; }).sort().join(',')) : '';
     var a = ctx.parcel.attrs, sub = a.SUBDIV_NAME, pud = /PUD/i.test(ctx.facts.prop_desc || ''), out = [], kb = ctx.facts.kb;
     var parcelPage = ctx.parcel.county === 'Weber' ? 'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=' + encodeURIComponent(ctx.parcel.id) : a.BOUNDARY_SRC;
     if (sub) {
@@ -991,6 +993,15 @@
         'As a floor, Weber County\'s published schedule (County Code 12-3-6 and 12-3-8) on ' + (hasPlan ? 'this plan (' + fmt(hs) + ' sq ft house' + (gs ? ' + ' + fmt(gs) + ' sq ft garage' : '') + ')' : 'a typical ' + fmt(hs) + ' sq ft house with an ' + fmt(gs) + ' sq ft garage') +
         ' gives a valuation of ' + money2(wb.valuation) + ' (ICC ' + BVD.asOf + ' rates: $' + BVD.r3 + '/sq ft house, $' + BVD.garage + '/sq ft garage), a permit fee of ' + money2(wb.permit) +
         ', plan review ' + money2(wb.planReview) + ', trade permits $350 and the 1% state surcharge: about ' + money2(wb.total) + '. Expect the city\'s total to be somewhat higher.';
+      // The estimate is for a new house. When the planned permits add no dwelling, say so instead of quoting it.
+      var planned = ctx.permits && ctx.permits.indexOf('*') === -1 ? ctx.permits.map(String) : null;
+      if (planned && planned.indexOf('1') === -1 && planned.indexOf('102') === -1) {
+        var types = ((window.LR_DATA && window.LR_DATA.cityInspect && window.LR_DATA.cityInspect.types) || []), work = planned.map(function (t) { var x = types.filter(function (y) { return y.value === t; })[0]; return x ? x.label.toLowerCase() : 'this work'; }).join(' + ');
+        out.push(F('permits', 'Permit & impact fees', 'verify', 'Fees for your ' + work + ': ask the building department',
+          'Cornerpin\'s fee estimate is for a new house and does not apply to a ' + work + '. Building permit and plan review fees follow ' + (pf ? pf.adopted : 'the city\'s fee schedule') + ' on the value of the work. The city\'s impact fees (' + list + '; ' + kb.impact[0][2] + '). The storm-drain fee is charged per unit of impervious area, so ask whether any of these apply and whether new paving or structures add units. Permits: ' + kb.permits,
+          juris + ' impact fee ordinance', kb.impactSrc, null,
+          'Ask the building department for the fee on a ' + work + ' at your estimated cost, then submit through the permit portal (checklist: ' + kb.submittal + ').'));
+      } else
       out.push(F('permits', 'Permit & impact fees', 'watch', 'Impact fees about $' + fmt(known + fire) + ' + building permit and plan review from about $' + fmt(wb.total),
         'Impact fees: ' + list + ' (' + kb.impact[0][2] + ', one storm-drain unit assumed; more impervious area means more units).' +
         (kb.fireImpact ? ' Plus $' + fire + ' fire impact fee: ' + kb.fireImpact[1] + '.' : '') + ' ' + bldTxt + ' Permits: ' + kb.permits,

@@ -580,7 +580,8 @@
     if (researching) { pendingResearch = e.detail; return; }
     var typeIds = e.detail.typeIds || [], label = e.detail.label || 'your permits';
     var todo = RP.stepsFor(typeIds, researched(last)), prior = last.facts && last.facts.automaticInvestigation;
-    if (todo.indexOf('check_permit_packet') === -1 && RP.packetStale(last, typeIds)) todo.push('check_permit_packet');
+    RP.rerunFor(last, typeIds).forEach(function (id) { if (todo.indexOf(id) === -1) todo.push(id); });
+    todo = RP.ORDER.filter(function (id) { return todo.indexOf(id) !== -1; });
     // Always tell the server which permits are planned when they need approval research: it creates the
     // investigation if needed, or records the permits (and refreshes a finished answer) on the existing one.
     var investigate = RP.needsApprovalResearch(typeIds);

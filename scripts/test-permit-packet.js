@@ -30,7 +30,7 @@ let p=W.create({parcel:{county:'Weber',id:'1',attrs:{PARCEL_ADD:'x'}},date:'2026
 const report=pk2=>({parcel:{county:'Weber',id:'1',attrs:{PARCEL_ADD:'x'}},date:'2026-11-13',facts:{jurisdiction:'Ogden Valley City',packets:pk2,packet:Object.values(pk2)[0]},findings:[]});
 p=W.apply(p,{type:'sync_report',report:report({'2':pk,'74':P.build('74',{facts,findings})})});
 assert(p.requirements.some(r=>r.id==='req:2:doc-permit-plans')&&p.requirements.some(r=>r.id==='req:74:doc-permit-plans'),'Same document for two permits stays two requirements');
-assert(!p.requirements.some(r=>r.suggestedStatus==='rule'&&r.required),'City rules are not filing requirements');assert(p.requirements.some(r=>r.id==='req:74:rule-deck-detached'&&r.required),'A "check with the city" item is a real to-do');
+assert(!p.requirements.some(r=>r.suggestedStatus==='rule'),'City rules stay in the packet; they are not filing requirements');assert(p.requirements.filter(r=>r.permitType).every(r=>r.permitLabel),'Each requirement names its permit');assert(p.requirements.some(r=>r.id==='req:74:rule-deck-detached'&&r.required),'A "check with the city" item is a real to-do');
 p.requirements.find(r=>r.id==='req:74:doc-permit-plans').note='Designer engaged';
 p=W.apply(p,{type:'sync_report',report:report({'74':P.build('74',{facts,findings}),'2':pk})});
 assert.equal(p.requirements.find(r=>r.id==='req:74:doc-permit-plans').note,'Designer engaged','A review follows its requirement, not its position');
@@ -39,7 +39,10 @@ console.log('PASS: requirements combine every permit\'s packet with stable ids; 
 for(const t of Object.keys(RP.STEPS_FOR))assert(RP.STEPS_FOR[t].includes('check_permit_packet'),t+' builds a packet');
 assert(!RP.stepsFor(['4'],RP.QUICK).includes('check_documents'),'An interior packet does not force slow document research');
 assert(RP.packetStale({facts:{packetPermits:['4']}},['2','4'])&&!RP.packetStale({facts:{packetPermits:['2','4']}},['4','2']));
-console.log('PASS: research plan builds a packet for every permit and refreshes it when the permits change.');
+assert.deepEqual(RP.rerunFor({facts:{packetPermits:['2','74'],feePermits:'2,74'}},['74','2']),[],'Same permits: nothing re-runs');
+assert.deepEqual(RP.rerunFor({facts:{packetPermits:['2','74']}},['2','74']),['check_ccr_permits'],'A report built before the fee step knew the permits re-runs it');
+assert.deepEqual(RP.rerunFor({facts:{packetPermits:['2'],feePermits:'2'}},['1']),['check_ccr_permits','check_permit_packet']);
+console.log('PASS: research plan builds a packet for every permit and refreshes it and the fee estimate when the permits change.');
 (async()=>{
  // The packet step builds one packet per planned permit.
  global.window=globalThis;global.localStorage={getItem(){return null},setItem(){},removeItem(){}};window.PermitPacket=P;require('../web/lotreport.js');
@@ -48,6 +51,14 @@ console.log('PASS: research plan builds a packet for every permit and refreshes 
  assert.deepEqual(Object.keys(out.facts.packets).sort(),['2','74']);assert.equal(out.facts.packet.permitType,'2');assert.deepEqual(out.facts.packetPermits,['2','74']);
  assert(out.findings.some(f=>f.item==='Permit packet · Pool')&&out.findings.some(f=>f.item==='Permit packet · Deck'));
  console.log('PASS: the packet step builds one packet per planned permit, without the house packet unless a home is planned.');
+ // Fees: the new-house estimate is not quoted for a pool + deck.
+ const kbf={impact:[['Roads',4512.14,'Ord. 2026-19']],impactSrc:'https://ord.example/',permits:'p',submittal:'s',lighting:'l',permitFees:{adopted:'Resolution 2026-28',note:'n'}};
+ window.LR_DATA={cityInspect:require('../data/permits/ogden-valley-cityinspect.json')};
+ const fees=async permits=>(await window.LotReport.run({id:'222320021',county:'Weber',rings:[ring],cy:41.3217,cx:-111.8107,attrs:{PARCEL_ADD:'x'}},null,{},null,null,{steps:['check_ccr_permits'],prior:{facts:{...facts,kb:kbf},findings:[]},permits}));
+ const pf=await fees(['2','74']),fee=pf.findings.find(f=>f.item==='Permit & impact fees');
+ assert(/pool \+ deck/.test(fee.headline)&&!/\$\d/.test(fee.headline)&&!fee.cost&&/new house/.test(fee.detail),'No house fee estimate for a pool + deck');assert.equal(pf.facts.feePermits,'2,74');
+ assert(/Impact fees about \$/.test((await fees(['1','2'])).findings.find(f=>f.item==='Permit & impact fees').headline),'A new home keeps the estimate');
+ console.log('PASS: the fee estimate follows the planned permits — no new-house estimate for a pool + deck.');
  // Planned permits reach the server; the answer must rest on a clause covering that work.
  const A=require('../lib/automatic-investigation');assert.deepEqual(A.plannedPermits(['74','2','2','x']).typeIds,['2','74']);assert.deepEqual(A.plannedPermits(['2']).labels,['Pool']);assert.equal(A.plannedPermits(['9999']),null);
  const S=require('../lib/investigation-synthesis');

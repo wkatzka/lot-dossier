@@ -32,10 +32,14 @@ function stepsFor(typeIds,alreadyRun=[]){
  return ORDER.filter(id=>want.has(id)&&!done.has(id));
 }
 // The packet depends on which permits are planned, so it re-runs whenever that set changes.
+const permitKey=typeIds=>(typeIds||[]).includes('*')?'*':[...new Set((typeIds||[]).map(String))].sort().join(',');
 function packetStale(report,typeIds){const had=(report?.facts?.packetPermits||[]).join(','),want=(typeIds||[]).includes('*')?'*':[...new Set((typeIds||[]).map(String))].sort().join(',');return had!==want;}
+// Steps whose output depends on the planned permits (fee estimate, packets): re-run when the set changes.
+const PERMIT_AWARE=['check_ccr_permits','check_permit_packet'];
+function rerunFor(report,typeIds){const out=[];if((report?.facts?.feePermits??'')!==permitKey(typeIds))out.push('check_ccr_permits');if(packetStale(report,typeIds))out.push('check_permit_packet');return out;}
 function needsApprovalResearch(typeIds){return (typeIds||[]).some(t=>EXTERIOR.has(String(t)));}
 // Reports saved before staging have no step record: treat them as fully researched.
 function stepsRun(report){const s=report?.facts?.stepsRun;return s?Object.keys(s):(report?.findings?.length?ORDER.slice():[]);}
 function notRun(report){const done=new Set(stepsRun(report));return ORDER.filter(id=>!done.has(id));}
-const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun,packetStale};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
+const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,notRun,packetStale,rerunFor,PERMIT_AWARE,permitKey};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ResearchPlan=api;
 })(typeof window!=='undefined'?window:globalThis);

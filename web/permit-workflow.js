@@ -20,7 +20,8 @@
   // ("2:doc-site-plan"); older single-packet reports keep positional ids.
   function requirements(report) {
     const facts = (report || {}).facts || {}, packets = facts.packets && Object.keys(facts.packets).length ? Object.values(facts.packets) : facts.packet ? [facts.packet] : [];
-    const items = packets.flatMap(pk => (pk.items || []).map(x => ({ ...x, permitLabel: pk.label || '' })));
+    // City rules shape the design; they are shown in each packet, not filed or reviewed as documents.
+    const items = packets.flatMap(pk => (pk.items || []).filter(x => x.status !== 'rule').map(x => ({ ...x, permitLabel: pk.label || '' })));
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
       .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel,
         required: !['na', 'optional', 'rule'].includes(x.status),
