@@ -11,7 +11,7 @@ const first={sha256:h('f'),source:'https://example.org/2022-first-amendment.pdf'
  supportingEvidence:[{kind:'property_scope',sha256:h('f'),source:'https://example.org/2022-first-amendment.pdf',page:6,quote:'All of Lots 46 through 68'},{kind:'execution_status',sha256:h('f'),source:'https://example.org/2022-first-amendment.pdf',page:8,quote:'this 15 day of March 2023'}]};
 const term={sha256:h('t'),source:'https://example.org/termination.pdf',documentTitle:'Termination of Declarant Rights Under Master Declaration for Wolf Creek Resort',documentStatus:'not_established',requirements:[],
  authorityChanges:[{sha256:h('t'),source:'https://example.org/termination.pdf',page:2,quote:'Declarant hereby voluntarily and irrevocably terminates',kind:'termination'}]};
-const guide={sha256:h('g'),source:'https://example.org/guidelines.pdf',documentTitle:'Master Design Review Board Guidelines',documentStatus:'not_established',
+const guide={sha256:h('g'),source:'https://example.org/guidelines.pdf',documentTitle:'Master Design Review Board Guidelines',documentStatus:'published_guidelines',
  requirements:[{sha256:h('g'),source:'https://example.org/guidelines.pdf',page:7,quote:'plans must be approved by the DRB prior to submittal to the County',authority:'Design Review Board',stage:'submission'}]};
 const interpretations=[decl,first,term,guide];
 const inventories={[h('d')]:{entries:[],recording:null},[h('f')]:{entries:[],recording:{entry:'3277834',page:1,quote:'E# 3277834 PG 1 OF 8',recordedOn:'2023-03-28',dateQuote:'28-MAR-23',dateMethod:'stamp_region_ocr'}},
@@ -40,6 +40,7 @@ rejects(d=>d.findings[1].text='The Termination of Declarant Rights was recorded 
 // Unsigned-copy limitations and enforceability.
 rejects(d=>{d.findings[0].limitations='No current ACC appointees are shown.';d.findings[0].text='The Example Ridge declaration requires Board approval before construction of a new dwelling is commenced.';},/does not say so/,'Omitting the unsigned-copy limitation');
 rejects(d=>d.findings[0].text+=' The Example Ridge declaration is enforceable against the lot.',/not shown to be executed or recorded/,'Presenting current enforceability as settled');
+{const d=good();d.findings.push({text:'If the master guidelines apply, the DRB reviews plans before submittal to the County.',limitations:'They refer to the County, not the current city.',evidenceIds:[drb]});assert.deepEqual(problems(d),[],'Published guidelines need no signature qualification');}
 // Submission, issuance and construction stay distinct.
 rejects(d=>d.findings[0].text='The unsigned online copy says the Board must approve plans before the building permit application.',/construction-commencement gate/,'Restating a construction gate as a submission gate');
 rejects(d=>d.answer.when='The Board must approve before the permit is issued.',/construction-commencement gate/,'Restating a construction gate as an issuance gate in the short answer');
