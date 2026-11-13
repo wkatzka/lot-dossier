@@ -23,7 +23,7 @@
     // City rules shape the design; they are shown in each packet, not filed or reviewed as documents.
     const items = packets.flatMap(pk => (pk.items || []).filter(x => x.status !== 'rule').map(x => ({ ...x, permitLabel: pk.label || '' })));
     return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
-      .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel,
+      .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel, group: x.group || '',
         required: !['na', 'optional', 'rule'].includes(x.status),
         state: 'missing', suggestedStatus: x.status, owner: x.who || '', source: x.why || '', sourceUrl: x.link || '',
         detail: x.detail || '', note: '', documentIds: [] })));
@@ -108,7 +108,7 @@
         const fresh = requirements(a.report);
         p.requirements = fresh.map(r => {
           const prior = p.requirements.find(x => x.id === r.id) || p.requirements.find(x => x.title === r.title && (x.permitType || '') === (r.permitType || ''));
-          return prior ? Object.assign({}, prior, { state: 'needs_review', required: r.required, detail: r.detail, source: r.source, sourceUrl: r.sourceUrl }) : r;
+          return prior ? Object.assign({}, prior, { state: 'needs_review', required: r.required, detail: r.detail, source: r.source, sourceUrl: r.sourceUrl, group: r.group, permitLabel: r.permitLabel, suggestedStatus: r.suggestedStatus }) : r;
         });
         invalidate(p); event(p, a.type, 'Site/plan snapshot updated. Requirement reviews and unsubmitted package approvals need renewal.', now); break;
       }

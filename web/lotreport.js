@@ -556,7 +556,7 @@
     } else {
       out.push(F('water', 'Culinary water', 'verify', 'No public water system mapped; supply unverified',
         'The service-area dataset does not establish whether this lot has an existing connection, a private or mutual system, or needs a well. Confirm the source and service entitlement before selecting a water-supply design.',
-        'Utah Division of Water Rights: water service areas', 'https://www.waterrights.utah.gov/', ctx.cost('well'), 'Have a water rights consultant confirm a source before closing.'));
+        'Utah Division of Water Rights: water service areas', 'https://www.waterrights.utah.gov/', ctx.cost('well'), 'Have a water rights consultant confirm a water source before design starts (and before buying, if the lot is not bought yet).'));
     }
     var sec = await area(ctx, UGRC + '/Utah_DNR_Secondary_Water_Systems/FeatureServer/0');
     if (sec.length) {
@@ -574,7 +574,7 @@
         'The Division of Water Rights maps this land as irrigated under ' + (wr.length > 1 ? 'these rights' : 'this right') + (ac ? ' (a ' + fmt(ac) + '-acre service area, typical of an irrigation company)' : '') +
         '. Water for landscaping comes through shares in the company that holds the right, so confirm whether shares are deeded with the lot.',
         'Utah Division of Water Rights: irrigation places of use', pou[0].attributes.dbURL || 'https://www.waterrights.utah.gov/',
-        null, 'Ask the seller for the irrigation share certificate, or confirm in the purchase contract that shares convey.'));
+        null, 'Ask the owner for the irrigation share certificate (if the lot is being bought, confirm in the purchase contract that the shares come with it).'));
     }
     var pods = await arcgisQuery(UTAH_AGO + '/Utah_Points_of_Diversion/FeatureServer/0', { geometry: ctx.parcel.point, distance: 800 });
     var wells = pods.map(function (p) { return p.attributes; }).filter(function (p) { return p.TYPE === 'Underground'; });
@@ -600,7 +600,7 @@
     return [F('geo', 'Landslides', 'flag', 'Mapped ' + (a.LSUnit || 'landslide deposit') + ' covers about ' + Math.round(cov * 100) + '% of the lot',
       'Source map: ' + src + ', ' + (a.MapScale || '?') + ' scale. ' + (a.Notes || '') + ' Weber County/Ogden Valley typically requires a geologic hazards study and geotechnical report before permitting on mapped landslides, and the findings can move the building pad or require engineered foundations or drainage.',
       'UGS landslide compilation via UGRC', 'https://geology.utah.gov/apps/hazards/', ctx.cost('geologic_hazards_study'),
-      'Order a geologic hazards study and geotech report before closing, or make the purchase contingent on one.')];
+      'Order a geologic hazards study and geotech report before design starts (and before buying, if the lot is not bought yet).')];
   };
 
   C.check_faults = async function (ctx) {
@@ -1470,7 +1470,7 @@
         (v('shares') ? v('shares') + '. ' : '') + supply + (v('fees') ? ' Buyers pay ' + v('fees').replace(/\s+/g, ' ') + '.' : '') +
         ' Read from the scanned letter in ' + lp('supplier') + '; this supersedes the state service-area map.',
         cite(letter.doc, wf.supplier.page), letter.doc.url, ctx.cost('culinary_connection'),
-        'Confirm in the purchase contract that the lot\'s ' + (v('shares') && /Class A/i.test(v('shares')) ? 'Class A (connection)' + (/Class C/i.test(v('shares')) ? ' and Class C (irrigation)' : '') + ' shares' : 'water shares') + ' convey at closing, and get the hook-up and connection fees from ' + sup + '.'));
+        'Confirm with the owner that the lot\'s ' + (v('shares') && /Class A/i.test(v('shares')) ? 'Class A (connection)' + (/Class C/i.test(v('shares')) ? ' and Class C (irrigation)' : '') + ' shares' : 'water shares') + ' are held with the lot (or convey at closing if it is being bought), and get the hook-up and connection fees from ' + sup + '.'));
       if (both || secNotes.length) replaceFinding(ctx, 'water', 'Secondary (irrigation) water', F('water', 'Secondary (irrigation) water', secNotes.length ? 'watch' : 'ok',
         both ? 'Secondary water from ' + sup + (v('shares') && /Class C/i.test(v('shares')) ? ' (Class C irrigation shares)' : '') : 'Secondary water: see staff report',
         (both ? 'The feasibility letter covers secondary (irrigation) water as well as culinary. ' : '') +

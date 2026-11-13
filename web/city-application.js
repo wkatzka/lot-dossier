@@ -114,6 +114,8 @@
     }
     return {type:'city_application',permitType,entries};
   }
+  let showAll=false;
+  function setShowAll(v){showAll=!!v;}
   function render(p,page='primary'){
     renderedProject=p;
     if(!supported(p))return '<section class="pw-card"><h2>City application</h2><p>Exact field mapping is currently available for Ogden Valley City Building Permits. Other jurisdictions need their own form mapping.</p></section>';
@@ -123,12 +125,15 @@
     let html='<section class="pw-card city-application"><label for="city-permit-type">Permit type</label><select id="city-permit-type" data-city-type><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select>';
     if(t){
       const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.review.state==='confirmed'),stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed'));
-      html+='<div class="application-stats"><div><strong>'+filled.length+' / '+editable.length+'</strong><span>Editable fields populated</span><progress value="'+filled.length+'" max="'+(editable.length||1)+'" aria-label="Editable fields populated"></progress></div><div><strong>'+supplied.length+'</strong><span>Confirmed answers</span></div><div><strong>'+suggested.length+'</strong><span>Suggested · review needed'+(stale.length?' · '+stale.length+' additional stale answers':'')+'</span></div><div><strong>'+(editable.length-filled.length)+'</strong><span>Unanswered · includes optional</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
+      const ready=readiness(p,id);html+='<div class="application-stats"><div><strong>'+ready.missing.length+'</strong><span>Required questions to answer</span></div><div><strong>'+ready.unreviewed.length+'</strong><span>Answers Cornerpin filled in for you to check</span></div><div><strong>'+supplied.length+'</strong><span>Answers checked</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
 
       html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>'<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'">'+(i+1)+'. '+titles[key]+'</button>').join('')+'</nav><p>Review each answer against its source. * marks a required field observed in the city form.</p><a href="#application-documents">Read a document +</a></aside>';
-      const list=rs.filter(r=>r.section===page);
+      // By default show only what still needs the user: required blanks, and filled answers not yet checked.
+      const needs=r=>!r.locked&&(String(r.value??'').trim()===''?(r.required||r.markedRequired):r.review.state!=='confirmed');
+      const all=rs.filter(r=>r.section===page),list=showAll?all:all.filter(needs),hiddenCount=all.length-list.length;
       html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields" tabindex="0" role="region" aria-label="Application fields">';
-      if(!list.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
+      html+='<p class="city-filter">'+(showAll?'Showing all '+all.length+' fields on this page. <button type="button" data-action="city-show-all" data-id="0">Show only what needs me</button>':(list.length?'Showing '+list.length+' question'+(list.length===1?'':'s')+' that need you.':'Nothing on this page needs you.')+(hiddenCount?' <button type="button" data-action="city-show-all" data-id="1">Show all '+all.length+' fields</button>':''))+'</p>';
+      if(!all.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
       html+=list.map(r=>{
         const inputId='city-'+r.key,name='answer:'+r.key,current=esc(r.value),required=r.required||r.markedRequired;
         const fact=Facts?.selected(p,r.name,id),doc=fact&&((p.documents||[]).find(d=>d.id===fact.documentId)||(p.documents||[]).find(d=>d.name===fact.filename&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)));
@@ -160,5 +165,5 @@
     const note=root.document.createElement('div'),type=renderedProject.application.cityInspect?.typeId,row=rows(renderedProject,type).find(r=>r.key===button.dataset.fieldEvidence);note.innerHTML=Reviews.panel(renderedProject,row,type);target.append(note);const backButton=root.document.createElement('button');backButton.type='button';backButton.dataset.returnField='';backButton.textContent='Return to answer';target.append(backButton);
     if(root.matchMedia('(max-width: 900px)').matches)target.scrollIntoView({behavior:root.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
   });
-  const api={catalog,supported,rows,update,sheet,render,formCommand,Reviews,readiness};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
+  const api={catalog,supported,rows,update,sheet,render,formCommand,Reviews,readiness,setShowAll};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CityApplication=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -18,7 +18,8 @@ p=W.apply(p,{type:'sync_report',report});assert.match(row('builder_valuation').s
 const saved=JSON.parse(JSON.stringify(p));assert.equal(C.sheet(saved),C.sheet(p));assert.match(C.sheet(p),/NOT SUBMITTED/);assert.match(C.sheet(p),/500000/);
 change({permitType:'1',fieldKey:key,reset:'yes'});assert.equal(row('builder_valuation').value,'');
 change({permitType:'1',fieldKey:row('description').key,value:'<img src=x onerror=alert(1)>',basis:'User scope'});assert(!C.render(p).includes('<img'));
-// Native form pages preserve the observed order, labels and controls for all types.
+// Native form pages preserve the observed order, labels and controls for all types ("Show all fields" view).
+C.setShowAll(true);
 for(const t of C.catalog.types){change({permitType:t.value});for(const page of Object.keys(t.sections)){
  const dom=new JSDOM(C.render(p,page)),d=dom.window.document;
  assert.equal(d.querySelector('[data-city-type]').value,t.value);

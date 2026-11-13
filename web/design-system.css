@@ -226,3 +226,20 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 #research-status.done{border-left-color:var(--cp-muted,#888)}
 .cp-intent-addons{border:0;padding:0;margin:8px 0}.cp-intent-addons legend{font-weight:600;margin-bottom:6px}.cp-intent-addons label{display:block;margin:0 0 8px;cursor:pointer}
 .cp-coverage{margin:8px 0}.cp-coverage button{margin-left:6px;padding:2px 10px;font-size:13px}
+/* Your next steps / Ready to file: one row per step, who does it first. */
+.cp-next-steps ol,.cp-checklist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.cp-next-steps li,.cp-checklist li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--cp-line)}
+.cp-checklist li{grid-template-columns:auto auto 1fr auto}
+.cp-next-steps li:first-child,.cp-checklist li:first-child{border-top:0}
+.cp-next-steps p,.cp-checklist p{margin:2px 0 0;color:var(--cp-muted)}
+.cp-who{display:inline-block;min-width:72px;text-align:center;padding:3px 8px;border-radius:999px;font-size:.78rem;font-weight:600;background:var(--cp-neutral-bg);color:var(--cp-ink);white-space:nowrap}
+.cp-who-you{background:var(--cp-primary);color:#fff}
+.cp-who-other{background:var(--cp-review,#f3e2b5);color:var(--cp-ink)}
+.cp-check{display:inline-flex;width:22px;height:22px;border:2px solid var(--cp-line);border-radius:50%;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.cp-checklist li.is-done .cp-check{background:var(--cp-primary);border-color:var(--cp-primary);color:#fff}
+.cp-checklist li.is-done strong{color:var(--cp-muted)}
+.cp-checklist button.primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
+.cp-checklist button[disabled]{opacity:.5;cursor:not-allowed}
+.city-filter{margin:0 0 12px}
+.pw-visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:640px){.cp-next-steps li,.cp-checklist li{grid-template-columns:auto 1fr}.cp-next-steps li>:last-child,.cp-checklist li>button:last-of-type,.cp-checklist li>a{grid-column:1/-1;justify-self:start}.cp-checklist .cp-who{display:none}}

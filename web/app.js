@@ -120,7 +120,7 @@
   }
   function fail(msg, options) {
     prog.classList.remove('on'); form.classList.remove('off');
-    go.disabled = false; go.textContent = 'Generate dossier';
+    go.disabled = false; go.textContent = 'Check this lot';
     err.textContent = msg;
     if (options && options.length) {
       // Offer the matches as one-click choices that fill the address field.

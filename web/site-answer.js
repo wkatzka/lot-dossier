@@ -26,7 +26,9 @@ function summary(report,project,{limit=4}={}){
  const top=list.filter(f=>f.status!=='verify').slice(0,limit);
  return {top,counts,verify:list.filter(f=>f.status==='verify'),total:list.length};
 }
-function todo(f,project){const D=root.SiteDecisions;return f.next_step||(project&&D?D.status(project,f.members?.[0]||f).missing:'')||'Read the cited source and confirm whether it applies to this lot.';}
+// When the report has no next step, say who can settle it — not "read the source".
+const WHO=[[/slope|terrain|grading|relief|topo/i,'Have a surveyor confirm the grades with a topo survey; your designer needs it for the site plan.'],[/landslide|fault|liquefaction|soil|geolog|boring|seismic/i,'Ask a geotechnical engineer whether this affects your foundation design.'],[/flood/i,'Ask the building department whether a floodplain review applies to your project.'],[/water|sewer|septic|utilit|power|gas/i,'Call the provider to confirm service and connection fees for this lot.'],[/easement|plat|setback|boundary/i,'Have a surveyor mark the lines and easements before you place the work.'],[/hoa|cc&r|covenant|design review/i,'Get the HOA\'s design rules and approval steps before you design.']];
+function todo(f,project){const D=root.SiteDecisions;if(f.next_step)return f.next_step;const text=(f.item||'')+' '+(f.headline||'')+' '+(f.section||'');const m=WHO.find(([re])=>re.test(text));return m?m[1]:'Ask the building department whether this applies to your project.';}
 // What has and hasn't been researched yet, with a way to research everything.
 function coverage(report,project){const RP=root.ResearchPlan,LR=root.LotReport;if(!RP)return '';const missing=RP.notRun(report);if(!missing.length)return '';
  const names=missing.map(id=>(LR?.STEPS||[]).find(s=>s[0]===id)?.[1]||id),intent=project?.application?.intent;
@@ -44,5 +46,5 @@ function card(report,{project=null,where='site'}={}){
  const contacts=report?.facts?.contacts||[];
  return head('Who to ask about this site','contacts')+(contacts.length?'<ul>'+contacts.slice(0,3).map(c=>'<li><strong>'+esc(c.name)+'</strong>'+(c.portal?' — '+link(c.portal,'online portal'):'')+(c.people||[]).slice(0,2).map(p=>'<br>'+esc(p.role)+(p.email?': '+esc(p.email):'')+(p.phone?' · '+esc(p.phone):'')).join('')+'</li>').join('')+'</ul>':'<p>No site findings were produced and no contacts are on file. Open Contacts for the building department and county offices.</p>')+goSite+'</section>';
 }
-const api={summary,card,merge};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SiteAnswer=api;
+const api={summary,card,merge,todo};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SiteAnswer=api;
 })(typeof window!=='undefined'?window:globalThis);

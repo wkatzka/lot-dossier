@@ -28,7 +28,7 @@ const c1=strip(A.card(report,{where:'site'}));
 assert(/^Site findings that matter/.test(c1)&&/Landslides Concern Mapped landslide covers about 100% of the lot What to do: Order a geologic hazards study/.test(c1));
 assert(/Source: USGS 3DEP · USGS EPQS \(agree\)/.test(c1),'Agreeing sources are cited together');
 assert(/3 more to watch · 2 routine items to verify — listed in the sections below/.test(c1),'The rest is pointed to, not shown');
-assert(/What to do: Read the cited source and confirm whether it applies/.test(c1),'No invented advice where the report has none');
+assert(/What to do: Have a surveyor confirm the grades with a topo survey/.test(c1)&&!/Read the cited source/.test(c1),'Without a report next step, the card names who can settle it (no invented facts)');
 assert(/Open Site Review/.test(strip(A.card(report,{where:'overview'}))),'Overview card links to Site Review');
 // Tier 2: nothing flagged → the sources to verify are the finding.
 const c2=strip(A.card({findings:findings.filter(x=>x.status==='verify'||x.status==='ok'),facts:report.facts}));

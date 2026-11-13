@@ -11,7 +11,7 @@ assert(d.querySelector('#category-land').closest('tr').hidden);assert(!d.querySe
 d.querySelector('#topic-search').value='elevation';d.querySelector('#topic-search').dispatchEvent(new w.Event('input'));assert.equal(d.querySelector('#topic-count').textContent,'1 topics');
 d.querySelector('#category-survey').click();assert.equal(d.querySelector('.group[data-category="survey"]').hidden,false);
 d.querySelector('#topic-search').value='not present';d.querySelector('#topic-search').dispatchEvent(new w.Event('input'));assert.equal(d.querySelector('#topic-count').textContent,'0 topics');
-const overview=new JSDOM(O.render(p)).window.document;assert(overview.querySelector('#overview-work .cp-metrics'));assert(!overview.querySelector('aside .cp-metrics'));
+const overview=new JSDOM(O.render(p)).window.document;assert(overview.querySelector('.cp-pipeline')&&!overview.querySelector('#overview-work')&&!overview.querySelector('.cp-metrics'),'One set of counts: no repeated outstanding-work panel');
 w.LR_DATA={cityInspect:C.catalog};for(const f of ['permit-facts','permit-assistant','site-decisions','answer-reviews','city-application'])w.eval(fs.readFileSync('web/'+f+'.js','utf8'));
 p.documents.push({id:'synthetic-plan',name:'Example plans.pdf',hash:'test-hash',family:'test-plan',version:1,role:'plan'});
 p.application.documentExtractions=[{permitType:'1',documentId:'synthetic-plan',documentHash:'test-hash',facts:[{field:'engineer_record',value:'Example Engineering',unit:'text',page:5,quote:'Engineer: Example Engineering',method:'explicit_plan_text',documentId:'synthetic-plan',documentHash:'test-hash',filename:'Example plans.pdf'}]}];
