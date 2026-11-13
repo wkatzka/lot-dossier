@@ -18,6 +18,8 @@ assert.equal(I.validate({...parsed,requirements:[checklistClause]},checklistPage
 const inspectionText='Beacon Code Consultants: This inspection must be passed prior to installing insulation.';
 const inspection=I.validate({...parsed,requirements:[{...requirement,authority:'Beacon Code Consultants',authorityQuote:inspectionText,quote:inspectionText}]},[{page:1,text:inspectionText}],target,doc);
 assert.equal(inspection.requirements[0].stage,'construction_inspection','In-progress inspections do not become pre-permit approvals');
+const priorInspection='The Architectural Committee requires site inspection approval before construction begins.';
+assert.equal(I.validate({...parsed,requirements:[{...requirement,quote:priorInspection,authorityQuote:priorInspection}]},[{page:1,text:priorInspection}],target,doc).requirements[0].stage,'construction');
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
