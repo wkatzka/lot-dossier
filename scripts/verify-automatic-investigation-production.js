@@ -52,8 +52,9 @@ async function main(){
  assert(!first.citations.some(c=>/Required_Inspections/i.test(c.source)),'Inspections are secondary and must not lead the answer');
  assert(!syn.findings.some(f=>/\b(nothing|no (?:document|evidence|original|record)s?)\b[^.]{0,90}\b(approvals?|permits?)\b[^.]{0,60}\b(obtained|granted|issued)\b/i.test(f.text)),'Generic "no approval obtained" statements are not a plan-approval answer');
  const all=syn.findings.map(f=>f.text+' '+f.limitations).join(' ');
- const exhibitFinding=syn.findings.find(f=>/Exhibit A/i.test(f.text+' '+f.limitations)&&f.citations.some(c=>c.sha256===masterHash)&&/(recovered|retrieved|read)/i.test(f.text+' '+f.limitations));
- assert(exhibitFinding,'Master Exhibit A must be presented as recovered');
+ // Recovered = the answer cites the exhibit's own page (53) rather than calling it missing (checked above).
+ const exhibitFinding=syn.findings.find(f=>f.citations.some(c=>c.sha256===masterHash&&c.page===53));
+ assert(exhibitFinding,'Master Exhibit A must be cited from its recovered page 53');
  assert(/(does not (?:name|identify|list|mention)|metes and bounds|plat|parcel numbers|not establish)/i.test(exhibitFinding.text+' '+exhibitFinding.limitations),'Recovered master Exhibit A must keep the lot-coverage limitation');
  const withDirections=all+' '+syn.missingEvidence.map(m=>m.document+' '+m.action).join(' ');
  assert(/(unsigned|not (?:signed|executed)|blank)/i.test(withDirections)&&withDirections.includes('2957404'),'Execution/recording gap for the neighborhood declaration must remain explicit');

@@ -309,3 +309,13 @@ Initial investigation: `app.js` stores site checklist status separately; `projec
 - [ ] Signed-in account view not separately exercised (anonymous device-saved workspace used; same panel component).
 - [ ] Still open and unrelated to this fix: Cobabe's missing executed agreement/current ARC authority and the failed real-user comprehension check.
 - [x] Prepared `CLAUDE-HANDOFF-automatic-investigation.md` at the user's usage/handoff checkpoint, with exact remaining steps, artifacts, deployed code and approved budget limits. Tasks 21/22 remain partially verified, not fully accepted.
+
+### Narrow acceptance pass — 2026-11-13
+- [x] Recovered recording identifiers retained with original-page citations: Termination E# 2628422 (03-Apr-13) and First Amendment E# 3277834 (28-MAR-23), from recorder stamps; execution/notary/filename dates kept separate.
+- [x] Request for an already-recovered identifier removed; every next action has a document, question and dependency class.
+- [x] Approval-claim strength: unsigned-copy qualification, separate neighborhood/master/municipal tracks, construction vs submission/issuance, institutional role preserved, proportionate Board/ACC qualification (rejection tests in `scripts/test-answer-checks.js`).
+- [x] **This address's answer passes semantic review** (version 3, production proof PASS, manual review vs originals; residual: direction 2 bundles two dependencies).
+- [ ] **Signed-in production behavior** — pending user sign-in in the browser pane.
+- [ ] **Fresh address completes without manual database intervention** — not claimed. This run needed audited checkpoint interventions and five synthesis regenerations. A clean run needs its own budget day under the $5 default (a long document set may pause overnight).
+- [ ] **Real-user comprehension** — not tested; not claimed.
+- [ ] Optional UI follow-up: collapse detailed findings and source links under the short answer.
