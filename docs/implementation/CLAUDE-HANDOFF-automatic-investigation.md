@@ -100,3 +100,6 @@ User's product rule: show the distilled, project-specific bits front and centre 
 
 ## Who-does-what next steps and recorded-copy comparison (2026-11-13 ~19:45 UTC)
 Next steps state the user's and Cornerpin's parts. "Copy recovered; match to recorded instrument unverified" steps offer an upload compared deterministically against the retrieved copy (`lib/recorded-comparison.js`, `lib/recorded-comparison-handler.js`, workflow command `recorded_comparison`). Verified: tests, local real-OCR end-to-end, production UI and 401. Unverified: a real production upload (no recorded copy available). Not built: interpreting other uploads into the answer; automatic retrieval of recorded copies.
+
+## Site findings answer first (2026-11-13 ~20:30 UTC)
+`web/site-answer.js` leads Site Review and the Overview with the few findings that matter (deterministic ranking, merged duplicates, sources as citations, fallbacks to sources then recorded contacts). Tests `scripts/test-site-answer.js`; verified signed-in in production.
