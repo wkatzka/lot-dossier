@@ -42,6 +42,7 @@ assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '
  const dynamicProfile=await P.profile({...target,countyRecord:{url:'https://webercountyutah.gov/parcelsearch/ownership-info.php?id=000000002'}},{request:async()=>new Response('<html><body><a href="https://new-neighborhood.org/documents">Example Ridge HOA</a><a href="https://127.0.0.1/private">Example Ridge private</a></body></html>',{status:200,headers:{'content-type':'text/html'}})});
  assert(dynamicProfile.hosts.includes('new-neighborhood.org'));assert(!P.HOSTS.includes('new-neighborhood.org'));assert(dynamicProfile.seeds.some(s=>s.url==='https://new-neighborhood.org/documents'));assert(!dynamicProfile.hosts.includes('127.0.0.1'));assert(dynamicProfile.discoveredHosts[0].source.includes('neighborhood-hoas'));
  const leadProfile={id:'leads',hosts:['example.org']},leadState=D.create(leadProfile);leadState.externalLeads=[{url:'https://public-files.example.org/original.pdf',from:'https://example.org/library',route:'association_libraries',status:'requires_source_review'},{url:'https://127.0.0.1/private.pdf',from:'https://example.org/library',route:'association_libraries',status:'requires_source_review'}];A.admitDocumentLeads({profile:leadProfile,state:leadState});assert(leadProfile.hosts.includes('public-files.example.org'));assert(!leadProfile.hosts.includes('127.0.0.1'));assert.equal(leadState.jobs.length,1);assert.equal(leadState.profileHash,D.create(leadProfile).profileHash);
+ const synthesis=require('../lib/investigation-synthesis'),oldSynthesize=synthesis.synthesize;synthesis.synthesize=async()=>({version:1,findings:[],missingEvidence:[]});
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
  let saved,claimCount=0;
  try{
@@ -57,7 +58,7 @@ assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '
   S.rpc=async(action,payload)=>{if(action==='status')return {id:'existing'};throw Error('Duplicate enqueue');};P.identity=async()=>{throw Error('Existing job should be reused');};assert.equal((await A.enqueue('Weber',target.parcelId)).id,'existing');
   const rendered=require('../web/title-research-view').investigationPanel({...saved.result,automation:{status:'complete_with_gaps',updatedAt:new Date().toISOString()}});assert(rendered.includes('Before construction'));assert(!rendered.includes('Before permit submission'));assert(rendered.includes('declaration.pdf#page=1'));assert(rendered.includes('Confirm recorded parcel membership')===false);assert(rendered.includes('later amendments'));
   console.log('PASS: exact original quotations, authority and parcel checks, stage isolation, durable checkpoint publication, idle workers, deduplicated enqueue and live interpretation rendering.');
- }finally{S.rpc=old.rpc;D.run=old.run;I.interpret=old.interpret;P.identity=old.identity;P.profile=old.profile;}
+ }finally{synthesis.synthesize=oldSynthesize;S.rpc=old.rpc;D.run=old.run;I.interpret=old.interpret;P.identity=old.identity;P.profile=old.profile;}
 })().catch(e=>{console.error(e);process.exitCode=1});
 
 assert.equal(I.refineTiming({stage:'timing_unresolved',quote:'As a general rule, if work is covered or concealed, it must be inspected prior to covering.'}).stage,'construction_inspection');
