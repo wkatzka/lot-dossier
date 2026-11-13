@@ -569,7 +569,13 @@
     if (done) setTimeout(function () { if (bar.textContent === text) bar.hidden = true; }, 8000);
   }
   window.addEventListener('cornerpin:research-permits', async function (e) {
-    if (!last || !RP) return;
+    if (!RP) return;
+    // After a reload the report lives only in the open project; use it (and prefer it if `last` is another parcel).
+    var wp = window.ProjectWorkspace && window.ProjectWorkspace.project && window.ProjectWorkspace.project();
+    if (wp && wp.report && wp.report.parcel && (!last || !last.parcel || last.parcel.id !== wp.report.parcel.id || last.parcel.county !== wp.report.parcel.county)) {
+      last = JSON.parse(JSON.stringify(wp.report)); last.date = new Date(last.date); renderedReportKey = '';
+    }
+    if (!last) return;
     if (researching) { pendingResearch = e.detail; return; }
     var typeIds = e.detail.typeIds || [], label = e.detail.label || 'your permits';
     var todo = RP.stepsFor(typeIds, researched(last)), prior = last.facts && last.facts.automaticInvestigation;
