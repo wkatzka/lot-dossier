@@ -372,3 +372,7 @@ body details.cp-fine[open]>summary::after{content:none}
 .cp-rule-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .cp-rule-actions button{display:inline-flex;align-items:center;gap:6px}
 @media (max-width:640px){.cp-site-v2>li,.cp-rule-card{flex-direction:column}.cp-ans-head .cp-chip{margin-left:0}}
+.cp-rule-group{margin:0 0 18px}
+.cp-rule-group h4{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:1rem}
+.cp-rule-more{margin-top:10px}
+.cp-who-other{background:#fbecc8;color:#5c3d00}
