@@ -32,3 +32,11 @@ dom.window.close();console.log('PASS: reviewed originals propagate to live and d
 
 const broad=c.LotReport.reviewFindings([{item:'Other statewide requirements',status:'ok',headline:'No state radon, sprinkler, EV-ready or solar-ready mandates'},{item:'Wood-burning fireplaces',status:'ok',headline:'No state ban on new wood-burning fireplaces here'},{item:'Ground snow load',status:'ok',headline:'51 psf ground snow load required for homes here',detail:'Source reference'}]);assert(broad.every(f=>f.status==='verify'));assert(broad.every(f=>f.priorInterpretation));assert.equal(JSON.stringify(c.LotReport.reviewFindings(broad)),JSON.stringify(broad));assert.doesNotMatch(broad.map(f=>f.headline).join(' '),/No state|No statewide|required for homes here/);
 console.log('PASS: saved broad-code summaries and mapped snow values do not assert project clearance or final design loads.');
+
+const geologicLegacy=[{section:'geo',item:'Subdivision geologic report',status:'ok',headline:'Geologic hazards report on file (February 28, 2022)',detail:'Referenced on plat.'},{section:'geo',item:'Nearby test borings',status:'ok',headline:'No archived geotechnical borings within 1 mile',detail:'The site geotechnical report will be the first subsurface data for this lot.'},{section:'geo',item:'State geologic report archive',status:'verify',headline:'Search archive',detail:'A report for this subdivision or a neighbor can stand in for, or narrow, a new study.'}];
+const geoBefore=JSON.stringify(geologicLegacy),geoCorrected=c.LotReport.reviewFindings(geologicLegacy);
+assert(geoCorrected.every(f=>f.status==='verify'));assert.equal(JSON.stringify(geologicLegacy),geoBefore);
+assert.equal(JSON.stringify(c.LotReport.reviewFindings(geoCorrected)),JSON.stringify(geoCorrected));
+assert.doesNotMatch(geoCorrected.map(f=>f.detail).join(' '),/first subsurface|can stand in for/);
+assert(geoCorrected.slice(0,2).every(f=>f.next_step&&f.priorInterpretation));
+console.log('PASS: report existence and empty archive results do not imply geologic clearance or absent prior investigations.');

@@ -1537,7 +1537,7 @@
 
     // Subdivision geologic report referenced on the plat.
     (plat.hazardReports || []).slice(0, 1).forEach(function (h) {
-      out.push(F('geo', 'Subdivision geologic report', 'ok', 'Geologic hazards report on file' + (h.date ? ' (' + title(h.date) + ')' : ''),
+      out.push(F('geo', 'Subdivision geologic report', 'verify', 'Plat cites a geologic report; applicability unresolved' + (h.date ? ' (' + title(h.date) + ')' : ''),
         (h.title ? '"' + title(h.title) + '"' : 'A geologic hazards evaluation') + (h.firm ? ' by ' + title(h.firm) : '') + ' covers the subdivision, per the recorded plat.' +
         (h.publicReview ? ' The plat says it is available for public review at the county planning office; ask for it before ordering a new study.' : '') +
         ' The link searches the state geologic report archive for this title.',
@@ -1566,8 +1566,8 @@
       cql_filter: 'latitude BETWEEN ' + (lat - dLat).toFixed(5) + ' AND ' + (lat + dLat).toFixed(5) + ' AND longitude BETWEEN ' + (lon - dLon).toFixed(5) + ' AND ' + (lon + dLon).toFixed(5) } });
     var holes = (d.features || []).map(function (f) { var p = f.properties; p.km = distPts(lon, lat, p.longitude, p.latitude) / 1000; return p; })
       .filter(function (p) { return p.km <= 1.61; }).sort(function (a, b) { return a.km - b.km; });
-    if (!holes.length) return [F('geo', 'Nearby test borings', 'ok', 'No archived geotechnical borings within 1 mile',
-      "Checked the Utah Geological Survey's Subsurface Geotechnical Database (16,000+ borings and test pits from consultant reports). Coverage is densest along the Wasatch Front; without nearby borings, the site geotechnical report will be the first subsurface data for this lot.",
+    if (!holes.length) return [F('geo', 'Nearby test borings', 'verify', 'No archived geotechnical borings within 1 mile',
+      "Checked the Utah Geological Survey's Subsurface Geotechnical Database (16,000+ borings and test pits from consultant reports). No results in this archive do not establish that no previous investigations exist. Check subdivision reports and their exploration maps with the project geotechnical engineer before deciding what additional investigation is needed.",
       'UGS Subsurface Geotechnical Database', 'https://borehole.geology.utah.gov/')];
     var reports = {};
     holes.forEach(function (h) { (reports[h.report_url] = reports[h.report_url] || []).push(h); });
@@ -1639,7 +1639,7 @@
     var hz = ctx.facts.landslide_cov || (ctx.facts.fault && ctx.facts.fault.ft < 5280);
     return [F('geo', 'State geologic report archive', 'verify', 'Search the UGS archive for site reports on ' + (sub || street || 'this area'),
       "The Utah Geological Survey's GeoData Archive holds thousands of consultant geologic-hazard, fault and geotechnical reports, and since May 2024 every such report filed for a permit must be submitted to it. " +
-      'A report for this subdivision or a neighbor can stand in for, or narrow, a new study' + (hz ? ', which matters here given the mapped hazards nearby' : '') + '. ' +
+      'A subdivision or neighboring report may inform further investigation; only a qualified professional and the applicable authority can establish whether its scope is sufficient for this project' + (hz ? ', which matters here given the mapped hazards nearby' : '') + '. ' +
       'The link opens a search for "' + term + '"' + (sub && street ? '; also try "' + street + '" or the consultant named on the plat' : '') + '.',
       'UGS GeoData Archive', ugs + encodeURIComponent(term), null,
       'Open the archive search; if a report covers this lot, share it with your geotechnical engineer before ordering a new study.')];
@@ -2168,6 +2168,19 @@
       // Apply the same interpretation boundary to older saved reports and new findings.
       // The saved snapshot itself is not mutated; retain its original text for audit history.
       var prior = {status:f.status, headline:f.headline, detail:f.detail, next_step:f.next_step, cost:f.cost};
+      if(f.item==='Subdivision geologic report'){
+        f.status='verify';
+        f.headline=(f.headline||'').replace('Geologic hazards report on file','Plat cites a geologic report; applicability unresolved');
+        f.next_step='Open the recorded plat and any reviewed original excerpts. Obtain the complete cited report and study-area maps from the planning office named on the plat; have the project geotechnical engineer establish applicability to the proposed work.';
+      }
+      if(f.item==='Nearby test borings' && /^No archived geotechnical borings/.test(f.headline||'')){
+        f.status='verify';
+        f.detail='The archive query returned no borings within the stated search area. This does not establish that no previous investigations exist. Unpublished, unindexed or differently located reports may contain relevant data.';
+        f.next_step='Open the UGS boring map and subdivision report references; compare exploration locations with the proposed work through the project geotechnical engineer.';
+      }
+      if(f.item==='State geologic report archive'){
+        f.detail=(f.detail||'').replace(/A report for this subdivision or a neighbor can stand in for, or narrow, a new study[^.]*\./,'A subdivision or neighboring report may inform further investigation. Its scope and suitability for this project must be established by the project geotechnical engineer and applicable authority.');
+      }
       if(/1882728/.test((f.headline||'')+' '+(f.detail||'')+' '+(f.next_step||'')) && /only sold by the Recorder/.test(f.detail||'')){
         f.status='verify';
         f.detail=f.detail.replace(/The recorded text itself is only sold by the Recorder[^.]*\./g,'Public original entry 1882728 is available from the Wolf Creek Resort Master HOA website. Public availability does not establish that it controls this lot; reconcile parcel coverage, amendments, reviewer authority and approval timing.');
