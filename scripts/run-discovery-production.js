@@ -1,13 +1,12 @@
 /* Bounded, restartable worker. State is restored/persisted by the Actions artifact workflow. */
 const fs=require('node:fs'),path=require('node:path');
 const D=require('../lib/record-discovery-engine'),P=require('../lib/discovery-publish'),M=require('../lib/discovery-metadata');
-const crypto=require('node:crypto');
 function extendProfile(state,active,profile){
  const rest=p=>JSON.stringify({...p,endDate:undefined,hosts:undefined,seeds:undefined});
  const subset=(a,b)=>(a||[]).every(x=>(b||[]).some(y=>JSON.stringify(x)===JSON.stringify(y)));
  if(rest(active)!==rest(profile)||!subset(active.hosts,profile.hosts)||!subset(active.seeds,profile.seeds))return null;
  const next={...profile,endDate:active.endDate};
- const nextHash=crypto.createHash('sha256').update(JSON.stringify(next)).digest('hex');
+ const nextHash=D.create(next).profileHash;
  if(nextHash!==state.profileHash){
   (state.profileRevisions||=[]).push({previousHash:state.profileHash,nextHash,checkedAt:new Date().toISOString(),reason:'Additive reviewed hosts/seeds; existing results retained; new seeds are queued by the engine.'});
   state.profileHash=nextHash;

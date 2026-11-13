@@ -22,6 +22,18 @@ const priorInspection='The Architectural Committee requires site inspection appr
 assert.equal(I.validate({...parsed,requirements:[{...requirement,quote:priorInspection,authorityQuote:priorInspection}]},[{page:1,text:priorInspection}],target,doc).requirements[0].stage,'construction');
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
+ const identity=await P.identity('Weber','000000002',{
+  record:async()=>({subdivision:'Example Ridge',lot:'2'}),
+  request:async url=>{
+   const u=new URL(url);
+   if(u.pathname.includes('Municipal')){
+    assert.equal(u.searchParams.get('geometryType'),'esriGeometryPolygon');
+    return {ok:true,json:async()=>({features:[{attributes:{NAME:'Ogden Valley City'}}]})};
+   }
+   return {ok:true,json:async()=>({features:[{attributes:{PARCEL_ADD:'Example',SUBDIV_NAME:'Example Ridge'},geometry:{rings:[[[0,0],[1,0],[1,1],[0,0]]]}}]})};
+  }
+ });
+ assert.equal(identity.municipality,'Ogden Valley City');assert.equal(identity.municipalityAmbiguous,false);
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
  let saved,claimCount=0;
  try{
