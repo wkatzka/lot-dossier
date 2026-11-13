@@ -269,9 +269,12 @@
     });
     if (places.length === 1 || (places.length > 1 && places.every(function (f) { return f.attributes.CountyID === places[0].attributes.CountyID && f.attributes.ZipCode === places[0].attributes.ZipCode; }))) {
       var g = places[0];
-      return parcelAtPoint(FIPS[g.attributes.CountyID], g.geometry.x, g.geometry.y);
+      // Address points may lie in a road or HOA common area. Require situs corroboration.
+      var pointParcel;try{pointParcel=await parcelAtPoint(FIPS[g.attributes.CountyID], g.geometry.x, g.geometry.y);}catch(e){}
+      if(pointParcel&&pointParcel.attrs.PARCEL_ADD){try{var situs=parseStreet(pointParcel.attrs.PARCEL_ADD);if(situs.number===a.number&&situs.name===a.name&&(!a.pre||situs.pre===a.pre)&&(!a.suf||situs.suf===a.suf)&&(!a.type||situs.type===a.type))return pointParcel;}catch(e){}}
+      if(!countyHint)countyHint=FIPS[g.attributes.CountyID];
     }
-    if (places.length > 1) {
+    else if (places.length > 1) {
       var opts = places.slice(0, 12).map(function (f) { return f.attributes.FullAdd + ', ' + (f.attributes.City ? title(f.attributes.City) + ' ' : '') + f.attributes.ZipCode + ' (' + FIPS[f.attributes.CountyID] + ' County)'; });
       throw ambiguous('"' + query + '" matches ' + places.length + ' places in Utah. Add the city or ZIP code, for example "' + opts[0].replace(/ \(.*$/, '') + '".', opts);
     }
