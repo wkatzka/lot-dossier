@@ -38,7 +38,7 @@
     },
     "api/projects.js": {
       "maxDuration": 300,
-      "includeFiles": "{web/permit-facts.js,web/plan-measurements.js,node_modules/@napi-rs/**,node_modules/pdfjs-dist/legacy/build/**}"
+      "includeFiles": "{web/permit-facts.js,web/plan-measurements.js,lib/original-reader-worker.js,lib/recording-stamp-worker.js,node_modules/@napi-rs/**,node_modules/tesseract.js/**,node_modules/tesseract.js-core/**,node_modules/pdfjs-dist/legacy/build/**}"
     }
   },
   "headers": [

@@ -180,6 +180,14 @@
       case 'application':
         ['applicant', 'owner', 'contractor', 'description'].forEach(k => { if (k in a) p.application[k] = clean(a[k]); });
         invalidate(p); event(p, a.type, 'Application details updated.', now); break;
+      case 'recorded_comparison': {
+        // Evidence only: compares a supplied recorded copy with a retrieved copy. No approval or decision.
+        const x=a.result,d=p.documents.find(d=>d.id===x?.documentId&&d.hash===x?.documentHash);
+        required(d&&latest(p,d),'The compared document changed; compare the current version.');
+        required(/^recorded-comparison-\d+$/.test(x.version||'')&&Array.isArray(x.sections)&&x.sections.length<=8,'Invalid comparison result');
+        p.application.recordedComparisons=(p.application.recordedComparisons||[]).filter(y=>!(y.entry===x.entry&&y.referenceSha===x.referenceSha)).concat([clone(x)]);
+        event(p,a.type,'Compared '+d.name+' with the retrieved copy for Entry '+x.entry+': '+String(x.overall).replace(/_/g,' ')+'.',now,'system');break;
+      }
       case 'document': {
         required(a.document && clean(a.document.id) && clean(a.document.name) && clean(a.document.hash), 'Document metadata and checksum are required.');
         required(!doc(p, a.document.id), 'Document already exists.');

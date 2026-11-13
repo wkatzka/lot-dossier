@@ -2,6 +2,7 @@ const C=require('../lib/cloud-projects');
 const {send,query}=require('../lib/respond');
 module.exports=async(req,res)=>{
  if(['permit-extraction','plan-measurements'].includes(query(req).action))return require('../lib/permit-extraction-handler')(req,res);
+ if(query(req).action==='recorded-comparison')return require('../lib/recorded-comparison-handler')(req,res);
  const c=C.config();res.setHeader('Cache-Control','no-store');
  if(req.method==='GET'&&query(req).action==='config')return send(res,200,c);
  if(!c.configured)return send(res,503,{error:'Private cloud storage is not configured. Local projects remain available.'});

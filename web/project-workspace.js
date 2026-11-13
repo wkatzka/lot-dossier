@@ -55,6 +55,8 @@
     if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;ruleTaskId=view?.ruleTaskId||"";draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
   }
   async function commit(command, file) { const next = W.apply(project, command); if(next===project){render();return;} await S.save(next, project.revision, file); project = next; window.SiteDecisions.setActive(project);render(); }
+  // Narrow hook so the approval answer can add a supplied document and its comparison through the same save path.
+  window.ProjectWorkspace={commit:(command,file)=>commit(command,file),project:()=>project};
   function draftProject(){if(tab!=='draft')return project;return {...project,application:{...project.application,cityInspect:{...project.application.cityInspect,typeId:draftType||project.application.cityInspect?.typeId}}};}
   async function openPermitDraft(id){
     await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';

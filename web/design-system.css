@@ -208,3 +208,7 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .cp-answer>button{margin-top:8px}
 .cp-research-details{margin-top:8px}.cp-research-details>summary{cursor:pointer;font-weight:600;padding:8px 0}
 @media (max-width:640px){.cp-answer-grid{grid-template-columns:1fr}.cp-answer-grid dt{margin-top:6px}}
+
+.cp-upload{display:inline-block;margin-top:8px;font-weight:600;cursor:pointer}.cp-upload input{display:block;margin-top:6px;font-weight:400}
+.cp-upload-status{display:block;margin-top:6px;color:var(--cp-muted)}
+.cp-answer-grid dd p{margin:0 0 6px}
