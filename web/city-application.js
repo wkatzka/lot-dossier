@@ -65,7 +65,10 @@
       const f=catalog.fields[key],rowId=section+'.'+key,c=candidate(p,t,section,f),saved=p.application.cityInspect?.answers?.[t.value]?.[rowId];
       const row={...f,section,key:rowId,locked:locked(f),value:saved?saved.value:c.value,basis:saved?saved.basis:c.basis,guidance:c.basis,
         status:saved?(saved.siteVersion===p.siteVersion&&(saved.planVersion||0)===(p.planVersion||0)?'User supplied · review before filing':'Site or plans changed · review saved answer'):(c.value!==''?'Suggested · review before filing':(f.type==='file'?'Document needed':locked(f)&&f.name!=='permit_type'?'Complete in city portal':'Answer needed'))};
-      row.review=Reviews.status(p,row,t.value);if(row.review.state!=='unreviewed')row.status=({confirmed:'Confirmed',rejected:'Rejected · replace this answer','needs-evidence':'Needs evidence',stale:'Stale · review again'})[row.review.state];return row;
+      row.review=Reviews.status(p,row,t.value);
+      // Answers taken unchanged from team details the user confirmed (e.g. their saved company) need no second check.
+      if(!saved&&row.review.state==='unreviewed'&&/^Confirmed project team/.test(c.basis)&&row.value!==''){row.review={...row.review,state:'confirmed'};row.status='From your team details';return row;}
+      if(row.review.state!=='unreviewed')row.status=({confirmed:'Confirmed',rejected:'Rejected · replace this answer','needs-evidence':'Needs evidence',stale:'Stale · review again'})[row.review.state];return row;
     }));
   }
   function readiness(p,id){
