@@ -70,6 +70,8 @@ const D=require('../lib/record-discovery-engine'),PMN=require('../lib/pmn');
   drained.documents[0].unreadPages=[1];fs.writeFileSync(path.join(parallelDir,'manifest.json'),JSON.stringify(drained));
   const restored=await D.run(profile,parallelDir,{maxJobs:0});
   assert.equal(restored.jobs.find(j=>j.key==='ocr|'+drained.documents[0].sha256+'|1').status,'queued','Missing page text must reopen a completed OCR task');
+  const batchState=D.create(profile),batchDoc={sha256:'batch',file:'blobs/batch',kind:'pdf',urls:['https://example.org/batch.pdf'],pages:3,unreadPages:[1,2,3],matches:[],route:profile.routes[0]};batchState.documents=[batchDoc];fs.writeFileSync(path.join(parallelDir,'blobs/batch'),'batch');fs.writeFileSync(path.join(parallelDir,'readings/batch.json'),JSON.stringify({sha256:'batch',pages:[1,2,3].map(page=>({page,text:'',needsOCR:true}))}));for(const page of [1,2,3])D.add(batchState,{kind:'ocr',documentHash:'batch',page,key:'ocr|batch|'+page,route:profile.routes[0]});
+  await D.processJob(batchState,profile,batchState.jobs[0],parallelDir,{ocrBatchSize:3,ocr:async(bytes,page,count)=>{assert.equal(count,3);return {pages:[1,2,3].map(page=>({page,text:'Verified original page '+page}))};}});assert.deepEqual(batchDoc.unreadPages,[]);assert(batchState.jobs.every(j=>j.status==='complete'));assert.equal(JSON.parse(fs.readFileSync(path.join(parallelDir,'readings/batch.json'))).pages.length,3);
   const reordered=Object.fromEntries(Object.entries(profile).reverse());
   await D.run(reordered,parallelDir,{maxJobs:0});
   await assert.rejects(()=>D.run({...reordered,scope:'changed scope'},parallelDir,{maxJobs:0}),/Profile changed/);
