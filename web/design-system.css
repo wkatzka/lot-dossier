@@ -307,3 +307,7 @@ body details.cp-fine[open]>summary::after{content:none}
 .cp-record>summary::before,.cp-record[open]>summary::before{content:none}
 .cp-record>summary{align-items:center}
 .cp-record>summary>span{flex:1}
+/* Win over the workspace theme's #project-workspace button rules (ID specificity). */
+#project-workspace button.cp-btn-primary,html[data-theme] #project-workspace button.cp-btn-primary,#project-workspace .cp-checklist button.primary,html[data-theme] #project-workspace .cp-checklist button.primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
+#project-workspace .approval-task>button[data-id="overview"],html[data-theme] #project-workspace .approval-task>button[data-id="overview"]{border:0;background:none;padding:0;box-shadow:none;color:var(--cp-primary);font-weight:600}
+#project-workspace button.cp-btn-primary .cp-icon,#project-workspace .cp-checklist button.primary .cp-icon{color:#fff}
