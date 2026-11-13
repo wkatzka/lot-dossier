@@ -7,3 +7,13 @@ assert.throws(()=>S.validate({...valid,findings:[{...valid.findings[0],evidenceI
 assert.throws(()=>S.validate({...valid,missingEvidence:[{...valid.missingEvidence[0],evidenceIds:[]}]},items));
 assert(!JSON.stringify(result).includes('approval_obtained'));
 console.log('PASS: cross-document explanations require existing original evidence and retain conditional status; unsupported citations and ungrounded document directions are rejected.');
+(async()=>{
+ let called=false;
+ const output=await S.synthesize([doc],{address:'Synthetic address',parcelId:'000000001',subdivision:'Example',lot:'1',municipality:'Example City',ownerRecord:'must not be sent'}, {key:'test',request:async(url,options)=>{
+  called=true;const body=JSON.parse(options.body);assert.equal(body.max_tokens,5000);assert(!body.messages[0].content.includes('must not be sent'));assert(body.system.includes('untrusted data'));return {ok:true,json:async()=>({stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(valid)}]})};
+ }});assert(called);assert.equal(output.findings[0].citations[0].source,doc.source);
+ await assert.rejects(S.synthesize([doc],{}, {key:'test',request:async()=>({ok:true,json:async()=>({stop_reason:'max_tokens'})})}),/did not finish/);
+ const html=require('../web/title-research-view').investigationPanel({automation:{status:'complete_with_gaps'},synthesis:output,interpretations:[doc],investigation:{questions:[]}});
+ assert(html.includes('What this means for your project'));assert(html.includes('Specific evidence still needed'));assert(html.includes('original.pdf#page=2'));
+ console.log('PASS: bounded synthesis response, private-field exclusion, original links in live UI, and rejection of truncated model output.');
+})().catch(e=>{console.error(e);process.exitCode=1});

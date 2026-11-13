@@ -10,13 +10,23 @@ create table if not exists cornerpin_private.research_jobs(
  available_at timestamptz not null default now(), created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
  unique(county,parcel_id), check(county='Weber'), check(parcel_id ~ '^[0-9]{9}$')
 );
+create table if not exists cornerpin_private.research_readings(
+ sha256 text not null check(sha256 ~ '^[a-f0-9]{64}$'), reader_version integer not null,
+ reading jsonb not null, updated_at timestamptz not null default now(), primary key(sha256,reader_version)
+);
 revoke all on all tables in schema cornerpin_private from public, anon, authenticated;
 create or replace function public.cornerpin_research(p_secret text,p_action text,p_payload jsonb default '{}'::jsonb)
 returns jsonb language plpgsql security definer set search_path=pg_catalog as $$
 declare j cornerpin_private.research_jobs%rowtype; total integer;
 begin
  if not exists(select 1 from cornerpin_private.ai_budget_auth where secret_hash=encode(sha256(convert_to(p_secret,'UTF8')),'hex')) then raise exception 'Research authentication failed'; end if;
- if p_action='authorize_dispatch' then
+ if p_action='reading_get' then
+  return (select reading from cornerpin_private.research_readings where sha256=p_payload->>'sha256' and reader_version=(p_payload->>'version')::integer);
+ elsif p_action='reading_put' then
+  if octet_length((p_payload->'reading')::text)>10000000 or jsonb_typeof(p_payload->'reading'->'pages')<>'array' then raise exception 'Invalid public reading cache'; end if;
+  insert into cornerpin_private.research_readings(sha256,reader_version,reading) values(p_payload->>'sha256',(p_payload->>'version')::integer,p_payload->'reading') on conflict(sha256,reader_version) do update set reading=excluded.reading,updated_at=now();
+  return jsonb_build_object('saved',true);
+ elsif p_action='authorize_dispatch' then
   return jsonb_build_object('allowed',exists(select 1 from cornerpin_private.research_config where dispatch_secret=p_payload->>'token'));
  elsif p_action='enqueue' then
   perform pg_advisory_xact_lock(786223110);
