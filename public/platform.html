@@ -1064,6 +1064,57 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .city-filter{margin:0 0 12px}
 .pw-visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:640px){.cp-next-steps li,.cp-checklist li{grid-template-columns:auto 1fr}.cp-next-steps li>:last-child,.cp-checklist li>button:last-of-type,.cp-checklist li>a{grid-column:1/-1;justify-self:start}.cp-checklist .cp-who{display:none}}
+/* Icons and visual task cards */
+.cp-icon{flex:none;vertical-align:-4px}
+.cp-icon-sm{width:14px;height:14px;opacity:.7}
+.approval-task>button[data-id="overview"]{border:0;background:none;padding:0;color:var(--cp-primary);font-weight:600;margin-bottom:12px;cursor:pointer}
+.cp-task-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.cp-task-head h2{margin:0}
+.cp-task-head .cp-eyebrow{margin:0 0 2px}
+.cp-task-icon{display:inline-flex;width:48px;height:48px;border-radius:12px;align-items:center;justify-content:center;background:var(--cp-primary);color:#fff}
+.cp-task-icon .cp-icon{width:26px;height:26px}
+.cp-task-summary{color:var(--cp-muted);max-width:70ch;margin:12px 0 20px}
+.cp-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:.8rem;font-weight:600;white-space:nowrap}
+.cp-chip .cp-icon{width:15px;height:15px}
+.cp-chip-open{margin-left:auto;background:var(--cp-review,#f3e2b5);color:var(--cp-ink)}
+.cp-chip-muted{background:var(--cp-neutral-bg);color:var(--cp-muted)}
+.cp-qcards{list-style:none;margin:0 0 20px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.cp-qcard{display:flex;flex-direction:column;gap:8px;padding:18px;border:1px solid var(--cp-line);border-radius:12px;background:var(--cp-surface)}
+.cp-qcard h3{margin:4px 0 0;font-size:1.05rem}
+.cp-qcard p{margin:0;color:var(--cp-muted);font-size:.92rem;flex:1}
+.cp-qcard .cp-chip{align-self:flex-start}
+.cp-qcard-top{display:flex;align-items:center;justify-content:space-between}
+.cp-qnum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--cp-ink);color:var(--cp-surface);font-weight:700}
+.cp-qicon{display:inline-flex;width:40px;height:40px;border-radius:10px;align-items:center;justify-content:center;background:var(--cp-neutral-bg);color:var(--cp-primary)}
+.cp-qicon .cp-icon{width:24px;height:24px}
+.cp-task-where{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:16px 0;border-top:1px solid var(--cp-line)}
+.cp-task-where h3{display:flex;align-items:center;gap:8px;margin:0;font-size:1rem;flex-basis:100%}
+.cp-link-pills{display:flex;flex-wrap:wrap;gap:8px}
+.cp-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--cp-line);border-radius:999px;text-decoration:none;color:var(--cp-ink);background:var(--cp-surface);font-size:.9rem}
+.cp-pill:hover{border-color:var(--cp-primary)}
+.cp-btn-primary,.cp-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-weight:600;text-decoration:none;cursor:pointer}
+.cp-btn-primary{background:var(--cp-primary);color:#fff;border:1px solid var(--cp-primary)}
+.cp-btn{border:1px solid var(--cp-line);background:var(--cp-surface);color:var(--cp-ink)}
+.cp-btn:hover{border-color:var(--cp-primary)}
+.cp-contact-card{display:flex;gap:16px;align-items:flex-start;padding:18px;margin:6px 0 16px;border:1px solid var(--cp-line);border-radius:12px;background:var(--cp-neutral-bg)}
+.cp-avatar{flex:none;display:inline-flex;width:52px;height:52px;border-radius:50%;align-items:center;justify-content:center;background:var(--cp-ink);color:var(--cp-surface);font-weight:700;font-size:1.05rem}
+.cp-contact-body{flex:1;min-width:0}
+.cp-contact-body .cp-eyebrow{margin:0 0 4px}
+.cp-contact-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.cp-fine summary{cursor:pointer;color:var(--cp-muted);font-size:.85rem}
+.cp-fine p{font-size:.88rem;color:var(--cp-muted)}
+.cp-done{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;border-left:4px solid var(--cp-primary);background:var(--cp-surface)}
+.cp-done>.cp-icon{color:var(--cp-primary);margin-top:2px}
+.cp-done p{margin:2px 0 0;color:var(--cp-muted)}
+.cp-record>summary{cursor:pointer;list-style:none}
+.cp-record>summary h2{display:inline;margin-right:8px}
+.cp-record>summary::before{content:'▸ ';color:var(--cp-muted)}
+.cp-record[open]>summary::before{content:'▾ '}
+/* Next steps and checklist: icon in a tinted square */
+.cp-step-icon{display:inline-flex;width:40px;height:40px;border-radius:10px;align-items:center;justify-content:center;background:var(--cp-neutral-bg);color:var(--cp-primary)}
+.cp-next-steps li{grid-template-columns:auto 1fr auto}
+.cp-next-steps .cp-who{margin-bottom:4px}
+@media (max-width:640px){.cp-contact-card{flex-direction:column}.cp-chip-open{margin-left:0}.cp-qcards{grid-template-columns:1fr}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -5801,6 +5852,35 @@ if(typeof document!=='undefined')document.addEventListener('click',async e=>{
 const api={PLANS,facts,assess,suggest,command,card};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectIntent=api;
 })(typeof window!=='undefined'?window:globalThis);
 
+/* Small inline icon set (24×24, 2px stroke, currentColor). Decorative: aria-hidden. */
+(function(root){'use strict';
+const P={
+ doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.6c2.9.2 5 2 5 5.4"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+ upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>',
+ check:'<path d="m5 12 5 5 9-10"/>',
+ flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',
+ alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',
+ home:'<path d="m3 11 9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+ building:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10 21v-3h4v3"/>',
+ hardhat:'<path d="M3 17h18v2H3z"/><path d="M5 17a7 7 0 0 1 14 0"/><path d="M10 10V6h4v4"/>',
+ briefcase:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+ clipboard:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 11h6M9 15h4"/>',
+ pin:'<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+ send:'<path d="M21 3 3 10l7 3 3 7z"/><path d="m10 13 4-4"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+ external:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+};
+function icon(name,cls=''){const d=P[name]||P.doc;return '<svg class="cp-icon'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'+d+'</svg>';}
+const api={icon,names:Object.keys(P)};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CpIcons=api;
+})(typeof window!=='undefined'?window:globalThis);
+
 /* "Your company": the contractor enters their details once; every project's permit forms reuse them.
    Saved in this browser (and in each project it is applied to, which syncs when signed in). Applying
    only fills an empty Builder role (and, if chosen, an empty Applicant/contact role); it never
@@ -5905,11 +5985,14 @@ function button(a){if(!a)return '';if(a.type==='scroll')return '<a class="btn" h
  if(a.type==='requirements')return '<button type="button" data-action="requirements">'+esc(a.label)+'</button>';
  if(a.type==='submit-city')return '<button type="button" class="primary" data-action="submit-city"'+(a.disabled?' disabled':'')+'>'+esc(a.label)+'</button>';
  return '<button type="button" data-action="tab" data-id="'+esc(a.id||'')+'">'+esc(a.label)+'</button>';}
+const I=n=>(node?require('./icons'):root.CpIcons)?.icon(n)||'';
+const WHO_ICON={You:'user',HOA:'home',City:'building','Geotech engineer':'hardhat',Surveyor:'pin',Consultant:'hardhat',Cornerpin:'search'};
+const ITEM_ICON=id=>id==='company'?'briefcase':id==='owner'?'user':/^form-/.test(id)?'clipboard':/^docs-/.test(id)?'doc':/^site-/.test(id)?'pin':id==='submit'?'send':'flag';
 function whoTag(w){return '<span class="cp-who cp-who-'+(WHO_TONE[w]||'pro')+'">'+esc(w)+'</span>';}
 function stepsCard(p){const list=steps(p);if(!list.length)return '';
- return '<section class="cp-answer cp-next-steps" aria-labelledby="next-steps-heading"><p class="cp-eyebrow" id="next-steps-heading">Your next steps</p><ol>'+list.map(s=>'<li>'+whoTag(s.who)+'<div><strong>'+esc(s.title)+'</strong><p>'+esc(s.detail)+'</p></div>'+button(s.action)+'</li>').join('')+'</ol></section>';}
+ return '<section class="cp-answer cp-next-steps" aria-labelledby="next-steps-heading"><p class="cp-eyebrow" id="next-steps-heading">Your next steps</p><ol>'+list.map(s=>'<li><span class="cp-step-icon">'+I(WHO_ICON[s.who]||'hardhat')+'</span><div>'+whoTag(s.who)+'<br><strong>'+esc(s.title)+'</strong><p>'+esc(s.detail)+'</p></div>'+button(s.action)+'</li>').join('')+'</ol></section>';}
 function checklistCard(p){const c=checklist(p);
- return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p><ol class="cp-checklist">'+c.items.map(x=>'<li class="'+(x.done?'is-done':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span>'+whoTag(x.who)+'<div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol>'+
+ return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p><ol class="cp-checklist">'+c.items.map(x=>'<li class="'+(x.done?'is-done':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+I(ITEM_ICON(x.id))+'</span><div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol>'+
   (c.ready&&!c.filed?'<div id="submit-help" hidden><p><strong>How to submit:</strong> 1. Download your answers. 2. Open '+(c.portal?'<a href="'+esc(c.portal)+'" target="_blank" rel="noopener">the city\'s permit portal</a>':'the city\'s permit portal')+' and copy them in, attaching your documents. 3. Come back and record the application number.</p><div class="pw-actions"><button type="button" data-action="city-download-all">Download my answers</button><button type="button" data-action="record-receipt">I\'ve submitted it</button></div></div>':'')+'</section>';}
 const api={checklist,steps,stepsCard,checklistCard,planned};if(node)module.exports=api;else root.NextSteps=api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -7718,8 +7801,15 @@ function sourceLibrary(p){if(!A.rules(p).some(r=>r.id==='ov-zone-match'))return 
 function task(p,id){
  const r=A.rules(p).find(x=>x.id===id);if(!r)return '<section class="pw-card"><h2>Approval task unavailable for this property</h2><button data-action="tab" data-id="overview">Return to Overview</button></section>';
  const c=A.evidence.forProject(p),plan=r.actionPlan,contact=c?.chain.find(x=>x.id===plan?.contactId)?.nextStep;
- const instructions=plan?'<h2 id="approval-task-heading" tabindex="-1">'+esc(plan.title)+'</h2><p>'+esc(plan.summary)+'</p><ol>'+plan.questions.map(q=>'<li><strong>'+esc(q.title)+'</strong><p>'+esc(q.instruction)+'</p></li>').join('')+'</ol><div class="pw-actions"><button data-action="tab" data-id="documents">Check or add project documents</button>'+plan.sources.map(x=>link(A.evidence.sources[x.id]?.url,x.label)).join('')+'</div><h3>'+esc(plan.contactTitle)+'</h3><p>'+esc(plan.contactReason)+'</p><p><strong>'+esc(contact?.organization)+'</strong></p><p><a href="tel:'+esc(contact?.phone?.replace(/[^+0-9]/g,''))+'">'+esc(contact?.phone)+'</a> · <a href="mailto:'+esc(contact?.email)+'">'+esc(contact?.email)+'</a> · '+link(contact?.url,'Verify the association registry')+'</p><p><strong>What will finish this task:</strong> '+esc(plan.done)+'</p>':'<h2 id="approval-task-heading" tabindex="-1">'+esc(r.title)+'</h2>';
- return '<section class="pw-card approval-task"><button data-action="tab" data-id="overview">← Project Overview</button>'+instructions+'</section><section class="pw-card"><h2>Supporting evidence and recorded decision</h2>'+detail(p,id)+'</section><button data-action="tab" data-id="rules">All rules and approval stages</button>';
+ const I=n=>root.CpIcons?root.CpIcons.icon(n):'',qIcon=t=>/who|authori/i.test(t)?'users':/when|timing|deadline/i.test(t)?'clock':'doc';
+ const initials=String(contact?.organization||'?').replace(/[^A-Za-z ]/g,' ').split(/\s+/).filter(w=>w.length>2).slice(0,2).map(w=>w[0].toUpperCase()).join('')||'?';
+ const tel=contact?.phone?String(contact.phone).replace(/[^+0-9]/g,''):'';
+ const instructions=plan?'<div class="cp-task-head"><span class="cp-task-icon">'+I('clipboard')+'</span><div><p class="cp-eyebrow">Approval task</p><h2 id="approval-task-heading" tabindex="-1">'+esc(plan.title)+'</h2></div><span class="cp-chip cp-chip-open">'+I('alert')+plan.questions.length+' questions open</span></div><p class="cp-task-summary">'+esc(plan.summary)+'</p>'+
+  '<ol class="cp-qcards">'+plan.questions.map((q,i)=>'<li class="cp-qcard"><div class="cp-qcard-top"><span class="cp-qnum">'+(i+1)+'</span><span class="cp-qicon">'+I(qIcon(q.title))+'</span></div><h3>'+esc(q.title)+'</h3><p>'+esc(q.instruction)+'</p><span class="cp-chip cp-chip-muted">Not answered yet</span></li>').join('')+'</ol>'+
+  '<div class="cp-task-where"><h3>'+I('search')+'Where to look</h3><div class="cp-link-pills">'+plan.sources.map(x=>{const u=A.evidence.sources[x.id]?.url;return /^https?:\/\//.test(u||'')?'<a class="cp-pill" href="'+esc(u)+'" target="_blank" rel="noopener">'+I('doc')+'<span>'+esc(x.label)+'</span>'+I('external','cp-icon-sm')+'</a>':'';}).join('')+'</div><button type="button" class="cp-btn-primary" data-action="tab" data-id="documents">'+I('upload')+'Check or add project documents</button></div>'+
+  (contact?'<div class="cp-contact-card"><div class="cp-avatar" aria-hidden="true">'+esc(initials)+'</div><div class="cp-contact-body"><p class="cp-eyebrow">'+esc(plan.contactTitle)+'</p><strong>'+esc(contact.organization)+'</strong><div class="cp-contact-actions">'+(tel?'<a class="cp-btn" href="tel:'+esc(tel)+'">'+I('phone')+esc(contact.phone)+'</a>':'')+(contact.email?'<a class="cp-btn" href="mailto:'+esc(contact.email)+'">'+I('mail')+'Email</a>':'')+(contact.url?'<a class="cp-btn" href="'+esc(contact.url)+'" target="_blank" rel="noopener">'+I('shield')+'Check registry</a>':'')+'</div><details class="cp-fine"><summary>Why this contact?</summary><p>'+esc(plan.contactReason)+'</p></details></div></div>':'')+
+  '<div class="cp-done">'+I('flag')+'<div><strong>Done when</strong><p>'+esc(plan.done)+'</p></div></div>':'<h2 id="approval-task-heading" tabindex="-1">'+esc(r.title)+'</h2>';
+ return '<section class="pw-card approval-task"><button data-action="tab" data-id="overview">← Project Overview</button>'+instructions+'</section><details class="pw-card cp-record"><summary><h2>Record what you found</h2><span class="pw-muted">Sources, evidence and your decision — once you have the documents</span></summary>'+detail(p,id)+'</details><button data-action="tab" data-id="rules">All rules and approval stages</button>';
 }
 
 function detail(p,id){const r=A.rules(p).find(r=>r.id===id);if(!r)return '';const x=A.reviewCurrent(p,r)||{},prior=p.application.ruleReviews?.[id];return '<h3>'+esc(r.title)+'</h3><p>'+esc(r.trigger)+'</p><p>'+timing(r)+' · '+esc(r.authority)+' · '+link(r.url,r.evidenceCheck?'View source reference':'View original source')+'</p>'+((p.application.areaMap?.layers||[]).find(l=>l.id===r.layer)?.features||[]).map(f=>'<p>'+esc(f.name)+' '+Object.entries(f.attributes||{}).filter(([k,v])=>/link|url/i.test(k)&&/^https:\/\//.test(String(v))).map(([k,v])=>link(v,'Open original mapped record')).join(' ')+'</p>').join('')+ruleNextStep(p,r)+evidenceDetails(p,r.evidenceIds)+(prior&&!A.reviewCurrent(p,r)?'<section class="pw-card"><h4>Previous decision — needs renewed review</h4><p>'+esc(prior.state)+' · '+esc(prior.reviewer)+' · '+esc(prior.at)+'</p><p>'+esc(prior.note)+'</p>'+link(prior.url,'Previous review source')+'<p>The rule, supporting evidence, project or source version has changed, or the earlier review did not record those dependencies. The previous decision is retained but does not satisfy current readiness.</p></section>':'')+'<form data-command="rule_review" data-id="'+r.id+'">'+select('state','Decision',[['approved',r.evidenceCheck?'Controlling evidence reviewed and issue resolved':'Approval received and reviewed'],['not-applicable','Not applicable — documented basis'],['needs-review','Unresolved — follow the next step above']],x.state)+'<label>Reviewed by<input name="reviewer" required value="'+esc(x.reviewer)+'"></label><label>Approval date / reference / conditions or applicability basis<textarea name="note" required>'+esc(x.note)+'</textarea></label><label>Original approval or applicability evidence HTTPS link<input type="url" name="url" value="'+esc(x.url)+'"></label><label>Or current supporting document<select name="documentId"><option value="">Choose evidence</option>'+p.documents.filter(d=>!p.documents.some(n=>n.family===d.family&&n.version>d.version)).map(d=>'<option value="'+esc(d.id)+'"'+(d.id===x.documentId?' selected':'')+'>'+esc(d.name)+'</option>').join('')+'</select></label><p>Uploading or finding a rule does not prove approval. Decisions are your recorded review, not verification by the authority. Changes to plans, scope or map checks require renewed review.</p><button type="submit">Save decision</button></form>';}
