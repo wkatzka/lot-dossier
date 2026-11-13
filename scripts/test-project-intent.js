@@ -29,6 +29,7 @@ s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>
 // Every plan maps to real city permit types.
 for(const [id,p] of Object.entries(I.PLANS))assert(p.typeIds.every(t=>C.catalog.types.some(x=>x.value===t)),id+' maps to catalog types');
 const card=I.card(built);assert(/What are you planning\?/.test(card)&&/not a prediction/.test(card)&&/More options/.test(card)&&/data-intent="evaluate"/.test(card));
+assert(!I.suggest(built).plans.find(p=>p.id==='remodel').reasons.some(r=>r.source),'General statements carry no source');assert(/County parcel record/.test(I.card(built)),'The house fact cites the parcel record');
 console.log('PASS: plans ranked by fit with the lot\'s own records — built vs vacant from the parcel record, sourced reasons, constrained options explained, nothing presumed when unknown.');
 // Saving the choice fills the existing scope and worksheets and removes nothing.
 let p=W.create({parcel:{county:'Weber',id:'222320023',attrs:{PARCEL_ADD:'3459 N WIND RIVER CT'}},date:'2026-11-13',facts:{jurisdiction:'Ogden Valley City',packet:{items:[],rows:[]}}});
