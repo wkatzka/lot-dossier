@@ -67,6 +67,9 @@ const D=require('../lib/record-discovery-engine'),PMN=require('../lib/pmn');
   const parallel=D.create(profile);for(const h of ['one','two']){fs.writeFileSync(path.join(parallelDir,'blobs',h),h);fs.writeFileSync(path.join(parallelDir,'readings',h+'.json'),JSON.stringify({sha256:h,pages:[{page:1,text:'',needsOCR:true},{page:2,text:'',needsOCR:true}]}));parallel.documents.push({sha256:h,file:'blobs/'+h,kind:'pdf',urls:['https://example.org/'+h+'.pdf'],unreadPages:[1,2],matches:[],route:profile.routes[0]});for(const page of [1,2])D.add(parallel,{kind:'ocr',documentHash:h,page,route:profile.routes[0]});}
   fs.writeFileSync(path.join(parallelDir,'manifest.json'),JSON.stringify(parallel));const active=new Set();let simultaneous=0;
   const drained=await D.run(profile,parallelDir,{ocrConcurrency:4,ocr:async(bytes,page)=>{const h=bytes.toString();assert(!active.has(h));active.add(h);simultaneous=Math.max(simultaneous,active.size);await new Promise(r=>setTimeout(r,5));active.delete(h);return {pages:[{page,text:'Read '+h+' '+page}]};}});assert.equal(drained.coverage.pending,0);assert.equal(drained.coverage.unreadDocuments,0);assert.equal(simultaneous,2);for(const h of ['one','two'])assert(JSON.parse(fs.readFileSync(path.join(parallelDir,'readings',h+'.json'))).pages.every(p=>p.text.includes(h)));
+  drained.documents[0].unreadPages=[1];fs.writeFileSync(path.join(parallelDir,'manifest.json'),JSON.stringify(drained));
+  const restored=await D.run(profile,parallelDir,{maxJobs:0});
+  assert.equal(restored.jobs.find(j=>j.kind==='ocr'&&j.documentHash===drained.documents[0].sha256&&j.page===1).status,'queued','Missing page text must reopen a completed OCR task');
   const reordered=Object.fromEntries(Object.entries(profile).reverse());
   await D.run(reordered,parallelDir,{maxJobs:0});
   await assert.rejects(()=>D.run({...reordered,scope:'changed scope'},parallelDir,{maxJobs:0}),/Profile changed/);
