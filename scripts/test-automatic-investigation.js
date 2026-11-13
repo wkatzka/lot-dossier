@@ -22,6 +22,9 @@ const priorInspection='The Architectural Committee requires site inspection appr
 assert.equal(I.validate({...parsed,requirements:[{...requirement,quote:priorInspection,authorityQuote:priorInspection}]},[{page:1,text:priorInspection}],target,doc).requirements[0].stage,'construction');
 assert.equal(I.refineTiming({stage:'timing_unresolved',quote:'No activities shall commence on any portion of an Owner’s property until an application for approval has been submitted to and finally approved by the DRB'}).stage,'construction');
 assert.equal(I.refineTiming({stage:'submission',quote:'Any requests for variances shall be submitted following review and approval by the Design Review Board.'}).stage,'other_submission');
+const effectText='The Declarant hereby terminates the reserved appointment rights effective January 1, 2020.';
+const effect=I.validate({...parsed,requirements:[],authorityChanges:[{kind:'termination',affectedAuthority:'Declarant',description:'Appointment rights terminate',quote:effectText,page:1,dateQuote:'effective January 1, 2020',datePage:1}]},[{page:1,text:effectText}],target,doc);assert.equal(effect.authorityChanges.length,1);assert.equal(effect.authorityChanges[0].dateQuote,'effective January 1, 2020');assert.equal(effect.effectExtractionVersion,1);
+assert.equal(I.validate({...parsed,requirements:[],authorityChanges:[{...effect.authorityChanges[0],quote:'Unsupported termination clause'}]},[{page:1,text:effectText}],target,doc).authorityChanges.length,0);
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
  const identity=await P.identity('Weber','000000002',{
