@@ -41,6 +41,7 @@ assert(NS.checklist(p).items[0].done&&/Peak Builders/.test(NS.checklist(p).items
 for(const r of p.requirements)r.state='reviewed';
 const filled={...p,application:{...p.application}};c=NS.checklist(filled);
 assert(c.items.filter(x=>/^(docs|site)-/.test(x.id)).every(x=>x.done));
+const legacy=structuredClone(p);for(const r of legacy.requirements)delete r.group;assert.deepEqual(NS.checklist(legacy).items.map(x=>x.id),NS.checklist(p).items.map(x=>x.id),'Older projects without requirement groups get the same checklist');
 console.log('PASS: one Ready-to-file checklist per project, built from the planned permits, ending in a single Submit step that unlocks when everything above is done.');
 
 // Permit form: only questions that need the user, with "Show all".

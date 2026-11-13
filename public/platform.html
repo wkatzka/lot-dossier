@@ -5857,7 +5857,9 @@ function checklist(p){
    items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:n||m?[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in to check':''].filter(Boolean).join(' · '):'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
   else items.push({id:'form-'+t,who:'You',title:label(t)+' application',detail:'Fill in '+jurisdiction(p)+'\'s own form; Cornerpin has not mapped it yet.',done:false,action:{type:'tab',id:'filing',label:'Open'}});
   const reqs=(p.requirements||[]).filter(r=>r.permitType===t&&r.required);
-  const docs=reqs.filter(r=>r.group==='What the city asks for'),site=reqs.filter(r=>r.group==='What this lot adds'||r.group==='City rules for this work');
+  // Projects saved before requirements carried their packet group: infer it from the stable id.
+  const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
+  const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
   if(docs.length){const left=docs.filter(r=>!done(r));items.push({id:'docs-'+t,who:'You',title:'Documents for the '+label(t)+' permit',detail:left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):'All marked ready',done:!left.length,action:{type:'requirements',label:left.length?'Get ready':'Review'}});}
   if(site.length){const left=site.filter(r=>!done(r));items.push({id:'site-'+t,who:'You',title:'Lot checks for the '+label(t)+' permit',detail:left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):'All checked',done:!left.length,action:{type:'requirements',label:left.length?'Check':'Review'}});}
  }
