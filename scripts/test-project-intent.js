@@ -11,7 +11,7 @@ const findings=[{item:'Assessor',section:'land',status:'ok',url:'https://county.
  {item:'HOA registration',section:'ccr',status:'ok',source:'Utah HOA registry',url:'https://hoa.example/'},
  {item:'Pool grading and ground conditions',section:'pool',status:'watch',headline:'Lot-average slope 20.0%',source:'Pool screening'}];
 const zone={front:30,rear:30,side:10,zone:'RE-15',source:'https://city.example/zoning'};
-const built={parcel:{attrs:{HOUSE_CNT:'1',TOTAL_MKT_VALUE:1165460,LAND_MKT_VALUE:300000,EFFBUILT_YR:2026,PARCEL_ACRES:0.08}},facts:{lot_sf:2792,zone_std:zone},findings};
+const built={parcel:{attrs:{HOUSE_CNT:'2',PROP_CLASS:'Residential',BUILT_YR:1997,EFFBUILT_YR:2014,TOTAL_MKT_VALUE:523884,LAND_MKT_VALUE:123102,PARCEL_ACRES:0.08}},facts:{lot_sf:2792,zone_std:zone},findings};
 const vacant={parcel:{attrs:{HOUSE_CNT:'0',TOTAL_MKT_VALUE:310000,LAND_MKT_VALUE:300000,PARCEL_ACRES:0.4}},facts:{lot_sf:17424,zone_std:zone},findings};
 const unknown={parcel:{attrs:{PARCEL_ACRES:0.4}},facts:{zone_std:zone},findings};
 // Built lot: changes to the house rank first; new home and footprint work are constrained, with sourced reasons.
@@ -24,11 +24,16 @@ assert(!s.plans.some(p=>p.reasons.some(r=>/HOA.s approval first/.test(r.text))),
 // Vacant lot: building a home leads; changes to a house are not offered.
 s=I.suggest(vacant);assert.equal(s.lot.state,'vacant');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');
 assert(!s.plans.some(p=>['addition','remodel','pool','replace-home'].includes(p.id)),'No house, so no house changes');
-// Record in transition (Cobabe 224410004): house count 1 but "Vacant - Agricultural", no size, year built or values.
-const building={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Vacant - Agricultural',TOTAL_MKT_VALUE:null,LAND_MKT_VALUE:null,BLDG_SQFT:null,BUILT_YR:null,EFFBUILT_YR:2026,PARCEL_ACRES:3.1}},facts:{zone_std:zone},findings};
-s=I.suggest(building);assert.equal(s.lot.state,'building');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');
-assert(/Vacant - Agricultural/.test(s.plans[0].reasons[0].text)&&/not built yet/.test(s.plans[0].reasons[0].text));
-assert(!s.plans.some(p=>['addition','remodel','basement','adu','replace-home'].includes(p.id)),'No finished house, so no remodel or addition');assert(/being built/.test(I.card(building)));
+// Weber's HOUSE_CNT is 1 even on vacant parcels (Cobabe 224410004: "Vacant - Agricultural", no values): it is not a house.
+const cobabe={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Vacant - Agricultural',TOTAL_MKT_VALUE:null,LAND_MKT_VALUE:null,BLDG_SQFT:null,BUILT_YR:null,EFFBUILT_YR:2026,PARCEL_ACRES:3.1}},facts:{zone_std:zone},findings};
+s=I.suggest(cobabe);assert.equal(s.lot.state,'vacant');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');assert(/Vacant - Agricultural with no building on record/.test(s.plans[0].reasons[0].text));
+assert(!s.plans.some(p=>['addition','remodel','basement','adu','replace-home'].includes(p.id)),'No house, so no remodel or addition');
+// New construction (222320023: no year built yet, $865k of buildings, effective 2026): no tear-down; finishing and outdoor work first.
+const fresh={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Residential',TOTAL_MKT_VALUE:1165460,LAND_MKT_VALUE:300000,EFFBUILT_YR:2026,PARCEL_ACRES:0.4}},facts:{lot_sf:17424},findings:[]};
+s=I.suggest(fresh);assert(s.lot.recent&&!s.plans.some(p=>p.id==='replace-home'));assert.equal(s.plans[0].id,'basement');assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good');assert(/newly built/.test(I.card(fresh)));
+// Teardown candidate (240150017: 1945 house, $2k of buildings on $438k of land): replacing it leads.
+const tear={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Residential',BUILT_YR:1945,EFFBUILT_YR:2002,TOTAL_MKT_VALUE:440087,LAND_MKT_VALUE:438102,PARCEL_ACRES:0.75}},facts:{lot_sf:32670},findings:[]};
+s=I.suggest(tear);assert(s.lot.teardown);assert.equal(s.plans[0].id,'replace-home');assert.equal(s.plans[0].fit,'good');assert(/\$2k on \$438k of land/.test(s.plans[0].reasons[0].text));assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good');
 // Unknown: nothing is presumed.
 s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>p.id==='new-home')&&s.plans.some(p=>p.id==='remodel'));assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good','Interior work is not a good fit when a house is not established');assert(/does not say whether there is a house/.test(I.card(unknown)));
 // Every plan maps to real city permit types.

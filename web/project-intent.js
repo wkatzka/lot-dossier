@@ -26,16 +26,22 @@ const PLANS={
 const FIT={good:'Good fit',possible:'Possible',constrained:'Constrained'};
 function facts(report){
  const a=report?.parcel?.attrs||{},f=report?.facts||{},findings=report?.findings||[],n=v=>Number.isFinite(Number(v))?Number(v):null;
- const houses=n(a.HOUSE_CNT),total=n(a.TOTAL_MKT_VALUE),land=n(a.LAND_MKT_VALUE),improvement=total!=null&&land!=null?total-land:null;
- const built=n(a.BUILT_YR)||n(a.EFFBUILT_YR),acres=n(a.PARCEL_ACRES),sqft=Number(f.lot_sf)||(acres?acres*43560:null);
- const yearBuilt=n(a.BUILT_YR),bldgSf=n(a.BLDG_SQFT),propClass=String(a.PROP_CLASS||''),vacantClass=/^vacant/i.test(propClass);
- // A house count with a vacant land class and no building size or year built is a record in transition
- // (typically a house being built and not yet assessed) — not an existing house to remodel or add to.
- const inTransition=houses>0&&!yearBuilt&&!bldgSf&&(vacantClass||improvement==null);
- const state=inTransition?'building':houses>0||(improvement!=null&&total>0&&improvement>Math.max(25000,0.15*total))?'improved':houses===0&&improvement!=null&&improvement<=Math.max(25000,0.15*(total||0))||(vacantClass&&!houses&&!bldgSf)?'vacant':'unknown';
+ // Weber's HOUSE_CNT is 1 on almost every parcel, vacant ones included, so it is not evidence of a house.
+ // Decide from the land class, year built and how much of the market value is in buildings.
+ const total=n(a.TOTAL_MKT_VALUE),land=n(a.LAND_MKT_VALUE),improvement=total!=null&&land!=null?total-land:null;
+ const yearBuilt=n(a.BUILT_YR),eff=n(a.EFFBUILT_YR),built=yearBuilt||eff,acres=n(a.PARCEL_ACRES),sqft=Number(f.lot_sf)||(acres?acres*43560:null);
+ const propClass=String(a.PROP_CLASS||''),vacantClass=/^vacant/i.test(propClass),homeClass=/^(residential|mixed)/i.test(propClass);
+ const bigImp=improvement!=null&&total>0&&improvement>Math.max(25000,0.15*total);
+ const state=(vacantClass||(!propClass&&improvement!=null&&!yearBuilt))&&!bigImp?'vacant':bigImp||(homeClass&&yearBuilt)?'improved':'unknown';
+ const year=new Date().getFullYear();
+ // New construction: built in the last two years, or a large building value with no year built yet.
+ const recent=state==='improved'&&((yearBuilt&&yearBuilt>=year-2)||(!yearBuilt&&eff&&eff>=year-1&&bigImp));
+ // Teardown candidate: an old house carrying little of the value next to its land.
+ const teardown=state==='improved'&&!recent&&yearBuilt&&yearBuilt<year-50&&improvement!=null&&total>0&&improvement<0.2*total;
+ const outbuildings=state==='vacant'&&!!(yearBuilt||n(a.BLDG_SQFT));
  const find=(re,section)=>findings.find(x=>(!section||x.section===section)&&re.test(x.item||''));
  const parcelSrc={label:'County parcel record',url:findings.find(x=>x.item==='Assessor')?.url||findings.find(x=>x.item==='Parcel')?.url||null};
- return {state,houses,built,propClass,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
+ return {state,yearBuilt,recent,teardown,outbuildings,built,propClass,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
   hoa:find(/HOA registration|CC&Rs/i,'ccr'),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status))};
 }
 const r=(text,src)=>({text,source:src||null});
@@ -43,13 +49,15 @@ const r=(text,src)=>({text,source:src||null});
 function assess(plan,F,{asAddOn=false}={}){
  const reasons=[],small=F.sqft&&F.sqft<6000,setbacks=F.zone&&(F.zone.front||F.zone.rear)?F.zone:null;
  const lotLine=F.sqft?'Lot is about '+Math.round(F.sqft).toLocaleString('en-US')+' sq ft'+(F.acres?' ('+F.acres+' acre)':''):'';
- const houseLine=F.state==='building'?'County record counts '+(F.houses>1?F.houses+' houses':'a house')+' but classifies the land as '+(F.propClass||'vacant')+', with no building size or year built'+(F.built?' (effective year '+F.built+')':'')+'. The house is most likely not built yet':F.state==='improved'?'County record shows '+(F.houses>1?F.houses+' houses':'a house')+(F.built?' (built or updated '+F.built+')':'')+(F.improvement!=null?' worth about $'+Math.round(F.improvement/1000).toLocaleString('en-US')+'k':''):F.state==='vacant'?'County record shows no house on the lot':'';
+ const money=v=>'$'+(v>=1e6?(v/1e6).toFixed(1)+'M':Math.round(v/1000).toLocaleString('en-US')+'k');
+ const houseLine=F.state==='vacant'?'County record classifies the land as '+(F.propClass||'vacant')+(F.outbuildings?', with outbuildings'+(F.yearBuilt?' from '+F.yearBuilt:'')+' but no house value':' with no building on record'):
+  F.state==='improved'?'County record shows a house'+(F.yearBuilt?' built in '+F.yearBuilt:F.recent?', newly assessed ('+F.built+')':'')+(F.improvement!=null&&F.improvement>0?', buildings valued at about '+money(F.improvement)+(F.land?' on '+money(F.land)+' of land':''):''):'';
  let fit='possible';
  if(plan==='evaluate')return {fit:null,reasons:[r('See the site findings and approvals without choosing a project yet.')]};
- if(plan==='new-home'){if(F.state==='building'){fit='good';reasons.push(r(houseLine+'.',F.parcelSrc));}else if(F.state==='vacant'){fit='good';reasons.push(r(houseLine,F.parcelSrc));}else if(F.state==='improved'){fit='constrained';reasons.push(r(houseLine+'; a new home would mean replacing it.',F.parcelSrc));}}
- if(plan==='replace-home'){if(F.state!=='improved')return null;fit='constrained';reasons.push(r(houseLine+(F.built&&F.built>=new Date().getFullYear()-5?'; recently built':''),F.parcelSrc));}
- if(!asAddOn&&['addition','remodel','basement','adu','deck','garage','pool','solar','retaining-wall'].includes(plan)&&(F.state==='vacant'||F.state==='building'))return null;
- if(['remodel','basement','adu'].includes(plan)){if(F.state==='improved'){fit='good';reasons.push(r('Work stays inside the existing house, so setbacks and most site hazards don\'t change.'));}else reasons.push(r('Only if there is a finished house on the lot; the county parcel record does not say.',F.parcelSrc));
+ if(plan==='new-home'){if(F.state==='vacant'){fit='good';reasons.push(r(houseLine+'.',F.parcelSrc));}else if(F.state==='improved'){fit=F.teardown?'possible':'constrained';reasons.push(r(houseLine+'; a new home would mean '+(F.recent?'replacing a house that was just built':'replacing it')+'.',F.parcelSrc));}}
+ if(plan==='replace-home'){if(F.state!=='improved'||F.recent)return null;if(F.teardown){fit='good';reasons.push(r(houseLine+': most of the value is in the land, which is typical of a teardown.',F.parcelSrc));}else{fit='constrained';reasons.push(r(houseLine+'.',F.parcelSrc));}}
+ if(!asAddOn&&['addition','remodel','basement','adu','deck','garage','pool','solar','retaining-wall'].includes(plan)&&F.state==='vacant')return null;
+ if(['remodel','basement','adu'].includes(plan)){if(F.state==='improved'&&F.teardown){reasons.push(r(houseLine+'; check the house is worth keeping before remodeling.',F.parcelSrc));}else if(F.state==='improved'){fit=F.recent&&plan==='remodel'?'possible':'good';if(F.recent&&plan==='remodel')reasons.push(r(houseLine+'; a new house rarely needs remodeling yet.',F.parcelSrc));reasons.push(r('Work stays inside the existing house, so setbacks and most site hazards don\'t change.'));}else reasons.push(r('Only if there is a finished house on the lot; the county parcel record does not say.',F.parcelSrc));
   if(plan==='basement')fit='possible',reasons.push(r('Only if the house has an unfinished basement; the county parcel record does not say.'));
   if(plan==='adu')fit='possible',reasons.push(r('Check that zoning and the HOA covenants allow a second unit inside the house.',F.hoa?{label:F.hoa.source,url:F.hoa.url}:null));}
  if(PLANS[plan].footprint&&plan!=='new-home'&&plan!=='replace-home'){
@@ -67,13 +75,15 @@ const ORDER={good:0,possible:1,constrained:2};
 function suggest(report){
  const F=facts(report),out=[];
  for(const id of Object.keys(PLANS)){if(id==='evaluate')continue;const a=assess(id,F);if(a)out.push({id,...PLANS[id],...a});}
- out.sort((x,y)=>ORDER[x.fit]-ORDER[y.fit]);
+ // Among equal fits, a just-built house leads with finishing and outdoor work before changing the house.
+ const first=F.recent?['basement','garage','pool','deck','solar','retaining-wall']:[],rank=id=>{const i=first.indexOf(id);return i<0?first.length:i;};
+ out.sort((x,y)=>ORDER[x.fit]-ORDER[y.fit]||rank(x.id)-rank(y.id));
  return {lot:F,plans:out,evaluate:{id:'evaluate',...PLANS.evaluate,...assess('evaluate',F)}};
 }
 function command(id,addOns=[]){const p=PLANS[id];if(!p)throw Error('Unknown plan');const extra=addOns.filter(a=>p.addOns.includes(a)&&PLANS[a]);
  const all=[p,...extra.map(a=>PLANS[a])],typeIds=[...new Set(all.flatMap(x=>x.typeIds))],scope={...p.scope};if(extra.some(a=>PLANS[a].scope.adu))scope.adu='yes';
  return {type:'project_intent',plan:id,addOns:extra,label:[p.short||p.label,...extra.map(a=>PLANS[a].short.toLowerCase())].join(' + '),typeIds,scope,pool:all.some(x=>x.pool)?'included':null};}
-function basis(F){return F.state==='building'?'The county record suggests a house is being built here, so building it is listed first.':F.state==='improved'?'This lot already has a house, so projects that change it are listed first.':F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
+function basis(F){return F.state==='improved'?(F.teardown?'This lot has an old house valued well below its land, so replacing it is listed first.':F.recent?'This lot has a newly built house, so additions to it are listed first.':'This lot already has a house, so projects that change it are listed first.'):F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
 const tag=fit=>fit?' <span class="cp-status cp-'+(fit==='good'?'ok':fit==='constrained'?'review':'neutral')+'">'+FIT[fit]+'</span>':'';
 const reasonList=(x,n=3)=>x.reasons.length?'<ul class="cp-intent-reasons">'+x.reasons.slice(0,n).map(z=>'<li>'+esc(z.text)+(z.source?.label?' <small>('+link(z.source.url,z.source.label)+')</small>':'')+'</li>').join('')+'</ul>':'';
 function card(report,{project=null,limit=4,selected=null}={}){

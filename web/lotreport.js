@@ -376,7 +376,7 @@
     if (a.PROP_CLASS) bits.push('assessor class: ' + a.PROP_CLASS);
     if (a.SUBDIV_NAME) bits.push('subdivision: ' + a.SUBDIV_NAME);
     var status = 'ok', extra = '';
-    if (a.BLDG_SQFT || a.BUILT_YR) { status = 'watch'; extra = ' Assessor shows an existing structure (' + a.BLDG_SQFT + ' sq ft, built ' + a.BUILT_YR + '): demolition or remodel may apply.'; }
+    if (a.BLDG_SQFT || a.BUILT_YR) { status = 'watch'; extra = ' Assessor shows an existing structure (' + [a.BLDG_SQFT ? a.BLDG_SQFT + ' sq ft' : '', a.BUILT_YR ? 'built ' + a.BUILT_YR : ''].filter(Boolean).join(', ') + '): demolition or remodel may apply.'; }
     return [F('land', 'Parcel', status, 'Parcel ' + ctx.parcel.id + ', ' + (a.PARCEL_ADD || 'no situs address'), bits.join('; ') + '.' + extra + (ctx.parcel.addressMatchNote ? ' ' + ctx.parcel.addressMatchNote : ''),
       'UGRC statewide parcels (LIR)', a.ASSESSOR_SRC)];
   };
