@@ -46,6 +46,12 @@ begin
   if not found then return null; end if;
   update cornerpin_private.research_jobs set status='running',lease=gen_random_uuid(),lease_until=now()+interval '6 minutes',attempts=attempts+1,updated_at=now() where id=j.id returning * into j;
   return to_jsonb(j);
+ elsif p_action='progress' then
+  if octet_length((p_payload->'checkpoint')::text)>12000000 then raise exception 'Research checkpoint too large'; end if;
+  update cornerpin_private.research_jobs set checkpoint=p_payload->'checkpoint',phase=p_payload->>'phase',updated_at=now()
+   where id=(p_payload->>'id')::uuid and lease=(p_payload->>'lease')::uuid and lease_until>now() returning * into j;
+  if not found then raise exception 'Research lease expired'; end if;
+  return jsonb_build_object('saved',true);
  elsif p_action='save' then
   if octet_length(p_payload::text)>12000000 then raise exception 'Research checkpoint too large'; end if;
   update cornerpin_private.research_jobs set checkpoint=p_payload->'checkpoint',result=p_payload->'result',phase=p_payload->>'phase',status=p_payload->>'status',lease=null,lease_until=null,available_at=now()+make_interval(secs=>least(86400,greatest(0,coalesce((p_payload->>'delaySeconds')::integer,0)))),updated_at=now()
