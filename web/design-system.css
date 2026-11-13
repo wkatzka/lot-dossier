@@ -212,3 +212,6 @@ body summary{list-style:none!important;display:flex;align-items:center;justify-c
 .cp-upload{display:inline-block;margin-top:8px;font-weight:600;cursor:pointer}.cp-upload input{display:block;margin-top:6px;font-weight:400}
 .cp-upload-status{display:block;margin-top:6px;color:var(--cp-muted)}
 .cp-answer-grid dd p{margin:0 0 6px}
+
+.cp-site-list{margin:0 0 8px;padding-left:20px}.cp-site-list li{margin:0 0 14px}.cp-site-list li p{margin:0 0 4px}
+.cp-site-list .cp-status{margin-left:6px;font-size:12px}.cp-site-list button{margin-left:8px;padding:2px 10px;font-size:13px}

@@ -521,6 +521,8 @@
     renderedReportKey=nextReportKey;
     $('rv-body').innerHTML = reportHTML(last, null, false);
     if (window.ReportCategories) window.ReportCategories.mount($('rv-body'));
+    // Answer first: the findings that matter for this lot, then the full report sections below.
+    if (window.SiteAnswer) { var wp=window.ProjectWorkspace&&window.ProjectWorkspace.project(), proj=wp&&wp.report&&wp.report.parcel&&last.parcel&&wp.report.parcel.id===last.parcel.id?wp:null, wrap=$('rv-body').querySelector('.wrap')||$('rv-body'), nav=wrap.querySelector('.report-section-nav'), html='<div id="site-answer">'+window.SiteAnswer.card(last,{project:proj,where:'site'})+'</div>'; if(nav)nav.insertAdjacentHTML('afterend',html); else wrap.insertAdjacentHTML('afterbegin',html); }
     }
     document.body.classList.add('show-report');
     $('rv-plan').textContent = last.plan ? 'Update building plans' : 'Add building plans';
