@@ -16,7 +16,7 @@ const vacant={parcel:{attrs:{HOUSE_CNT:'0',TOTAL_MKT_VALUE:310000,LAND_MKT_VALUE
 const unknown={parcel:{attrs:{PARCEL_ACRES:0.4}},facts:{zone_std:zone},findings};
 // Built lot: changes to the house rank first; new home and footprint work are constrained, with sourced reasons.
 let s=I.suggest(built);assert.equal(s.lot.state,'improved');
-assert.equal(s.plans[0].id,'remodel');assert.equal(s.plans.find(p=>p.id==='new-home').fit,'constrained');
+assert.equal(s.plans[0].id,'remodel');assert(!s.plans.some(p=>p.id==='new-home')&&s.plans.find(p=>p.id==='replace-home').fit==='constrained','A house on the lot: rebuilding is offered once, as a tear-down');
 const add=s.plans.find(p=>p.id==='addition');assert.equal(add.fit,'constrained');assert(add.reasons.some(r=>/subdivision plat may set different ones/.test(r.text)&&r.source.url===zone.source),'Setback reason is sourced and notes the plat may differ');
 assert(add.reasons.some(r=>/geotechnical/.test(r.text)&&r.source.url==='https://ugs.example/'));
 assert(s.plans.every(p=>p.reasons.every(r=>r.source===null||r.source.label)),'Every sourced reason names its source');
@@ -34,6 +34,10 @@ s=I.suggest(fresh);assert(s.lot.recent&&!s.plans.some(p=>p.id==='replace-home'))
 // Teardown candidate (240150017: 1945 house, $2k of buildings on $438k of land): replacing it leads.
 const tear={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Residential',BUILT_YR:1945,EFFBUILT_YR:2002,TOTAL_MKT_VALUE:440087,LAND_MKT_VALUE:438102,PARCEL_ACRES:0.75}},facts:{lot_sf:32670},findings:[]};
 s=I.suggest(tear);assert(s.lot.teardown);assert.equal(s.plans[0].id,'replace-home');assert.equal(s.plans[0].fit,'good');assert(/\$2k on \$438k of land/.test(s.plans[0].reasons[0].text));assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good');
+// HOA wording: "in an HOA" only with a registry match; a platted subdivision alone means CC&Rs are likely; none otherwise.
+const ccr=h=>({...built,findings:[{item:'CC&Rs / HOA',section:'ccr',status:'verify',headline:h,source:'County parcel record',url:'https://p.example/'}]});
+const deckReason=x=>I.suggest(x).plans.find(p=>p.id==='deck').reasons.map(r=>r.text).join(' ');
+assert(/in an HOA/.test(deckReason(built))&&/CC&Rs are likely/.test(deckReason(ccr('W Hampton: recorded CC&Rs likely')))&&!/HOA|CC&Rs/.test(deckReason(ccr('Not in a platted subdivision per assessor'))));
 // Unknown: nothing is presumed.
 s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>p.id==='new-home')&&s.plans.some(p=>p.id==='remodel'));assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good','Interior work is not a good fit when a house is not established');assert(/does not say whether there is a house/.test(I.card(unknown)));
 // Every plan maps to real city permit types.

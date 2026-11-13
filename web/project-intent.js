@@ -42,7 +42,9 @@ function facts(report){
  const find=(re,section)=>findings.find(x=>(!section||x.section===section)&&re.test(x.item||''));
  const parcelSrc={label:'County parcel record',url:findings.find(x=>x.item==='Assessor')?.url||findings.find(x=>x.item==='Parcel')?.url||null};
  return {state,yearBuilt,recent,teardown,outbuildings,built,propClass,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
-  hoa:find(/HOA registration|CC&Rs/i,'ccr'),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status))};
+  // HOA: confirmed by the state registry match, or only likely (platted subdivision with CC&Rs referenced).
+  hoa:find(/HOA registration/i,'ccr')||(f.hoaReg?{source:'Utah HOA registry',url:f.hoaReg.source||null}:null)||findings.find(x=>x.section==='ccr'&&/CC&Rs/i.test(x.item||'')&&!/not in a platted subdivision/i.test(x.headline||''))||null,
+  hoaConfirmed:!!(find(/HOA registration/i,'ccr')||f.hoaReg),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status))};
 }
 const r=(text,src)=>({text,source:src||null});
 // Fit and reasons for one plan on this lot.
@@ -54,12 +56,12 @@ function assess(plan,F,{asAddOn=false}={}){
   F.state==='improved'?'County record shows a house'+(F.yearBuilt?' built in '+F.yearBuilt:F.recent?', newly assessed ('+F.built+')':'')+(F.improvement!=null&&F.improvement>0?', buildings valued at about '+money(F.improvement)+(F.land?' on '+money(F.land)+' of land':''):''):'';
  let fit='possible';
  if(plan==='evaluate')return {fit:null,reasons:[r('See the site findings and approvals without choosing a project yet.')]};
- if(plan==='new-home'){if(F.state==='vacant'){fit='good';reasons.push(r(houseLine+'.',F.parcelSrc));}else if(F.state==='improved'){fit=F.teardown?'possible':'constrained';reasons.push(r(houseLine+'; a new home would mean '+(F.recent?'replacing a house that was just built':'replacing it')+'.',F.parcelSrc));}}
+ if(plan==='new-home'){if(F.state==='vacant'){fit='good';reasons.push(r(houseLine+'.',F.parcelSrc));}else if(F.state==='improved'){if(!F.recent)return null;fit='constrained';reasons.push(r(houseLine+'; a new home would mean replacing a house that was just built.',F.parcelSrc));}}
  if(plan==='replace-home'){if(F.state!=='improved'||F.recent)return null;if(F.teardown){fit='good';reasons.push(r(houseLine+': most of the value is in the land, which is typical of a teardown.',F.parcelSrc));}else{fit='constrained';reasons.push(r(houseLine+'.',F.parcelSrc));}}
  if(!asAddOn&&['addition','remodel','basement','adu','deck','garage','pool','solar','retaining-wall'].includes(plan)&&F.state==='vacant')return null;
  if(['remodel','basement','adu'].includes(plan)){if(F.state==='improved'&&F.teardown){reasons.push(r(houseLine+'; check the house is worth keeping before remodeling.',F.parcelSrc));}else if(F.state==='improved'){fit=F.recent&&plan==='remodel'?'possible':'good';if(F.recent&&plan==='remodel')reasons.push(r(houseLine+'; a new house rarely needs remodeling yet.',F.parcelSrc));reasons.push(r('Work stays inside the existing house, so setbacks and most site hazards don\'t change.'));}else reasons.push(r('Only if there is a finished house on the lot; the county parcel record does not say.',F.parcelSrc));
   if(plan==='basement')fit='possible',reasons.push(r('Only if the house has an unfinished basement; the county parcel record does not say.'));
-  if(plan==='adu')fit='possible',reasons.push(r('Check that zoning and the HOA covenants allow a second unit inside the house.',F.hoa?{label:F.hoa.source,url:F.hoa.url}:null));}
+  if(plan==='adu')fit='possible',reasons.push(r('Check that zoning'+(F.hoa?' and the '+(F.hoaConfirmed?'HOA':'recorded')+' covenants':'')+' allow a second unit inside the house.',F.hoa?{label:F.hoa.source,url:F.hoa.url}:null));}
  if(PLANS[plan].footprint&&plan!=='new-home'&&plan!=='replace-home'){
   if(small&&setbacks){fit='constrained';reasons.push(r(lotLine+'; '+setbacks.zone+' zoning sets '+setbacks.front+' ft front and '+setbacks.rear+' ft rear setbacks'+(F.platSetbacks?' (the subdivision plat may set different ones)':'')+', which leaves little room outside the house.',{label:'Zoning setbacks',url:setbacks.source}));}
   else if(lotLine)reasons.push(r(lotLine+'.',F.parcelSrc));
@@ -67,7 +69,7 @@ function assess(plan,F,{asAddOn=false}={}){
  }
  if(plan==='pool'){for(const x of F.poolFlags.slice(0,2))reasons.push(r(x.headline,{label:x.source,url:x.url}));if(F.poolFlags.length)fit='constrained';}
  if(['deck','solar','retaining-wall'].includes(plan)){fit='possible';if(F.slope&&plan==='retaining-wall')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): the city\'s retaining-wall permit asks for engineering and stamped calculations.',{label:'Ogden Valley City permit form',url:null}));if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
- if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r('The lot is in an HOA; see Approvals for its rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
+ if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r(F.hoaConfirmed?'The lot is in an HOA; see Approvals for its rules on exterior changes.':'Recorded CC&Rs are likely for this subdivision; see Approvals for any rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
  if(plan==='new-home'&&F.state==='vacant'&&F.landslide?.status==='flag')reasons.push(r('Mapped landslide on the lot: plan for a geologic hazards study.',{label:F.landslide.source,url:F.landslide.url}));
  return {fit,reasons:reasons.filter(x=>x.text)};
 }
@@ -83,7 +85,7 @@ function suggest(report){
 function command(id,addOns=[]){const p=PLANS[id];if(!p)throw Error('Unknown plan');const extra=addOns.filter(a=>p.addOns.includes(a)&&PLANS[a]);
  const all=[p,...extra.map(a=>PLANS[a])],typeIds=[...new Set(all.flatMap(x=>x.typeIds))],scope={...p.scope};if(extra.some(a=>PLANS[a].scope.adu))scope.adu='yes';
  return {type:'project_intent',plan:id,addOns:extra,label:[p.short||p.label,...extra.map(a=>PLANS[a].short.toLowerCase())].join(' + '),typeIds,scope,pool:all.some(x=>x.pool)?'included':null};}
-function basis(F){return F.state==='improved'?(F.teardown?'This lot has an old house valued well below its land, so replacing it is listed first.':F.recent?'This lot has a newly built house, so additions to it are listed first.':'This lot already has a house, so projects that change it are listed first.'):F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
+function basis(F){return F.state==='improved'?(F.teardown?'This lot has an old house valued well below its land, so replacing it is listed first.':F.recent?'This lot has a newly built house, so finishing and outdoor projects are listed first.':'This lot already has a house, so projects that change it are listed first.'):F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
 const tag=fit=>fit?' <span class="cp-status cp-'+(fit==='good'?'ok':fit==='constrained'?'review':'neutral')+'">'+FIT[fit]+'</span>':'';
 const reasonList=(x,n=3)=>x.reasons.length?'<ul class="cp-intent-reasons">'+x.reasons.slice(0,n).map(z=>'<li>'+esc(z.text)+(z.source?.label?' <small>('+link(z.source.url,z.source.label)+')</small>':'')+'</li>').join('')+'</ul>':'';
 function card(report,{project=null,limit=4,selected=null}={}){
