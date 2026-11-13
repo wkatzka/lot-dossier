@@ -8,7 +8,27 @@ const corrected=c.LotReport.reviewFindings(findings);assert(corrected.every(f=>f
 const dom=new JSDOM(fs.readFileSync('public/platform.html','utf8'),{runScripts:'outside-only',url:'https://example.org'});dom.window.LotReport=c.LotReport;dom.window.LR_DATA={};dom.window.PlatEvidence=require('../web/plat-evidence');dom.window.eval(fs.readFileSync('web/app.js','utf8').replace(/\}\)\(\);\s*$/,'window.auditRender=function(r,s){last=r;return reportHTML(r,{},s);};})();'));
 for(const saved of [false,true]){const html=dom.window.auditRender({date:new Date(),parcel:{county:'Example',id:'synthetic',attrs:{},rings:[]},facts:{packet:old},findings},saved);assert.doesNotMatch(html,/Earliest realistic submittal|Not expected:|No lot-coverage cap|only sold by|statute does not require/);assert.match(html,/No submission or issuance date is predicted/);assert.match(html,/1882728-18-Oct-2002.pdf/);}
 const W=require('../web/permit-workflow'),D=require('../web/site-decisions');let reviewed=W.create({date:'2026-11-12',parcel:{county:'Example',id:'synthetic',attrs:{},rings:[]},facts:{packet:old},findings});reviewed=W.apply(reviewed,{type:'site_review',id:D.id(findings[0]),state:'needs-evidence',reviewer:'Export reviewer',conclusion:'Current authority unresolved',scope:'Synthetic',basis:'Original is available; current applicability is unresolved',url:'https://example.org/review-original',locator:'Page 12',missing:'Executed current amendment',confirmed:true});dom.window.SiteDecisions=D;D.setActive(reviewed);for(const saved of [false,true]){const exported=dom.window.auditRender({...reviewed.report,date:new Date(reviewed.report.date)},saved);assert.match(exported,/Export reviewer/);assert.match(exported,/https:\/\/example.org\/review-original/);assert.match(exported,/Page 12/);}D.setActive(null);
-dom.window.close();console.log('PASS: immutable/idempotent packet corrections, geotechnical applicability, unresolved fire design, base-zone scope, public-original access, live and saved HTML.');
+// Current reviewed originals must survive the live and downloaded report paths.
+dom.window.ApprovalEvidence=require('../web/approval-evidence');
+const record={date:new Date('2026-11-01'),parcel:{county:'Weber',id:'224410004',attrs:{PARCEL_ID:'224410004'},rings:[]},facts:{},findings:[{section:'geo',item:'Landslides',status:'ok',headline:'No mapped landslides on the lot'},{section:'water',item:'Culinary water',status:'verify',headline:'No public water system mapped'},{section:'septic',item:'Sewer vs. septic',status:'verify',headline:'Service unverified'},{section:'ccr',item:'CC&Rs / HOA',status:'verify',headline:'Authority unverified'},{section:'land',item:'Development agreement',status:'verify',headline:'Recorded references'}]};
+const priorRecord=JSON.stringify(record);
+for(const saved of [false,true]){
+ const output=dom.window.auditRender(record,saved),page=new JSDOM(output);
+ assert.equal(page.window.document.querySelectorAll('.reviewed-section-evidence').length,5);
+ assert.match(output,/Do not transfer townhome risk ratings to this lot/);
+ assert.match(output,/#page=106/);assert.match(output,/Lots 1–9, including Lot 4/);
+ assert.match(output,/not evidence that infrastructure is complete/);
+ assert.match(output,/John Lewis, registered president/);assert.match(output,/3372687.*3372667/s);
+ assert.match(output,/No mapped landslides on the lot/,'Original map observation remains available');
+ assert(!output.includes('<details class="reviewed-section-evidence"'));
+ const other=structuredClone(record);other.parcel.id='224410005';other.parcel.attrs.PARCEL_ID='224410005';
+ assert(!dom.window.auditRender(other,saved).includes('reviewed-section-evidence'),'No other-lot inheritance');
+ const conflicting=structuredClone(record);conflicting.parcel.attrs.PARCEL_ID='224410005';
+ assert(!dom.window.auditRender(conflicting,saved).includes('reviewed-section-evidence'),'Conflicting identity is rejected');
+ page.window.close();
+}
+assert.equal(JSON.stringify(record),priorRecord,'Rendering must not mutate the saved report or create decisions');
+dom.window.close();console.log('PASS: reviewed originals propagate to live and downloaded reports with property isolation and no automatic review closure');console.log('PASS: immutable/idempotent packet corrections, geotechnical applicability, unresolved fire design, base-zone scope, public-original access, live and saved HTML.');
 
 const broad=c.LotReport.reviewFindings([{item:'Other statewide requirements',status:'ok',headline:'No state radon, sprinkler, EV-ready or solar-ready mandates'},{item:'Wood-burning fireplaces',status:'ok',headline:'No state ban on new wood-burning fireplaces here'},{item:'Ground snow load',status:'ok',headline:'51 psf ground snow load required for homes here',detail:'Source reference'}]);assert(broad.every(f=>f.status==='verify'));assert(broad.every(f=>f.priorInterpretation));assert.equal(JSON.stringify(c.LotReport.reviewFindings(broad)),JSON.stringify(broad));assert.doesNotMatch(broad.map(f=>f.headline).join(' '),/No state|No statewide|required for homes here/);
 console.log('PASS: saved broad-code summaries and mapped snow values do not assert project clearance or final design loads.');

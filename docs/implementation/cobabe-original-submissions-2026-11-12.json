@@ -1486,7 +1486,7 @@
     "Lot 4 declaration/annexation and current ARC delegation",
     "Operative approval timing clause",
     "February 28 2022 geologic report and applicable recommendations",
-    "Unreviewed original bond offering; OpenGov CAPTCHA requires user approval"
+    "Unreviewed original bond offering"
   ],
   "additionalReviewedEvidence": [
     {
@@ -1546,5 +1546,24 @@
     "phone": "801-745-3737",
     "email": "accounting@wolfcreekresort.com",
     "limit": "Registry does not designate architectural reviewer. Contact was already in access appendix; promoted to next step after re-verification."
+  },
+  "openGov": {
+    "url": "https://countyofweberut.portal.opengov.com/locations/146889",
+    "searches": [
+      {
+        "tab": "Records",
+        "query": "Cobabe",
+        "result": "No results found"
+      },
+      {
+        "tab": "Locations",
+        "query": "5241",
+        "result": "Matched 5241 E COBABE RANCH RD N"
+      }
+    ],
+    "identity": "Details tab MBL 224410004",
+    "records": "No records at this location...",
+    "access": "First CAPTCHA completed by agent with approval; second reset after agent attempt, then completed by user; location subsequently loaded",
+    "limit": "Only visible records in this new building-inspections portal. Does not prove absence of older Frontier, municipal, recorder or private records."
   }
 }

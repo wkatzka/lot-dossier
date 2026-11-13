@@ -297,6 +297,13 @@
       historical + '<p><b>Not yet resolved:</b> separately recorded easements, prior-parcel history, amendments/releases, current title exceptions and survey-confirmed geometry. The draft site plan checks setbacks only; it does not clear the house or driveway against easements.</p></section>';
   }
 
+  function reviewedSectionEvidence(r,section) {
+    var e=window.ApprovalEvidence && window.ApprovalEvidence.reportSection(r,section);
+    if(!e)return '';
+    var n=e.nextStep||{};
+    return '<aside class="card reviewed-section-evidence" aria-label="Reviewed original evidence"><p class="eyebrow">Reviewed originals · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4><p>'+esc(e.finding)+'</p><p><b>Still needed:</b> '+esc(e.missing||'')+'</p><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a> · '+esc(s.locator)+'</li>';}).join('')+'</ul><p><b>Next step:</b> '+esc(n.action||'')+'</p><p>'+esc(n.organization||'')+(n.url?' · <a href="'+esc(n.url)+'" target="_blank" rel="noopener">Official source</a>':'')+(n.phone?' · <a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+esc(n.phone)+'</a>':'')+(n.email?' · <a href="mailto:'+esc(n.email)+'">'+esc(n.email)+'</a>':'')+'</p><p class="hint">These reviewed records supplement the saved map checks below. They do not mark an approval received or close a checklist item.</p></aside>';
+  }
+
   function reportHTML(r, state, saved) {
     var a = r.parcel.attrs, f = LR.reviewFindings(r.findings), plan = r.plan;
     var reviewProject=window.SiteDecisions && window.SiteDecisions.forReport(r);
@@ -324,7 +331,7 @@
     var groups = order.map(function (c) {
       var fs = f.filter(function (x) { return x.section === c[0]; }).sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; });
       if (!fs.length) return '';
-      return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + fs.filter(function(x){return !sourceLead(x);}).map(row).join('') + (fs.some(sourceLead)?'<details class="source-leads"><summary>'+fs.filter(sourceLead).length+' unverified record leads — not confirmed restrictions</summary><p>These references may concern earlier or neighboring land. They are excluded from the concern totals and action checklist until their applicability is established.</p>'+fs.filter(sourceLead).map(row).join('')+'</details>':'') + '</section>';
+      return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + reviewedSectionEvidence(r,c[0]) + fs.filter(function(x){return !sourceLead(x);}).map(row).join('') + (fs.some(sourceLead)?'<details class="source-leads"><summary>'+fs.filter(sourceLead).length+' unverified record leads — not confirmed restrictions</summary><p>These references may concern earlier or neighboring land. They are excluded from the concern totals and action checklist until their applicability is established.</p>'+fs.filter(sourceLead).map(row).join('')+'</details>':'') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return !sourceLead(x) && activeFinding(x) && (x.status === 'flag' || (x.status === 'verify' && ['Culinary water','Fire hydrant'].includes(x.item))); });
     var top = flags.length ? flags.map(function (x) { return '<li data-concern-category="' + esc(x.section) + '"><span class="priority-status priority-' + x.status + '">' + (x.status === 'flag' ? 'Concern' : x.status === 'watch' ? 'Review' : 'Verify') + '</span> <b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
