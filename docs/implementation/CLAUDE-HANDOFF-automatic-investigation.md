@@ -106,3 +106,6 @@ Next steps state the user's and Cornerpin's parts. "Copy recovered; match to rec
 
 ## Project intent and the proposed staged flow (2026-11-13 ~21:30 UTC)
 `web/project-intent.js` asks "What are you planning?" after the address, ranked by fit with the lot's records, and stores the plan (`project_intent` command). User direction for the next stage: preliminary pass → intent confirmation → targeted deep research per plan → re-run targeted research when the plan changes. Not started; needs a plan-to-research mapping and gating of the full dossier and the background approval investigation.
+
+## Staged research shipped (2026-11-13 ~22:30 UTC)
+Plan: `/Users/wkatzka/.claude/plans/proud-sprouting-mango.md`. `web/research-plan.js` (QUICK, STEPS_FOR per City Inspect permit, deps, stepsFor, needsApprovalResearch); `LotReport.run(..., {steps, prior, investigate})` with step-tagged findings and `facts.stepsRun`; `app.js` first read → `cornerpin:research-permits` targeted runs; permit bundles in `web/project-intent.js`. Verified in production anonymously (see checklist). Pending: exterior-permit run (AI budget), signed-in check, first-read speed.
