@@ -45,3 +45,17 @@ const geologyHtml=ui.detail(p,'cobabe-plat-conditions');assert.match(geologyHtml
 assert.match(ui.detail(p,'ov-sewer'),/tel:8017453435/);
 assert(!ui.detail(project('224410005'),'ov-water').includes('14305604-HOA1'),'Do not send unrelated parcels to Cobabe');
 console.log('PASS: every missing Cobabe instrument has an explicit source route; rendered actions preserve parcel isolation and authority limits');
+
+assert.match(timingHtml,/John Lewis, registered president/);
+assert.match(timingHtml,/tel:8017453737/);
+assert.match(timingHtml,/mailto:accounting@wolfcreekresort.com/);
+assert.match(c.chain.find(x=>x.id==='reviewer').nextStep.action,/does not designate the architectural reviewer/);
+
+// Partial geologic evidence must preserve property scope and competing descriptions.
+const hazard=c.chain.find(x=>x.id==='hazards');
+assert(hazard.sources.includes('hazardStaff') && hazard.sources.includes('hazardExcerpt'));
+assert.match(hazard.finding,/outside the study area/);
+assert.match(hazard.finding,/Do not transfer townhome risk ratings to this lot/);
+assert.match(hazard.missing,/study-area maps/);
+assert.match(geologyHtml,/#page=106/);
+assert(!ui.detail(project('224410005'),'ov-geologic').includes('reproduces §7.0'));
