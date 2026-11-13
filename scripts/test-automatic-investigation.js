@@ -11,6 +11,10 @@ assert.equal(I.validate({...parsed,requirements:[{...requirement,quote:'A fabric
 assert.equal(I.validate({...parsed,requirements:[{...requirement,authority:'The President'}]},pages,target,doc).requirements.length,0);
 assert.equal(I.validate({...parsed,requirements:[{...requirement,applicabilityQuote:'An unrelated subdivision'}]},pages,target,doc).requirements[0].applicability,'unresolved');
 assert.equal(I.validate({...parsed,requirements:[{...requirement,page:9}]},pages,target,doc).requirements.length,0);
+const checklistPages=[{page:1,text:'Ogden Valley City Building Permit Submission Requirements'}, {page:2,text:'Water Company Will Serve Letter or Approved Well Permit - Will serves must be specific to the building lot.'}];
+const checklistClause={...requirement,authority:'Water Company',authorityQuote:checklistPages[1].text,authorityPage:2,quote:checklistPages[1].text,page:2,stage:'submission',stageQuote:checklistPages[0].text,stagePage:1,applicabilityQuote:checklistPages[0].text,applicabilityPage:1,appliesWhen:'New dwelling with water service'};
+assert.equal(I.validate({...parsed,requirements:[checklistClause]},checklistPages,target,{...doc,urls:['https://ogdenvalley.gov/checklist.pdf']}).requirements[0].stage,'submission');
+assert.equal(I.validate({...parsed,requirements:[checklistClause]},checklistPages,target,doc).requirements[0].stage,'timing_unresolved','A private checklist heading does not establish municipal intake');
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
  const old={rpc:S.rpc,run:D.run,interpret:I.interpret,identity:P.identity,profile:P.profile};
