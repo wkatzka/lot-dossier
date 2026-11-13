@@ -54,7 +54,7 @@ function steps(p,{limit=3}={}){
  const s=SA()?SA().summary(p.report,p,{limit:4}):{top:[]};
  for(const f of s.top.filter(f=>f.status==='flag').slice(0,1)){const t=SA().todo(f,p);add({id:'concern',who:whoFor(t),title:f.item,detail:t,action:{type:'site',label:'See why'}});}
  // A specific approval task this lot needs (e.g. find who reviews plans) beats the generic HOA line.
- const rule=(()=>{try{return PO()?.summary(p)?.approvalPriorities?.[0]||null;}catch{return null;}})();
+ const rule=(()=>{try{return (PO()?.summary(p)?.approvalPriorities||[]).find(r=>r.overviewTitle)||null;}catch{return null;}})();
  if(rule&&!(p.receipts||[]).length)add({id:'hoa',who:'You',title:rule.overviewTitle||rule.title,detail:rule.overviewSummary||'Find out who approves this and when, before you build.',action:{type:'rule',id:rule.id,label:rule.overviewAction||'Open'}});
  // HOA approval: needed before building, not before filing.
  const exterior=(p.application?.intent?.typeIds||[]).some(t=>t!=='4'&&t!=='70');

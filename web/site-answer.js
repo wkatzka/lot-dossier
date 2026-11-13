@@ -28,7 +28,10 @@ function summary(report,project,{limit=4}={}){
 }
 // When the report has no next step, say who can settle it — not "read the source".
 const WHO=[[/slope|terrain|grading|relief|topo/i,'Have a surveyor confirm the grades with a topo survey; your designer needs it for the site plan.'],[/landslide|fault|liquefaction|soil|geolog|boring|seismic/i,'Ask a geotechnical engineer whether this affects your foundation design.'],[/flood/i,'Ask the building department whether a floodplain review applies to your project.'],[/water|sewer|septic|utilit|power|gas/i,'Call the provider to confirm service and connection fees for this lot.'],[/easement|plat|setback|boundary/i,'Have a surveyor mark the lines and easements before you place the work.'],[/hoa|cc&r|covenant|design review/i,'Get the HOA\'s design rules and approval steps before you design.']];
-function todo(f,project){const D=root.SiteDecisions;if(f.next_step)return f.next_step;const text=(f.item||'')+' '+(f.headline||'')+' '+(f.section||'');const m=WHO.find(([re])=>re.test(text));return m?m[1]:'Ask the building department whether this applies to your project.';}
+// Reports saved before 2026-11-13 used buyer-only wording; show the builder wording instead.
+const LEGACY=[[/ before closing, or make the purchase contingent on one\./,' before design starts (and before buying, if the lot is not bought yet).'],[/ before closing\.$/,' before design starts (and before buying, if the lot is not bought yet).']];
+const modern=t=>LEGACY.reduce((s,[re,to])=>s.replace(re,to),String(t));
+function todo(f,project){const D=root.SiteDecisions;if(f.next_step)return modern(f.next_step);const text=(f.item||'')+' '+(f.headline||'')+' '+(f.section||'');const m=WHO.find(([re])=>re.test(text));return m?m[1]:'Ask the building department whether this applies to your project.';}
 // What has and hasn't been researched yet, with a way to research everything.
 function coverage(report,project){const RP=root.ResearchPlan,LR=root.LotReport;if(!RP)return '';const missing=RP.notRun(report);if(!missing.length)return '';
  const names=missing.map(id=>(LR?.STEPS||[]).find(s=>s[0]===id)?.[1]||id),intent=project?.application?.intent;
