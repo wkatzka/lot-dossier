@@ -20,6 +20,8 @@ const inspection=I.validate({...parsed,requirements:[{...requirement,authority:'
 assert.equal(inspection.requirements[0].stage,'construction_inspection','In-progress inspections do not become pre-permit approvals');
 const priorInspection='The Architectural Committee requires site inspection approval before construction begins.';
 assert.equal(I.validate({...parsed,requirements:[{...requirement,quote:priorInspection,authorityQuote:priorInspection}]},[{page:1,text:priorInspection}],target,doc).requirements[0].stage,'construction');
+assert.equal(I.refineTiming({stage:'timing_unresolved',quote:'No activities shall commence on any portion of an Owner’s property until an application for approval has been submitted to and finally approved by the DRB'}).stage,'construction');
+assert.equal(I.refineTiming({stage:'submission',quote:'Any requests for variances shall be submitted following review and approval by the Design Review Board.'}).stage,'other_submission');
 assert.equal(P.significant('Trappers Ridge At Wolf Creek Prud Phase 4').join(' '),'trappers ridge');
 (async()=>{
  const identity=await P.identity('Weber','000000002',{

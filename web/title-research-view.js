@@ -28,7 +28,7 @@ function acquisition(t){
 function automaticPanel(d){
  if(!d.automation)return '';
  const states={queued:'Research is queued',running:'Research is running',retry_wait:'Research will retry',complete_with_gaps:'Public-source pass finished with evidence gaps',complete:'Research finished'};
- const stages={submission:'Before permit submission',issuance:'Before permit issuance',construction:'Before construction',timing_unresolved:'Timing not established',construction_inspection:'During construction',occupancy:'Before occupancy'};
+ const stages={submission:'Before permit submission',issuance:'Before permit issuance',construction:'Before construction',timing_unresolved:'Timing not established',construction_inspection:'During construction',occupancy:'Before occupancy',other_submission:'Before the cited variance request'};
  const all=(d.interpretations||[]).flatMap(doc=>(doc.requirements||[]).map(r=>({...r,documentTitle:doc.documentTitle})));
  const findings=all.filter(r=>!['construction_inspection','occupancy'].includes(r.stage));
  const later=all.filter(r=>['construction_inspection','occupancy'].includes(r.stage));
