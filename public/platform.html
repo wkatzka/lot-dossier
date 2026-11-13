@@ -7742,6 +7742,9 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       await S.save(next,old?old.revision:null);return retainPublicSources(await collectChecklist(next));
     });
     capture.finally(()=>{capturing--;}).catch(err=>{const b=document.getElementById('rv-workflow');b.textContent='Permit workflow · save failed';b.title=err.message;});
+    // A report saved while this project is open (e.g. targeted research after choosing permits)
+    // must replace the in-memory copy, or the next commit would save from a stale revision.
+    capture.then(async saved=>{if(!saved||!project||project.id!==saved.id)return;project=await S.get(saved.id);window.SiteDecisions.setActive(project);if(document.body.classList.contains('show-project'))render();}).catch(()=>{});
   });
   document.getElementById('rv-workflow').addEventListener('click',async()=>{
     try {project=await capture;if(!project)throw new Error('Generate a site report first.');project=await S.get(project.id);tab='overview';render();window.scrollTo(0,0);}catch(err){render();message(err.message);}
