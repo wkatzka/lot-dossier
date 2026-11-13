@@ -24,8 +24,13 @@ assert(!s.plans.some(p=>p.reasons.some(r=>/HOA.s approval first/.test(r.text))),
 // Vacant lot: building a home leads; changes to a house are not offered.
 s=I.suggest(vacant);assert.equal(s.lot.state,'vacant');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');
 assert(!s.plans.some(p=>['addition','remodel','pool','replace-home'].includes(p.id)),'No house, so no house changes');
+// Record in transition (Cobabe 224410004): house count 1 but "Vacant - Agricultural", no size, year built or values.
+const building={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Vacant - Agricultural',TOTAL_MKT_VALUE:null,LAND_MKT_VALUE:null,BLDG_SQFT:null,BUILT_YR:null,EFFBUILT_YR:2026,PARCEL_ACRES:3.1}},facts:{zone_std:zone},findings};
+s=I.suggest(building);assert.equal(s.lot.state,'building');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');
+assert(/Vacant - Agricultural/.test(s.plans[0].reasons[0].text)&&/not built yet/.test(s.plans[0].reasons[0].text));
+assert(!s.plans.some(p=>['addition','remodel','basement','adu','replace-home'].includes(p.id)),'No finished house, so no remodel or addition');assert(/being built/.test(I.card(building)));
 // Unknown: nothing is presumed.
-s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>p.id==='new-home')&&s.plans.some(p=>p.id==='remodel'));assert(/does not say whether there is a house/.test(I.card(unknown)));
+s=I.suggest(unknown);assert.equal(s.lot.state,'unknown');assert(s.plans.some(p=>p.id==='new-home')&&s.plans.some(p=>p.id==='remodel'));assert.notEqual(s.plans.find(p=>p.id==='remodel').fit,'good','Interior work is not a good fit when a house is not established');assert(/does not say whether there is a house/.test(I.card(unknown)));
 // Every plan maps to real city permit types.
 for(const [id,p] of Object.entries(I.PLANS))assert(p.typeIds.every(t=>C.catalog.types.some(x=>x.value===t)),id+' maps to catalog types');
 const card=I.card(built);assert(/What are you planning\?/.test(card)&&/not a prediction/.test(card)&&/More options/.test(card)&&/data-intent-confirm="evaluate"/.test(card));
