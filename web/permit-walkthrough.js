@@ -88,6 +88,9 @@ const FIND=[
  [/^engineer_record/,'The engineer’s stamp on the structural sheets of your plans.'],
  [/^design_professional/,'The title block on your plans.'],
  [/^owner/,'Ask the property owner. County records only list a mailing address.'],
+ [/^(phase|lot_no)$/,'The recorded subdivision plat, or the legal description on the county parcel record.'],
+ [/^is_corner$/,'The county parcel map: a corner lot touches two streets.'],
+ [/^area$/,'The city’s form doesn’t say what this means or its units. Ask the building department before filling it in.'],
  [/^(contact_|notify_contact|owner_builder)/,'Your call: whoever the city should reach about this permit.'],
  [/^(builder|buildername)/,'Your company details. Add them once under My company and Cornerpin fills them in on every permit.'],
  [/^(bedrooms|bathrooms|stories|garages|construction_material|num_units|num_buildings)$/,'Your floor plans and elevations.'],
@@ -140,7 +143,7 @@ function side(p,t,s){
  const groups=new Map();for(const r of filled){const src=sourceFor(p,r,t.value),k=src.from+'|'+(src.quote||'')+'|'+(src.documentId||'');if(!groups.has(k))groups.set(k,{src,rows:[]});groups.get(k).rows.push(r);}
  h+=[...groups.values()].map(({src,rows})=>'<article class="cp-wt-src" data-keys="'+esc(rows.map(r=>r.key).join(' '))+'" tabindex="-1"><p class="cp-wt-srcfrom">From <b>'+esc(src.from)+'</b>'+(src.ai?' · read by CornerpinAI':'')+'</p>'+(src.quote?'<blockquote>“'+esc(src.quote)+'”</blockquote>':'')+(src.where?'<p class="pw-muted">'+esc(src.where)+'</p>':'')+'<dl class="cp-wt-vals">'+rows.map(r=>'<div><dt>'+esc(label(r))+'</dt><dd>'+esc(r.options?.find(o=>o.value===r.value)?.label||r.value)+'</dd></div>').join('')+'</dl>'+(src.documentId?'<button type="button" class="cp-link" data-action="view-file" data-id="'+esc(src.documentId)+'">Open the document</button>':'')+(src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener noreferrer">Open the listing</a>':'')+([...new Set(rows.map(r=>r.basis))].filter(b=>b&&b!==src.quote).length?'<details class="cp-wt-more"><summary>What to check</summary>'+[...new Set(rows.map(r=>r.basis))].map(b=>'<p>'+esc(b)+'</p>').join('')+'</details>':'')+'</article>').join('');
  if(empty.length){const groups=new Map();for(const r of empty){const f=findFor(r);if(!groups.has(f))groups.set(f,[]);groups.get(f).push(r);}
-  h+='<div class="cp-wt-find"><h4>Where to find '+(filled.length?'the rest':'these')+'</h4>'+[...groups].map(([f,rs])=>'<div class="cp-wt-src" data-keys="'+esc(rs.map(r=>r.key).join(' '))+'" tabindex="-1"><p><b>'+esc(list(rs.map(label).slice(0,4))+(rs.length>4?' and '+(rs.length-4)+' more':''))+'</b></p><p>'+esc(f[1])+'</p>'+(f[2]?'<a href="'+esc(f[2])+'" target="_blank" rel="noopener noreferrer">'+esc(f[3])+'</a>':'')+'</div>').join('')+'</div>';}
+  h+='<div class="cp-wt-find"><h4>Where to find '+(filled.length?'the rest':'these')+'</h4>'+[...groups].map(([f,rs])=>'<div class="cp-wt-src" data-keys="'+esc(rs.map(r=>r.key).join(' '))+'" tabindex="-1"><p><b>'+esc(rs.length<=3?list(rs.map(r=>label(r).replace(/\?$/,''))):rs.slice(0,2).map(r=>label(r).replace(/\?$/,'')).join(', ')+' and '+(rs.length-2)+' more')+'</b></p><p>'+esc(f[1])+'</p>'+(f[2]?'<a href="'+esc(f[2])+'" target="_blank" rel="noopener noreferrer">'+esc(f[3])+'</a>':'')+'</div>').join('')+'</div>';}
  return h;
 }
 function documentsScreen(p,t,s){
@@ -174,13 +177,14 @@ function render(p,screenId){
   return '<div class="cp-wt-part"><p class="cp-wt-part-h">'+(done?'<span class="cp-wt-mark is-done" aria-hidden="true">✓</span>':'')+esc(PARTS[part])+'</p><ol>'+ss.map((x,j)=>{const y=sts[j],here=x.id===s.id;
    const mark=here?'→':y.seen&&!y.todo?'✓':'';const cls=here?' is-here':y.seen&&!y.todo?(y.skipped?' is-skip':' is-done'):'';
    return '<li><button type="button" data-action="wt-go" data-id="'+x.id+'"'+(here?' aria-current="step"':'')+'><span class="cp-wt-mark'+cls+'" aria-hidden="true">'+mark+'</span><span>'+esc(x.nav)+'</span>'+(y.todo&&x.id!=='review'?'<em class="cp-page-count" aria-label="'+y.todo+' to do">'+y.todo+'</em>':'')+'</button></li>';}).join('')+'</ol></div>';}).join('')+'<button type="button" class="cp-link cp-wt-full" data-action="wt-full">See the whole form at once</button></nav>';
- const head='<div class="cp-wt-top"><button type="button" class="cp-wt-back" data-action="wt-go" data-id="'+(prev?prev.id:'')+'"'+(prev?'':' disabled')+' aria-label="Previous screen">←</button><p class="cp-eyebrow">'+esc(PARTS[s.part])+' · Step '+(i+1)+' of '+all.length+'</p></div><h2 class="cp-wt-q" tabindex="-1">'+esc(s.q)+'</h2>'+(s.why?'<p class="cp-wt-why">'+esc(s.why)+'</p>':'');
+ const gated=s.gate&&!st.filled.length&&st.gate!=='yes';
+ const head='<div class="cp-wt-top"><button type="button" class="cp-wt-back" data-action="wt-go" data-id="'+(prev?prev.id:'')+'"'+(prev?'':' disabled')+' aria-label="Previous screen">←</button><p class="cp-eyebrow">'+esc(PARTS[s.part])+' · Step '+(i+1)+' of '+all.length+'</p></div><h2 class="cp-wt-q" tabindex="-1"'+(s.gate&&!st.filled.length?' data-q-yes="'+esc(s.q)+'" data-q-gate="'+esc(s.gate)+'"':'')+'>'+esc(gated?s.gate:s.q)+'</h2>'+(s.why?'<p class="cp-wt-why">'+esc(s.why)+'</p>':'');
  let body='';
  if(s.id==='documents')body=documentsScreen(p,t,s);
  else if(s.id==='portal')body=portalScreen(s);
  else if(s.id==='review')body=reviewScreen(p,t,all);
  else{
-  if(s.gate&&!st.filled.length){const g=st.gate;body+='<fieldset class="cp-wt-gate"><legend>'+esc(s.gate)+'</legend><div class="cp-wt-tiles">'+[['yes','Yes'],['no','Not yet / not needed']].map(([v,l])=>'<label class="cp-wt-tile"><input type="radio" name="wt-gate" value="'+v+'"'+(g===v?' checked':'')+'><span>'+(g===v?'✓ ':'')+esc(l)+'</span></label>').join('')+'</div></fieldset>';}
+  if(s.gate&&!st.filled.length){const g=st.gate;body+='<fieldset class="cp-wt-gate"><legend class="pw-visually-hidden">'+esc(s.gate)+'</legend><div class="cp-wt-tiles">'+[['yes','Yes'],['no','Not yet / not needed']].map(([v,l])=>'<label class="cp-wt-tile"><input type="radio" name="wt-gate" value="'+v+'"'+(g===v?' checked':'')+'><span>'+(g===v?'✓ ':'')+esc(l)+'</span></label>').join('')+'</div></fieldset>';}
   const hide=s.gate&&!st.filled.length&&st.gate!=='yes';
   body+='<div class="cp-wt-fields" data-wt-fields'+(hide?' hidden':'')+'>'+intro(s,st,p,t)+s.rows.filter(r=>!Object.values(s.twins).includes(r)&&!(r.locked&&r.name!=='permit_type')).map(r=>row(p,t,r,Object.entries(s.twins).find(([k])=>k===r.key)?.[1])).join('')+'</div>';
  }
@@ -203,7 +207,7 @@ function reviews(p,form){
  return out;
 }
 if(root.document){
- root.document.addEventListener('change',e=>{const g=e.target.closest?.('.cp-wt-gate input[name=wt-gate]');if(g){const f=g.closest('form');f.querySelectorAll('.cp-wt-tile span').forEach(s=>s.textContent=s.textContent.replace(/^✓ /,''));const sp=g.parentElement.querySelector('span');sp.textContent='✓ '+sp.textContent;const box=f.querySelector('[data-wt-fields]');if(box)box.hidden=g.value!=='yes';}});
+ root.document.addEventListener('change',e=>{const g=e.target.closest?.('.cp-wt-gate input[name=wt-gate]');if(g){const f=g.closest('form');f.querySelectorAll('.cp-wt-tile span').forEach(s=>s.textContent=s.textContent.replace(/^✓ /,''));const sp=g.parentElement.querySelector('span');sp.textContent='✓ '+sp.textContent;const box=f.querySelector('[data-wt-fields]');if(box)box.hidden=g.value!=='yes';const h=f.querySelector('.cp-wt-q[data-q-yes]');if(h)h.textContent=g.value==='yes'?h.dataset.qYes:h.dataset.qGate;}});
  root.document.addEventListener('input',e=>{const id=e.target.id;if(!id)return;root.document.querySelectorAll('[data-wt-twin="'+id+'"]').forEach(h=>h.value=e.target.value);});
  root.document.addEventListener('click',e=>{const b=e.target.closest?.('[data-wt-src]');if(!b)return;const k=b.dataset.wtSrc,card=root.document.getElementById('wt-src-'+k)||[...root.document.querySelectorAll('.cp-wt-src[data-keys]')].find(c=>c.dataset.keys.split(' ').includes(k));
   root.document.querySelectorAll('.cp-wt-src.is-on').forEach(c=>c.classList.remove('is-on'));if(card){card.classList.add('is-on');card.scrollIntoView?.({block:'nearest'});card.focus?.({preventScroll:true});}});

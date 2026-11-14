@@ -58,11 +58,11 @@ async function until(f,label){for(let i=0;i<400;i++){if(await f())return;await n
  s=await saved();assert.equal(s.application.cityInspect.answers['1'][page1.key].value,'801-555-0100');assert.equal(s.application.cityInspect.answers['1'][page2.key].value,'801-555-0100');
  // 6. Yes/no first: "Not yet" skips the electrician's nine questions and the step shows as skipped.
  await go('electrical');
- assert(d.querySelector('[data-wt-fields]').hidden,'questions hidden until Yes');
+ assert(d.querySelector('[data-wt-fields]').hidden,'questions hidden until Yes');assert.equal(d.querySelector('.cp-wt-q').textContent,'Do you have an electrical contractor yet?','the yes/no question is the heading');
  const no=d.querySelector('input[name=wt-gate][value=no]');no.checked=true;no.dispatchEvent(new w.Event('change',{bubbles:true}));await next();
  s=await saved();assert.equal(s.application.walkthrough['1'].gates.electrical,'no');
  assert(d.querySelector('.cp-wt-nav button[data-id=electrical] .cp-wt-mark.is-skip'));
- await go('plumbing');const yes=d.querySelector('input[name=wt-gate][value=yes]');yes.checked=true;yes.dispatchEvent(new w.Event('change',{bubbles:true}));assert(!d.querySelector('[data-wt-fields]').hidden,'Yes shows the questions');
+ await go('plumbing');const yes=d.querySelector('input[name=wt-gate][value=yes]');yes.checked=true;yes.dispatchEvent(new w.Event('change',{bubbles:true}));assert(!d.querySelector('[data-wt-fields]').hidden,'Yes shows the questions');assert.equal(d.querySelector('.cp-wt-q').textContent,'Who is your plumbing contractor?');
  // 7. Cost: dollars, never negative, with the estimator alongside.
  await go('cost');const val=d.querySelector('.cp-num-money input');assert.equal(val.min,'0');assert(d.querySelector('.cp-wt-extra input[name=rate_0]'),'cost estimator on the cost screen');
  // 8. Documents say who provides each one; the portal step never signs for the user.
