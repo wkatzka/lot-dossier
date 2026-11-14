@@ -11,6 +11,11 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const label=(id)=>C()?.catalog?.types?.find(t=>t.value===String(id))?.label||'Permit';
 const plural=(n,one,many)=>n+' '+(n===1?one:(many||one+'s'));
 const done=r=>['reviewed','waived'].includes(r.state);
+// What kind of requirement this is, across packet versions: a document to supply, a check about this lot, or form data.
+function kindOf(r){const g=r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
+ if(/^What the city asks for$|^Drawings$|^Reports$/i.test(g))return 'docs';
+ if(/^What this lot adds$|^City rules for this work$|^Stormwater$|^Approvals$|^Fees$/i.test(g))return 'site';
+ if(/^Application$/i.test(g))return 'form';return '';}
 function planned(p){const t=(p.application?.intent?.typeIds||[]).filter(x=>x!=='*');return t.length?t.map(String):(p.application?.permitSelections||[]).map(String);}
 function jurisdiction(p){return p.application?.jurisdiction||p.report?.facts?.jurisdiction||'the city';}
 function portal(p){const c=C();if(c&&c.supported&&c.supported(p))return c.catalog.source||null;return p.report?.facts?.kb?.portal||null;}
@@ -30,8 +35,7 @@ function checklist(p){
   else items.push({id:'form-'+t,who:'You',title:label(t)+' application',detail:'Fill in '+jurisdiction(p)+'\'s own form; Cornerpin has not mapped it yet.',done:false,action:{type:'tab',id:'filing',label:'Open'}});
   const main=planned(p)[0],reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===main&&r.id!=='scope'))&&r.required);
   // Projects saved before requirements carried their packet group: infer it from the stable id.
-  const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
-  const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
+  const docs=reqs.filter(r=>kindOf(r)==='docs'),site=reqs.filter(r=>kindOf(r)==='site');
   if(docs.length){const left=docs.filter(r=>!done(r));items.push({id:'docs-'+t,who:'You',title:'Documents for the '+label(t)+' permit',detail:(docs.length-left.length)+' of '+docs.length+' ready'+(left.length?' · ':'')+(left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):''),done:!left.length,action:{type:'requirements',label:left.length?'Get ready':'Review'}});}
   if(site.length){const left=site.filter(r=>!done(r));items.push({id:'site-'+t,who:'You',title:'Lot checks for the '+label(t)+' permit',detail:(site.length-left.length)+' of '+site.length+' checked'+(left.length?' · ':'')+(left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):''),done:!left.length,action:{type:'requirements',label:left.length?'Check':'Review'}});}
  }
@@ -48,8 +52,7 @@ const SOURCES=[[/confirmed project team|team profile|company/i,'your company det
 function sourceOf(basis){for(const [re,l] of SOURCES)if(re.test(basis||''))return l;return '';}
 function permitSummary(p,t){
  const c=C(),supported=!!(c&&c.supported&&c.supported(p)),reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===planned(p)[0]&&r.id!=='scope'))&&r.required);
- const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
- const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
+ const docs=reqs.filter(r=>kindOf(r)==='docs'),site=reqs.filter(r=>kindOf(r)==='site');
  let form={total:0,ready:0,found:0,checked:0,missing:0,toCheck:0,sources:[]};
  if(supported){const rows=c.rows(p,t).filter(r=>!r.locked),filled=r=>String(r.value??'').trim()!=='',req=r=>r.required||r.markedRequired;
   const needed=rows.filter(r=>req(r)||filled(r)),ok=r=>filled(r)&&r.review&&r.review.state==='confirmed',byUs=r=>filled(r)&&!/^User supplied/.test(r.status||'');
@@ -117,5 +120,5 @@ function stepsCard(p){const list=steps(p);if(!list.length)return '';
 function checklistCard(p){const c=checklist(p),perm=planned(p).map(t=>permitSummary(p,t));
  return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p>'+(perm.length>1?'<p class="cp-permits-overall"><b>'+perm.filter(x=>x.complete).length+' of '+perm.length+' permits</b> ready to submit.</p>':'')+'<ol class="cp-checklist">'+c.items.map(x=>(/^form-/.test(x.id)?'<li class="cp-permit-li">'+permitHeader(perm.find(z=>'form-'+z.typeId===x.id)||permitSummary(p,x.id.slice(5)),c.jurisdiction)+'</li>':'')+'<li class="'+(x.done?'is-done':'')+(/^(form|docs|site)-/.test(x.id)?' cp-permit-sub':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+AR(ITEM_ART(x.id),ITEM_ICON(x.id))+'</span><div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol><p class="cp-trust">Cornerpin reads public records and the city’s published rules. The city, your HOA and your professionals make the final calls.</p>'+
   (c.ready&&!c.filed?'<div id="submit-help" hidden><p><strong>How to submit:</strong> 1. Download your answers. 2. Open '+(c.portal?'<a href="'+esc(c.portal)+'" target="_blank" rel="noopener">the city\'s permit portal</a>':'the city\'s permit portal')+' and copy them in, attaching your documents. 3. Come back and record the application number.</p><div class="pw-actions"><button type="button" data-action="city-download-all">Download my answers</button><button type="button" data-action="record-receipt">I\'ve submitted it</button></div></div>':'')+'</section>';}
-const api={checklist,steps,stepsCard,checklistCard,planned,permitSummary};if(node)module.exports=api;else root.NextSteps=api;
+const api={checklist,steps,stepsCard,checklistCard,planned,permitSummary,kindOf};if(node)module.exports=api;else root.NextSteps=api;
 })(typeof window!=='undefined'?window:globalThis);

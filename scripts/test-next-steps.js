@@ -80,3 +80,8 @@ console.log('PASS: blank optional questions stay visible with a plain explanatio
  assert(/role="progressbar"[^>]*aria-valuemax="\d+" aria-valuenow="\d+"/.test(html)&&/Cornerpin found <b>\d+ answers?<\/b> from /.test(html));
  assert(/<b>0 of 2 permits<\/b> ready to submit/.test(html),'multi-permit projects show how many permits are ready');
  console.log('PASS: each permit states what the city needs and what Cornerpin found, with an honest progress bar.');}
+
+// House packets group requirements as Drawings/Reports/Stormwater/Approvals/Fees: they still count as documents and lot checks.
+{const g=['Application','Drawings','Reports','Stormwater','Approvals','Fees'].map(group=>NS.kindOf({group,id:'req:1:x'}));
+ assert.deepEqual(g,['form','docs','docs','site','site','site']);
+ console.log('PASS: every packet grouping maps to form answers, documents or lot checks.');}
