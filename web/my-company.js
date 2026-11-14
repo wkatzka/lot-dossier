@@ -33,9 +33,15 @@ function commandsFor(project,profile=get()){
  return out;
 }
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function form(profile=get()){
- const v=profile||{},f=(k,label,type='text')=>'<label>'+label+'<input name="'+k+'" type="'+type+'" value="'+esc(v[k]||'')+'"'+(k==='name'?' required':'')+'></label>';
- return '<section class="pw-card" id="my-company"><h2>Your company</h2><p>Enter this once. Cornerpin fills it into the builder section of every permit form, on every project. When you’re signed in it’s saved to your account, so it’s there on your phone too.</p><form data-my-company><div class="pw-grid">'+f('name','Company name')+f('contact','Your name')+f('phone','Phone','tel')+f('email','Email','email')+f('license','Contractor license #')+f('address','Street address')+f('city','City')+f('state','State')+f('zip','ZIP')+'</div><label><input type="checkbox" name="alsoContact"'+(v.alsoContact!==false?' checked':'')+'> I\'m also the contact person on applications</label><button type="submit">'+(profile?'Save changes':'Save my company')+'</button></form>'+(profile?'<p class="pw-muted">Saved in this browser. Projects that already list a builder keep theirs.</p>':'')+'</section>';
+// The company fields, shared by the account panel and Permit Preparation so both stay identical.
+function fields(profile=get()){
+ const v=profile||{},f=(k,label,type='text',extra='')=>'<label'+(extra?' class="'+extra+'"':'')+'>'+label+'<input name="'+k+'" type="'+type+'" value="'+esc(v[k]||'')+'"'+(k==='name'?' required':'')+(k==='phone'?' autocomplete="tel"':k==='email'?' autocomplete="email"':'')+'></label>';
+ return '<div class="pw-grid cp-company-grid">'+f('name','Company name','text','cp-span2')+f('contact','Your name')+f('license','Contractor license #')+f('phone','Phone','tel')+f('email','Email','email')+f('address','Street address','text','cp-span2')+f('city','City')+f('state','State')+f('zip','ZIP')+'</div><label class="cp-check-line"><input type="checkbox" name="alsoContact"'+(v.alsoContact!==false?' checked':'')+'> I\'m also the contact person on applications</label>';
 }
-const api={KEY,FIELDS,get,save,saveEverywhere,syncAccount,clean,commandsFor,form};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MyCompany=api;
+function summary(profile=get()){if(!profile)return '';return [profile.name,profile.contact,profile.phone,profile.license?'License '+profile.license:''].filter(Boolean).map(esc).join(' · ');}
+function form(profile=get()){
+ const synced=!!(root.CloudSync&&root.CloudSync.signedIn&&root.CloudSync.signedIn());
+ return '<section class="pw-card" id="my-company"><h2>Your company</h2><p>Enter this once. Cornerpin fills it into the builder section of every permit form, on every project. You can also set it up from your account.</p><form data-my-company>'+fields(profile)+'<button type="submit">'+(profile?'Save changes':'Save my company')+'</button></form>'+(profile?'<p class="pw-muted">'+(synced?'Saved to your account.':'Saved in this browser. Sign in to keep it on your account.')+' Projects that already list a builder keep theirs.</p>':'')+'</section>';
+}
+const api={KEY,FIELDS,get,save,saveEverywhere,syncAccount,clean,commandsFor,form,fields,summary};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MyCompany=api;
 })(typeof window!=='undefined'?window:globalThis);

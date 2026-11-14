@@ -96,3 +96,17 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-timing-key b{display:inline-block;min-width:170px;font-weight:650}
 @media(max-width:560px){.cp-timing-key b{display:block;min-width:0}}
 .cp-trust{font-size:var(--cp-text-sm);color:var(--cp-muted);margin-top:8px}
+
+/* Company profile: account panel + Permit Preparation share these fields */
+.cp-company-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.cp-company-grid .cp-span2{grid-column:1 / -1}
+.cp-check-line{display:flex;align-items:center;gap:8px;margin:12px 0}
+.cp-check-line input{width:auto;margin:0}
+@media(max-width:520px){.cp-company-grid{grid-template-columns:1fr}}
+.account-dialog.is-company{max-width:600px}
+.account-dialog .cp-company-grid label{margin:8px 0}
+.account-company{margin:20px 0;padding:16px 18px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-surface)}
+.account-company h3{margin:0 0 6px;font-size:var(--cp-h3);font-weight:650}
+.account-company p{margin:0 0 12px;font-size:var(--cp-text);line-height:1.5}
+.account-dialog .account-company button,.account-dialog .account-secondary{background:transparent;color:var(--cp-ink);border:1px solid var(--cp-control);border-radius:var(--cp-r-control);padding:8px 14px;font-weight:600}
+.account-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
