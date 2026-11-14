@@ -7573,7 +7573,10 @@ const api={lookup,rules,blockers,reviewCurrent,reviewFingerprint,evidence:E,sour
   const CityApp = () => typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
   function mapped(p) { try { const C = CityApp(); return !!(C && C.supported && C.supported(p)); } catch (_) { return false; } }
   // Requirements that apply: older projects may still hold the generic scope item; it no longer counts where the form is mapped.
-  function active(p) { return (p.requirements || []).filter(r => !(r.id === 'scope' && mapped(p))); }
+  // Where the form is mapped, the generic scope item and the 'application data / contact information' items are
+  // covered question by question by the permit form itself, so they don't count twice.
+  const formItem = r => r.id === 'scope' || /^Application$/i.test(r.group || '') || /contact information|application data/i.test(r.title || '');
+  function active(p) { const m = mapped(p); return (p.requirements || []).filter(r => !(m && formItem(r))); }
   function requirements(report) {
     const facts = (report || {}).facts || {}, packets = facts.packets && Object.keys(facts.packets).length ? Object.values(facts.packets) : facts.packet ? [facts.packet] : [];
     // City rules shape the design; they are shown in each packet, not filed or reviewed as documents.
