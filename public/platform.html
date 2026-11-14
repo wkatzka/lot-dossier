@@ -1583,7 +1583,8 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-intent-later-why .cp-src{margin-left:4px}
 .cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}
 /* My projects: delete, confirmed in place */
-#project-workspace .pw-delete-link:not([hidden]){display:inline-block}
+#project-workspace .pw-delete-link{display:inline-block}
+#project-workspace .pw-delete-link[hidden]{display:none}
 #project-workspace .pw-delete-link{margin:10px 0 0 12px;font-size:var(--cp-text-sm);color:var(--cp-muted)}
 #project-workspace .pw-delete-link:hover{color:var(--cp-t-concern)}
 .pw-delete-confirm{margin-top:12px;padding:12px 14px;border:1px solid var(--cp-t-concern-bg);border-radius:var(--cp-r);background:#fff7f6}
