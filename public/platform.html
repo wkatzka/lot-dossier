@@ -6806,7 +6806,12 @@ const api={rule,check,attrs,toNumber};if(typeof module!=='undefined'&&module.exp
     if(/^other\d+$/.test(f.name)||f.type==='checkbox')basis='Complete personally in the city portal after reading the full statement. Cornerpin does not provide initials or acknowledgments.';
     if(section==='building'&&t.value==='1'&&['front_set_back','rear_set_back'].includes(f.name)){
       const side=f.name==='front_set_back'?'front':'rear',minimum=fx.zone_std?.[side];
-      if(minimum!=null&&Number.isFinite(Number(minimum))&&Number(minimum)>=0){value=minimum;basis='Saved zoning/development standards: minimum '+side+' setback in feet. Confirm the applicable frontage and controlling plat or amendments. This is not the actual proposed distance.';}
+      if(minimum!=null&&Number.isFinite(Number(minimum))&&Number(minimum)>=0){value=minimum;
+        // Say where the number comes from: a recorded plat note is not the base zoning, and the two can differ.
+        const zf=(p.report?.findings||[]).find(x=>x.item==='Zoning'),base=zf&&new RegExp("(\\d+)' "+side).exec(zf.headline||'');
+        basis=fx.zone_std?.zone==='plat'
+          ?'Recorded plat setback note: '+minimum+' ft '+side+' minimum. The plat cites a development agreement Cornerpin has not confirmed yet'+(base&&Number(base[1])!==Number(minimum)?'; the base '+(fx.zone||'zone')+' zoning sets '+base[1]+' ft':'')+'. Confirm which controls before filing. This is the minimum, not your proposed distance.'
+          :'Zoning standards ('+(fx.zone||'base zone')+'): minimum '+side+' setback in feet. Confirm the subdivision plat or amendments don\'t set a different one. This is the minimum, not your proposed distance.';}
     }
     if(['primary','building','professionals'].includes(section)&&Facts){
       const factName=({buildername:'builder_name',ownername:'owner_name',owneremail:'owner_email'})[f.name]||f.name;

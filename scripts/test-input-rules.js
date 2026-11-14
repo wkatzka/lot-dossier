@@ -36,3 +36,8 @@ console.log('PASS: the city form rejects a bad answer at save time with a plain 
 const broken=[];for(const id of types)for(const r of C.rows(p,id)){if(r.locked||r.options||!String(r.value??'').trim())continue;const e=IR.check(r.value,IR.rule(r.label,r.name,r.type));if(e)broken.push(id+' · '+r.label+' = '+JSON.stringify(r.value)+' → '+e);}
 assert.deepEqual(broken,[],'Pre-filled answers that break their rule:\n'+broken.join('\n'));
 console.log('PASS: every answer Cornerpin pre-fills, on every permit type, passes its input rule.');
+// Setback answers say where the number comes from: a recorded plat note is not the base zoning, and they can differ.
+{const C2=require('../web/city-application');const q={property:{address:'5241 E COBABE RANCH RD'},documents:[],application:{},report:{parcel:{county:'Weber',id:'x',attrs:{}},facts:{jurisdiction:'Ogden Valley City',zone:'AV-3',zone_std:{zone:'plat',front:20,rear:20}},findings:[{item:'Zoning',headline:"AV-3 Agricultural Valley: 30' front, 10' side (24' both sides), 30' rear, 35' max height"}]}};
+ const front=C2.rows(q,'1').find(r=>/Min\. Front/.test(r.label));assert.equal(String(front.value),'20');
+ assert(/Recorded plat setback note/.test(front.basis)&&/base AV-3 zoning sets 30 ft/.test(front.basis)&&/not confirmed/.test(front.basis),front.basis);
+ console.log('PASS: plat-based setbacks name their source and flag a conflict with base zoning.');}
