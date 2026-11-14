@@ -185,3 +185,13 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-permit-yours{color:var(--cp-muted)}
 .cp-permits-overall{margin:4px 0 8px;font-size:var(--cp-text)}
 .cp-permit-found>span,.cp-permit-yours>span{flex:1;min-width:0}
+/* Permit form progress: checked · filled in by Cornerpin (to check) · blank */
+.cp-form-progress{margin:6px 0 16px}
+.cp-form-progress-k{margin:0 0 8px;font-size:var(--cp-text)}
+.cp-bar-split{display:flex;height:10px}
+.cp-bar-split>span{display:block;height:100%;border-radius:0}
+.cp-bar-split .cp-seg-ok{background:var(--cp-t-ok)}
+.cp-bar-split .cp-seg-found{background:#8fb1f0}
+.cp-form-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:8px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+.cp-form-legend span{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:-8px}
+.cp-dot-ok{background:var(--cp-t-ok)}.cp-dot-found{background:#8fb1f0}.cp-dot-blank{background:var(--cp-t-neutral-bg);border:1px solid var(--cp-line)}
