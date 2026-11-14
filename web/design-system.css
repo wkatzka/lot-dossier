@@ -465,3 +465,10 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-app-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 #project-workspace .cp-app-actions .cp-primary,html[data-theme] #project-workspace .cp-app-actions button.cp-primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
 #project-workspace .city-save-state{font-size:13px;color:var(--cp-muted);margin-top:8px}
+#project-workspace .city-optional-hint{margin:0;padding:12px 16px 4px;font-size:14px;color:var(--cp-muted)}
+#project-workspace details.city-optional-group{border-bottom:1px solid var(--cp-line)}
+#project-workspace details.city-optional-group>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:600;font-size:15px;list-style:none}
+#project-workspace details.city-optional-group>summary::after{content:"+";font-weight:400;font-size:18px;color:var(--cp-muted)}
+#project-workspace details.city-optional-group[open]>summary::after{content:"−"}
+#project-workspace details.city-optional-group>summary em{margin-left:auto;font-style:normal;font-size:12px;font-weight:500;color:var(--cp-muted)}
+#project-workspace details.city-optional-group[open]{background:#fbfaf6}

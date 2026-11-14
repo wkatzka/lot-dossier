@@ -1286,6 +1286,13 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-app-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 #project-workspace .cp-app-actions .cp-primary,html[data-theme] #project-workspace .cp-app-actions button.cp-primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
 #project-workspace .city-save-state{font-size:13px;color:var(--cp-muted);margin-top:8px}
+#project-workspace .city-optional-hint{margin:0;padding:12px 16px 4px;font-size:14px;color:var(--cp-muted)}
+#project-workspace details.city-optional-group{border-bottom:1px solid var(--cp-line)}
+#project-workspace details.city-optional-group>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:600;font-size:15px;list-style:none}
+#project-workspace details.city-optional-group>summary::after{content:"+";font-weight:400;font-size:18px;color:var(--cp-muted)}
+#project-workspace details.city-optional-group[open]>summary::after{content:"−"}
+#project-workspace details.city-optional-group>summary em{margin-left:auto;font-style:normal;font-size:12px;font-weight:500;color:var(--cp-muted)}
+#project-workspace details.city-optional-group[open]{background:#fbfaf6}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6591,7 +6598,11 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
       if(page==='professionals'&&!showAll&&root.MyCompany&&!root.MyCompany.get())html+='<div class="cp-app-company"><p><b>Building it yourself, or hiring a contractor?</b> Add your company once and Cornerpin fills in the contractor questions on every permit.</p><button type="button" data-action="my-company">Add my company details</button></div>';
       if(!all.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
       html+=list.map(field).join('');
-      if(opt.length)html+=list.length?'<details class="city-optional"><summary>'+opt.length+' optional question'+(opt.length===1?'':'s')+' left blank</summary>'+opt.map(field).join('')+'</details>':'<div class="city-optional-open">'+opt.map(field).join('')+'</div>';
+      // Long runs of blank optional questions are grouped by who they're about (engineer, plumber…), each folded.
+      const ROLE=/^(Engineer of Record|Design Professional|Builder|General Contractor|Electrical|Mechanical|Plumbing|Owner|Applicant|Architect)/i,NICE={electrical:'Electrical contractor',mechanical:'Mechanical contractor',plumbing:'Plumbing contractor','engineer of record':'Engineer of record','design professional':'Design professional (architect or designer)'};
+      const groupsOf=rows=>{const out=[];let cur=null;for(const r of rows){const m=ROLE.exec(String(r.label||''));const k=m?m[1].toLowerCase():cur?cur.key:'other';if(!cur||cur.key!==k){cur={key:k,label:NICE[k]||(m?m[1]:'Other questions'),rows:[]};out.push(cur);}cur.rows.push(r);}return out;};
+      const optHtml=rows=>{const gs=groupsOf(rows);if(rows.length<=6||gs.length<2)return rows.map(field).join('');return '<p class="city-optional-hint">Open only the people on your project. Leave the rest blank.</p>'+gs.map(g=>'<details class="city-optional-group"><summary><span>'+esc(g.label)+'</span><em>'+g.rows.length+' blank</em></summary>'+g.rows.map(field).join('')+'</details>').join('');};
+      if(opt.length)html+=list.length?'<details class="city-optional"><summary>'+opt.length+' optional question'+(opt.length===1?'':'s')+' left blank</summary>'+optHtml(opt)+'</details>':'<div class="city-optional-open">'+optHtml(opt)+'</div>';
       const pages=Object.keys(titles),next=pages[pages.indexOf(page)+1];
       html+='</div></fieldset><div class="pw-actions cp-app-actions">'+(next?'<button type="submit" class="cp-primary" data-city-next="'+next+'">Save &amp; next page →</button>':'')+'<button type="submit">Save</button><button type="button" data-action="city-download">Download my answers</button></div><p class="city-save-state" role="status">Answers save when you click Save or switch pages.</p></form>';
       html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>View evidence</b> on any filled-in answer to see the record or document it came from.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
