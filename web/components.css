@@ -303,3 +303,18 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-permit-rows>li:first-child{border-top:1px solid var(--cp-line)}
 .cp-permit-rows>li.cp-permit-note{display:block;padding:10px 0}
 .cp-permit-rows>li.cp-permit-note p{margin:0;font-size:var(--cp-text-sm)}
+/* Plan picker on an empty lot: why the house comes first, and how related permits look here */
+.cp-intent-why{margin:4px 0 14px}
+.cp-intent-why>p{margin:0 0 8px;font-size:var(--cp-text);line-height:1.55;color:var(--cp-ink);max-width:78ch}
+.cp-intent-why a{font-size:var(--cp-text-sm)}
+.cp-intent-later{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.cp-intent-later li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-input)}
+.cp-intent-later li.cp-fit-constrained{border-color:var(--cp-t-review-bg);background:#fffaf0}
+.cp-intent-later .cp-intent-ico{flex:none;width:34px;height:34px}
+.cp-intent-later .cp-intent-ico .cp-art{width:34px;height:34px}
+.cp-intent-later p{margin:0;font-size:var(--cp-text-sm);line-height:1.45}
+.cp-intent-later p b{font-size:var(--cp-text)}
+.cp-intent-later .cp-status{margin-left:6px;vertical-align:1px}
+.cp-intent-later-why{color:var(--cp-muted);margin-top:2px}
+.cp-intent-later-why .cp-src{margin-left:4px}
+.cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}

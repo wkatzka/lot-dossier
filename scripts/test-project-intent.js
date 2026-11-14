@@ -27,6 +27,22 @@ assert(!s.plans.some(p=>['addition','remodel','pool','replace-home'].includes(p.
 // Weber's HOUSE_CNT is 1 even on vacant parcels (Cobabe 224410004: "Vacant - Agricultural", no values): it is not a house.
 const cobabe={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Vacant - Agricultural',TOTAL_MKT_VALUE:null,LAND_MKT_VALUE:null,BLDG_SQFT:null,BUILT_YR:null,EFFBUILT_YR:2026,PARCEL_ACRES:3.1}},facts:{zone_std:zone},findings};
 s=I.suggest(cobabe);assert.equal(s.lot.state,'vacant');assert.equal(s.plans[0].id,'new-home');assert.equal(s.plans[0].fit,'good');assert(/Vacant - Agricultural with no building on record/.test(s.plans[0].reasons[0].text));
+// Empty lot: the picker says why the house permit comes first, then how each related permit looks on this lot,
+// saying plainly when early findings make one a problem (here: shallow groundwater for a basement, slope for a pool).
+{const wet={...cobabe,facts:{...cobabe.facts,basement_rating:'Very limited',water_table_in:24},findings:[...findings,{item:'Soils for foundations',section:'geo',status:'watch',headline:'Seasonal water table ~24 in below surface; basements rated very limited',source:'USDA soil survey',url:'https://soils.example/'}]};
+ const {JSDOM}=require('jsdom'),doc=new JSDOM('<main>'+I.card(wet)+'</main>').window.document,t=doc.body.textContent.replace(/\s+/g,' ');
+ assert.match(t,/This is an empty lot\. The county record classifies it as Vacant - Agricultural with no building, so the Single Family Dwelling permit is the right first permit\./);
+ const later=[...doc.querySelectorAll('.cp-intent-later li')].map(li=>li.textContent.replace(/\s+/g,' '));
+ assert.deepEqual(later.map(x=>x.split(' ')[0]),['Basement','Detached','Deck','Pool','Retaining','Solar']);
+ assert.match(later[0],/part of the house permit.*Constrained.*Likely a problem here: Seasonal water table ~24 in below surface; basements rated very limited/);
+ assert(doc.querySelector('.cp-intent-later li a[href="https://soils.example/"]'),'basement reason links its source');
+ assert.match(later.find(x=>/^Pool/.test(x)),/Constrained.*Likely a problem here: Lot-average slope 20\.0%/);
+ assert.equal(doc.querySelectorAll('.cp-intent-tile').length,1,'still one main choice on an empty lot');
+ const next=new JSDOM('<main>'+I.card(wet,{selected:'new-home'})+'</main>').window.document.body.textContent.replace(/\s+/g,' ');
+ assert.match(next,/Basement\? It’s part of the house permit\.\s*Constrained Likely a problem here: Seasonal water table/);
+ // No soils data: no basement claim either way.
+ assert(!new JSDOM('<main>'+I.card(cobabe)+'</main>').window.document.body.textContent.includes('Basement'));
+ console.log('PASS: empty lot explains why the house permit comes first and previews garage, deck, pool, retaining wall, solar and basement against the early findings.');}
 assert(!s.plans.some(p=>['addition','remodel','basement','adu','replace-home'].includes(p.id)),'No house, so no remodel or addition');
 // New construction (222320023: no year built yet, $865k of buildings, effective 2026): no tear-down; finishing and outdoor work first.
 const fresh={parcel:{attrs:{HOUSE_CNT:'1',PROP_CLASS:'Residential',TOTAL_MKT_VALUE:1165460,LAND_MKT_VALUE:300000,EFFBUILT_YR:2026,PARCEL_ACRES:0.4}},facts:{lot_sf:17424},findings:[]};

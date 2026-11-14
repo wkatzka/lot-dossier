@@ -1567,6 +1567,21 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-permit-rows>li:first-child{border-top:1px solid var(--cp-line)}
 .cp-permit-rows>li.cp-permit-note{display:block;padding:10px 0}
 .cp-permit-rows>li.cp-permit-note p{margin:0;font-size:var(--cp-text-sm)}
+/* Plan picker on an empty lot: why the house comes first, and how related permits look here */
+.cp-intent-why{margin:4px 0 14px}
+.cp-intent-why>p{margin:0 0 8px;font-size:var(--cp-text);line-height:1.55;color:var(--cp-ink);max-width:78ch}
+.cp-intent-why a{font-size:var(--cp-text-sm)}
+.cp-intent-later{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.cp-intent-later li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-input)}
+.cp-intent-later li.cp-fit-constrained{border-color:var(--cp-t-review-bg);background:#fffaf0}
+.cp-intent-later .cp-intent-ico{flex:none;width:34px;height:34px}
+.cp-intent-later .cp-intent-ico .cp-art{width:34px;height:34px}
+.cp-intent-later p{margin:0;font-size:var(--cp-text-sm);line-height:1.45}
+.cp-intent-later p b{font-size:var(--cp-text)}
+.cp-intent-later .cp-status{margin-left:6px;vertical-align:1px}
+.cp-intent-later-why{color:var(--cp-muted);margin-top:2px}
+.cp-intent-later-why .cp-src{margin-left:4px}
+.cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6286,7 +6301,7 @@ function facts(report){
  return {state,yearBuilt,recent,teardown,outbuildings,built,propClass,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
   // HOA: confirmed by the state registry match, or only likely (platted subdivision with CC&Rs referenced).
   hoa:find(/HOA registration/i,'ccr')||(f.hoaReg?{source:'Utah HOA registry',url:f.hoaReg.source||null}:null)||findings.find(x=>x.section==='ccr'&&/CC&Rs/i.test(x.item||'')&&!/not in a platted subdivision/i.test(x.headline||''))||null,
-  hoaConfirmed:!!(find(/HOA registration/i,'ccr')||f.hoaReg),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status))};
+  hoaConfirmed:!!(find(/HOA registration/i,'ccr')||f.hoaReg),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status)),basementRating:f.basement_rating||null,waterTable:Number.isFinite(Number(f.water_table_in))?Number(f.water_table_in):null,flood:findings.find(x=>/flood/i.test(x.item||'')&&x.status==='flag')||null};
 }
 const r=(text,src)=>({text,source:src||null});
 // Fit and reasons for one plan on this lot.
@@ -6307,9 +6322,9 @@ function assess(plan,F,{asAddOn=false}={}){
  if(PLANS[plan].footprint&&plan!=='new-home'&&plan!=='replace-home'){
   if(small&&setbacks){fit='constrained';reasons.push(r(lotLine+'; '+setbacks.zone+' zoning sets '+setbacks.front+' ft front and '+setbacks.rear+' ft rear setbacks'+(F.platSetbacks?' (the subdivision plat may set different ones)':'')+', which leaves little room outside the house.',{label:'Zoning setbacks',url:setbacks.source}));}
   else if(lotLine)reasons.push(r(lotLine+'.',F.parcelSrc));
-  if(F.landslide&&F.landslide.status==='flag')reasons.push(r('New footprint on mapped landslide ground likely needs geotechnical review.',{label:F.landslide.source,url:F.landslide.url}));
+  if(F.landslide&&F.landslide.status==='flag'){fit='constrained';reasons.push(r('New footprint on mapped landslide ground likely needs geotechnical review.',{label:F.landslide.source,url:F.landslide.url}));}
  }
- if(plan==='pool'){for(const x of F.poolFlags.slice(0,2))reasons.push(r(x.headline,{label:x.source,url:x.url}));if(F.poolFlags.length)fit='constrained';}
+ if(plan==='pool'){reasons.unshift(...F.poolFlags.slice(0,2).map(x=>r(x.headline,{label:x.source,url:x.url})));if(F.poolFlags.length)fit='constrained';}
  if(['deck','solar','retaining-wall'].includes(plan)){fit='possible';if(F.slope&&plan==='retaining-wall')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): the city\'s retaining-wall permit asks for engineering and stamped calculations.',{label:'Ogden Valley City permit form',url:null}));if(F.slope&&plan==='deck')reasons.push(r('Sloped lot ('+F.slope.headline.split('·')[0].trim()+'): a deck may need engineered footings.',{label:F.slope.source,url:F.slope.url}));}
  if(PLANS[plan].exterior&&F.hoa&&plan!=='new-home'&&plan!=='replace-home')reasons.push(r(F.hoaConfirmed?'The lot is in an HOA; see Approvals for its rules on exterior changes.':'Recorded CC&Rs are likely for this subdivision; see Approvals for any rules on exterior changes.',{label:F.hoa.source,url:F.hoa.url}));
  if(plan==='new-home'&&F.state==='vacant'&&F.landslide?.status==='flag')reasons.push(r('Mapped landslide on the lot: plan for a geologic hazards study.',{label:F.landslide.source,url:F.landslide.url}));
@@ -6327,6 +6342,25 @@ function suggest(report){
 function command(id,addOns=[]){const p=PLANS[id];if(!p)throw Error('Unknown plan');const extra=addOns.filter(a=>p.addOns.includes(a)&&PLANS[a]);
  const all=[p,...extra.map(a=>PLANS[a])],typeIds=[...new Set(all.flatMap(x=>x.typeIds))],scope={...p.scope};if(extra.some(a=>PLANS[a].scope.adu))scope.adu='yes';
  return {type:'project_intent',plan:id,addOns:extra,label:[p.short||p.label,...extra.map(a=>PLANS[a].short.toLowerCase())].join(' + '),typeIds,scope,pool:all.some(x=>x.pool)?'included':null};}
+// A basement is part of the house permit, not its own permit: say what the soils data says about it.
+function basementNote(F){
+ const src=F.basements?{label:F.basements.source||'Soil survey',url:F.basements.url||null}:null,rating=String(F.basementRating||'').toLowerCase(),wt=F.waterTable;
+ if(!rating&&wt==null)return null;
+ if(/very limited/.test(rating)||(wt!=null&&wt<60))return {fit:'constrained',reasons:[r((F.basements?.headline||'Basements rated '+rating)+'. A full basement would likely need waterproofing or dewatering; a slab or crawlspace may be the better choice. A geotech report decides.',src)]};
+ if(/somewhat/.test(rating))return {fit:'possible',reasons:[r('Soils are rated somewhat limited for basements. Likely workable; the geotech report will confirm.',src)]};
+ return {fit:'good',reasons:[r('Soils are rated '+(rating||'suitable')+' for basements.',src)]};
+}
+const LEAD={constrained:'Likely a problem here: ',possible:'',good:''};
+// The reason that explains the rating, not the plain lot size.
+const keyReason=x=>x.reasons.find(z=>!/^Lot is about [\d,]+ sq ft[^;]*\.$/.test(z.text))||null;
+// Empty lot: say why the house permit comes first, then what each related permit looks like on this lot.
+function vacantWhy(F){
+ const later=['garage','deck','pool','retaining-wall','solar'].map(id=>({id,...PLANS[id],...(assess(id,F,{asAddOn:true})||{fit:null,reasons:[]})}));
+ const base=basementNote(F),items=[...(base?[{id:'basement',label:'Basement',note:'part of the house permit',...base}]:[]),...later];
+ const why=x=>{const z=keyReason(x);return z?'<span>'+esc((LEAD[x.fit]||'')+z.text)+'</span>'+srcLink(z):'Nothing in the early findings limits this.';};
+ return '<div class="cp-intent-why"><p><b>This is an empty lot.</b> '+esc(F.propClass?'The county record classifies it as '+F.propClass+' with no building':'The county record shows no building')+(F.outbuildings?' (only outbuildings)':'')+', so the Single Family Dwelling permit is the right first permit.'+(F.parcelSrc.url?' '+link(F.parcelSrc.url,'County parcel record'):'')+'</p>'+
+  '<p>If you build the house, these come with it or after it. Each is its own permit; you can add them on the next step. Here is what this lot’s early findings say:</p><ul class="cp-intent-later">'+items.map(x=>'<li class="cp-fit-'+esc(x.fit||'none')+'"><span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span><div><p><b>'+esc(x.label)+'</b>'+(x.note?' <small>('+esc(x.note)+')</small>':'')+tag(x.fit)+'</p><p class="cp-intent-later-why">'+why(x)+'</p></div></li>').join('')+'</ul></div>';
+}
 function basis(F){return F.state==='improved'?(F.teardown?'This lot has an old house valued well below its land, so replacing it is listed first.':F.recent?'This lot has a newly built house, so finishing and outdoor projects are listed first.':'This lot already has a house, so projects that change it are listed first.'):F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
 const tag=fit=>fit?' <span class="cp-status cp-'+(fit==='good'?'ok':fit==='constrained'?'review':'neutral')+'">'+FIT[fit]+'</span>':'';
 const srcLink=z=>z.source?.url?' <a class="cp-src" href="'+esc(z.source.url)+'" target="_blank" rel="noopener" title="'+esc(z.source.label||'Source')+'">source</a>':(z.source?.label?' <span class="cp-src" title="'+esc(z.source.label)+'">source</span>':'');
@@ -6340,11 +6374,11 @@ function card(report,{project=null,limit=4,selected=null}={}){
  if(selected&&PLANS[selected]){const p=PLANS[selected],F=s.lot,main=s.plans.find(x=>x.id===selected)||{reasons:[],fit:null};
   const addOns=p.addOns.map(id=>({id,...PLANS[id],...(assess(id,F,{asAddOn:true})||{fit:null,reasons:[]})}));
   return '<section class="cp-answer cp-intent" aria-label="Choose permits"><p class="cp-eyebrow">Your permits</p><p class="cp-intent-chosen"><span class="cp-intent-ico">'+A(selected,PLAN_ICON[selected]||'clipboard')+'</span><strong>'+esc(p.label)+'</strong> <small>(permit: '+esc(p.permit)+')</small>'+tag(main.fit)+'</p>'+reasonList(main,2)+
-   (addOns.length?'<fieldset class="cp-intent-addons"><legend>Also planning any of these? Each is its own permit.</legend>'+addOns.map(x=>'<label class="cp-addon-tile"><input type="checkbox" data-addon="'+esc(x.id)+'"> <span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span>'+esc(x.label)+tag(x.fit)+(x.reasons[0]?'<br><small>'+esc(x.reasons[0].text)+'</small>':'')+'</label>').join('')+'</fieldset>':'')+
+   (addOns.length?'<fieldset class="cp-intent-addons"><legend>Also planning any of these? Each is its own permit.</legend>'+addOns.map(x=>'<label class="cp-addon-tile"><input type="checkbox" data-addon="'+esc(x.id)+'"> <span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span>'+esc(x.label)+tag(x.fit)+(keyReason(x)?'<br><small>'+esc((LEAD[x.fit]||'')+keyReason(x).text)+'</small>':'')+'</label>').join('')+'</fieldset>':'')+(selected==='new-home'&&basementNote(F)?(b=>'<p class="cp-intent-basement"><b>Basement?</b> It’s part of the house permit.'+tag(b.fit)+' '+esc((LEAD[b.fit]||'')+b.reasons[0].text)+srcLink(b.reasons[0])+'</p>')(basementNote(F)):'')+
    '<p><button type="button" class="primary" data-intent-confirm="'+esc(selected)+'">Research these permits</button> <button type="button" data-intent-back>Back</button></p><p><small>Cornerpin then researches only what these permits need. You can change this later; only the extra research runs.</small></p></section>';}
  const row=x=>'<li class="cp-intent-tile cp-fit-'+esc(x.fit||'none')+'"><button type="button" class="cp-intent-option" data-intent="'+esc(x.id)+'"><span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span><span class="cp-intent-label">'+esc(x.label)+'</span>'+tag(x.fit)+'</button>'+reasonList(x,2)+'<button type="button" class="cp-intent-choose" data-intent="'+esc(x.id)+'" aria-label="Choose '+esc(x.label)+'">Choose '+I('arrow')+'</button></li>';
  const top=s.plans.slice(0,limit),rest=s.plans.slice(limit);
- return '<section class="cp-answer cp-intent" aria-label="What are you planning for this lot?"><div class="cp-ans-head"><span class="cp-ans-icon">'+I('clipboard')+'</span><p class="cp-eyebrow">What are you planning?</p></div><p class="cp-intent-basis">'+esc(basis(s.lot))+(s.lot.state!=='unknown'&&s.lot.parcelSrc.url?' <small>('+link(s.lot.parcelSrc.url,'County parcel record')+')</small>':'')+'</p><p class="cp-intent-hint"><small>Pick the main permit; you can add related permits next. Ranked by fit with this lot\'s records — not a prediction.</small></p><ol class="cp-intent-list">'+top.map(row).join('')+'</ol>'+(rest.length?'<details><summary>More options</summary><ol class="cp-intent-list">'+rest.map(row).join('')+'</ol></details>':'')+'<p class="cp-intent-evaluate">'+'<button type="button" class="cp-intent-option" data-intent-confirm="evaluate">'+I('search')+' '+esc(s.evaluate.label)+'</button> <small>Researches everything; slower.</small></p></section>';
+ return '<section class="cp-answer cp-intent" aria-label="What are you planning for this lot?"><div class="cp-ans-head"><span class="cp-ans-icon">'+I('clipboard')+'</span><p class="cp-eyebrow">What are you planning?</p></div>'+(s.lot.state==='vacant'?vacantWhy(s.lot):'<p class="cp-intent-basis">'+esc(basis(s.lot))+(s.lot.state!=='unknown'&&s.lot.parcelSrc.url?' <small>('+link(s.lot.parcelSrc.url,'County parcel record')+')</small>':'')+'</p><p class="cp-intent-hint"><small>Pick the main permit; you can add related permits next. Ranked by fit with this lot\'s records — not a prediction.</small></p>')+'<ol class="cp-intent-list">'+top.map(row).join('')+'</ol>'+(rest.length?'<details><summary>More options</summary><ol class="cp-intent-list">'+rest.map(row).join('')+'</ol></details>':'')+'<p class="cp-intent-evaluate">'+'<button type="button" class="cp-intent-option" data-intent-confirm="evaluate">'+I('search')+' '+esc(s.evaluate.label)+'</button> <small>Researches everything; slower.</small></p></section>';
 }
 // Picking a main permit shows its add-ons; confirming saves the bundle and asks the report to run
 // the research those permits need (web/app.js listens for cornerpin:research-permits).
@@ -6363,7 +6397,7 @@ if(typeof document!=='undefined')document.addEventListener('click',async e=>{
   root.dispatchEvent(new CustomEvent('cornerpin:research-permits',{detail:{typeIds:id==='evaluate'?['*']:cmd.typeIds,label:cmd.label}}));
  }catch(err){confirm.disabled=false;box?.insertAdjacentHTML('beforeend','<p role="status">'+esc(err.message)+'</p>');}
 });
-const api={PLANS,facts,assess,suggest,command,card};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectIntent=api;
+const api={PLANS,facts,assess,suggest,command,card,basementNote};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectIntent=api;
 })(typeof window!=='undefined'?window:globalThis);
 
 /* Small inline icon set (24×24, 2px stroke, currentColor). Decorative: aria-hidden. */
