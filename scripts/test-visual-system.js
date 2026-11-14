@@ -9,4 +9,7 @@ const legacy=['styles.css','project-workspace.css','design-system.css'].map(f=>f
 const n=(legacy.match(/!important/g)||[]).length;
 assert(n<=49,'Legacy CSS gained !important rules ('+n+' > 49). Style components in web/components.css instead.');
 for(const v of ['--cp-r:','--cp-t-concern-bg','--cp-t-review-bg','--cp-t-verify-bg','--cp-t-ok-bg','--cp-t-neutral-bg','--cp-text:'])assert(comp.includes(v),'token '+v);
+// Inline <style> in home.html is unlayered and beats @layer legacy: it must carry its own light-theme colours.
+const home=fs.readFileSync('web/home.html','utf8'),restore=/html\.cp-restoring #cp-restore\{[^}]*\}/.exec(home)?.[0]||'';
+assert(/color:#273239/.test(restore)&&/background:#e9e9e5/.test(restore),'"Opening your workspace" screen has dark text on the light background');
 console.log('PASS: one visual system — components.css (no !important) over @layer legacy; legacy !important count capped at 49.');

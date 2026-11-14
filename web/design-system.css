@@ -46,7 +46,6 @@ html[data-theme=light] .analysis-time,html[data-theme=light] #project-workspace 
 html[data-theme=light] .permit-progress progress,html[data-theme=light] .permit-progress progress::-webkit-progress-bar{background:#d3dcd5}
 html[data-theme=light] .permit-progress progress::-webkit-progress-value{background:#476e5c}
 html[data-theme=light] .permit-progress progress::-moz-progress-bar{background:#476e5c}
-html[data-theme=light].cp-restoring #cp-restore{color:var(--ink);background:var(--bg)}
 @media(max-width:640px){
  
  #cornerpin-global-nav>div{justify-content:flex-end}
