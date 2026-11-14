@@ -1,0 +1,91 @@
+/* Cornerpin components — the one place cards, buttons, status chips and text sizes are defined.
+   Older stylesheets (styles, project-workspace, concrete-theme, design-system) are wrapped by the build in
+   `@layer legacy`, so everything here wins without !important or ID-specificity contests.
+   Rule of thumb: add a class to a component list below rather than styling it again elsewhere. */
+
+/* ---------- Tokens ---------- */
+:root{
+ --cp-r:8px;          /* every card, panel and grouped list */
+ --cp-r-control:6px;  /* buttons and inputs */
+ --cp-r-pill:999px;   /* chips */
+ --cp-text:14px;--cp-text-sm:13px;--cp-text-xs:12px;--cp-lh:1.6;
+ --cp-h2:21px;--cp-h3:16px;--cp-h3-lg:18px;--cp-h4:15px;
+ --cp-pad-card:24px;--cp-pad-inner:16px 18px;
+ /* status tones: background / text */
+ --cp-t-concern-bg:#fbe6e3;--cp-t-concern:#8c1d16;
+ --cp-t-review-bg:#fbefd2;--cp-t-review:#6b4300;
+ --cp-t-verify-bg:#e3edf6;--cp-t-verify:#1f4a73;
+ --cp-t-ok-bg:#e1efe4;--cp-t-ok:#1f5a33;
+ --cp-t-neutral-bg:#e8ece7;--cp-t-neutral:#4d5a53;
+}
+
+/* ---------- Cards ---------- */
+.pw-card,#rv .card,.cp-panel,.cp-evid,#rv .cp-evid,.document-record,.card.packet{
+ border-radius:var(--cp-r);border:1px solid var(--cp-line);background:var(--cp-surface);box-shadow:none}
+.pw-card{padding:var(--cp-pad-card)}
+/* Inner cards: one level down inside a card or list */
+.cp-rule-card,.cp-qcard,.cp-contact-card,.cp-intent-tile,.cp-site-v2>li,.cp-evid-grid>div{
+ border-radius:var(--cp-r);border:1px solid var(--cp-line)}
+.cp-rule-card,.cp-qcard,.cp-contact-card,.cp-site-v2>li{padding:var(--cp-pad-inner)}
+#rv .frow.cp-frow{border-radius:var(--cp-r);padding:20px 22px 16px}
+#rv .cp-evid{padding:20px 22px}
+/* Stacked rows read as one rounded list */
+details.cp-req{border-radius:0;margin:0 0 -1px}
+details.cp-req:first-of-type{border-top-left-radius:var(--cp-r);border-top-right-radius:var(--cp-r)}
+details.cp-req:last-of-type{border-bottom-left-radius:var(--cp-r);border-bottom-right-radius:var(--cp-r);margin-bottom:0}
+#project-workspace .application-workspace fieldset,#project-workspace .cp-app-stats{border-radius:var(--cp-r);overflow:hidden}
+/* Panels without a fill inside a card are flat */
+.pw-card .pw-card{border:0;padding:0;background:transparent}
+
+/* ---------- Text ---------- */
+#project-workspace,#rv .wrap{font-size:var(--cp-text);line-height:var(--cp-lh)}
+.cp-rule-card p,.cp-rule-why,#project-workspace td,#project-workspace td p,.cp-ans-tile p,.cp-qcard p,.cp-req-body>p,.cp-frow-body>p,.cp-evid-finding,.cp-site-body p,.cp-ans p,.cp-next-steps p,.cp-checklist p{font-size:var(--cp-text);line-height:var(--cp-lh)}
+.cp-rule-meta,.cp-req-sub,.cp-site-headline,.pw-muted,#project-workspace .hint,#rv .hint,.cp-frow-meta,.city-save-state,.cp-app-key,.cp-evid .hint{font-size:var(--cp-text-sm);color:var(--cp-muted)}
+.cp-eyebrow,#rv .eyebrow,#rv .cp-frow .item,.cp-evid .eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k{
+ font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#project-workspace h2,#rv .card>h2,#rv .cp-page-heading h2,#rv .cp-panel-head h2,#rv .group>header h3{font-size:var(--cp-h2);font-weight:650;line-height:1.3;letter-spacing:-.01em}
+#rv .group>header h3{font-size:var(--cp-h3-lg)}
+#project-workspace h3,#rv .wrap h3,#rv .cp-frow h4,#rv .cp-evid h4,.cp-rule-card h3,.cp-rule-card h4{font-size:var(--cp-h3);font-weight:650;line-height:1.35}
+#project-workspace .permit-summary h3,#project-workspace .cp-req-group h3{font-size:var(--cp-h3-lg)}
+#project-workspace h4{font-size:var(--cp-h4);font-weight:600}
+/* Lead sentence of an answer card: one step up from body */
+.cp-ans-lead p{font-size:16px;line-height:1.5}
+/* Section labels inside report cards are eyebrows, not headings */
+#rv .packet>h2,#rv .pk-head h2,#rv .hero2 .card h2:not(.site-summary-title),#rv .chk-sum h2{font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4}
+#rv .site-summary-title{font-size:var(--cp-h2);font-weight:650}
+#rv .packet h3{font-size:var(--cp-h3)}
+
+/* ---------- Buttons ---------- */
+/* Secondary (default) */
+#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button{
+ font-size:var(--cp-text);font-weight:600;border-radius:var(--cp-r-control);min-height:40px;padding:8px 14px;line-height:1.2}
+/* Primary */
+#project-workspace button.primary,#project-workspace button.cp-primary,#project-workspace .cp-go,#project-workspace button[data-city-next],#project-workspace .cp-ready button[data-action=submit-city]{
+ background:var(--cp-primary);border-color:var(--cp-primary);color:#fff}
+#project-workspace button.primary:hover,#project-workspace button.cp-primary:hover,#project-workspace .cp-go:hover{background:var(--cp-primary-hover)}
+#project-workspace button:disabled{opacity:.55;cursor:not-allowed}
+/* Link-style */
+.cp-link,.cp-more,.field-evidence-button,#project-workspace .cp-link,#rv .cp-more{
+ background:none;border:0;padding:0;min-height:0;font-size:var(--cp-text-sm);font-weight:600;color:var(--cp-primary);text-decoration:underline;text-underline-offset:3px;cursor:pointer;width:auto}
+.cp-more{margin-top:6px}
+
+/* ---------- Status chips ---------- */
+.cp-chip,.cp-status,.cp-req-chip,.pk-badge,.pw-status,.cp-who,#rv .cp-frow>.badge,#rv .frow>.badge{
+ display:inline-flex;align-items:center;gap:4px;font-size:var(--cp-text-xs);font-weight:650;line-height:1.4;padding:3px 10px;border-radius:var(--cp-r-pill);
+ letter-spacing:0;text-transform:none;white-space:nowrap;border:0;background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral);min-width:0;text-align:left}
+/* concern */
+.cp-chip-concern,.cp-chip-flag,.cp-status.cp-concern,.pk-badge.s-flag,#rv .s-flag>.badge{background:var(--cp-t-concern-bg);color:var(--cp-t-concern)}
+/* needs action / review */
+.cp-chip-open,.cp-chip-review,.cp-status.cp-review,.pk-badge.s-watch,#rv .s-watch>.badge,.cp-req-todo .cp-req-chip,.cp-who-other{background:var(--cp-t-review-bg);color:var(--cp-t-review)}
+/* needs checking */
+.cp-chip-verify,.cp-status.cp-verify,.pk-badge.s-verify,#rv .s-verify>.badge,.cp-req-look .cp-req-chip,.cp-who-pro{background:var(--cp-t-verify-bg);color:var(--cp-t-verify)}
+/* done / fine */
+.cp-chip-ok,.cp-status.cp-ok,.pk-badge.s-ok,#rv .s-ok>.badge,.cp-req-done .cp-req-chip{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+/* you */
+.cp-who-you{background:var(--cp-primary);color:#fff}
+/* Chips sit beside text, never stretch */
+#rv .frow.cp-frow>.badge{position:absolute;top:18px;right:18px}
+@media(max-width:560px){#rv .frow.cp-frow>.badge{position:static;margin-bottom:10px;justify-self:start}}
+
+/* ---------- Map (moved out of the legacy layer so Leaflet's own CSS doesn't win) ---------- */
+#rv #map .leaflet-control,#rv #map .leaflet-popup{color:#222;text-shadow:none}

@@ -8,7 +8,7 @@ Inlines web/home.html, web/styles.css, the in-browser engine (web/lotreport.js),
 (web/planreader.js), the UI (web/app.js) and the generic cost assumptions. Refuses to write output that contains
 project-specific strings or embedded images.
 """
-import argparse
+import re, argparse
 import json
 import os
 import subprocess
@@ -30,7 +30,12 @@ def read(*p):
 
 def build(api_base, inline_assets=False):
     html = read(WEB, "home.html")
-    css = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + '\n' + read(WEB, "concrete-theme.css") + "\n" + read(WEB, "design-system.css")
+    # Older stylesheets sit in a lower cascade layer; components.css (unlayered) is the single source for
+    # cards, buttons, chips and text sizes and wins without specificity fights.
+    legacy = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + '\n' + read(WEB, "concrete-theme.css") + "\n" + read(WEB, "design-system.css")
+    font_faces = "".join(re.findall(r"@font-face\{[^}]*\}", legacy))
+    legacy = re.sub(r"@font-face\{[^}]*\}", "", legacy)
+    css = font_faces + "\n@layer legacy{\n" + legacy + "\n}\n" + read(WEB, "components.css")
     # Keep Inter available in saved reports and the optional standalone application too.
     import base64
     with open(os.path.join(ROOT, "public", "assets", "fonts", "inter.woff2"), "rb") as fh:
