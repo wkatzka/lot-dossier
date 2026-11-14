@@ -79,9 +79,9 @@
       disclosure(button,categories.filter(c=>c.key===item.dataset.concernCategory));
     });
     categories.filter(c=>!c.resource).forEach(c=>c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads')).forEach((row,index)=>{
-      const b=document.createElement('button');b.type='button';b.className='investigate-evidence';b.textContent='Investigate with public records →';
+      const b=document.createElement('button');b.type='button';b.className='investigate-evidence';b.innerHTML=(window.CpIcons?window.CpIcons.icon('search'):'')+'Dig into public records';b.classList.add('cp-act');
       b.addEventListener('click',()=>window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'documents',section:'site',anchor:'public-records',investigation:{category:c.key,index,title:row.querySelector('.item')?.textContent||c.label,question:row.querySelector('h4')?.textContent||'',label:c.label}}})));
-      row.append(b);
+      const bar=row.querySelector('.cp-frow-actions');if(bar)bar.append(b);else{const body=row.querySelector('.cp-frow-body')||row,nb=document.createElement('div');nb.className='cp-frow-actions';nb.append(b);body.append(nb);}
     }));
     if(categories.length)select(categories[0]);
     root.querySelectorAll('a[href="#packet"]').forEach(a=>{a.textContent='Open permit preparation →';});

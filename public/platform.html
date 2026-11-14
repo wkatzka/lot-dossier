@@ -1204,6 +1204,60 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace button.cp-more,html[data-theme] #project-workspace button.cp-more{border:0;background:none;padding:0;margin:-4px 0 10px;color:var(--cp-primary);font-weight:600;font-size:.88rem;box-shadow:none}
 #rv-body button.cp-more{border:0;background:none;padding:0;margin:-4px 0 10px;color:var(--cp-primary);font-weight:600;font-size:.88rem;box-shadow:none;cursor:pointer}
 
+/* Site Review findings: one story per card — what it is, what we found, what to do, cost/source, actions. */
+#rv .frow.cp-frow{grid-template-columns:minmax(0,1fr);gap:0;padding:22px 22px 18px;margin:12px 0;background:var(--cp-surface,#fff);border:1px solid var(--cp-line,#d9d6cf);border-left:4px solid var(--cp-line,#d9d6cf);border-radius:0;position:relative}
+#rv .frow.cp-frow.s-flag{border-left-color:#b3261e}#rv .frow.cp-frow.s-watch{border-left-color:#a15c1b}#rv .frow.cp-frow.s-verify{border-left-color:#2f5d8a}#rv .frow.cp-frow.s-ok{border-left-color:#2e6b3f}
+#rv .frow.cp-frow>.badge{position:absolute;top:20px;right:20px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:999px;padding:4px 10px;font-weight:700}
+#rv .cp-frow.s-flag>.badge{background:#fbe3e0;color:#8c1d16}#rv .cp-frow.s-watch>.badge{background:#fbecc8;color:#5c3d00}#rv .cp-frow.s-verify>.badge{background:#e1ebf5;color:#1f4266}#rv .cp-frow.s-ok>.badge{background:#e0efe3;color:#1f4d2c}
+#rv .cp-frow-head{display:flex;gap:14px;align-items:flex-start;padding-right:130px}
+#rv .cp-frow-icon{flex:none;width:40px;height:40px;display:grid;place-items:center;background:var(--cp-canvas,#f1efe9);color:var(--cp-primary,#7a3d12)}
+#rv .cp-frow .item{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cp-muted,#6b6760)}
+#rv .cp-frow h4{margin:4px 0 0;font-size:18px;line-height:1.35}
+#rv .cp-frow-body>p{margin:14px 0 0 54px;font-size:15px;line-height:1.65;max-width:72ch;color:var(--cp-muted,#55524c)}
+#rv .cp-frow .next{margin:16px 0 0 54px;padding:12px 14px;background:#fbf3e6;border-left:3px solid var(--cp-primary,#a15c1b);max-width:72ch;font-size:15px;line-height:1.55;color:var(--cp-ink,#1d1b18)}
+#rv .cp-frow .next b{display:flex;align-items:center;gap:6px;margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-primary,#7a3d12)}
+#rv .cp-frow .next b .cp-icon{width:15px;height:15px}
+#rv .cp-frow-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 0 54px;font-size:13px;color:var(--cp-muted,#6b6760)}
+#rv .cp-frow-meta>span{display:inline-flex;align-items:center;gap:6px;overflow-wrap:anywhere}
+#rv .cp-frow-meta .cp-icon{width:15px;height:15px;flex:none}
+#rv .cp-meta-cost b{color:var(--cp-ink,#1d1b18);font-variant-numeric:tabular-nums}#rv .cp-meta-cost em{font-style:normal;opacity:.8}
+#rv .cp-meta-src a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+#rv .cp-frow-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 0 54px;padding-top:14px;border-top:1px solid var(--cp-line,#e4e1da)}
+#rv .cp-frow-actions p{margin:0}
+#rv .cp-review-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--cp-muted,#6b6760);margin-right:auto}
+#rv .cp-review-chip .cp-icon{width:15px;height:15px}#rv .cp-review-chip.rv-resolved,#rv .cp-review-chip.rv-not-applicable{color:#1f4d2c}
+#rv .cp-frow-actions button.cp-act,#rv .cp-frow-actions .investigate-evidence{display:inline-flex;align-items:center;gap:6px;margin:0;padding:8px 12px;font-size:14px;line-height:1.2;background:transparent;border:1px solid var(--cp-line,#cfcac0);color:var(--cp-ink,#1d1b18);cursor:pointer;border-radius:0;width:auto}
+#rv .cp-frow-actions button.cp-act:hover{border-color:var(--cp-primary,#7a3d12);color:var(--cp-primary,#7a3d12)}
+#rv .cp-frow-actions .cp-icon{width:16px;height:16px}
+#rv .cp-frow p.cp-clamp+.cp-more,#rv .cp-frow .cp-more{margin-left:54px}
+@media(max-width:560px){#rv .frow.cp-frow{padding:18px 16px}#rv .frow.cp-frow>.badge{position:static;justify-self:start;margin-bottom:10px}#rv .cp-frow-head{padding-right:0}#rv .cp-frow-body>p,#rv .cp-frow .next,#rv .cp-frow-meta,#rv .cp-frow-actions,#rv .cp-frow .cp-more{margin-left:0}}
+
+/* "Records we checked" panel */
+#rv .cp-evid{padding:20px 22px;margin:12px 0;background:var(--cp-canvas,#f4f2ec);border:1px solid var(--cp-line,#d9d6cf);border-radius:0}
+#rv .cp-evid-head{display:flex;gap:14px;align-items:flex-start}
+#rv .cp-evid-icon{flex:none;width:40px;height:40px;display:grid;place-items:center;background:#fff;color:var(--cp-primary,#7a3d12)}
+#rv .cp-evid .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cp-muted,#6b6760)}
+#rv .cp-evid h4{margin:4px 0 0;font-size:17px;line-height:1.35}
+#rv .cp-evid-finding{margin:12px 0 0 54px;font-size:15px;line-height:1.6;max-width:72ch}
+#rv .cp-evid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:16px 0 0 54px}
+#rv .cp-evid-grid>div{background:#fff;padding:14px 16px;border-top:3px solid var(--cp-line,#d9d6cf)}
+#rv .cp-evid-open{border-top-color:#a15c1b!important}#rv .cp-evid-start{border-top-color:#2e6b3f!important}
+#rv .cp-evid-k{display:flex;align-items:center;gap:6px;margin:0 0 8px!important;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#rv .cp-evid-k .cp-icon{width:15px;height:15px}
+#rv .cp-evid-grid ul{margin:0;padding-left:18px;font-size:14px;line-height:1.55}#rv .cp-evid-grid li+li{margin-top:4px}
+#rv .cp-evid-grid p{margin:0;font-size:14px;line-height:1.55}
+#rv .cp-evid-contact{display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:10px!important;color:var(--cp-muted,#6b6760)}
+#rv .cp-evid-contact a{display:inline-flex;align-items:center;gap:4px}#rv .cp-evid-contact .cp-icon{width:14px;height:14px}
+#rv details.cp-evid-src{margin:14px 0 0 54px}
+#rv details.cp-evid-src summary{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;list-style:none}
+#rv details.cp-evid-src summary::after{content:none}
+#rv details.cp-evid-src summary .cp-icon{width:15px;height:15px}
+#rv details.cp-evid-src ul{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
+#rv details.cp-evid-src li span{display:block;color:var(--cp-muted,#6b6760);font-size:13px}
+#rv .cp-evid .hint{margin:12px 0 0 54px;font-size:12px;color:var(--cp-muted,#6b6760)}
+@media(max-width:560px){#rv .cp-evid-finding,#rv .cp-evid-grid,#rv details.cp-evid-src,#rv .cp-evid .hint{margin-left:0}}
+@media print{#rv details.cp-evid-src>ul{display:block}}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -5048,7 +5102,11 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
   var form = $('form'), prog = $('progress'), err = $('err'), go = $('go');
   var mode = 'none', last = null, map = null;
 
-  var STATUS = { flag: 'Potential concern', watch: 'Review condition', verify: 'Needs verification', ok: 'No issue identified' };
+  var STATUS = { flag: 'Concern', watch: 'Watch this', verify: 'Needs checking', ok: 'Looks fine' };
+  var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
+  var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
+  var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
+  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){return x.replace(/\.$/,'').trim();}).filter(Boolean); };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -5351,7 +5409,16 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
     var e=window.ApprovalEvidence && window.ApprovalEvidence.reportSection(r,section);
     if(!e)return '';
     var n=e.nextStep||{};
-    return '<aside class="card reviewed-section-evidence" aria-label="Reviewed original evidence"><p class="eyebrow">Reviewed originals · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4><p>'+esc(e.finding)+'</p><p><b>Still needed:</b> '+esc(e.missing||'')+'</p><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a> · '+esc(s.locator)+'</li>';}).join('')+'</ul><p><b>Next step:</b> '+esc(n.action||'')+'</p><p>'+esc(n.organization||'')+(n.url?' · <a href="'+esc(n.url)+'" target="_blank" rel="noopener">Official source</a>':'')+(n.phone?' · <a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+esc(n.phone)+'</a>':'')+(n.email?' · <a href="mailto:'+esc(n.email)+'">'+esc(n.email)+'</a>':'')+'</p><p class="hint">These reviewed records supplement the saved map checks below. They do not mark an approval received or close a checklist item.</p></aside>';
+    var open=splitList(e.missing), contact=[n.organization?esc(n.organization):'', n.phone?'<a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+ICON('phone')+esc(n.phone)+'</a>':'', n.email?'<a href="mailto:'+esc(n.email)+'">'+ICON('mail')+esc(n.email)+'</a>':'', n.url?'<a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+ICON('external')+'Official source</a>':''].filter(Boolean);
+    return '<aside class="card reviewed-section-evidence cp-evid" aria-label="Records we checked">'+
+      '<div class="cp-evid-head"><span class="cp-evid-icon">'+ICON('search')+'</span><div><p class="eyebrow">Records we checked · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4></div></div>'+
+      '<p class="cp-evid-finding">'+esc(e.finding)+'</p>'+
+      '<div class="cp-evid-grid">'+
+        (open.length?'<div class="cp-evid-open"><p class="cp-evid-k">'+ICON('alert')+'Still open</p><ul>'+open.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>':'')+
+        (n.action?'<div class="cp-evid-start"><p class="cp-evid-k">'+ICON('arrow')+'Start here</p><p>'+esc(n.action)+'</p>'+(contact.length?'<p class="cp-evid-contact">'+contact.join('<span aria-hidden="true"> · </span>')+'</p>':'')+'</div>':'')+
+      '</div>'+
+      '<details class="cp-evid-src"><summary>'+ICON('doc')+'The '+e.sources.length+' record'+(e.sources.length===1?'':'s')+' behind this</summary><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a><span>'+esc(s.locator)+'</span></li>';}).join('')+'</ul></details>'+
+      '<p class="hint">For reference: this does not mark an approval received or close a checklist item.</p></aside>';
   }
 
   function reportHTML(r, state, saved) {
@@ -5371,11 +5438,16 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
             ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
             '</div><label class="chk-attach">Attach file<input type="file" multiple></label><p class="hint">Attachments add evidence. Review it before marking this item Done.</p><ul class="chk-list"></ul></div>';
       }
-      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(decision.reviewer?'<p>Reviewed by '+esc(decision.reviewer)+' · '+esc(decision.at)+'</p><p>'+esc(decision.basis)+'</p><ul>'+(decision.references||[]).map(function(ref){return '<li>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'">Original source</a>':esc(ref.name)+' · SHA-256 '+esc(ref.hash))+'</li>';}).join('')+'</ul>':'')+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
-      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(decision.state):STATUS[x.status]) + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
-        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
-        (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
-        '<div class="src">' + src + '</div>' + chk + '</div></article>';
+      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review cp-frow-actions"><span class="cp-review-chip rv-'+esc(decision.state)+'">'+(decision.closed?ICON('check'):ICON('clock'))+esc(REVIEW_LABEL[decision.state]||decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</span>'+(decision.reviewer?'<p>Reviewed by '+esc(decision.reviewer)+' · '+esc(decision.at)+'</p><p>'+esc(decision.basis)+'</p><ul>'+(decision.references||[]).map(function(ref){return '<li>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'">Original source</a>':esc(ref.name)+' · SHA-256 '+esc(ref.hash))+'</li>';}).join('')+'</ul>':'')+(saved?'':'<button type="button" class="cp-act" data-review-question="'+esc(window.SiteDecisions.id(x))+'">'+ICON('clipboard')+'Review &amp; decide</button>')+'</div>';}
+      var icon = /flood/i.test(x.item||'') ? 'waves' : (SEC_ICON[x.section] || 'flag');
+      var meta = [];
+      if (x.cost && x.status !== 'ok') meta.push('<span class="cp-meta-cost">' + ICON('cash') + '<b>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + '</b> ' + esc(x.cost.label) + ' <em>rough range, not a quote</em></span>');
+      if (src) meta.push('<span class="cp-meta-src">' + ICON('doc') + src + '</span>');
+      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow cp-frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(REVIEW_LABEL[decision.state]||decision.state):STATUS[x.status]) + '</div><div class="cp-frow-body">' +
+        '<div class="cp-frow-head"><span class="cp-frow-icon">' + ICON(icon) + '</span><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4></div></div>' +
+        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>' + ICON('arrow') + 'What to do</b> ' + esc(x.next_step) + '</div>' : '') +
+        (meta.length ? '<div class="cp-frow-meta">' + meta.join('') + '</div>' : '') +
+        chk + '</div></article>';
     };
     var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
     var groups = order.map(function (c) {
@@ -5760,9 +5832,9 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
       disclosure(button,categories.filter(c=>c.key===item.dataset.concernCategory));
     });
     categories.filter(c=>!c.resource).forEach(c=>c.nodes.flatMap(n=>Array.from(n.querySelectorAll('.frow'))).filter(r=>!r.closest('.source-leads')).forEach((row,index)=>{
-      const b=document.createElement('button');b.type='button';b.className='investigate-evidence';b.textContent='Investigate with public records →';
+      const b=document.createElement('button');b.type='button';b.className='investigate-evidence';b.innerHTML=(window.CpIcons?window.CpIcons.icon('search'):'')+'Dig into public records';b.classList.add('cp-act');
       b.addEventListener('click',()=>window.dispatchEvent(new CustomEvent('cornerpin:open-workflow',{detail:{tab:'documents',section:'site',anchor:'public-records',investigation:{category:c.key,index,title:row.querySelector('.item')?.textContent||c.label,question:row.querySelector('h4')?.textContent||'',label:c.label}}})));
-      row.append(b);
+      const bar=row.querySelector('.cp-frow-actions');if(bar)bar.append(b);else{const body=row.querySelector('.cp-frow-body')||row,nb=document.createElement('div');nb.className='cp-frow-actions';nb.append(b);body.append(nb);}
     }));
     if(categories.length)select(categories[0]);
     root.querySelectorAll('a[href="#packet"]').forEach(a=>{a.textContent='Open permit preparation →';});

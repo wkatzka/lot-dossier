@@ -6,7 +6,11 @@
   var form = $('form'), prog = $('progress'), err = $('err'), go = $('go');
   var mode = 'none', last = null, map = null;
 
-  var STATUS = { flag: 'Potential concern', watch: 'Review condition', verify: 'Needs verification', ok: 'No issue identified' };
+  var STATUS = { flag: 'Concern', watch: 'Watch this', verify: 'Needs checking', ok: 'Looks fine' };
+  var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
+  var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
+  var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
+  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){return x.replace(/\.$/,'').trim();}).filter(Boolean); };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -309,7 +313,16 @@
     var e=window.ApprovalEvidence && window.ApprovalEvidence.reportSection(r,section);
     if(!e)return '';
     var n=e.nextStep||{};
-    return '<aside class="card reviewed-section-evidence" aria-label="Reviewed original evidence"><p class="eyebrow">Reviewed originals · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4><p>'+esc(e.finding)+'</p><p><b>Still needed:</b> '+esc(e.missing||'')+'</p><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a> · '+esc(s.locator)+'</li>';}).join('')+'</ul><p><b>Next step:</b> '+esc(n.action||'')+'</p><p>'+esc(n.organization||'')+(n.url?' · <a href="'+esc(n.url)+'" target="_blank" rel="noopener">Official source</a>':'')+(n.phone?' · <a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+esc(n.phone)+'</a>':'')+(n.email?' · <a href="mailto:'+esc(n.email)+'">'+esc(n.email)+'</a>':'')+'</p><p class="hint">These reviewed records supplement the saved map checks below. They do not mark an approval received or close a checklist item.</p></aside>';
+    var open=splitList(e.missing), contact=[n.organization?esc(n.organization):'', n.phone?'<a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+ICON('phone')+esc(n.phone)+'</a>':'', n.email?'<a href="mailto:'+esc(n.email)+'">'+ICON('mail')+esc(n.email)+'</a>':'', n.url?'<a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+ICON('external')+'Official source</a>':''].filter(Boolean);
+    return '<aside class="card reviewed-section-evidence cp-evid" aria-label="Records we checked">'+
+      '<div class="cp-evid-head"><span class="cp-evid-icon">'+ICON('search')+'</span><div><p class="eyebrow">Records we checked · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4></div></div>'+
+      '<p class="cp-evid-finding">'+esc(e.finding)+'</p>'+
+      '<div class="cp-evid-grid">'+
+        (open.length?'<div class="cp-evid-open"><p class="cp-evid-k">'+ICON('alert')+'Still open</p><ul>'+open.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>':'')+
+        (n.action?'<div class="cp-evid-start"><p class="cp-evid-k">'+ICON('arrow')+'Start here</p><p>'+esc(n.action)+'</p>'+(contact.length?'<p class="cp-evid-contact">'+contact.join('<span aria-hidden="true"> · </span>')+'</p>':'')+'</div>':'')+
+      '</div>'+
+      '<details class="cp-evid-src"><summary>'+ICON('doc')+'The '+e.sources.length+' record'+(e.sources.length===1?'':'s')+' behind this</summary><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a><span>'+esc(s.locator)+'</span></li>';}).join('')+'</ul></details>'+
+      '<p class="hint">For reference: this does not mark an approval received or close a checklist item.</p></aside>';
   }
 
   function reportHTML(r, state, saved) {
@@ -329,11 +342,16 @@
             ['todo', 'done', 'na'].map(function (v) { return '<button type="button" data-st="' + v + '" aria-pressed="' + (st.status === v) + '">' + { todo: 'To do', done: 'Done', na: 'N/A' }[v] + '</button>'; }).join('') +
             '</div><label class="chk-attach">Attach file<input type="file" multiple></label><p class="hint">Attachments add evidence. Review it before marking this item Done.</p><ul class="chk-list"></ul></div>';
       }
-      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review"><p>Review: '+esc(decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</p>'+(decision.reviewer?'<p>Reviewed by '+esc(decision.reviewer)+' · '+esc(decision.at)+'</p><p>'+esc(decision.basis)+'</p><ul>'+(decision.references||[]).map(function(ref){return '<li>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'">Original source</a>':esc(ref.name)+' · SHA-256 '+esc(ref.hash))+'</li>';}).join('')+'</ul>':'')+(saved?'':'<button type="button" data-review-question="'+esc(window.SiteDecisions.id(x))+'">Review evidence &amp; decision</button>')+'</div>';}
-      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(decision.state):STATUS[x.status]) + '</div><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4>' +
-        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>Next step</b> ' + esc(x.next_step) + '</div>' : '') +
-        (x.cost && x.status !== 'ok' ? '<div class="cost"><span>Unvalidated planning range · </span>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + ' <span>' + esc(x.cost.label) + '</span></div>' : '') +
-        '<div class="src">' + src + '</div>' + chk + '</div></article>';
+      if(reviewProject){var decision=window.SiteDecisions.status(reviewProject,window.SiteDecisions.finding(reviewProject,window.SiteDecisions.id(x))||x);chk='<div class="chk-review cp-frow-actions"><span class="cp-review-chip rv-'+esc(decision.state)+'">'+(decision.closed?ICON('check'):ICON('clock'))+esc(REVIEW_LABEL[decision.state]||decision.state)+(decision.conclusion?' · '+esc(decision.conclusion):'')+'</span>'+(decision.reviewer?'<p>Reviewed by '+esc(decision.reviewer)+' · '+esc(decision.at)+'</p><p>'+esc(decision.basis)+'</p><ul>'+(decision.references||[]).map(function(ref){return '<li>'+esc(ref.role||'supports')+' · '+esc(ref.locator)+' · '+(ref.url?'<a href="'+esc(ref.url)+'">Original source</a>':esc(ref.name)+' · SHA-256 '+esc(ref.hash))+'</li>';}).join('')+'</ul>':'')+(saved?'':'<button type="button" class="cp-act" data-review-question="'+esc(window.SiteDecisions.id(x))+'">'+ICON('clipboard')+'Review &amp; decide</button>')+'</div>';}
+      var icon = /flood/i.test(x.item||'') ? 'waves' : (SEC_ICON[x.section] || 'flag');
+      var meta = [];
+      if (x.cost && x.status !== 'ok') meta.push('<span class="cp-meta-cost">' + ICON('cash') + '<b>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + '</b> ' + esc(x.cost.label) + ' <em>rough range, not a quote</em></span>');
+      if (src) meta.push('<span class="cp-meta-src">' + ICON('doc') + src + '</span>');
+      return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow cp-frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(REVIEW_LABEL[decision.state]||decision.state):STATUS[x.status]) + '</div><div class="cp-frow-body">' +
+        '<div class="cp-frow-head"><span class="cp-frow-icon">' + ICON(icon) + '</span><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4></div></div>' +
+        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>' + ICON('arrow') + 'What to do</b> ' + esc(x.next_step) + '</div>' : '') +
+        (meta.length ? '<div class="cp-frow-meta">' + meta.join('') + '</div>' : '') +
+        chk + '</div></article>';
     };
     var order = LR.CHECKLIST.filter(function (c) { return c[0] === 'plan'; }).concat(LR.CHECKLIST.filter(function (c) { return c[0] !== 'plan'; }));
     var groups = order.map(function (c) {
