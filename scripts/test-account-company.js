@@ -12,7 +12,7 @@ const assert=require('node:assert/strict'),fs=require('fs'),{JSDOM}=require('jsd
  await w.CornerpinAccount.open();const dlg=d.querySelector('.account-dialog');
  assert(/Your company/.test(dlg.textContent)&&/Optional/.test(dlg.textContent),'Signed-in account panel offers the optional company section');
  d.querySelector('[data-account-mode=company]').click();await tick();
- const f=dlg.querySelector('form[data-account-company]');assert(f,'Add company details opens the company form');
+ const f=dlg.querySelector('form[data-account-company]');assert(f,'Add company details opens the company form');assert.equal(dlg.querySelector('h2').textContent,'Your company');
  f.querySelector('[name=name]').value='Peak Builders LLC';f.querySelector('[name=phone]').value='801-555-0100';
  f.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick();await tick();
  assert.equal(saved.at(-1)?.name,'Peak Builders LLC','Saved to the account');assert(/Company saved to your account/.test(dlg.textContent));

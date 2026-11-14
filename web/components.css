@@ -110,3 +110,4 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .account-company p{margin:0 0 12px;font-size:var(--cp-text);line-height:1.5}
 .account-dialog .account-company button,.account-dialog .account-secondary{background:transparent;color:var(--cp-ink);border:1px solid var(--cp-control);border-radius:var(--cp-r-control);padding:8px 14px;font-weight:600}
 .account-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.account-dialog input:not([type=checkbox]){width:100%;box-sizing:border-box;border:1px solid var(--cp-control);border-radius:var(--cp-r-control);background:var(--cp-input,#fff);min-height:44px;padding:8px 12px;font-size:16px}
