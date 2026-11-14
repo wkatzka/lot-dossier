@@ -285,3 +285,10 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #project-workspace .cp-permit-name:hover{color:var(--cp-primary);text-decoration:underline}
 @media (max-width:1180px){.cp-wt{grid-template-columns:210px minmax(0,1fr)}.cp-wt-side{grid-column:2;position:static;max-height:none}}
 @media (max-width:760px){.cp-wt{grid-template-columns:1fr}.cp-wt-side{grid-column:auto}.cp-wt-nav{position:static}.cp-wt-row{grid-template-columns:1fr}.cp-wt-label{justify-content:flex-start;text-align:left;min-height:0}.cp-wt-main>form{padding:18px 16px}.cp-wt-summary li{grid-template-columns:20px 1fr}.cp-wt-summary li>span:last-child{grid-column:2}}
+.cp-wt-page .cp-wt-title{display:block;max-width:none}
+.cp-wt-vals{margin:6px 0 4px}
+.cp-wt-vals div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-top:1px solid var(--cp-line);font-size:var(--cp-text-sm)}
+.cp-wt-vals dt{color:var(--cp-muted)}
+.cp-wt-vals dd{margin:0;font-weight:650;color:var(--cp-ink);text-align:right;overflow-wrap:anywhere}
+#project-workspace .cp-wt-more summary{min-height:28px;font-size:var(--cp-text-xs);font-weight:600;color:var(--cp-muted)}
+.cp-wt-more p{margin:4px 0 0;font-size:var(--cp-text-xs);color:var(--cp-muted)}

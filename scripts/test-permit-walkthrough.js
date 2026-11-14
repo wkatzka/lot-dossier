@@ -32,7 +32,9 @@ async function until(f,label){for(let i=0;i<400;i++){if(await f())return;await n
  assert.equal(d.querySelector('.cp-wt-q').textContent,'Is this the right lot?');
  assert.deepEqual([...d.querySelectorAll('.cp-wt-part-h')].map(x=>x.textContent),['The property','The project','Your team','The building','Documents','Finish']);
  const addr=C.rows(await saved(),'1').find(r=>r.name==='property_address');
- const card=d.getElementById('wt-src-'+addr.key);assert(card,'source card for the address');
+ const card=[...d.querySelectorAll('.cp-wt-src[data-keys]')].find(c=>c.dataset.keys.split(' ').includes(addr.key));assert(card,'source card for the address');
+ // One card per source: the parcel excerpt appears once, with every answer it supplied listed under it.
+ assert.equal([...d.querySelectorAll('.cp-wt-side blockquote')].filter(b=>/Parcel 224410004/.test(b.textContent)).length,1);assert(card.querySelectorAll('.cp-wt-vals dt').length>1);
  assert.match(card.textContent,/From the county parcel record/);assert.match(card.querySelector('blockquote').textContent,/Parcel 224410004 · 5241 E COBABE RANCH RD/);
  assert.match(d.querySelector('.cp-wt-intro').textContent,/Cornerpin filled in \d+ of \d+ from the county parcel record/);
  assert(d.querySelector('.cp-wt-find'),'blank answers say where to find them');
