@@ -89,3 +89,10 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 
 /* ---------- Map (moved out of the legacy layer so Leaflet's own CSS doesn't win) ---------- */
 #rv #map .leaflet-control,#rv #map .leaflet-popup{color:#222;text-shadow:none}
+
+/* Timing key on Rules & Approvals */
+.cp-timing-key{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+.cp-timing-key li{font-size:var(--cp-text);line-height:1.5}
+.cp-timing-key b{display:inline-block;min-width:170px;font-weight:650}
+@media(max-width:560px){.cp-timing-key b{display:block;min-width:0}}
+.cp-trust{font-size:var(--cp-text-sm);color:var(--cp-muted);margin-top:8px}

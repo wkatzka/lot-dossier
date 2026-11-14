@@ -9,6 +9,8 @@
   var STATUS = { flag: 'Concern', watch: 'Watch this', verify: 'Needs checking', ok: 'Looks fine' };
   // Reports saved before a wording fix are cleaned when shown, so nobody has to re-run research to lose an empty label.
   var cleanText = function (t) { return String(t || '').replace(/\.\s*Plat:\s*\./g, '.').replace(/\bPlat: /g, 'Subdivision: ').replace(/\s*\bnull sq ft\b/g, '').replace(/\s+\./g, '.'); };
+  // Packet findings in older saved reports counted 'N of M items ready', which competes with Ready to file.
+  var cleanHeadline = function (x) { var h = cleanText(x.headline); if (x.section === 'permits' && /^\d+ of \d+ (items ready for the (.+) permit|application items ready or drafted)/.test(h)) { var m = /items ready for the (.+) permit/.exec(h); return 'What the city asks for with the ' + (m ? m[1] : 'building') + ' permit'; } return h; };
   var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
   var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
   var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
@@ -324,7 +326,7 @@
         (n.action?'<div class="cp-evid-start"><p class="cp-evid-k">'+ICON('arrow')+'Start here</p><p>'+esc(n.action)+'</p>'+(contact.length?'<p class="cp-evid-contact">'+contact.join('<span aria-hidden="true"> · </span>')+'</p>':'')+'</div>':'')+
       '</div>'+
       '<details class="cp-evid-src"><summary>'+ICON('doc')+'The '+e.sources.length+' record'+(e.sources.length===1?'':'s')+' behind this</summary><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a><span>'+esc(s.locator)+'</span></li>';}).join('')+'</ul></details>'+
-      '<p class="hint">For reference: this does not mark an approval received or close a checklist item.</p></aside>';
+      '</aside>';
   }
 
   function reportHTML(r, state, saved) {
@@ -350,7 +352,7 @@
       if (x.cost && x.status !== 'ok') meta.push('<span class="cp-meta-cost">' + ICON('cash') + '<b>' + money(x.cost.low) + '&ndash;' + money(x.cost.high) + '</b> ' + esc(x.cost.label) + ' <em>rough range, not a quote</em></span>');
       if (src) meta.push('<span class="cp-meta-src">' + ICON('doc') + src + '</span>');
       return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow cp-frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(REVIEW_LABEL[decision.state]||decision.state):STATUS[x.status]) + '</div><div class="cp-frow-body">' +
-        '<div class="cp-frow-head"><span class="cp-frow-icon">' + ICON(icon) + '</span><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4></div></div>' +
+        '<div class="cp-frow-head"><span class="cp-frow-icon">' + ICON(icon) + '</span><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(cleanHeadline(x)) + '</h4></div></div>' +
         (x.detail ? '<p>' + esc(cleanText(x.detail)) + '</p>' : '') + (x.next_step ? '<div class="next"><b>' + ICON('arrow') + 'What to do</b> ' + esc(x.next_step) + '</div>' : '') +
         (meta.length ? '<div class="cp-frow-meta">' + meta.join('') + '</div>' : '') +
         chk + '</div></article>';
@@ -362,7 +364,7 @@
       return '<section class="group" data-category="' + esc(c[0]) + '"><header><span class="dot s-' + fs[0].status + '"></span><h3>' + esc(c[1]) + '</h3><span class="n">' + fs.length + '</span></header>' + reviewedSectionEvidence(r,c[0]) + fs.filter(function(x){return !sourceLead(x);}).map(row).join('') + (fs.some(sourceLead)?'<details class="source-leads"><summary>'+fs.filter(sourceLead).length+' unverified record leads — not confirmed restrictions</summary><p>These references may concern earlier or neighboring land. They are excluded from the concern totals and action checklist until their applicability is established.</p>'+fs.filter(sourceLead).map(row).join('')+'</details>':'') + '</section>';
     }).join('');
     var flags = f.filter(function (x) { return !sourceLead(x) && activeFinding(x) && (x.status === 'flag' || (x.status === 'verify' && ['Culinary water','Fire hydrant'].includes(x.item))); });
-    var top = flags.length ? flags.map(function (x) { return '<li data-concern-category="' + esc(x.section) + '"><span class="priority-status priority-' + x.status + '">' + (x.status === 'flag' ? 'Concern' : x.status === 'watch' ? 'Review' : 'Verify') + '</span> <b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No high-priority concerns identified in the checks completed. Missing records and verification items remain open.</li>';
+    var top = flags.length ? flags.map(function (x) { return '<li data-concern-category="' + esc(x.section) + '"><span class="priority-status priority-' + x.status + '">' + (x.status === 'flag' ? 'Concern' : x.status === 'watch' ? 'Review' : 'Verify') + '</span> <b>' + esc(x.item) + '.</b> ' + esc(x.headline) + '</li>'; }).join('') : '<li>No major concerns in the checks we ran. Open questions are listed by topic below.</li>';
     var next = f.slice().sort(function (p, q) { return ORDER[p.status] - ORDER[q.status]; }).filter(function (x) { return x.next_step && activeFinding(x); })
       .map(function (x) { return '<li><span class="dot s-' + x.status + '"></span>' + esc(x.next_step) + '</li>'; }).join('');
     var KIND = { building: 'Plan approval & permits', planning: 'Planning & zoning', office: 'City / county office', records: 'Records not posted online', hoa: 'HOA (state registry)' };
@@ -398,12 +400,12 @@
       '<h2 class="site-summary-title">' + (count('flag') + count('watch') + count('verify')) + ' items need review or verification</h2><div class="tally"><div class="t-flag"><b>' + count('flag') + '</b><span>Concerns</span></div><div class="t-watch"><b>' + count('watch') + '</b><span>Review</span></div>' +
       '<div class="t-verify"><b>' + count('verify') + '</b><span>Verify</span></div><div class="t-ok"><b>' + count('ok') + '</b><span>No issue identified</span></div></div>' +
       (f.some(sourceLead)?'<p class="source-lead-note">'+f.filter(sourceLead).length+' historical/source leads are grouped under their topics, separate from these finding totals.</p>':'')+checklistSummary(f, state, saved) +
-      '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. The report identifies potential work; it does not establish a lot-specific construction budget.</p>' +
-      '<h2 style="margin-top:18px">Priority findings</h2><p class="priority-key">Red: potential building constraint. Blue: important information to verify. Neither establishes approval or a prohibition.</p><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Permit packet: ' + r.facts.packet.ready + ' of ' + r.facts.packet.needed + ' source-packet items available or drafted; application review remains &darr;</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
+      '<h2>Cost considerations</h2><p>' + costs.length + ' items to price. Rough ranges, not quotes.</p>' +
+      '<h2 style="margin-top:18px">Priority findings</h2><p class="priority-key">Red could limit what you build. Blue needs checking before you rely on it.</p><ul class="top">' + top + '</ul>' + planSum + ((r.facts || {}).packet ? '<p class="pk-jump"><a href="#packet">Next: permit preparation</a></p>' : '') + '</div></div>' + planHtml + contactsHtml + platEvidenceSection(r) + groups +
       packetHtml + '<div class="two"><div class="card"><h2>Next steps</h2><ol class="nextsteps">' + next + '</ol></div>' +
-      '<div class="card"><h2>Cost considerations</h2><p>Unvalidated planning ranges (' + costs.length + ' items)</p><p>These generic placeholders are not bids or site-specific estimates. They may overlap or represent alternatives; do not add them into a project budget.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></div></div>' +
+      '<div class="card"><h2>Cost considerations</h2><p>Rough ranges for ' + costs.length + ' items. They aren’t quotes, and some overlap, so don’t add them up.</p><table><thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead><tbody>' + costRows + '</tbody></table></div></div>' +
       '<p class="disclaimer">Screening report built from public data (UGRC, Utah Geological Survey, Utah Division of Water Rights, Weber County GIS, USDA NRCS, USGS, FEMA). ' +
-      'Regional maps miss site-specific conditions. This is not a survey, geotechnical report, title report or appraisal. Cost ranges are placeholders until calibrated with local bids.</p></div>';
+      'Cornerpin reads public maps and records; it isn’t a survey, soils report, title report or appraisal. The city, your HOA and your professionals make the final calls.</p></div>';
   }
 
   // Permit packet: what we gathered, estimated or drafted for the building permit application.
@@ -439,7 +441,7 @@
     var rows = pk.rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td><td class="pk-src">' + esc(r[2]) + '</td></tr>'; }).join('');
     return '<section class="card packet" id="packet' + sfx + '"><div class="eyebrow">Next: the building permit</div><h2>Permit packet · ' + (pk.label && pk.permitType !== '1' ? esc(pk.label) + ' · ' : '') + esc(pk.jurisdiction) + '</h2>' +
       '<p class="pk-sub">Review the source materials, applicable approvals and proposed-work answers before preparing a filing handoff.</p>' +
-      '<div class="pk-meter"><div class="chk-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><span><b>' + pk.ready + ' of ' + pk.needed + '</b> source-packet items available or drafted — not application completeness</span></div>' +
+      '<p class="pk-meter">Track what’s left in <b>Ready to file</b> on Permit Preparation.</p>' +
       '<ol class="pk-timeline"><li><b>Resolve prerequisites</b> Confirm which approvals apply and whether they precede submission, issuance or construction.</li><li><b>Establish durations</b> Professional work and authority turnaround are not established for this project. No submission or issuance date is predicted.</li><li><b>Check review conditions</b> Statutory review periods depend on the application and applicable exceptions; they are not a project completion guarantee. <a href="https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html" target="_blank" rel="noopener">Utah Code §10-20-909</a></li></ol>' +
       (pk.portal ? '<p class="pk-portal">Submit through the <a href="' + esc(pk.portal) + '" target="_blank" rel="noopener">city permit portal</a>' + (pk.checklist ? ' · <a href="' + esc(pk.checklist) + '" target="_blank" rel="noopener">city submission checklist</a>' : '') + '.</p>' : '') +
       '<ol class="pk-items">' + items + '</ol>' +

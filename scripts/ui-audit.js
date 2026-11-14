@@ -20,7 +20,7 @@ function run(scope=document.body,{expand=true,layout=true}={}){
  const byParent=new Map();for(const el of blocks){if(!['P','LI','DD','TD'].includes(el.tagName))continue;const t=norm(txt(el));if(t.length<4)continue;const k=el.parentElement;if(!byParent.has(k))byParent.set(k,new Map());const m=byParent.get(k);m.set(t,(m.get(t)||0)+1);}
  for(const [el,m] of byParent)for(const [t,n] of m)if(n>=3)add('repeated-line ×'+n,el,t);
  // 2-5. Text leaks, machine codes, broken punctuation, giant paragraphs.
- for(const el of blocks){const own=[...el.childNodes].map(n=>n.nodeType===3?n.textContent:n.nodeType===1&&norm(n.textContent)?' x ':'').join('');const t=norm(txt(el));
+ for(const el of blocks){const own=[...el.childNodes].map(n=>n.nodeType===3?n.textContent:n.nodeType===1&&norm(n.textContent)?'x':'').join('');const t=norm(txt(el));
   if(BAD.test(own))add('leaked-value',el,t);
   if(CODE.test(own)&&!/@|https?:|\.pdf|\.tif/.test(own))add('machine-code',el,t);
   if(PUNCT.test(own))add('punctuation',el,t);

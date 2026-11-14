@@ -1890,7 +1890,7 @@
     (permits || []).filter(function (t) { return t !== '1'; }).forEach(function (t) {
       var pk = root.PermitPacket && root.PermitPacket.build(t, { facts: Object.assign({ parcelId: ctx.parcel.id }, f), findings: ctx.findings, kb: f.kb });
       if (!pk) return; f.packets[t] = pk;
-      out.push(F('permits', 'Permit packet · ' + pk.label, 'verify', pk.ready + ' of ' + pk.needed + ' items ready for the ' + pk.label.toLowerCase() + ' permit', 'What the city\'s ' + pk.label + ' application asks for, the city rules for this work, and what this lot adds. Open Permit Preparation to work through it.', pk.source.label, pk.source.url));
+      out.push(F('permits', 'Permit packet · ' + pk.label, 'verify', 'What the city asks for with the ' + pk.label.toLowerCase() + ' permit', 'What the city\'s ' + pk.label + ' application asks for, the city rules for this work, and what this lot adds. Open Permit Preparation to work through it.', pk.source.label, pk.source.url));
     });
     if (!wantHome) { var first = (permits || []).map(function (t) { return f.packets[t]; }).filter(Boolean)[0]; f.packet = first || null; }
     f.packetPermits = permits ? permits.slice().sort() : ['*'];
@@ -2043,8 +2043,8 @@
     f.packet = { jurisdiction: juris, items: items, letters: letters, rows: rows, est: est, timeline: timeline, sitePlan: sp && !sp.error ? { svg: sp.svg, fits: sp.fits, samples: sp.samples } : null,
       sitePlanError: sp && sp.error, ready: ready, needed: needed, portal: kb && kb.portal, checklist: cityReq };
     f.packet = reviewPacket(f.packet);
-    return [F('permits', 'Permit packet', ready >= needed ? 'ok' : 'verify', ready + ' of ' + needed + ' application items ready or drafted',
-      'Source materials and drafts are not confirmed submission prerequisites. Review Rules & Approvals, application answers and supporting documents. Submission and issuance dates are unresolved until applicable approvals, professional work and review conditions are established.',
+    return [F('permits', 'Permit packet', ready >= needed ? 'ok' : 'verify', 'What the city asks for with the building permit',
+      'The application items, the city rules for this work and what this lot adds. Work through them in Ready to file on Permit Preparation.',
       'Utah Code 10-20-909', 'https://le.utah.gov/xcode/Title10/Chapter20/C10-20-S909_2025110620251206.html', null, 'Resolve the applicable approval sequence before scheduling the filing.')];
   };
 
