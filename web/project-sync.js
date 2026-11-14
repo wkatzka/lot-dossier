@@ -19,5 +19,7 @@ async function retryPending(){const owner=S.owner();if(!owner||owner!==C.user()?
 root.addEventListener('cornerpin:project-saved',e=>enqueue(e.detail.id,e.detail.owner));
 root.addEventListener('cornerpin:auth',e=>{if(e.detail.user&&['SIGNED_IN','INITIAL_SESSION'].includes(e.detail.event))setTimeout(()=>retryPending().catch(()=>{}),0);});
 root.addEventListener('online',()=>retryPending().catch(()=>{}));
-root.ProjectSync={enqueue,status,retryPending};
+// Wait for any account save of this project to finish (used before deleting it, so a save can't bring it back).
+function settle(id,owner=S.owner()){return (jobs.get(key(owner,id))?.promise||Promise.resolve()).catch(()=>{});}
+root.ProjectSync={enqueue,status,retryPending,settle};
 })(window);

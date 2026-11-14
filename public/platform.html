@@ -1582,6 +1582,13 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-intent-later-why{color:var(--cp-muted);margin-top:2px}
 .cp-intent-later-why .cp-src{margin-left:4px}
 .cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}
+/* My projects: delete, confirmed in place */
+#project-workspace .pw-delete-link{display:inline-block;margin:10px 0 0 12px;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .pw-delete-link:hover{color:var(--cp-t-concern)}
+.pw-delete-confirm{margin-top:12px;padding:12px 14px;border:1px solid var(--cp-t-concern-bg);border-radius:var(--cp-r);background:#fff7f6}
+.pw-delete-confirm p{margin:0 0 8px;font-size:var(--cp-text);color:var(--cp-ink)}
+#project-workspace button.pw-danger{background:var(--cp-t-concern);border-color:var(--cp-t-concern);color:#fff}
+#project-workspace button.pw-danger:hover{background:#6f150f}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -8131,7 +8138,14 @@ const api={pack,unpack,hash};if(typeof module!=='undefined'&&module.exports)modu
       t.oncomplete=()=>{resolve(project);if(!options.cloudRestore)notify(project,account);};t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
-  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles, checklistRecords };
+  // Permanently remove a project from this device, with the uploaded files no other project uses.
+  async function remove(id) {
+    const account=owner,d=await db(),all=await read('projects'),p=all.find(x=>x.id===id);if(!p)return false;
+    const used=new Set(all.filter(x=>x.id!==id).flatMap(x=>(x.documents||[]).map(doc=>doc.id)));
+    return new Promise((resolve,reject)=>{const t=d.transaction(['projects','files'],'readwrite');t.objectStore('projects').delete(id);for(const doc of p.documents||[])if(!used.has(doc.id))t.objectStore('files').delete(doc.id);
+      t.oncomplete=()=>{resolve(true);if(root.dispatchEvent)root.dispatchEvent(new CustomEvent('cornerpin:project-deleted',{detail:{id,owner:account}}));};t.onabort=t.onerror=()=>reject(t.error||Error('Project could not be deleted.'));});
+  }
+  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, remove, checklistFiles, checklistRecords };
 })(window);
 
 </script>
@@ -8192,13 +8206,23 @@ async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owne
  for(const d of p.documents){assertOwner(owner);const r=await fileRequest(d,'GET');if(!r.ok)throw Error('Cloud file unavailable');const blob=await r.blob();if(await root.ProjectBackup.hash(await blob.arrayBuffer())!==d.hash)throw Error('Cloud file checksum mismatch');files.push({id:d.id,blob});}
  assertOwner(owner);const restored=await root.ProjectStore.restore(p,files,{cloudRestore:true,expectedRevision:existing?.revision});localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
 }
+async function remove(id){
+ const owner=session?.user?.id;assertOwner(owner);const c=await config(),all=await list(),p=all.find(x=>x.id===id);if(!p)return false;
+ const r=await fetch(c.url+'/rest/v1/cornerpin_projects?id=eq.'+encodeURIComponent(id)+'&owner_id=eq.'+encodeURIComponent(owner),{method:'DELETE',signal:AbortSignal.timeout(30000),headers:{apikey:c.key,...auth(),Prefer:'return=representation'}});
+ if(r.status===401||r.status===403)throw Error('Your account doesn’t allow deleting projects yet. Nothing was deleted.');
+ if(!r.ok)throw Error('Could not delete the project from your account (HTTP '+r.status+'). Nothing was deleted.');
+ const rows=await r.json();if(rows.length!==1)throw Error('Your account doesn’t allow deleting projects yet. Nothing was deleted.');
+ const used=new Set(all.filter(x=>x.id!==id).flatMap(x=>(x.documents||[]).map(d=>d.id+'/'+d.hash)));let kept=0;
+ for(const d of p.documents||[]){if(used.has(d.id+'/'+d.hash))continue;try{const f=await fileRequest(d,'DELETE');if(!f.ok&&f.status!==404)kept++;}catch(e){kept++;}}
+ localStorage.removeItem(baseKey(id));return {filesKept:kept};
+}
 function baseRevision(id){if(!session)return null;const v=localStorage.getItem(baseKey(id));return v===null?null:Number(v);}
 // "Your company" lives on the account (user metadata), so it follows the contractor to every device.
 const company={
  get:()=>session?.user?.user_metadata?.cornerpin_company||null,
  async save(v){await init();if(!client||!session)throw Error('Sign in to save your company to your account.');const {data,error}=await client.auth.updateUser({data:{cornerpin_company:v}});if(error)throw Error('Could not save to your account: '+error.message);if(data?.user)session={...session,user:data.user};return true;}
 };
-root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,company,user:()=>session?.user||null,signedIn:()=>!!session};
+root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,remove,logout,company,user:()=>session?.user||null,signedIn:()=>!!session};
 })(window);
 
 /* Serialize account saves; store writes remain usable offline. No public-source fetches here. */
@@ -8222,7 +8246,9 @@ async function retryPending(){const owner=S.owner();if(!owner||owner!==C.user()?
 root.addEventListener('cornerpin:project-saved',e=>enqueue(e.detail.id,e.detail.owner));
 root.addEventListener('cornerpin:auth',e=>{if(e.detail.user&&['SIGNED_IN','INITIAL_SESSION'].includes(e.detail.event))setTimeout(()=>retryPending().catch(()=>{}),0);});
 root.addEventListener('online',()=>retryPending().catch(()=>{}));
-root.ProjectSync={enqueue,status,retryPending};
+// Wait for any account save of this project to finish (used before deleting it, so a save can't bring it back).
+function settle(id,owner=S.owner()){return (jobs.get(key(owner,id))?.promise||Promise.resolve()).catch(()=>{});}
+root.ProjectSync={enqueue,status,retryPending,settle};
 })(window);
 
 /* Account controls. The official SDK owns token refresh; tokens are never exported. */
@@ -9050,12 +9076,15 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   async function list() {
     await window.CornerpinAccount.ready;const owner=S.owner();project=null;render();
     const rows=await S.list();if(S.owner()!==owner)return;
-    const merged=new Map(rows.map(p=>[p.id,p]));let warning='';
-    if(owner){try{const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;for(const p of cloud)if(!merged.has(p.id))merged.set(p.id,p);}catch(e){warning='Account unavailable. Showing projects saved on this device. '+e.message;}}
+    const merged=new Map(rows.map(p=>[p.id,p])),cloudIds=new Set();let warning='';
+    if(owner){try{const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;for(const p of cloud){cloudIds.add(p.id);if(!merged.has(p.id))merged.set(p.id,p);}}catch(e){warning='Account unavailable. Showing projects saved on this device. '+e.message;}}
     if(S.owner()!==owner||project)return;
-    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+window.ProjectOverview.stageLabel(p))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'<section class="pw-card pw-import-card"><h2>Import a project</h2><p>Bring a saved Cornerpin project and its files into your workspace.</p><form data-command="restore-backup"><label class="pw-backup-picker"><input class="pw-backup-input" name="backup" type="file" accept=".json,application/json" required aria-label="Choose project backup"><span class="pw-backup-icon" aria-hidden="true">↥</span><span class="pw-backup-copy"><span class="pw-backup-name">Choose backup</span><span class="pw-backup-hint">JSON file · up to 150 MB</span></span></label><button type="submit" disabled>Import project</button></form></section></div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
+    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+window.ProjectOverview.stageLabel(p))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+deleteBox(p,rows.some(x=>x.id===p.id),cloudIds.has(p.id))+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'<section class="pw-card pw-import-card"><h2>Import a project</h2><p>Bring a saved Cornerpin project and its files into your workspace.</p><form data-command="restore-backup"><label class="pw-backup-picker"><input class="pw-backup-input" name="backup" type="file" accept=".json,application/json" required aria-label="Choose project backup"><span class="pw-backup-icon" aria-hidden="true">↥</span><span class="pw-backup-copy"><span class="pw-backup-name">Choose backup</span><span class="pw-backup-hint">JSON file · up to 150 MB</span></span></label><button type="submit" disabled>Import project</button></form></section></div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
     if(warning)message(warning);
   }
+  // Delete asks first, in place: what goes, from where, that it can't be undone, and offers a backup.
+  function deleteBox(p,local,cloud){const files=(p.documents||[]).length,where=local&&cloud?'this device and your account':cloud?'your account':'this device';
+    return '<button type="button" class="cp-link pw-delete-link" data-action="delete-project" data-id="'+esc(p.id)+'">Delete project</button><div class="pw-delete-confirm" role="alertdialog" aria-label="Delete '+esc(p.property.address)+'" data-cloud="'+(cloud?1:0)+'" hidden><p><b>Delete '+esc(p.property.address)+'?</b> This permanently removes the project, its permit answers'+(files?' and '+files+' uploaded file'+(files===1?'':'s'):'')+' from '+where+'. It can’t be undone.</p><div class="pw-actions">'+(local?'<button type="button" data-action="backup-project" data-id="'+esc(p.id)+'">Download a backup first</button>':'')+'<button type="button" class="pw-danger" data-action="confirm-delete" data-id="'+esc(p.id)+'">Delete permanently</button><button type="button" data-action="cancel-delete" data-id="'+esc(p.id)+'">Cancel</button></div></div>';}
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
   async function exportPackage(id) {
     const pkg = project.packages.find(p=>p.id===id); if(!pkg) throw new Error('Package not found.');
@@ -9140,6 +9169,13 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       else if(a==='permit-hub'){await saveCityPage();tab='filing';section='filing';render();window.scrollTo(0,0);}
       else if(a==='projects') {await saveCityPage();await list();}
       else if(a==='open') {message('Opening saved project…');await openSaved(id);}
+      else if(a==='delete-project'||a==='cancel-delete'){const card=b.closest('.pw-card'),box=card.querySelector('.pw-delete-confirm'),open=a==='delete-project';box.hidden=!open;card.querySelector('.pw-delete-link').hidden=open;if(open)box.querySelector('[data-action=cancel-delete]').focus();else card.querySelector('.pw-delete-link').focus();}
+      else if(a==='backup-project'){const p=await S.get(id);if(!p)throw Error('This project isn’t saved on this device. Open it first to download a backup.');download('cornerpin-'+String(p.property.address).replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-backup.json',JSON.stringify(await window.ProjectBackup.pack(p,S.file)),'application/json');}
+      else if(a==='confirm-delete'){const box=b.closest('.pw-delete-confirm'),cloud=box.dataset.cloud==='1',owner=S.owner();b.disabled=true;
+        const address=b.closest('.pw-card').querySelector('h2').textContent;
+        try{if(cloud){if(!window.CloudSync.signedIn())throw Error('Sign in to delete a project saved to your account.');await window.ProjectSync.settle(id);await window.CloudSync.remove(id);}
+        if(S.owner()!==owner)throw Error('Account changed; nothing more was deleted.');await S.remove(id);}catch(err){b.disabled=false;throw err;}
+        await list();message('Deleted '+address+'.');}
       else if(a==='open-rule-task') {await saveCityPage();if(!window.AreaRules.rules(project).some(r=>r.id===id))throw Error('This approval task does not apply to this property.');ruleTaskId=id;tab='rules';render();const target=host.querySelector('#approval-task-heading');target?.focus();target?.scrollIntoView({block:'start'});}
       else if(a==='tab'||a==='filing'||a==='management') {await saveCityPage();ruleTaskId='';tab=a==='tab'?id:a;if(['filing','management'].includes(tab))section=tab;else if(['evidence','valuation','placement'].includes(tab))section='site';render();focusDestination();}
       else if(a==='refresh-evidence') {document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:refresh',{detail:project.report}));}

@@ -48,5 +48,12 @@
       t.oncomplete=()=>{resolve(project);if(!options.cloudRestore)notify(project,account);};t.onabort=t.onerror=()=>reject(error||t.error||Error('Restore failed'));
     });
   }
-  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, checklistFiles, checklistRecords };
+  // Permanently remove a project from this device, with the uploaded files no other project uses.
+  async function remove(id) {
+    const account=owner,d=await db(),all=await read('projects'),p=all.find(x=>x.id===id);if(!p)return false;
+    const used=new Set(all.filter(x=>x.id!==id).flatMap(x=>(x.documents||[]).map(doc=>doc.id)));
+    return new Promise((resolve,reject)=>{const t=d.transaction(['projects','files'],'readwrite');t.objectStore('projects').delete(id);for(const doc of p.documents||[])if(!used.has(doc.id))t.objectStore('files').delete(doc.id);
+      t.oncomplete=()=>{resolve(true);if(root.dispatchEvent)root.dispatchEvent(new CustomEvent('cornerpin:project-deleted',{detail:{id,owner:account}}));};t.onabort=t.onerror=()=>reject(t.error||Error('Project could not be deleted.'));});
+  }
+  root.ProjectStore = { setOwner, owner:()=>owner, list: () => read('projects'), get: id => read('projects', id), file: id => read('files', id), save, restore, remove, checklistFiles, checklistRecords };
 })(window);

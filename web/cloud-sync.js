@@ -54,11 +54,21 @@ async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owne
  for(const d of p.documents){assertOwner(owner);const r=await fileRequest(d,'GET');if(!r.ok)throw Error('Cloud file unavailable');const blob=await r.blob();if(await root.ProjectBackup.hash(await blob.arrayBuffer())!==d.hash)throw Error('Cloud file checksum mismatch');files.push({id:d.id,blob});}
  assertOwner(owner);const restored=await root.ProjectStore.restore(p,files,{cloudRestore:true,expectedRevision:existing?.revision});localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
 }
+async function remove(id){
+ const owner=session?.user?.id;assertOwner(owner);const c=await config(),all=await list(),p=all.find(x=>x.id===id);if(!p)return false;
+ const r=await fetch(c.url+'/rest/v1/cornerpin_projects?id=eq.'+encodeURIComponent(id)+'&owner_id=eq.'+encodeURIComponent(owner),{method:'DELETE',signal:AbortSignal.timeout(30000),headers:{apikey:c.key,...auth(),Prefer:'return=representation'}});
+ if(r.status===401||r.status===403)throw Error('Your account doesn’t allow deleting projects yet. Nothing was deleted.');
+ if(!r.ok)throw Error('Could not delete the project from your account (HTTP '+r.status+'). Nothing was deleted.');
+ const rows=await r.json();if(rows.length!==1)throw Error('Your account doesn’t allow deleting projects yet. Nothing was deleted.');
+ const used=new Set(all.filter(x=>x.id!==id).flatMap(x=>(x.documents||[]).map(d=>d.id+'/'+d.hash)));let kept=0;
+ for(const d of p.documents||[]){if(used.has(d.id+'/'+d.hash))continue;try{const f=await fileRequest(d,'DELETE');if(!f.ok&&f.status!==404)kept++;}catch(e){kept++;}}
+ localStorage.removeItem(baseKey(id));return {filesKept:kept};
+}
 function baseRevision(id){if(!session)return null;const v=localStorage.getItem(baseKey(id));return v===null?null:Number(v);}
 // "Your company" lives on the account (user metadata), so it follows the contractor to every device.
 const company={
  get:()=>session?.user?.user_metadata?.cornerpin_company||null,
  async save(v){await init();if(!client||!session)throw Error('Sign in to save your company to your account.');const {data,error}=await client.auth.updateUser({data:{cornerpin_company:v}});if(error)throw Error('Could not save to your account: '+error.message);if(data?.user)session={...session,user:data.user};return true;}
 };
-root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,company,user:()=>session?.user||null,signedIn:()=>!!session};
+root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,remove,logout,company,user:()=>session?.user||null,signedIn:()=>!!session};
 })(window);
