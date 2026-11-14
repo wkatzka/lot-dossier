@@ -440,3 +440,28 @@ body details.cp-fine[open]>summary::after{content:none}
 .cp-site-v2{grid-template-columns:minmax(0,1fr)}.cp-site-v2>li{min-width:0}
 #rv .cp-frow-meta>span{display:block}#rv .cp-frow-meta .cp-icon{vertical-align:-3px;margin-right:6px}
 .cp-site-todo>span{flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere}
+
+/* Permit form page cleanup */
+#project-workspace .cp-app-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:0;margin:20px 0}
+#project-workspace .cp-app-stats>div{padding:16px 20px;border-left:1px solid var(--cp-line)}#project-workspace .cp-app-stats>div:first-child{border-left:0}
+#project-workspace .cp-app-stats strong{display:block;font-size:26px;line-height:1.1}
+#project-workspace .cp-app-stats span{display:block;font-size:14px;margin-top:4px}
+#project-workspace .cp-app-stats small{display:block;font-size:12px;color:var(--cp-muted);margin-top:2px}
+@media(max-width:700px){#project-workspace .cp-app-stats{grid-template-columns:1fr}#project-workspace .cp-app-stats>div{border-left:0;border-top:1px solid var(--cp-line)}#project-workspace .cp-app-stats>div:first-child{border-top:0}}
+#project-workspace .application-sections .city-pages button{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#project-workspace .city-pages .cp-page-count{font-style:normal;font-size:12px;font-weight:700;min-width:22px;height:22px;padding:0 6px;display:inline-grid;place-items:center;background:#fbecc8;color:#5c3d00;border-radius:999px}
+#project-workspace .city-pages .cp-page-done{font-style:normal;color:#2e6b3f;font-weight:700}
+#project-workspace .cp-app-key{font-size:13px;color:var(--cp-muted);margin:14px 0 6px}
+#project-workspace .application-workspace fieldset>legend{float:left;width:100%;box-sizing:border-box;margin:0;padding:16px 16px 12px;font-size:20px;font-weight:700;border-bottom:1px solid var(--cp-line)}
+#project-workspace .application-workspace fieldset>legend+*{clear:both}
+#project-workspace .city-filter{margin:0;padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:15px;border-bottom:1px solid var(--cp-line)}
+#project-workspace .city-filter button{padding:6px 12px;font-size:14px}
+#project-workspace .city-filter button.cp-go{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
+#project-workspace .cp-app-company{margin:0;padding:14px 16px;background:#fbf3e6;border-bottom:1px solid var(--cp-line)}
+#project-workspace .cp-app-company p{margin:0 0 10px;font-size:14px;line-height:1.5}
+#project-workspace .cp-app-company button{padding:7px 12px;font-size:14px}
+#project-workspace details.city-optional>summary{padding:14px 16px;cursor:pointer;font-size:14px;font-weight:600}
+#project-workspace .city-field .city-answer-state{font-size:12px;color:var(--cp-muted)}
+#project-workspace .cp-app-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+#project-workspace .cp-app-actions .cp-primary,html[data-theme] #project-workspace .cp-app-actions button.cp-primary{background:var(--cp-primary);color:#fff;border-color:var(--cp-primary)}
+#project-workspace .city-save-state{font-size:13px;color:var(--cp-muted);margin-top:8px}

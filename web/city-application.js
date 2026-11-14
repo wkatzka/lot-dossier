@@ -128,17 +128,19 @@
     let html='<section class="pw-card city-application"><label for="city-permit-type">Permit type</label><select id="city-permit-type" data-city-type><option value="">Choose application type</option>'+groups.map(g=>'<optgroup label="'+esc(g)+'">'+catalog.types.filter(x=>x.group===g).map(x=>'<option value="'+x.value+'"'+(x.value===id?' selected':'')+'>'+esc(x.label)+'</option>').join('')+'</optgroup>').join('')+'</select>';
     if(t){
       const editable=rs.filter(r=>!r.locked),filled=editable.filter(r=>r.value!==''),suggested=filled.filter(r=>r.status.startsWith('Suggested')),supplied=filled.filter(r=>r.review.state==='confirmed'),stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed'));
-      const ready=readiness(p,id);html+='<div class="application-stats"><div><strong>'+ready.missing.length+'</strong><span>Required questions to answer</span></div><div><strong>'+ready.unreviewed.length+'</strong><span>Answers Cornerpin filled in for you to check</span></div><div><strong>'+supplied.length+'</strong><span>Answers checked</span></div></div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Review workspace</p>';
-
-      html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>'<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'">'+(i+1)+'. '+titles[key]+'</button>').join('')+'</nav><p>Review each answer against its source. * marks a required field observed in the city form.</p><a href="#application-documents">Read a document +</a></aside>';
-      // By default show only what still needs the user: required blanks, and filled answers not yet checked.
-      const needs=r=>!r.locked&&(String(r.value??'').trim()===''?(r.required||r.markedRequired):r.review.state!=='confirmed');
-      const all=rs.filter(r=>r.section===page),list=showAll?all:all.filter(needs),hiddenCount=all.length-list.length;
-      html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields" tabindex="0" role="region" aria-label="Application fields">';
-      html+='<p class="city-filter">'+(showAll?'Showing all '+all.length+' fields on this page. <button type="button" data-action="city-show-all" data-id="0">Show only what needs me</button>':(list.length?'Showing '+list.length+' question'+(list.length===1?'':'s')+' that need you.':'Nothing on this page needs you.')+(hiddenCount?' <button type="button" data-action="city-show-all" data-id="1">Show all '+all.length+' fields</button>':''))+'</p>';
-      if(!all.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
-      html+=list.map(r=>{
-        const inputId='city-'+r.key,name='answer:'+r.key,current=esc(r.value),required=r.required||r.markedRequired;
+      const ready=readiness(p,id);
+      const blank=r=>String(r.value??'').trim()==='',req=r=>r.required||r.markedRequired;
+      // What needs the user: required blanks and filled answers not yet checked. Blank optional questions are shown separately — never hidden as "done".
+      const needs=r=>!r.locked&&(blank(r)?req(r):r.review.state!=='confirmed');
+      const optionalBlank=r=>!r.locked&&blank(r)&&!req(r)&&r.type!=='file'&&r.name!=='permit_type';
+      const all=rs.filter(r=>r.section===page),list=showAll?all:all.filter(needs),opt=showAll?[]:all.filter(optionalBlank),hiddenCount=all.length-list.length-opt.length;
+      const elsewhere=Object.keys(titles).filter(k=>k!==page&&rs.some(r=>r.section===k&&needs(r)));
+      const stat=(n,label,hint)=>'<div><strong>'+n+'</strong><span>'+label+'</span>'+(hint?'<small>'+hint+'</small>':'')+'</div>';
+      html+='<div class="application-stats cp-app-stats">'+stat(ready.missing.length,'Required questions to answer',ready.missing.length?'The city needs these before you can submit':'')+stat(ready.unreviewed.length,'Answers Cornerpin filled in for you to check',ready.unreviewed.length?'Open each and confirm or correct it':'')+stat(supplied.length,'Answers checked','')+'</div><div class="application-workspace"><aside class="application-sections"><p class="cp-eyebrow">Form pages</p>';
+      const pageCount=k=>rs.filter(r=>r.section===k&&needs(r)).length;
+      html+='<nav class="city-pages" aria-label="Application pages">'+Object.keys(titles).map((key,i)=>{const n=pageCount(key);return '<button type="button" data-action="city-page" data-id="'+key+'" aria-current="'+(key===page?'step':'false')+'"><span>'+(i+1)+'. '+titles[key]+'</span>'+(n?'<em class="cp-page-count">'+n+'</em>':'<em class="cp-page-done" aria-label="Nothing needs you">✓</em>')+'</button>';}).join('')+'</nav><p class="cp-app-key">* = required by the city</p><a href="#application-documents">Fill answers from a plan document +</a></aside>';
+      const field=r=>{
+        const inputId='city-'+r.key,name='answer:'+r.key,current=esc(r.value),required=req(r);
         const fact=Facts?.selected(p,r.name,id),doc=fact&&((p.documents||[]).find(d=>d.id===fact.documentId)||(p.documents||[]).find(d=>d.name===fact.filename&&!p.documents.some(x=>x.family===d.family&&x.version>d.version)));
         const source=doc?'<div class="field-source-document"><p>'+esc(doc.name)+' · version '+doc.version+(fact.page?' · page '+esc(fact.page):'')+'</p><button type="button" data-action="download-file" data-id="'+esc(doc.id)+'">Open source document</button></div>':'';
         let out='<div data-evidence-key="'+esc(r.key)+'" class="city-field'+(r.type==='textarea'||r.type==='file'?' city-wide':'')+'"><label for="'+inputId+'">'+esc(r.label)+(required?' *':'')+'</label>';
@@ -149,11 +151,25 @@
         else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
         else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
         else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
-        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state">'+esc(r.status)+'</span><p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>'+source+'</div><button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">View evidence</button></div>';
-      }).join('');
+        const note=blank(r)&&!required?'':'<p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>';
+        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">View evidence</button>')+'</div>';
+      };
+      html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields" tabindex="0" role="region" aria-label="Application fields">';
+      let msg;
+      if(showAll)msg='Showing all '+all.length+' fields on this page. <button type="button" data-action="city-show-all" data-id="0">Show only what needs me</button>';
+      else{
+        msg=list.length?'Showing '+list.length+' question'+(list.length===1?'':'s')+' that need you.':opt.length?'No required questions on this page. '+opt.length+' optional question'+(opt.length===1?' is':'s are')+' blank: fill in any that apply.':'Everything on this page is answered and checked.';
+        if(!list.length&&elsewhere.length)msg+=' <button type="button" class="cp-go" data-action="city-page" data-id="'+elsewhere[0]+'">Next: '+titles[elsewhere[0]]+' ('+pageCount(elsewhere[0])+' to do) →</button>';
+        if(hiddenCount)msg+=' <button type="button" data-action="city-show-all" data-id="1">Show all '+all.length+' fields</button>';
+      }
+      html+='<div class="city-filter">'+msg+'</div>';
+      if(page==='professionals'&&!showAll&&root.MyCompany&&!root.MyCompany.get())html+='<div class="cp-app-company"><p><b>Building it yourself, or hiring a contractor?</b> Add your company once and Cornerpin fills in the contractor questions on every permit.</p><button type="button" data-action="my-company">Add my company details</button></div>';
+      if(!all.length)html+='<p>No fields were displayed during inspection. Requirements remain unconfirmed.</p>';
+      html+=list.map(field).join('');
+      if(opt.length)html+=list.length?'<details class="city-optional"><summary>'+opt.length+' optional question'+(opt.length===1?'':'s')+' left blank</summary>'+opt.map(field).join('')+'</details>':'<div class="city-optional-open">'+opt.map(field).join('')+'</div>';
       const pages=Object.keys(titles),next=pages[pages.indexOf(page)+1];
-      html+='</div></fieldset><div class="pw-actions"><button type="submit">Save page</button>'+(next?'<button type="submit" data-city-next="'+next+'">Save & continue →</button>':'')+'<button type="button" data-action="city-download">Save & download answers</button></div><p class="city-save-state" role="status">Changes save when you save, change application pages or select another permit type.</p></form>';
-      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Supporting evidence</p><h3 id="field-evidence-heading">Select a field</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Choose View evidence beside an answer to inspect its saved basis and available document reference.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
+      html+='</div></fieldset><div class="pw-actions cp-app-actions">'+(next?'<button type="submit" class="cp-primary" data-city-next="'+next+'">Save &amp; next page →</button>':'')+'<button type="submit">Save</button><button type="button" data-action="city-download">Download my answers</button></div><p class="city-save-state" role="status">Answers save when you click Save or switch pages.</p></form>';
+      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>View evidence</b> on any filled-in answer to see the record or document it came from.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
     }
     return html+'<p class="pw-muted">Form inspected '+catalog.observedAt+'. Layout is adapted for Cornerpin; conditional requirements and final city validation may differ. Signatures, acknowledgments and uploads are completed in CityInspect.</p><p><a href="'+catalog.source+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p></section>';
   }

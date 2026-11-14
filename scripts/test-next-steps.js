@@ -51,3 +51,11 @@ assert(/Showing \d+ questions? that need you/.test(html)&&/data-action="city-sho
 C.setShowAll(true);const all=C.render(p,'primary');C.setShowAll(false);
 assert(count(all)>count(html),'Show all reveals the optional fields');assert(/Required questions to answer/.test(html)&&!/Editable fields populated/.test(html));
 console.log('PASS: permit forms show only the questions that need the user, with a way to show every field.');
+
+// A page of blank optional questions is never reported as "nothing needs you"; the blanks stay visible.
+const pro=C.render(p,'professionals');
+assert(!/Nothing on this page needs you/.test(pro),'Blank questions are not hidden behind "nothing needs you"');
+assert(/optional questions? (is|are) blank|Showing \d+ questions? that need you/.test(pro));
+assert(count(pro)>0,'Blank optional fields are rendered');
+assert(/Optional — leave blank if it doesn’t apply/.test(pro));
+console.log('PASS: blank optional questions stay visible with a plain explanation, never reported as nothing to do.');
