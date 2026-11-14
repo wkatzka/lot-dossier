@@ -1257,6 +1257,7 @@ body details.cp-fine[open]>summary::after{content:none}
 #rv .cp-evid .hint{margin:12px 0 0 54px;font-size:12px;color:var(--cp-muted,#6b6760)}
 @media(max-width:560px){#rv .cp-evid-finding,#rv .cp-evid-grid,#rv details.cp-evid-src,#rv .cp-evid .hint{margin-left:0}}
 @media print{#rv details.cp-evid-src>ul{display:block}}
+#rv .cp-evid .cp-more{margin-left:54px}@media(max-width:560px){#rv .cp-evid .cp-more{margin-left:0}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -5106,7 +5107,7 @@ const api={ORDER,QUICK,STEPS_FOR,DEPS,stepsFor,needsApprovalResearch,stepsRun,no
   var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
   var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
   var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
-  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){return x.replace(/\.$/,'').trim();}).filter(Boolean); };
+  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){x=x.replace(/\.$/,'').trim();return x.charAt(0).toUpperCase()+x.slice(1);}).filter(Boolean); };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }

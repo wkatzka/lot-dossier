@@ -436,3 +436,4 @@ body details.cp-fine[open]>summary::after{content:none}
 #rv .cp-evid .hint{margin:12px 0 0 54px;font-size:12px;color:var(--cp-muted,#6b6760)}
 @media(max-width:560px){#rv .cp-evid-finding,#rv .cp-evid-grid,#rv details.cp-evid-src,#rv .cp-evid .hint{margin-left:0}}
 @media print{#rv details.cp-evid-src>ul{display:block}}
+#rv .cp-evid .cp-more{margin-left:54px}@media(max-width:560px){#rv .cp-evid .cp-more{margin-left:0}}

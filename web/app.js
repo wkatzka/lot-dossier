@@ -10,7 +10,7 @@
   var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
   var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
   var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
-  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){return x.replace(/\.$/,'').trim();}).filter(Boolean); };
+  var splitList = function (t) { return String(t||'').split(/;\s+|\.\s+(?=[A-Z])/).map(function(x){x=x.replace(/\.$/,'').trim();return x.charAt(0).toUpperCase()+x.slice(1);}).filter(Boolean); };
   var ORDER = { flag: 0, watch: 1, verify: 2, ok: 3 };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
