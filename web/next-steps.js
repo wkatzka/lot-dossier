@@ -31,7 +31,7 @@ function checklist(p){
  for(const t of types){
   const supported=c&&c.supported&&c.supported(p);
   if(supported){const r=c.readiness(p,t),n=r.missing.length,m=r.unreviewed.length;
-   items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:(()=>{const f=permitSummary(p,t).form;return (f.total?f.ready+' of '+f.total+' answers ready':'')+(n||m?' · '+[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in to check':''].filter(Boolean).join(' · '):'');})()||'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
+   items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:(()=>{const f=permitSummary(p,t).form;return (f.total?f.ready+' of '+f.total+' answers ready':'')+(n||m?' · '+[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in for your review':''].filter(Boolean).join(' · '):'');})()||'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
   else items.push({id:'form-'+t,who:'You',title:label(t)+' application',detail:'Fill in '+jurisdiction(p)+'\'s own form; Cornerpin has not mapped it yet.',done:false,action:{type:'tab',id:'filing',label:'Open'}});
   const main=planned(p)[0],reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===main&&r.id!=='scope'))&&r.required);
   // Projects saved before requirements carried their packet group: infer it from the stable id.
@@ -65,12 +65,12 @@ function permitSummary(p,t){
 function permitHeader(sm,city){
  const parts=[sm.form.total?plural(sm.form.total,'form answer'):'',sm.docs.total?plural(sm.docs.total,'document'):'',sm.site.total?plural(sm.site.total,'check')+' about this lot':''].filter(Boolean);
  const needs=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts.at(-1):parts[0]||'';
- const yours=[sm.form.missing?plural(sm.form.missing,'answer')+' to fill in':'',sm.form.toCheck?(sm.form.missing?sm.form.toCheck:plural(sm.form.toCheck,'answer'))+' to check':'',sm.docs.left.length?plural(sm.docs.left.length,'document'):'',sm.site.left.length?plural(sm.site.left.length,'lot check'):''].filter(Boolean);
+ const yours=[sm.form.missing?plural(sm.form.missing,'answer')+' to fill in':'',sm.form.toCheck?(sm.form.missing?sm.form.toCheck:plural(sm.form.toCheck,'answer'))+' for your review':'',sm.docs.left.length?plural(sm.docs.left.length,'document'):'',sm.site.left.length?plural(sm.site.left.length,'lot check'):''].filter(Boolean);
  const src=sm.form.sources.length>1?sm.form.sources.slice(0,-1).join(', ')+' and '+sm.form.sources.at(-1):sm.form.sources[0]||'';
  return '<div class="cp-permit-head"><p class="cp-eyebrow">'+esc(sm.label)+' permit · '+esc(city)+'</p>'+
   (needs?'<p class="cp-permit-needs">To issue this permit, the city needs <b>'+esc(needs)+'</b>.</p>':'<p class="cp-permit-needs">Cornerpin hasn’t mapped this city’s form yet; use the city’s own checklist.</p>')+
   (sm.total?'<div class="cp-permit-progress"><div class="cp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+sm.total+'" aria-valuenow="'+sm.ready+'" aria-label="'+esc(sm.label)+' permit progress"><span style="width:'+sm.pct+'%"></span></div><b>'+sm.ready+' of '+sm.total+' ready</b></div>':'')+
-  (sm.form.found?'<p class="cp-permit-found">'+I('search')+'<span>Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve checked '+sm.form.checked+'.':'Check each one before it counts.')+'</span></p>':'')+
+  (sm.form.found?'<p class="cp-permit-found">'+I('search')+'<span>Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve reviewed '+sm.form.checked+'.':'Review each one before it counts.')+'</span></p>':'')+
   (yours.length?'<p class="cp-permit-yours"><span>Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</span></p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+'</div>';
 }
 // The next three things to do on this project, most urgent first.
