@@ -12,7 +12,7 @@ function summary(p){
  for(const f of D.openFindings(p,findings))if(f.status in counts)counts[f.status]++;
  const ids=[...new Set([...(p.application.permitSelections||[]),p.application.cityInspect?.typeId].filter(Boolean))];
  const drafts=ids.map(id=>{const rows=C.rows(p,id).filter(r=>!r.locked),filled=rows.filter(r=>String(r.value??'').trim()),suggested=filled.filter(r=>r.status.startsWith('Suggested')).length,stale=filled.filter(r=>r.review.state==='stale'||r.status.startsWith('Site or plans changed')).length;return {id,label:C.catalog.types.find(t=>t.value===id)?.label||'Permit draft',total:rows.length,filled:filled.length,suggested,stale,confirmed:filled.filter(r=>r.review.state==='confirmed').length,supplied:filled.filter(r=>r.status.startsWith('User supplied')).length,missing:rows.length-filled.length};});
- const open=W.openCorrections(p),required=p.requirements.filter(r=>r.required),reviewed=required.filter(r=>['reviewed','waived'].includes(r.state)),blockers=W.blockers(p,p.application.reference?'resubmission':'initial');
+ const open=W.openCorrections(p),required=(W.active?W.active(p):p.requirements).filter(r=>r.required),reviewed=required.filter(r=>['reviewed','waived'].includes(r.state)),blockers=W.blockers(p,p.application.reference?'resubmission':'initial');
  const siteOpen=counts.flag+counts.watch+counts.verify;
  const groups=[];
  if(siteOpen)groups.push({action:'site',label:'Review site evidence',detail:counts.flag+' concerns · '+counts.watch+' review · '+counts.verify+' verification findings'});

@@ -18,11 +18,18 @@
   function event(p, type, text, now, explicitActor) { const actor=explicitActor||(['migrate_site_reviews','public_owner','area_map','sync_report'].includes(type)?'system':type==='document_extraction'?'extraction':type==='review_round'?'import':'user');p.events.push({ id: id(), at: now, type, text, actor, provenance:({system:'System update',extraction:'Document extraction · not reviewer confirmation',ai:'AI extraction · not reviewer confirmation',import:'Imported correspondence · user checked',user:'User action'})[actor] }); }
   // One checklist across every planned permit's packet. Packet items carry stable ids
   // ("2:doc-site-plan"); older single-packet reports keep positional ids.
+  const CityApp = () => typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
+  function mapped(p) { try { const C = CityApp(); return !!(C && C.supported && C.supported(p)); } catch (_) { return false; } }
+  // Requirements that apply: older projects may still hold the generic scope item; it no longer counts where the form is mapped.
+  function active(p) { return (p.requirements || []).filter(r => !(r.id === 'scope' && mapped(p))); }
   function requirements(report) {
     const facts = (report || {}).facts || {}, packets = facts.packets && Object.keys(facts.packets).length ? Object.values(facts.packets) : facts.packet ? [facts.packet] : [];
     // City rules shape the design; they are shown in each packet, not filed or reviewed as documents.
     const items = packets.flatMap(pk => (pk.items || []).filter(x => x.status !== 'rule').map(x => ({ ...x, permitLabel: pk.label || '' })));
-    return [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }]
+    // A generic 'confirm what this permit needs' item only when Cornerpin hasn't mapped the city's form;
+    // where it has (e.g. Ogden Valley City), every field and required attachment is already listed.
+    const scope = mapped({ report }) ? [] : [{ id: 'scope', title: 'Confirm current jurisdiction requirements and permit scope', required: true, state: 'missing', note: '', documentIds: [] }];
+    return scope
       .concat(items.map((x, i) => ({ id: x.id ? 'req:' + x.id : 'requirement-' + i, title: x.title, permitType: x.permitType || '', permitLabel: x.permitLabel, group: x.group || '',
         required: !['na', 'optional', 'rule'].includes(x.status),
         state: 'missing', suggestedStatus: x.status, owner: x.who || '', source: x.why || '', sourceUrl: x.link || '',
@@ -57,7 +64,7 @@
       if (!clean(p.application.owner)) out.push('Owner name is missing.');
       if (!clean(p.application.description)) out.push('Project description is missing.');
       if (!clean(p.application.jurisdiction)) out.push('Permitting authority is missing.');
-      p.requirements.filter(r => r.required).forEach(r => {
+      active(p).filter(r => r.required).forEach(r => {
         if (!['reviewed', 'waived'].includes(r.state)) out.push(r.title);
         (r.documentIds || []).forEach(key => { const d = doc(p, key); if (!d || !latest(p, d)) out.push(r.title + ': open Documents, select the current version, then update this requirement’s evidence in Permit Preparation.'); });
       });
@@ -315,6 +322,6 @@
         'Response: ' + (c.response || '[Response missing]'), 'Revisions: ' + ((c.documentIds || []).map(key => { const d = doc(p, key); return d ? d.name + ' v' + d.version : '[Missing document]'; }).join('; ') || c.noRevisionReason || '[Revision missing]'), ''
       ])].join('\n');
   }
-  const api = { create, apply, blockers, currentPackage, openCorrections, latest, splitComments, responseLetter, connection, id };
+  const api = { create, apply, blockers, active, currentPackage, openCorrections, latest, splitComments, responseLetter, connection, id };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.PermitWorkflow = api;
 })(typeof window !== 'undefined' ? window : globalThis);

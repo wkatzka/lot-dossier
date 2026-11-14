@@ -85,3 +85,11 @@ console.log('PASS: blank optional questions stay visible with a plain explanatio
 {const g=['Application','Drawings','Reports','Stormwater','Approvals','Fees'].map(group=>NS.kindOf({group,id:'req:1:x'}));
  assert.deepEqual(g,['form','docs','docs','site','site','site']);
  console.log('PASS: every packet grouping maps to form answers, documents or lot checks.');}
+
+// Where the city's form is mapped (Ogden Valley City), Cornerpin doesn't ask the user to "confirm what this permit needs".
+{const W2=require('../web/permit-workflow');const fresh=W2.create(report,'2026-11-14T00:00:00Z');
+ assert(!fresh.requirements.some(r=>r.id==='scope'),'no generic scope item for a mapped city form');
+ const legacy=structuredClone(fresh);legacy.requirements.unshift({id:'scope',title:'Confirm current jurisdiction requirements and permit scope',required:true,state:'missing',documentIds:[]});
+ assert(!W2.active(legacy).some(r=>r.id==='scope')&&!W2.blockers(legacy,'initial').includes('Confirm current jurisdiction requirements and permit scope'),'older projects: the saved scope item no longer shows or blocks');
+ const other=structuredClone(report);other.facts={...report.facts,jurisdiction:'Some Other City'};assert(W2.create(other,'2026-11-14T00:00:00Z').requirements.some(r=>r.id==='scope'),'unmapped cities still get the confirm step');
+ console.log('PASS: no "confirm what this permit needs" step where Cornerpin has mapped the city form.');}

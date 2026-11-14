@@ -39,7 +39,7 @@
     if(/geotech|storm ?water|swppp|lighting|hoa|architectural|excavation|impact fee|easement/i.test(r.title||'')&&!/city asks/i.test(g))return 'lot';return 'docs';}
   const REQ_SECTIONS=[['start','Before you start','flag'],['form','Answers for the permit form','clipboard'],['docs','Documents to upload','doc'],['lot','Extra for this lot','pin']];
   function requirementsCard(p){
-    const I=n=>window.CpIcons?window.CpIcons.icon(n):'',reqs=p.requirements||[],multi=new Set(reqs.map(x=>x.permitLabel).filter(Boolean)).size>1;
+    const I=n=>window.CpIcons?window.CpIcons.icon(n):'',reqs=W.active?W.active(p):(p.requirements||[]),multi=new Set(reqs.map(x=>x.permitLabel).filter(Boolean)).size>1;
     const done=reqs.filter(r=>['reviewed','waived'].includes(r.state)).length;
     const row=r=>{const st=REQ_STATE[r.state]||[String(r.state||'').replace(/_/g,' '),'todo'],who=r.owner||(REQ_WHO.find(x=>x[0].test(r.title||''))||[])[1]||(r.suggestedStatus==='pro'?'A design professional':r.suggestedStatus==='you'?'You':'');
       const detail=r.detail||(r.id==='scope'?'Check the building department’s current checklist for '+(p.application.jurisdiction||'the city')+' (or call them) to confirm what this permit needs. The list below comes from the city’s published requirements, which can change.':'');
