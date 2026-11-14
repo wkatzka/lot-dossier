@@ -7,6 +7,8 @@
   var mode = 'none', last = null, map = null;
 
   var STATUS = { flag: 'Concern', watch: 'Watch this', verify: 'Needs checking', ok: 'Looks fine' };
+  // Reports saved before a wording fix are cleaned when shown, so nobody has to re-run research to lose an empty label.
+  var cleanText = function (t) { return String(t || '').replace(/\.\s*Plat:\s*\./g, '.').replace(/\bPlat: /g, 'Subdivision: ').replace(/\s*\bnull sq ft\b/g, '').replace(/\s+\./g, '.'); };
   var ICON = function (n) { return window.CpIcons ? window.CpIcons.icon(n) : ''; };
   var SEC_ICON = { geo:'mountain', survey:'ruler', septic:'droplet', water:'droplet', utilities:'zap', access:'road', easements:'pin', ccr:'home', land:'pin', permits:'clipboard', minerals:'mountain', performance:'home', pool:'droplet', flood:'waves', plan:'clipboard' };
   var REVIEW_LABEL = { unreviewed:'Not reviewed yet', 'needs-evidence':'Needs more evidence', resolved:'Resolved', 'not-applicable':'Does not apply', stale:'Out of date — review again' };
@@ -349,7 +351,7 @@
       if (src) meta.push('<span class="cp-meta-src">' + ICON('doc') + src + '</span>');
       return '<article data-research-only="'+(reviewProject && !window.SiteDecisions.inScope(reviewProject,x)?'true':'false')+'" data-review-closed="'+(reviewProject && decision.closed?'true':'false')+'" class="frow cp-frow s-' + x.status + (actionable(x) ? ' act st-' + st.status : '') + '"><div class="badge">' + (reviewProject && decision.closed?'Reviewed · '+esc(REVIEW_LABEL[decision.state]||decision.state):STATUS[x.status]) + '</div><div class="cp-frow-body">' +
         '<div class="cp-frow-head"><span class="cp-frow-icon">' + ICON(icon) + '</span><div><div class="item">' + esc(x.item) + '</div><h4>' + esc(x.headline) + '</h4></div></div>' +
-        (x.detail ? '<p>' + esc(x.detail) + '</p>' : '') + (x.next_step ? '<div class="next"><b>' + ICON('arrow') + 'What to do</b> ' + esc(x.next_step) + '</div>' : '') +
+        (x.detail ? '<p>' + esc(cleanText(x.detail)) + '</p>' : '') + (x.next_step ? '<div class="next"><b>' + ICON('arrow') + 'What to do</b> ' + esc(x.next_step) + '</div>' : '') +
         (meta.length ? '<div class="cp-frow-meta">' + meta.join('') + '</div>' : '') +
         chk + '</div></article>';
     };

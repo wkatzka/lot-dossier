@@ -17,7 +17,9 @@ function projects(){
  const base=clone(require('../docs/ux-audit/phase-3/validation/synthetic-backup.json').project);base.report.parcel.county=base.property.county='Weber';base.propertyKey='Weber|'+base.report.parcel.id;
  const facts={jurisdiction:'Ogden Valley City',zone_std:{zone:'RE-15',front:30,side:10,rear:30},lot_sf:17424,stepsRun:{check_parcel:'x'}};
  const findings=[{item:'Landslides',section:'geo',status:'flag',headline:'Mapped landslide covers about 100% of the lot',next_step:'Order a geologic hazards study and geotech report before design starts.',source:'UGS',url:'https://ugs.example/'},
-  {item:'CC&Rs / HOA',section:'ccr',status:'verify',headline:'Trappers Ridge: recorded CC&Rs likely',source:'County parcel record',url:'https://p.example/'}];
+  {item:'CC&Rs / HOA',section:'ccr',status:'verify',headline:'Trappers Ridge: recorded CC&Rs likely',source:'County parcel record',url:'https://p.example/'},
+  // A finding saved before the wording fix: its empty "Plat: ." must be cleaned when shown.
+  {item:'County assessor',section:'land',status:'ok',headline:'Assessed value $412,000',detail:'Owner of record: SDC INVESTMENTS LLC. Property type: OUTBUILDINGS. Plat: . Assessed value lags the market.',source:'Weber County Assessor',url:'https://a.example/'}];
  const mk=(id,attrs,typeIds,intent)=>{const packets=Object.fromEntries(typeIds.map(t=>[t,P.build(t,{facts,findings})]));
   const report={parcel:{county:'Weber',id,attrs:{PARCEL_ADD:attrs.addr,PARCEL_ACRES:attrs.acres,PROP_CLASS:attrs.cls},rings:[]},date:'2026-11-13',findings,facts:{...facts,owner:'Jane Owner',packets,packet:packets[typeIds[0]]}};
   const p=W.create(report,'2026-11-13T00:00:00Z');p.application.jurisdiction='Ogden Valley City';if(intent)p.application.intent=intent;p.propertyKey='Weber|'+id;return p;};
