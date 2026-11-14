@@ -91,7 +91,7 @@
       const value=String(a.value??'').trim(),basis=String(a.basis??'').trim();
       if(value.length>Math.min(row.maxLength||10000,10000))throw Error('Answer exceeds the field length limit.');
       if(value&&row.options&&!row.options.some(o=>o.value===value))throw Error('Choose an option from the city form.');
-      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||(row.min!=null&&Number(value)<Number(row.min))||(row.max!=null&&Number(value)>Number(row.max))))throw Error('Enter a number within the city field limits.');
+      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||Number(value)<Number(row.min??0)||(row.max!=null&&Number(value)>Number(row.max))))throw Error((row.label||'This answer').replace(/:\s*$/,'')+(Number(value)<Number(row.min??0)?' can’t be negative.':' is outside the city field limits.'));
       if(value&&!basis)throw Error('Record the source or basis for this answer.');
       state.answers[t.value]=state.answers[t.value]||{};
       if(a.reset==='yes')delete state.answers[t.value][row.key];
@@ -150,9 +150,10 @@
         else if(r.locked)out+='<input'+attrs+' value="" disabled placeholder="Complete in CityInspect">';
         else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
         else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
+        else if(r.type==='number'){const money=/valuation|cost|value|fee|price/i.test(r.label),unit=money?'':/footage|sq\.? ?f|square|area/i.test(r.label)?'sq ft':/height/i.test(r.label)?'ft':'';out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div><p class="cp-num-err">Can’t be negative.</p>';}
         else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
         const note=blank(r)&&!required?'':'<p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>';
-        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">View evidence</button>')+'</div>';
+        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state cp-ans-'+(blank(r)?(required?'req':'opt'):r.review.state==='confirmed'?'ok':/^Suggested/.test(r.status)?'sug':'user')+'">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):/^Suggested/.test(r.status)?'Filled in by Cornerpin · not checked yet':/^User supplied/.test(r.status)?'Your answer':r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">'+(r.review.state==='confirmed'?'See source':'Check this answer →')+'</button>')+'</div>';
       };
       html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields" tabindex="0" role="region" aria-label="Application fields">';
       let msg;
@@ -173,7 +174,7 @@
       if(opt.length)html+=list.length?'<details class="city-optional"><summary>'+opt.length+' optional question'+(opt.length===1?'':'s')+' left blank</summary>'+optHtml(opt)+'</details>':'<div class="city-optional-open">'+optHtml(opt)+'</div>';
       const pages=Object.keys(titles),next=pages[pages.indexOf(page)+1];
       html+='</div></fieldset><div class="pw-actions cp-app-actions">'+(next?'<button type="submit" class="cp-primary" data-city-next="'+next+'">Save &amp; next page →</button>':'')+'<button type="submit">Save</button><button type="button" data-action="city-download">Download my answers</button></div><p class="city-save-state" role="status">Answers save when you click Save or switch pages.</p></form>';
-      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>View evidence</b> on any filled-in answer to see the record or document it came from.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
+      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>Check this answer</b> on anything Cornerpin filled in to see where it came from, then confirm or fix it.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
     }
     return html+'<p class="pw-muted">Form inspected '+catalog.observedAt+'. Layout is adapted for Cornerpin; conditional requirements and final city validation may differ. Signatures, acknowledgments and uploads are completed in CityInspect.</p><p><a href="'+catalog.source+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p></section>';
   }

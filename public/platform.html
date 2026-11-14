@@ -1326,6 +1326,34 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-req-formhead{font-weight:700;font-size:12px!important;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted);margin-top:16px!important}
 @media(max-width:600px){#project-workspace .cp-req-body{padding-left:14px}#project-workspace details.cp-req>summary{flex-wrap:wrap}#project-workspace .cp-req-chip{margin-left:34px}}
 
+/* Permit form: no inner scroll box; compact fields; numbers can't go negative */
+@media(min-width:701px){#project-workspace .application-workspace .city-fields{max-height:none!important;overflow:visible!important}}
+#project-workspace .application-evidence{position:sticky;top:16px}
+#project-workspace .application-workspace .city-field{padding:14px 16px}
+#project-workspace .application-workspace .city-field>label{display:block;font-weight:600;font-size:14px;margin:0 0 6px}
+#project-workspace .application-workspace .city-field input,#project-workspace .application-workspace .city-field select{height:42px;font-size:15px}
+#project-workspace .city-field .city-note{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:6px}
+#project-workspace .city-field .city-note>p{display:none}
+#project-workspace .city-field .city-answer-state{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+#project-workspace .city-field .city-answer-state::before{content:"";width:8px;height:8px;border-radius:50%;background:#b9b3a7}
+#project-workspace .city-answer-state.cp-ans-req{color:#8c1d16}#project-workspace .city-answer-state.cp-ans-req::before{background:#b3261e}
+#project-workspace .city-answer-state.cp-ans-sug{color:#5c3d00}#project-workspace .city-answer-state.cp-ans-sug::before{background:#d29a2c}
+#project-workspace .city-answer-state.cp-ans-ok{color:#1f4d2c}#project-workspace .city-answer-state.cp-ans-ok::before{background:#2e6b3f}
+#project-workspace .city-answer-state.cp-ans-user::before{background:#2f5d8a}
+#project-workspace .city-field{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px}
+#project-workspace .city-field>label,#project-workspace .city-field>input,#project-workspace .city-field>select,#project-workspace .city-field>textarea,#project-workspace .city-field>.cp-num,#project-workspace .city-field>.cp-num-err,#project-workspace .city-field>p{grid-column:1 / -1}
+#project-workspace .city-field>.city-note{grid-column:1}
+#project-workspace .city-field>.field-evidence-button,html[data-theme] #project-workspace .city-field>.field-evidence-button{grid-column:2;align-self:center;margin:6px 0 0;padding:0;background:none;border:0;font-size:13px;font-weight:600;color:var(--cp-primary);text-decoration:underline;text-underline-offset:3px;cursor:pointer;width:auto;height:auto}
+#project-workspace .cp-num{display:flex;align-items:stretch;border:1px solid var(--cp-line,#cfcac0);background:#fff;height:42px}
+#project-workspace .cp-num:focus-within{outline:2px solid var(--cp-primary);outline-offset:1px}
+#project-workspace .cp-num input,#project-workspace .application-workspace .city-field .cp-num input{flex:1;min-width:0;border:0!important;outline:0!important;height:40px;padding:0 12px;background:transparent;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+#project-workspace .cp-num input::-webkit-outer-spin-button,#project-workspace .cp-num input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#project-workspace .cp-num-pre,#project-workspace .cp-num-unit{display:grid;place-items:center;padding:0 12px;color:var(--cp-muted);background:#f4f2ec;font-size:14px}
+#project-workspace .cp-num-pre{border-right:1px solid var(--cp-line)}#project-workspace .cp-num-unit{border-left:1px solid var(--cp-line)}
+#project-workspace .cp-num-err{display:none;margin:6px 0 0;font-size:13px;color:#8c1d16}
+#project-workspace .cp-num:has(input:invalid){border-color:#b3261e;background:#fdf3f2}
+#project-workspace .cp-num:has(input:invalid)+.cp-num-err{display:block}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEwIDQxMCAxOTIgMTkyIiB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiI+PHRpdGxlPkNvcm5lcnBpbiBzeW1ib2w8L3RpdGxlPjxzdHlsZT5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7cGF0aHtzdHJva2U6I2Y1ZjRlZX19PC9zdHlsZT48ZyBpZD0iYnJhbmQtc3ltYm9sIj48cGF0aCBkPSJNMTc4IDQ1MEg1MFY1NzhNODggNTc4SDE3OFY0ODgiIHN0cm9rZT0iIzFmMmIyMyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNDUwIiByPSIyNCIgZmlsbD0iI2YyNmEzNiIvPjxwYXRoIGQ9Ik01MCA0ODh2NDhNODggNDUwaDQ4IiBzdHJva2U9IiMxZjJiMjMiIHN0cm9rZS13aWR0aD0iOS42IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==">
@@ -6555,7 +6583,7 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
       const value=String(a.value??'').trim(),basis=String(a.basis??'').trim();
       if(value.length>Math.min(row.maxLength||10000,10000))throw Error('Answer exceeds the field length limit.');
       if(value&&row.options&&!row.options.some(o=>o.value===value))throw Error('Choose an option from the city form.');
-      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||(row.min!=null&&Number(value)<Number(row.min))||(row.max!=null&&Number(value)>Number(row.max))))throw Error('Enter a number within the city field limits.');
+      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||Number(value)<Number(row.min??0)||(row.max!=null&&Number(value)>Number(row.max))))throw Error((row.label||'This answer').replace(/:\s*$/,'')+(Number(value)<Number(row.min??0)?' can’t be negative.':' is outside the city field limits.'));
       if(value&&!basis)throw Error('Record the source or basis for this answer.');
       state.answers[t.value]=state.answers[t.value]||{};
       if(a.reset==='yes')delete state.answers[t.value][row.key];
@@ -6614,9 +6642,10 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
         else if(r.locked)out+='<input'+attrs+' value="" disabled placeholder="Complete in CityInspect">';
         else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
         else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
+        else if(r.type==='number'){const money=/valuation|cost|value|fee|price/i.test(r.label),unit=money?'':/footage|sq\.? ?f|square|area/i.test(r.label)?'sq ft':/height/i.test(r.label)?'ft':'';out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div><p class="cp-num-err">Can’t be negative.</p>';}
         else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
         const note=blank(r)&&!required?'':'<p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>';
-        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">View evidence</button>')+'</div>';
+        return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state cp-ans-'+(blank(r)?(required?'req':'opt'):r.review.state==='confirmed'?'ok':/^Suggested/.test(r.status)?'sug':'user')+'">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):/^Suggested/.test(r.status)?'Filled in by Cornerpin · not checked yet':/^User supplied/.test(r.status)?'Your answer':r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">'+(r.review.state==='confirmed'?'See source':'Check this answer →')+'</button>')+'</div>';
       };
       html+='<form data-command="city_application_page"><input type="hidden" name="permitType" value="'+id+'"><fieldset><legend>'+titles[page]+'</legend><div class="city-fields" tabindex="0" role="region" aria-label="Application fields">';
       let msg;
@@ -6637,7 +6666,7 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
       if(opt.length)html+=list.length?'<details class="city-optional"><summary>'+opt.length+' optional question'+(opt.length===1?'':'s')+' left blank</summary>'+optHtml(opt)+'</details>':'<div class="city-optional-open">'+optHtml(opt)+'</div>';
       const pages=Object.keys(titles),next=pages[pages.indexOf(page)+1];
       html+='</div></fieldset><div class="pw-actions cp-app-actions">'+(next?'<button type="submit" class="cp-primary" data-city-next="'+next+'">Save &amp; next page →</button>':'')+'<button type="submit">Save</button><button type="button" data-action="city-download">Download my answers</button></div><p class="city-save-state" role="status">Answers save when you click Save or switch pages.</p></form>';
-      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>View evidence</b> on any filled-in answer to see the record or document it came from.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
+      html+='<aside class="application-evidence cp-panel" aria-label="Supporting evidence"><div class="cp-panel-head"><p class="cp-eyebrow">Where answers come from</p><h3 id="field-evidence-heading">Pick an answer</h3></div><div id="field-evidence-content" class="cp-panel-body" aria-live="polite"><p>Click <b>Check this answer</b> on anything Cornerpin filled in to see where it came from, then confirm or fix it.</p></div></aside></div><section id="application-documents">'+extractionPanel(p)+'</section>';
     }
     return html+'<p class="pw-muted">Form inspected '+catalog.observedAt+'. Layout is adapted for Cornerpin; conditional requirements and final city validation may differ. Signatures, acknowledgments and uploads are completed in CityInspect.</p><p><a href="'+catalog.source+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p></section>';
   }

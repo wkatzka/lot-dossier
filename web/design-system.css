@@ -504,3 +504,31 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-req-why{color:var(--cp-muted)}
 #project-workspace .cp-req-formhead{font-weight:700;font-size:12px!important;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted);margin-top:16px!important}
 @media(max-width:600px){#project-workspace .cp-req-body{padding-left:14px}#project-workspace details.cp-req>summary{flex-wrap:wrap}#project-workspace .cp-req-chip{margin-left:34px}}
+
+/* Permit form: no inner scroll box; compact fields; numbers can't go negative */
+@media(min-width:701px){#project-workspace .application-workspace .city-fields{max-height:none!important;overflow:visible!important}}
+#project-workspace .application-evidence{position:sticky;top:16px}
+#project-workspace .application-workspace .city-field{padding:14px 16px}
+#project-workspace .application-workspace .city-field>label{display:block;font-weight:600;font-size:14px;margin:0 0 6px}
+#project-workspace .application-workspace .city-field input,#project-workspace .application-workspace .city-field select{height:42px;font-size:15px}
+#project-workspace .city-field .city-note{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:6px}
+#project-workspace .city-field .city-note>p{display:none}
+#project-workspace .city-field .city-answer-state{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+#project-workspace .city-field .city-answer-state::before{content:"";width:8px;height:8px;border-radius:50%;background:#b9b3a7}
+#project-workspace .city-answer-state.cp-ans-req{color:#8c1d16}#project-workspace .city-answer-state.cp-ans-req::before{background:#b3261e}
+#project-workspace .city-answer-state.cp-ans-sug{color:#5c3d00}#project-workspace .city-answer-state.cp-ans-sug::before{background:#d29a2c}
+#project-workspace .city-answer-state.cp-ans-ok{color:#1f4d2c}#project-workspace .city-answer-state.cp-ans-ok::before{background:#2e6b3f}
+#project-workspace .city-answer-state.cp-ans-user::before{background:#2f5d8a}
+#project-workspace .city-field{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px}
+#project-workspace .city-field>label,#project-workspace .city-field>input,#project-workspace .city-field>select,#project-workspace .city-field>textarea,#project-workspace .city-field>.cp-num,#project-workspace .city-field>.cp-num-err,#project-workspace .city-field>p{grid-column:1 / -1}
+#project-workspace .city-field>.city-note{grid-column:1}
+#project-workspace .city-field>.field-evidence-button,html[data-theme] #project-workspace .city-field>.field-evidence-button{grid-column:2;align-self:center;margin:6px 0 0;padding:0;background:none;border:0;font-size:13px;font-weight:600;color:var(--cp-primary);text-decoration:underline;text-underline-offset:3px;cursor:pointer;width:auto;height:auto}
+#project-workspace .cp-num{display:flex;align-items:stretch;border:1px solid var(--cp-line,#cfcac0);background:#fff;height:42px}
+#project-workspace .cp-num:focus-within{outline:2px solid var(--cp-primary);outline-offset:1px}
+#project-workspace .cp-num input,#project-workspace .application-workspace .city-field .cp-num input{flex:1;min-width:0;border:0!important;outline:0!important;height:40px;padding:0 12px;background:transparent;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+#project-workspace .cp-num input::-webkit-outer-spin-button,#project-workspace .cp-num input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#project-workspace .cp-num-pre,#project-workspace .cp-num-unit{display:grid;place-items:center;padding:0 12px;color:var(--cp-muted);background:#f4f2ec;font-size:14px}
+#project-workspace .cp-num-pre{border-right:1px solid var(--cp-line)}#project-workspace .cp-num-unit{border-left:1px solid var(--cp-line)}
+#project-workspace .cp-num-err{display:none;margin:6px 0 0;font-size:13px;color:#8c1d16}
+#project-workspace .cp-num:has(input:invalid){border-color:#b3261e;background:#fdf3f2}
+#project-workspace .cp-num:has(input:invalid)+.cp-num-err{display:block}

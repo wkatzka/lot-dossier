@@ -59,3 +59,10 @@ assert(/optional questions? (is|are) blank|Showing \d+ questions? that need you/
 assert(count(pro)>0,'Blank optional fields are rendered');
 assert(/Optional — leave blank if it doesn’t apply/.test(pro));
 console.log('PASS: blank optional questions stay visible with a plain explanation, never reported as nothing to do.');
+
+// Numbers on the city form can never be saved negative, and the input says so.
+{const num=C.rows(p,'2').find(r=>r.type==='number'&&!r.locked);assert(num,'pool form has a number field');
+ assert.throws(()=>C.update(p,{permitType:'2',fieldKey:num.key,value:'-19',basis:'User-entered'}),/can’t be negative/);
+ assert.doesNotThrow(()=>C.update(p,{permitType:'2',fieldKey:num.key,value:'19',basis:'User-entered'}));
+ C.setShowAll(true);const h=C.render(p,'building');C.setShowAll(false);assert(/type="number" inputmode="decimal" step="any" min="0"/.test(h));assert(!/View evidence/.test(h));
+ console.log('PASS: number answers cannot be negative (input min and save check).');}
