@@ -1,5 +1,5 @@
 /* Cornerpin components — the one place cards, buttons, status chips and text sizes are defined.
-   Older stylesheets (styles, project-workspace, concrete-theme, design-system) are wrapped by the build in
+   Older stylesheets (styles, project-workspace, design-system) are wrapped by the build in
    `@layer legacy`, so everything here wins without !important or ID-specificity contests.
    Rule of thumb: add a class to a component list below rather than styling it again elsewhere. */
 
