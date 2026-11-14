@@ -26,14 +26,14 @@ function checklist(p){
  for(const t of types){
   const supported=c&&c.supported&&c.supported(p);
   if(supported){const r=c.readiness(p,t),n=r.missing.length,m=r.unreviewed.length;
-   items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:n||m?[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in to check':''].filter(Boolean).join(' · '):'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
+   items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:(()=>{const f=permitSummary(p,t).form;return (f.total?f.ready+' of '+f.total+' answers ready':'')+(n||m?' · '+[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in to check':''].filter(Boolean).join(' · '):'');})()||'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
   else items.push({id:'form-'+t,who:'You',title:label(t)+' application',detail:'Fill in '+jurisdiction(p)+'\'s own form; Cornerpin has not mapped it yet.',done:false,action:{type:'tab',id:'filing',label:'Open'}});
   const reqs=(p.requirements||[]).filter(r=>r.permitType===t&&r.required);
   // Projects saved before requirements carried their packet group: infer it from the stable id.
   const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
   const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
-  if(docs.length){const left=docs.filter(r=>!done(r));items.push({id:'docs-'+t,who:'You',title:'Documents for the '+label(t)+' permit',detail:left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):'All marked ready',done:!left.length,action:{type:'requirements',label:left.length?'Get ready':'Review'}});}
-  if(site.length){const left=site.filter(r=>!done(r));items.push({id:'site-'+t,who:'You',title:'Lot checks for the '+label(t)+' permit',detail:left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):'All checked',done:!left.length,action:{type:'requirements',label:left.length?'Check':'Review'}});}
+  if(docs.length){const left=docs.filter(r=>!done(r));items.push({id:'docs-'+t,who:'You',title:'Documents for the '+label(t)+' permit',detail:(docs.length-left.length)+' of '+docs.length+' ready'+(left.length?' · ':'')+(left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):''),done:!left.length,action:{type:'requirements',label:left.length?'Get ready':'Review'}});}
+  if(site.length){const left=site.filter(r=>!done(r));items.push({id:'site-'+t,who:'You',title:'Lot checks for the '+label(t)+' permit',detail:(site.length-left.length)+' of '+site.length+' checked'+(left.length?' · ':'')+(left.length?left.slice(0,3).map(r=>r.title).join(' · ')+(left.length>3?' · and '+(left.length-3)+' more':''):''),done:!left.length,action:{type:'requirements',label:left.length?'Check':'Review'}});}
  }
  if(!types.length)items.push({id:'plan',who:'You',title:'Choose what you\'re building',detail:'The checklist is built from the permits you choose.',done:false,action:{type:'tab',id:'overview',label:'Choose'}});
  const ready=items.every(x=>x.done);
@@ -42,6 +42,34 @@ function checklist(p){
  return {items,ready,filed,remaining:items.filter(x=>!x.done&&x.id!=='submit').length,portal:portal(p),jurisdiction:jurisdiction(p)};
 }
 
+// Per permit, in plain words: what the city needs, what Cornerpin found (and from where), what you've checked,
+// and what's still yours. The bar counts only items that are done or checked, never Cornerpin's unchecked guesses.
+const SOURCES=[[/confirmed project team|team profile|company/i,'your company details'],[/lot area|calculated/i,'the parcel map'],[/zoning|setback|development standard/i,'the zoning code'],[/plat/i,'the recorded plat'],[/plan|drawing|document|extract|schedule/i,'your plans'],[/parcel|jurisdiction record|assessor|county/i,'the county parcel record'],[/application details|scope|project name|preparation date/i,'your project details']];
+function sourceOf(basis){for(const [re,l] of SOURCES)if(re.test(basis||''))return l;return '';}
+function permitSummary(p,t){
+ const c=C(),supported=!!(c&&c.supported&&c.supported(p)),reqs=(p.requirements||[]).filter(r=>r.permitType===t&&r.required);
+ const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
+ const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
+ let form={total:0,ready:0,found:0,checked:0,missing:0,toCheck:0,sources:[]};
+ if(supported){const rows=c.rows(p,t).filter(r=>!r.locked),filled=r=>String(r.value??'').trim()!=='',req=r=>r.required||r.markedRequired;
+  const needed=rows.filter(r=>req(r)||filled(r)),ok=r=>filled(r)&&r.review&&r.review.state==='confirmed',byUs=r=>filled(r)&&!/^User supplied/.test(r.status||'');
+  const srcs=[];for(const r of needed.filter(byUs)){const l=sourceOf(r.basis);if(l&&!srcs.includes(l))srcs.push(l);}
+  form={total:needed.length,ready:needed.filter(ok).length,found:needed.filter(byUs).length,checked:needed.filter(r=>byUs(r)&&ok(r)).length,missing:needed.filter(r=>req(r)&&!filled(r)).length,toCheck:needed.filter(r=>filled(r)&&!ok(r)).length,sources:srcs};}
+ const d={total:docs.length,ready:docs.filter(done).length,left:docs.filter(r=>!done(r))},l={total:site.length,ready:site.filter(done).length,left:site.filter(r=>!done(r))};
+ const total=form.total+d.total+l.total,ready=form.ready+d.ready+l.ready;
+ return {typeId:t,label:label(t),supported,form,docs:d,site:l,total,ready,pct:total?Math.round(100*ready/total):0,complete:total>0&&ready===total};
+}
+function permitHeader(sm,city){
+ const parts=[sm.form.total?plural(sm.form.total,'form answer'):'',sm.docs.total?plural(sm.docs.total,'document'):'',sm.site.total?plural(sm.site.total,'check')+' about this lot':''].filter(Boolean);
+ const needs=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts.at(-1):parts[0]||'';
+ const yours=[sm.form.missing?plural(sm.form.missing,'answer')+' to fill in':'',sm.form.toCheck?(sm.form.missing?sm.form.toCheck:plural(sm.form.toCheck,'answer'))+' to check':'',sm.docs.left.length?plural(sm.docs.left.length,'document'):'',sm.site.left.length?plural(sm.site.left.length,'lot check'):''].filter(Boolean);
+ const src=sm.form.sources.length>1?sm.form.sources.slice(0,-1).join(', ')+' and '+sm.form.sources.at(-1):sm.form.sources[0]||'';
+ return '<div class="cp-permit-head"><p class="cp-eyebrow">'+esc(sm.label)+' permit · '+esc(city)+'</p>'+
+  (needs?'<p class="cp-permit-needs">To issue this permit, the city needs <b>'+esc(needs)+'</b>.</p>':'<p class="cp-permit-needs">Cornerpin hasn’t mapped this city’s form yet; use the city’s own checklist.</p>')+
+  (sm.total?'<div class="cp-permit-progress"><div class="cp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+sm.total+'" aria-valuenow="'+sm.ready+'" aria-label="'+esc(sm.label)+' permit progress"><span style="width:'+sm.pct+'%"></span></div><b>'+sm.ready+' of '+sm.total+' ready</b></div>':'')+
+  (sm.form.found?'<p class="cp-permit-found">'+I('search')+' Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve checked '+sm.form.checked+'.':'Check each one before it counts.')+'</p>':'')+
+  (yours.length?'<p class="cp-permit-yours">Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+'</div>';
+}
 // The next three things to do on this project, most urgent first.
 function steps(p,{limit=3}={}){
  const out=[],add=s=>{if(!out.some(x=>x.id===s.id))out.push(s);};
@@ -86,8 +114,8 @@ const ITEM_ICON=id=>id==='company'?'briefcase':id==='owner'?'user':/^form-/.test
 function whoTag(w){return '<span class="cp-who cp-who-'+(WHO_TONE[w]||'pro')+'">'+esc(w)+'</span>';}
 function stepsCard(p){const list=steps(p);if(!list.length)return '';
  return '<section class="cp-answer cp-next-steps" aria-labelledby="next-steps-heading"><p class="cp-eyebrow" id="next-steps-heading">Your next steps</p><ol>'+list.map(s=>'<li><span class="cp-step-icon">'+AR(WHO_ART[s.who]||'builder',WHO_ICON[s.who]||'hardhat')+'</span><div>'+whoTag(s.who)+'<br><strong>'+esc(s.title)+'</strong><p>'+esc(s.detail)+'</p></div>'+button(s.action)+'</li>').join('')+'</ol></section>';}
-function checklistCard(p){const c=checklist(p);
- return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p><ol class="cp-checklist">'+c.items.map(x=>'<li class="'+(x.done?'is-done':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+AR(ITEM_ART(x.id),ITEM_ICON(x.id))+'</span><div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol><p class="cp-trust">Cornerpin reads public records and the city’s published rules. The city, your HOA and your professionals make the final calls.</p>'+
+function checklistCard(p){const c=checklist(p),perm=planned(p).map(t=>permitSummary(p,t));
+ return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p>'+(perm.length>1?'<p class="cp-permits-overall"><b>'+perm.filter(x=>x.complete).length+' of '+perm.length+' permits</b> ready to submit.</p>':'')+'<ol class="cp-checklist">'+c.items.map(x=>(/^form-/.test(x.id)?'<li class="cp-permit-li">'+permitHeader(perm.find(z=>'form-'+z.typeId===x.id)||permitSummary(p,x.id.slice(5)),c.jurisdiction)+'</li>':'')+'<li class="'+(x.done?'is-done':'')+(/^(form|docs|site)-/.test(x.id)?' cp-permit-sub':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+AR(ITEM_ART(x.id),ITEM_ICON(x.id))+'</span><div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol><p class="cp-trust">Cornerpin reads public records and the city’s published rules. The city, your HOA and your professionals make the final calls.</p>'+
   (c.ready&&!c.filed?'<div id="submit-help" hidden><p><strong>How to submit:</strong> 1. Download your answers. 2. Open '+(c.portal?'<a href="'+esc(c.portal)+'" target="_blank" rel="noopener">the city\'s permit portal</a>':'the city\'s permit portal')+' and copy them in, attaching your documents. 3. Come back and record the application number.</p><div class="pw-actions"><button type="button" data-action="city-download-all">Download my answers</button><button type="button" data-action="record-receipt">I\'ve submitted it</button></div></div>':'')+'</section>';}
-const api={checklist,steps,stepsCard,checklistCard,planned};if(node)module.exports=api;else root.NextSteps=api;
+const api={checklist,steps,stepsCard,checklistCard,planned,permitSummary};if(node)module.exports=api;else root.NextSteps=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -66,3 +66,17 @@ console.log('PASS: blank optional questions stay visible with a plain explanatio
  assert.doesNotThrow(()=>C.update(p,{permitType:'2',fieldKey:num.key,value:'19',basis:'User-entered'}));
  C.setShowAll(true);const h=C.render(p,'building');C.setShowAll(false);assert(/type="number" inputmode="decimal" step="any" min="0"/.test(h));assert(!/View evidence/.test(h));
  console.log('PASS: number answers cannot be negative (input min and save check).');}
+
+// Each permit says plainly what the city needs, what Cornerpin found (and from where), and shows a bar that only
+// counts what's done or checked — never Cornerpin's unchecked answers.
+{const sm=NS.permitSummary(p,'2');
+ assert(sm.form.total>0&&sm.docs.total>0&&sm.site.total>0,'pool permit has form answers, documents and lot checks');
+ assert(sm.form.found>0&&sm.form.sources.length>0,'Cornerpin-found answers name their sources');
+ const unchecked=sm.form.toCheck;assert(unchecked>0);
+ assert.equal(sm.form.ready+sm.form.toCheck+sm.form.missing,sm.form.total,'every needed answer is ready, to check, or missing');
+ assert(sm.ready<=sm.total-unchecked,'unchecked Cornerpin answers never count toward the bar');
+ const html=NS.checklistCard(p);
+ assert(/To issue this permit, the city needs <b>\d+ form answers, \d+ documents and \d+ checks about this lot<\/b>/.test(html));
+ assert(/role="progressbar"[^>]*aria-valuemax="\d+" aria-valuenow="\d+"/.test(html)&&/Cornerpin found <b>\d+ answers?<\/b> from /.test(html));
+ assert(/<b>0 of 2 permits<\/b> ready to submit/.test(html),'multi-permit projects show how many permits are ready');
+ console.log('PASS: each permit states what the city needs and what Cornerpin found, with an honest progress bar.');}

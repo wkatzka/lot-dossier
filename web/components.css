@@ -167,3 +167,20 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #rv details.cp-evid2-src li span{display:block;color:var(--cp-muted);font-size:var(--cp-text-sm)}
 @media(max-width:560px){#rv .cp-evid2{padding:16px}}
 #rv .cp-evid2-meta .cp-chip{margin:0}
+
+/* Ready to file: one header per permit — what the city needs, what Cornerpin found, a progress bar */
+.cp-checklist>li.cp-permit-li{display:block;grid-template-columns:none;margin-top:8px;padding:18px 18px 14px;border:1px solid var(--cp-line);border-bottom:0;border-radius:var(--cp-r) var(--cp-r) 0 0;background:var(--cp-input,#fff)}
+.cp-checklist>li.cp-permit-sub{margin:0;padding:12px 18px 12px 18px;border:1px solid var(--cp-line);border-top:1px dashed var(--cp-line);background:var(--cp-input,#fff)}
+.cp-checklist>li.cp-permit-sub:has(+li:not(.cp-permit-sub)){border-radius:0 0 var(--cp-r) var(--cp-r);margin-bottom:8px}
+.cp-checklist:has(.cp-permit-li){gap:0}
+.cp-checklist:has(.cp-permit-li)>li:not(.cp-permit-li):not(.cp-permit-sub){padding:12px 0}
+.cp-permit-head .cp-eyebrow{margin:0 0 4px}
+.cp-permit-needs{margin:0;font-size:16px;line-height:1.45;color:var(--cp-ink)}
+.cp-permit-progress{display:flex;align-items:center;gap:12px;margin:12px 0 10px}
+.cp-permit-progress b{flex:none;font-size:var(--cp-text-sm);font-variant-numeric:tabular-nums}
+.cp-bar{flex:1;height:8px;border-radius:var(--cp-r-pill);background:var(--cp-t-neutral-bg);overflow:hidden}
+.cp-bar>span{display:block;height:100%;border-radius:inherit;background:var(--cp-t-ok);min-width:0;transition:width .3s}
+.cp-permit-found,.cp-permit-yours{display:flex;align-items:flex-start;gap:6px;margin:4px 0 0;font-size:var(--cp-text);line-height:1.5;color:var(--cp-ink)}
+.cp-permit-found .cp-icon,.cp-ok-line .cp-icon{width:16px;height:16px;flex:none;margin-top:2px;color:var(--cp-primary)}
+.cp-permit-yours{color:var(--cp-muted)}
+.cp-permits-overall{margin:4px 0 8px;font-size:var(--cp-text)}
