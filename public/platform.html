@@ -1406,7 +1406,7 @@ details.cp-req:last-of-type{border-bottom-left-radius:var(--cp-r);border-bottom-
 #project-workspace,#rv .wrap{font-size:var(--cp-text);line-height:var(--cp-lh)}
 .cp-rule-card p,.cp-rule-why,#project-workspace td,#project-workspace td p,.cp-ans-tile p,.cp-qcard p,.cp-req-body>p,.cp-frow-body>p,.cp-evid-finding,.cp-site-body p,.cp-ans p,.cp-next-steps p,.cp-checklist p{font-size:var(--cp-text);line-height:var(--cp-lh)}
 .cp-rule-meta,.cp-req-sub,.cp-site-headline,.pw-muted,#project-workspace .hint,#rv .hint,.cp-frow-meta,.city-save-state,.cp-app-key,.cp-evid .hint{font-size:var(--cp-text-sm);color:var(--cp-muted)}
-.cp-eyebrow,#rv .eyebrow,#rv .cp-frow .item,.cp-evid .eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k{
+html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebrow,#rv .cp-frow .item,#rv .cp-evid .eyebrow{
  font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
 #project-workspace h2,#rv .card>h2,#rv .cp-page-heading h2,#rv .cp-panel-head h2,#rv .group>header h3{font-size:var(--cp-h2);font-weight:650;line-height:1.3;letter-spacing:-.01em}
 #rv .group>header h3{font-size:var(--cp-h3-lg)}
@@ -1422,7 +1422,7 @@ details.cp-req:last-of-type{border-bottom-left-radius:var(--cp-r);border-bottom-
 
 /* ---------- Buttons ---------- */
 /* Secondary (default) */
-#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button{
+#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button,#rv :is(.cp-answer,.cp-site-v2,#site-intent,.cp-intent) button:not(.cp-link):not(.cp-more){
  font-size:var(--cp-text);font-weight:600;border-radius:var(--cp-r-control);min-height:40px;padding:8px 14px;line-height:1.2}
 /* Primary */
 #project-workspace button.primary,#project-workspace button.cp-primary,#project-workspace .cp-go,#project-workspace button[data-city-next],#project-workspace .cp-ready button[data-action=submit-city]{
@@ -6089,7 +6089,7 @@ const I=n=>(typeof module!=='undefined'&&module.exports?require('./icons'):root.
 const SECTION_ICON={geo:'mountain',survey:'ruler',septic:'droplet',water:'droplet',utilities:'zap',access:'road',easements:'pin',ccr:'home',land:'pin',permits:'clipboard',minerals:'mountain',performance:'home',pool:'droplet',flood:'waves'};
 const iconFor=f=>/flood/i.test(f.item||'')?'waves':SECTION_ICON[f.section]||'flag';
 function card(report,{project=null,where='site'}={}){
- const s=summary(report,project),D=root.SiteDecisions,head=(t,tone)=>'<section class="cp-answer cp-answer-v2'+(tone?' cp-answer-tier-'+tone:'')+'" aria-label="Site findings for this lot"><div class="cp-ans-head"><span class="cp-ans-icon">'+I(tone==='contacts'?'users':tone==='sources'?'search':'pin')+'</span><p class="cp-eyebrow">'+esc(t)+'</p>'+(s.counts.flag?'<span class="cp-chip cp-chip-open">'+I('alert')+s.counts.flag+' concern'+(s.counts.flag>1?'s':'')+'</span>':'')+'</div>';
+ const s=summary(report,project),D=root.SiteDecisions,head=(t,tone)=>'<section class="cp-answer cp-answer-v2'+(tone?' cp-answer-tier-'+tone:'')+'" aria-label="Site findings for this lot"><div class="cp-ans-head"><span class="cp-ans-icon">'+I(tone==='contacts'?'users':tone==='sources'?'search':'pin')+'</span><p class="cp-eyebrow">'+esc(t)+'</p>'+(s.counts.flag?'<span class="cp-chip cp-chip-concern">'+I('alert')+s.counts.flag+' concern'+(s.counts.flag>1?'s':'')+'</span>':'')+'</div>';
  const review=f=>project&&D?'<button type="button" data-review-question="'+esc(D.id(f.members?.[0]||f))+'">Review</button>':'';
  const more=(s.counts.verify||s.counts.watch>s.top.filter(f=>f.status==='watch').length)?'<p><small>'+[s.counts.watch-s.top.filter(f=>f.status==='watch').length>0?(s.counts.watch-s.top.filter(f=>f.status==='watch').length)+' more to watch':'',s.counts.verify?s.counts.verify+' routine items to verify':''].filter(Boolean).join(' · ')+(where==='site'?' — listed in the sections below.':' — in Site Review.')+'</small></p>':'';
  const goSite=where==='overview'?'<button type="button" data-action="site">Open Site Review</button>':'';
