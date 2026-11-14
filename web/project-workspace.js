@@ -59,7 +59,8 @@
     const old=project.report.facts.ownerRecord;if(old&&Date.now()-Date.parse(old.retrievedAt)<86400000)return;
     try{const r=await fetch((window.LR_DATA.apiBase||'')+'/api/parcel-docs?county=Weber&record=1&parcel='+encodeURIComponent(project.report.parcel.id)+'&v='+encodeURIComponent(window.LR_DATA.apiVersion||''),{signal:AbortSignal.timeout(20000)});if(!r.ok)return;const data=await r.json();if(data.ownerRecord)await commit({type:'public_owner',record:data.ownerRecord});}catch(e){/* Plan reading still proceeds when the public county service is unavailable. */}
   }
-  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById(analysisTarget)||document.getElementById('pw-message'); if (e) e.textContent = s; }
+  // Our own errors are written for people; programming errors are not, so they get a plain sentence instead.
+  function message(s) { window.AnalysisProgress.stop(); if(/cannot read prop|is not a function|is not defined|undefined|unexpected token|NaN|\[object /i.test(String(s||''))){console.error(s);s='Something went wrong on this page. Your saved work is safe; reload the page and try again.';} const e = document.getElementById(analysisTarget)||document.getElementById('pw-message'); if (e) e.textContent = s; }
   function syncLabel(p) {
     const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
     return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');

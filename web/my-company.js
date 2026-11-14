@@ -7,7 +7,7 @@ const KEY='cornerpin.myCompany.v1',FIELDS=['name','contact','phone','email','lic
 const store=()=>{try{return root.localStorage||null;}catch{return null;}};
 function get(){try{const v=JSON.parse(store()?.getItem(KEY)||'null');return v&&v.name?v:null;}catch{return null;}}
 function clean(o){const out={};for(const k of FIELDS)out[k]=String(o?.[k]??'').trim().slice(0,500);out.alsoContact=!!o?.alsoContact;return out;}
-function save(o){const v=clean(o);if(!v.name)throw Error('Enter your company name.');if(v.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email))throw Error('Enter a valid email.');try{store()?.setItem(KEY,JSON.stringify({...v,savedAt:new Date().toISOString()}));}catch{}return v;}
+function save(o){const v=clean(o);if(!v.name)throw Error('Enter your company name.');const IR=typeof module!=='undefined'&&module.exports?require('./input-rules'):root.InputRules;if(IR)for(const [k,label] of [['email','Email'],['phone','Phone']]){const e=IR.check(v[k],IR.rule(label));if(e)throw Error(e);}else if(v.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email))throw Error('Enter a valid email.');try{store()?.setItem(KEY,JSON.stringify({...v,savedAt:new Date().toISOString()}));}catch{}return v;}
 // Commands that fill the project's empty roles from the saved profile.
 function commandsFor(project,profile=get()){
  if(!profile)return [];const team=project?.application?.team||{},out=[],base={...Object.fromEntries(FIELDS.map(k=>[k,profile[k]||''])),type:'team_profile',confirmed:true};

@@ -1355,6 +1355,10 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-num:has(input:invalid)+.cp-num-err{display:block}
 #project-workspace:has(.handoff-guide) .cp-app-stats{display:none}
 #project-workspace .cp-num input,#project-workspace .application-workspace .city-field .cp-num input,html[data-theme] #project-workspace .cp-num input{margin:0!important;height:100%!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important;box-shadow:none!important}#project-workspace .cp-num{overflow:hidden}
+/* Field rules: one message style for every form */
+.cp-field-err{margin:6px 0 0;font-size:13px;color:#8c1d16;grid-column:1 / -1}
+#project-workspace input[aria-invalid=true],#rv input[aria-invalid=true]{border-color:#b3261e!important;background:#fdf3f2}
+#project-workspace .cp-num:has(input[aria-invalid=true]){border-color:#b3261e;background:#fdf3f2}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6170,7 +6174,7 @@ const KEY='cornerpin.myCompany.v1',FIELDS=['name','contact','phone','email','lic
 const store=()=>{try{return root.localStorage||null;}catch{return null;}};
 function get(){try{const v=JSON.parse(store()?.getItem(KEY)||'null');return v&&v.name?v:null;}catch{return null;}}
 function clean(o){const out={};for(const k of FIELDS)out[k]=String(o?.[k]??'').trim().slice(0,500);out.alsoContact=!!o?.alsoContact;return out;}
-function save(o){const v=clean(o);if(!v.name)throw Error('Enter your company name.');if(v.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email))throw Error('Enter a valid email.');try{store()?.setItem(KEY,JSON.stringify({...v,savedAt:new Date().toISOString()}));}catch{}return v;}
+function save(o){const v=clean(o);if(!v.name)throw Error('Enter your company name.');const IR=typeof module!=='undefined'&&module.exports?require('./input-rules'):root.InputRules;if(IR)for(const [k,label] of [['email','Email'],['phone','Phone']]){const e=IR.check(v[k],IR.rule(label));if(e)throw Error(e);}else if(v.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email))throw Error('Enter a valid email.');try{store()?.setItem(KEY,JSON.stringify({...v,savedAt:new Date().toISOString()}));}catch{}return v;}
 // Commands that fill the project's empty roles from the saved profile.
 function commandsFor(project,profile=get()){
  if(!profile)return [];const team=project?.application?.team||{},out=[],base={...Object.fromEntries(FIELDS.map(k=>[k,profile[k]||''])),type:'team_profile',confirmed:true};
@@ -6492,6 +6496,79 @@ function panel(p,r,type){if(r.locked)return '<p>This acknowledgment or upload mu
 const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AnswerReviews=api;
 })(typeof window!=='undefined'?window:globalThis);
 
+/* One place for what a sensible answer looks like, inferred from the field's label.
+   Used three ways: city-form saves are rejected when an answer breaks its rule; every form in the
+   workspace is checked before it submits; and fields show a plain message as soon as they're wrong. */
+(function(root){'use strict';
+const NUM=/^\s*(-?\d[\d,]*(?:\.\d+)?|-?\.\d+)\s*(ft|feet|'|sq\.? ?ft|sf|%|kw|kwh|a|amps?|v|volts?|w|watts?|\$)?\s*$/i;
+const MONEY=/^\s*\$?\s*(-?\d[\d,]*(?:\.\d{1,2})?)\s*$/;
+// Order matters: the first matching rule wins.
+const RULES=[
+ [/e-?mail/i,{kind:'email',inputType:'email',inputmode:'email',msg:'Enter an email like name@company.com.'}],
+ [/phone|\bfax\b/i,{kind:'phone',inputType:'tel',inputmode:'tel',msg:'Enter a 10-digit phone number.'}],
+ [/\bzip\b|postal/i,{kind:'zip',inputmode:'numeric',msg:'Enter a 5-digit ZIP code.'}],
+ [/\bstate\b/i,{kind:'state',msg:'Enter the state, e.g. UT.'}],
+ [/\bdate\b/i,{kind:'date',msg:'Enter a real date, e.g. 2026-11-13.'}],
+ [/latitude/i,{kind:'num',min:-90,max:90,msg:'Latitude is between -90 and 90.'}],
+ [/longitude/i,{kind:'num',min:-180,max:180,msg:'Longitude is between -180 and 180.'}],
+ [/valuation|cost|price|\bfee\b|amount|\(\$\)|budget|proceeds/i,{kind:'num',min:0,max:1e9,unit:'$',msg:'Enter a dollar amount of 0 or more.'}],
+ [/%|percent|share/i,{kind:'num',min:0,max:100,msg:'Enter a percentage from 0 to 100.'}],
+ [/rotation|degrees/i,{kind:'num',min:-360,max:360,msg:'Enter an angle from -360 to 360.'}],
+ [/east of|north of|offset/i,{kind:'num',min:-5000,max:5000,msg:'Enter a distance in feet (negative means west/south).'}],
+ [/\byear\b/i,{kind:'num',min:1800,max:2100,integer:true,msg:'Enter a 4-digit year.'}],
+ [/stories/i,{kind:'num',min:0,max:10,integer:true,msg:'Enter a whole number of stories (0–10).'}],
+ [/bathrooms/i,{kind:'num',min:0,max:50,step:0.5,msg:'Enter the number of bathrooms (halves allowed).'}],
+ [/# of units|number of buildings|bedrooms|garages$|garages:|number of modules|max occupancy|page count|pages\b/i,{kind:'num',min:0,max:1000,integer:true,msg:'Enter a whole number of 0 or more.'}],
+ [/lot footage|lot area|lot size/i,{kind:'num',min:0,max:5e7,unit:'sq ft',msg:'Enter the lot size in square feet (0 or more).'}],
+ [/floor|basement|garage|deck\/patio|^other:?\s*$|footage|sq ?ft|square feet|floor area|building area/i,{kind:'num',min:0,max:1e6,unit:'sq ft',msg:'Enter square feet (0 or more).'}],
+ [/set ?back|\(ft\)|feet|width|length|clearance|height|distance/i,{kind:'num',min:0,max:5000,unit:'ft',msg:'Enter feet (0 or more).'}],
+ [/tolerance/i,{kind:'num',min:0,max:1000,msg:'Enter a tolerance of 0 or more.'}],
+ [/amps/i,{kind:'num',min:0,max:10000,unit:'A',msg:'Enter amps (0 or more).'}],
+ [/volts/i,{kind:'num',min:0,max:1000,unit:'V',msg:'Enter volts (0–1000).'}],
+ [/kw|output|capacity/i,{kind:'num',min:0,max:100000,msg:'Enter a capacity of 0 or more.'}],
+ [/power rating/i,{kind:'num',min:0,max:5000,unit:'W',msg:'Enter watts (0 or more).'}],
+ [/quantity|rate\b/i,{kind:'num',min:0,max:1e9,msg:'Enter a number of 0 or more.'}]
+];
+const DEFAULT_NUM={kind:'num',min:0,max:1e9,msg:'Enter a number of 0 or more.'};
+function rule(label,name,type){const t=String(label||'')+' '+String(name||'');for(const [re,r] of RULES)if(re.test(t))return {...r};return type==='number'?{...DEFAULT_NUM}:null;}
+function toNumber(v,r){const s=String(v??'').trim();const m=(r&&r.unit==='$'?MONEY.exec(s):null)||NUM.exec(s);return m?Number(m[1].replace(/,/g,'')):NaN;}
+/* '' when the value is fine (blank is the caller's business: required-ness is checked elsewhere). */
+function check(value,r){
+ const s=String(value??'').trim();if(!s||!r)return '';
+ switch(r.kind){
+  case 'email':return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(s)?'':r.msg;
+  case 'phone':{const d=s.replace(/[^\d]/g,'').replace(/^1(?=\d{10}$)/,'');return d.length===10&&/^[\d\s().+\-x]+$/i.test(s.replace(/ext\.?\s*\d+$/i,''))?'':r.msg;}
+  case 'zip':return /^\d{5}(-\d{4})?$/.test(s)?'':r.msg;
+  case 'state':return /^[A-Za-z][A-Za-z .]{1,19}$/.test(s)?'':r.msg;
+  case 'date':{let y,m,d,x;if((x=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s)))[y,m,d]=[+x[1],+x[2],+x[3]];else if((x=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s)))[m,d,y]=[+x[1],+x[2],+x[3]];else return r.msg;
+   const dt=new Date(Date.UTC(y,m-1,d));return y>=1900&&y<=2100&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d?'':r.msg;}
+  case 'num':{const n=toNumber(s,r);if(!Number.isFinite(n))return 'Enter a number.';
+   if(r.min!=null&&n<r.min)return r.min===0?'Can’t be negative.':r.msg;if(r.max!=null&&n>r.max)return 'That’s too large. '+r.msg;
+   if(r.integer&&!Number.isInteger(n))return 'Enter a whole number.';if(r.step===0.5&&!Number.isInteger(n*2))return r.msg;return '';}
+ }
+ return '';
+}
+/* Extra HTML attributes for an <input> so browsers and phones help (keyboard type, min/max). */
+function attrs(r){if(!r)return '';let a='';if(r.inputmode)a+=' inputmode="'+r.inputmode+'"';else if(r.kind==='num')a+=' inputmode="decimal"';if(r.kind==='num'){if(r.min!=null)a+=' data-min="'+r.min+'"';if(r.max!=null)a+=' data-max="'+r.max+'"';}if(r.kind==='phone')a+=' autocomplete="tel"';if(r.kind==='email')a+=' autocomplete="email"';return a;}
+
+/* Browser: check every workspace input as people type and before any form submits. */
+function labelFor(el){if(el.labels&&el.labels[0])return el.labels[0].textContent;const l=el.closest('label');if(l)return l.textContent;return el.getAttribute('aria-label')||el.placeholder||'';}
+function ruleFor(el){if(el.type==='hidden'||el.type==='checkbox'||el.type==='radio'||el.type==='file'||el.readOnly||el.disabled)return null;if(el.tagName!=='INPUT')return null;return rule(labelFor(el),el.name,el.type);}
+function show(el,msg){const host=el.closest('.cp-num')||el;let p=host.nextElementSibling;if(!(p&&p.classList.contains('cp-field-err'))){if(!msg)return;p=root.document.createElement('p');p.className='cp-field-err';p.setAttribute('role','alert');host.after(p);}
+ p.textContent=msg;p.hidden=!msg;if(msg)el.setAttribute('aria-invalid','true');else el.removeAttribute('aria-invalid');try{el.setCustomValidity(msg);}catch(_){} }
+function validate(el){const r=ruleFor(el);if(!r)return '';const m=check(el.value,r);show(el,m);return m;}
+if(root.document&&root.addEventListener){
+ const inScope=el=>el&&el.closest&&el.closest('#project-workspace,#rv,#home,main');
+ root.document.addEventListener('input',e=>{const el=e.target;if(el.tagName==='INPUT'&&inScope(el)&&(el.getAttribute('aria-invalid')==='true'||el.type==='number'))validate(el);},true);
+ root.document.addEventListener('change',e=>{const el=e.target;if(el.tagName==='INPUT'&&inScope(el))validate(el);},true);
+ root.document.addEventListener('focusout',e=>{const el=e.target;if(el.tagName==='INPUT'&&inScope(el))validate(el);},true);
+ // Capture phase on window runs before the workspace's own submit handlers, so a bad answer never saves.
+ root.addEventListener('submit',e=>{const f=e.target;if(!f||!inScope(f))return;let first=null;for(const el of f.querySelectorAll('input'))if(validate(el)&&!first)first=el;
+  if(first){e.preventDefault();e.stopImmediatePropagation();first.focus();first.scrollIntoView({block:'center',behavior:'smooth'});}},true);
+}
+const api={rule,check,attrs,toNumber};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.InputRules=api;
+})(typeof window!=='undefined'?window:globalThis);
+
 /* Observed city forms, with explicit provenance. No portal writes or submissions. */
 (function(root){
   'use strict';
@@ -6499,6 +6576,7 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
   const Facts=typeof module!=='undefined'&&module.exports?require('./permit-facts'):root.PermitFacts;
   const Assistant=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const IR=typeof module!=='undefined'&&module.exports?require('./input-rules'):root.InputRules;
   const Reviews=typeof module!=='undefined'&&module.exports?require('./answer-reviews'):root.AnswerReviews;
   let renderedProject=null;
   const titles={primary:'Property & application',professionals:'Designers & contractors',building:'Building details',attachments:'Documents & acknowledgments'};
@@ -6585,7 +6663,8 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
       const value=String(a.value??'').trim(),basis=String(a.basis??'').trim();
       if(value.length>Math.min(row.maxLength||10000,10000))throw Error('Answer exceeds the field length limit.');
       if(value&&row.options&&!row.options.some(o=>o.value===value))throw Error('Choose an option from the city form.');
-      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||Number(value)<Number(row.min??0)||(row.max!=null&&Number(value)>Number(row.max))))throw Error((row.label||'This answer').replace(/:\s*$/,'')+(Number(value)<Number(row.min??0)?' can’t be negative.':' is outside the city field limits.'));
+      if(value&&!row.options&&IR){const rr=IR.rule(row.label,row.name,row.type);if(rr&&row.type==='number'&&row.min!=null)rr.min=Number(row.min);if(rr&&row.type==='number'&&row.max!=null)rr.max=Number(row.max);const err=IR.check(value,rr);if(err)throw Error((row.label||'This answer').replace(/:\s*$/,'')+': '+err);}
+      if(value&&row.type==='number'&&!Number.isFinite(Number(value)))throw Error('Enter a number.');
       if(value&&!basis)throw Error('Record the source or basis for this answer.');
       state.answers[t.value]=state.answers[t.value]||{};
       if(a.reset==='yes')delete state.answers[t.value][row.key];
@@ -6644,8 +6723,8 @@ const api={fingerprint,status,apply,panel};if(typeof module!=='undefined'&&modul
         else if(r.locked)out+='<input'+attrs+' value="" disabled placeholder="Complete in CityInspect">';
         else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
         else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
-        else if(r.type==='number'){const money=/valuation|cost|value|fee|price/i.test(r.label),unit=money?'':/footage|sq\.? ?f|square|area/i.test(r.label)?'sq ft':/height/i.test(r.label)?'ft':'';out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div><p class="cp-num-err">Can’t be negative.</p>';}
-        else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
+        else if(r.type==='number'){const rr=IR?IR.rule(r.label,r.name,'number'):null,money=rr?.unit==='$',unit=money?'':(rr?.unit||'');out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div>';}
+        else out+='<input'+attrs+(IR?IR.attrs(IR.rule(r.label,r.name,r.type)):'')+' type="'+(r.type==='number'?'number':((IR&&IR.rule(r.label,r.name,r.type)||{}).inputType||'text'))+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
         const note=blank(r)&&!required?'':'<p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>';
         return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state cp-ans-'+(blank(r)?(required?'req':'opt'):r.review.state==='confirmed'?'ok':/^Suggested/.test(r.status)?'sug':'user')+'">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):/^Suggested/.test(r.status)?'Filled in by Cornerpin · not checked yet':/^User supplied/.test(r.status)?'Your answer':r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">'+(r.review.state==='confirmed'?'See source':'Check this answer →')+'</button>')+'</div>';
       };
@@ -7801,6 +7880,7 @@ root.CornerpinAccount={open,ready:C.init()};root.CornerpinAccount.ready.catch(()
 
 (function(root){
 'use strict';
+const friendly=(e,fallback)=>{const m=String(e&&e.message||'');return !m||e instanceof TypeError||e instanceof ReferenceError||/cannot read|undefined|is not a function|null|NaN|unexpected token|failed to fetch/i.test(m)?fallback:m;};
 const E=root.EvidenceLedger,V=root.LandValue,G=root.PlacementEngine,T=root.turf,P=root.proj4;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number.isFinite(n)?n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}):'Not established';
@@ -7841,7 +7921,7 @@ function marketReference(p){
    (r.extrapolated?'<p>The parcel size is outside the acreage range of the local comparables; the size adjustment extrapolates beyond them.</p>':'')+
    '<details><summary>Comparable sales and adjustments</summary><p>Size elasticity: '+r.elasticity.toFixed(3)+'. Estimated from same-submarket, same-category sale pairs across '+r.trainingCount+' research records. Water, access, usable area, entitlements and time adjustments are not calibrated.</p><div style="overflow-x:auto"><table><thead><tr><th>Comparable / source</th><th>Sale date</th><th>Acres</th><th>Reported price</th><th>Size-adjusted price</th></tr></thead><tbody>'+r.comps.map(c=>'<tr><td>'+link(c.source+'#page='+c.page,c.address)+'<br>'+esc((c.flags||[]).join('; '))+'</td><td>'+esc(c.saleDate)+'</td><td>'+esc(c.grossAcres)+'</td><td>'+money(c.price)+'</td><td>'+money(c.adjustedPrice)+'</td></tr>').join('')+'</tbody></table></div><p>County-hosted MLS exhibits; settlement amounts and transaction conditions are not independently verified. The subject parcel’s own sales are excluded.</p></details>'+
    '<details><summary>How sensitive is this property’s estimate?</summary><p>Latest comparable: '+esc(stability.newestComparable)+'. Removing one preceding sale at a time changes this property’s historical-price reference to '+(stability.range?money(stability.range[0])+'–'+money(stability.range[1]):'an unavailable estimate')+'. Largest change: '+money(stability.maxChange)+'.</p><p>'+esc(stability.limitation)+'</p></details><details><summary>How the model performed</summary><p>'+m.within50k+' of '+m.n+' chronological development predictions were within $50,000; average absolute error '+money(m.mae)+'. After excluding atypical transactions: '+s.within50k+' of '+s.n+', average error '+money(s.mae)+'.</p><p>Seven research sales; these outcomes were inspected during model development, so this is not independent validation. Removing one training sale moved one tract estimate from $196,947 to $928,247. No calibrated uncertainty interval is available.</p></details>';
- }catch(e){content='<p>'+esc(e.message)+'</p><p>A historical price reference is not available for this parcel. You can still calculate a sourced builder-budget scenario below.</p>';}
+ }catch(e){content='<p>'+esc(friendly(e,'Sale records for this area could not be loaded.'))+'</p><p>A historical price reference is not available for this parcel. You can still calculate a sourced builder-budget scenario below.</p>';}
  return '<section class="pw-card"><h2>Weber land-price research · Beta</h2>'+content+'</section>';
 }
 function valuation(p){
@@ -7873,7 +7953,7 @@ function svg(p,values){
 }
 function placement(p){
  const l=ledger(p),last=l.runs.filter(r=>r.kind==='placement').at(-1),v=last?.inputs?.form||{};
- let preview;try{preview=svg(p,v);}catch(e){preview='<p>'+esc(e.message)+'</p>';}
+ let preview;try{preview=svg(p,v);}catch(e){preview='<p>'+esc(friendly(e,'The parcel outline isn’t available, so the drawing can’t be shown. You can still enter the pool size and clearances.'))+'</p>';}
  return '<section class="pw-card"><h2>Pool placement study</h2><p>The public parcel outline supports a conceptual layout. Recovered survey boundaries that pass acreage and map consistency checks also constrain the search. Exact siting remains unresolved until survey registration, restrictions, service lines, structures, terrain and applicable pool rules are verified. Dimensions below are editable scenario assumptions.</p>'+form('placement','<div class="pw-grid"><div id="placement-drawing">'+preview+'</div><div>'+input('width','Pool width (ft)',v.width??12,'number')+input('length','Pool length (ft)',v.length??24,'number')+input('deck','Deck around pool (ft)',v.deck??4,'number')+input('x','Centre east of parcel centre (ft)',v.x??0,'number')+input('y','Centre north of parcel centre (ft)',v.y??0,'number')+input('rotation','Rotation (degrees)',v.rotation??0,'number')+input('setback','Scenario boundary clearance (ft)',v.setback??(p.report.facts.jurisdiction==='Ogden Valley City'?10:''),'number')+input('ruleSource','Applicable rule source or assumption',v.ruleSource||(p.report.facts.jurisdiction==='Ogden Valley City'?'LUC 108-7-18 minimum only; larger zone setbacks and side/rear location unresolved':''))+input('tolerance','Placement tolerance (ft)',v.tolerance??1,'number')+'<p>Click or drag on the diagram to move the pool centre. Equipment shown as a 4 × 6 ft scenario footprint; clearance and access need verification.</p></div></div>')+'</section>'+runs(l,'placement');
 }
 function searchSummary(s){
@@ -8215,7 +8295,8 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
     const old=project.report.facts.ownerRecord;if(old&&Date.now()-Date.parse(old.retrievedAt)<86400000)return;
     try{const r=await fetch((window.LR_DATA.apiBase||'')+'/api/parcel-docs?county=Weber&record=1&parcel='+encodeURIComponent(project.report.parcel.id)+'&v='+encodeURIComponent(window.LR_DATA.apiVersion||''),{signal:AbortSignal.timeout(20000)});if(!r.ok)return;const data=await r.json();if(data.ownerRecord)await commit({type:'public_owner',record:data.ownerRecord});}catch(e){/* Plan reading still proceeds when the public county service is unavailable. */}
   }
-  function message(s) { window.AnalysisProgress.stop(); const e = document.getElementById(analysisTarget)||document.getElementById('pw-message'); if (e) e.textContent = s; }
+  // Our own errors are written for people; programming errors are not, so they get a plain sentence instead.
+  function message(s) { window.AnalysisProgress.stop(); if(/cannot read prop|is not a function|is not defined|undefined|unexpected token|NaN|\[object /i.test(String(s||''))){console.error(s);s='Something went wrong on this page. Your saved work is safe; reload the page and try again.';} const e = document.getElementById(analysisTarget)||document.getElementById('pw-message'); if (e) e.textContent = s; }
   function syncLabel(p) {
     const info=window.ProjectSync.status(p),labels={guest:'Saved on this device · sign in to save across devices',saving:'Saving to your account…',saved:'Saved to your account',pending:'Saved on this device · account sync pending'};
     return '<span>'+labels[info.state]+'</span>'+(info.error?'<span class="pw-muted"> · '+esc(info.error)+'</span>':'')+(info.state==='pending'?' '+button('cloud-save','Retry save',p.id):'');

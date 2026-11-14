@@ -5,6 +5,7 @@
   const Facts=typeof module!=='undefined'&&module.exports?require('./permit-facts'):root.PermitFacts;
   const Assistant=typeof module!=='undefined'&&module.exports?require('./permit-assistant'):root.PermitAssistant;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const IR=typeof module!=='undefined'&&module.exports?require('./input-rules'):root.InputRules;
   const Reviews=typeof module!=='undefined'&&module.exports?require('./answer-reviews'):root.AnswerReviews;
   let renderedProject=null;
   const titles={primary:'Property & application',professionals:'Designers & contractors',building:'Building details',attachments:'Documents & acknowledgments'};
@@ -91,7 +92,8 @@
       const value=String(a.value??'').trim(),basis=String(a.basis??'').trim();
       if(value.length>Math.min(row.maxLength||10000,10000))throw Error('Answer exceeds the field length limit.');
       if(value&&row.options&&!row.options.some(o=>o.value===value))throw Error('Choose an option from the city form.');
-      if(value&&row.type==='number'&&(!Number.isFinite(Number(value))||Number(value)<Number(row.min??0)||(row.max!=null&&Number(value)>Number(row.max))))throw Error((row.label||'This answer').replace(/:\s*$/,'')+(Number(value)<Number(row.min??0)?' can’t be negative.':' is outside the city field limits.'));
+      if(value&&!row.options&&IR){const rr=IR.rule(row.label,row.name,row.type);if(rr&&row.type==='number'&&row.min!=null)rr.min=Number(row.min);if(rr&&row.type==='number'&&row.max!=null)rr.max=Number(row.max);const err=IR.check(value,rr);if(err)throw Error((row.label||'This answer').replace(/:\s*$/,'')+': '+err);}
+      if(value&&row.type==='number'&&!Number.isFinite(Number(value)))throw Error('Enter a number.');
       if(value&&!basis)throw Error('Record the source or basis for this answer.');
       state.answers[t.value]=state.answers[t.value]||{};
       if(a.reset==='yes')delete state.answers[t.value][row.key];
@@ -150,8 +152,8 @@
         else if(r.locked)out+='<input'+attrs+' value="" disabled placeholder="Complete in CityInspect">';
         else if(r.options)out+='<select'+attrs+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
         else if(r.type==='textarea')out+='<textarea'+attrs+' maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+current+'</textarea>';
-        else if(r.type==='number'){const money=/valuation|cost|value|fee|price/i.test(r.label),unit=money?'':/footage|sq\.? ?f|square|area/i.test(r.label)?'sq ft':/height/i.test(r.label)?'ft':'';out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div><p class="cp-num-err">Can’t be negative.</p>';}
-        else out+='<input'+attrs+' type="'+(r.type==='number'?'number':'text')+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
+        else if(r.type==='number'){const rr=IR?IR.rule(r.label,r.name,'number'):null,money=rr?.unit==='$',unit=money?'':(rr?.unit||'');out+='<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+attrs+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+current+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div>';}
+        else out+='<input'+attrs+(IR?IR.attrs(IR.rule(r.label,r.name,r.type)):'')+' type="'+(r.type==='number'?'number':((IR&&IR.rule(r.label,r.name,r.type)||{}).inputType||'text'))+'"'+(r.type==='number'?' step="any"':'')+(r.min!=null?' min="'+esc(r.min)+'"':'')+(r.max!=null?' max="'+esc(r.max)+'"':'')+' maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+current+'">';
         const note=blank(r)&&!required?'':'<p>'+esc(r.basis)+(r.guidance!==r.basis?'<br>'+esc(r.guidance):'')+'</p>';
         return out+'<div id="'+inputId+'-note" class="city-note"><span class="city-answer-state cp-ans-'+(blank(r)?(required?'req':'opt'):r.review.state==='confirmed'?'ok':/^Suggested/.test(r.status)?'sug':'user')+'">'+esc(blank(r)?(required?'Required — not answered yet':'Optional — leave blank if it doesn’t apply'):/^Suggested/.test(r.status)?'Filled in by Cornerpin · not checked yet':/^User supplied/.test(r.status)?'Your answer':r.status)+'</span>'+note+source+'</div>'+(blank(r)?'':'<button type="button" class="field-evidence-button" data-field-evidence="'+esc(r.key)+'">'+(r.review.state==='confirmed'?'See source':'Check this answer →')+'</button>')+'</div>';
       };
