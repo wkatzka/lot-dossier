@@ -32,7 +32,7 @@ def build(api_base, inline_assets=False):
     html = read(WEB, "home.html")
     # Older stylesheets sit in a lower cascade layer; components.css (unlayered) is the single source for
     # cards, buttons, chips and text sizes and wins without specificity fights.
-    legacy = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + '\n' + read(WEB, "concrete-theme.css") + "\n" + read(WEB, "design-system.css")
+    legacy = read(WEB, "styles.css") + '\n' + read(WEB, "project-workspace.css") + "\n" + read(WEB, "design-system.css")
     font_faces = "".join(re.findall(r"@font-face\{[^}]*\}", legacy))
     legacy = re.sub(r"@font-face\{[^}]*\}", "", legacy)
     css = font_faces + "\n@layer legacy{\n" + legacy + "\n}\n" + read(WEB, "components.css")
