@@ -85,9 +85,13 @@ def build(api_base, inline_assets=False):
     results = json.loads(read(ROOT, "docs", "research", "backtest", "weber", "development-v2.json"))
     data["weberValue"] = {"records": sales["records"], "metrics": {k: results[k]["metrics"] for k in ("rollingDevelopment", "flaggedTransactionSensitivity")}}
     sdk = subprocess.check_output(["node", "scripts/bundle-auth.js"], cwd=ROOT, text=True)
+    # Reviewed approval evidence is a fixed file: serve it statically (no server function on every page load).
+    approval_js = subprocess.check_output(["node", "-e", "process.stdout.write('window.ApprovalEvidenceData='+JSON.stringify(require('./lib/approval-evidence-data')).replace(/</g,'\\\\u003c')+';')"], cwd=ROOT, text=True)
+    with open(os.path.join(ROOT, "public", "approval-evidence.js"), "w") as f: f.write(approval_js)
+    approval_version = hashlib.sha256(approval_js.encode()).hexdigest()[:12]
     # Reviewed public-record evidence stays separate from generic downloadable app / private-data guards.
     scripts = "\n".join([
-        '<script src="' + api_base + '/api/public-research?format=approval-evidence&amp;v=' + data["apiVersion"] + '"></script>',
+        '<script src="' + api_base + '/approval-evidence.js?v=' + approval_version + '"></script>',
         "<script>" + sdk.replace("</script", "<\\/script") + "</script>",
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>',
         "<script>window.LR_DATA = " + json.dumps(data).replace("</", "<\\/") + ";</script>",
