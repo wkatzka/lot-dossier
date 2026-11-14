@@ -472,3 +472,35 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace details.city-optional-group[open]>summary::after{content:"−"}
 #project-workspace details.city-optional-group>summary em{margin-left:auto;font-style:normal;font-size:12px;font-weight:500;color:var(--cp-muted)}
 #project-workspace details.city-optional-group[open]{background:#fbfaf6}
+
+/* "What the city needs" checklist */
+#project-workspace .cp-reqs-lead{font-size:15px;line-height:1.55;max-width:75ch}
+#project-workspace .cp-req-bar{height:6px;background:var(--cp-line,#e4e1da);margin:12px 0 22px}#project-workspace .cp-req-bar span{display:block;height:100%;background:#2e6b3f}
+#project-workspace .cp-req-group{margin:0 0 22px}
+#project-workspace .cp-req-group h3{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:16px}
+#project-workspace .cp-req-group h3 .cp-icon{width:18px;height:18px;color:var(--cp-primary)}
+#project-workspace .cp-req-group h3 em{margin-left:auto;font-style:normal;font-size:13px;font-weight:500;color:var(--cp-muted)}
+#project-workspace details.cp-req{border:1px solid var(--cp-line);background:var(--cp-surface,#fff);margin:0 0 -1px}
+#project-workspace details.cp-req>summary{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;list-style:none}
+#project-workspace details.cp-req>summary::-webkit-details-marker{display:none}
+#project-workspace details.cp-req>summary::after,body #project-workspace details.cp-req>summary::after{content:"+";margin-left:4px;font-size:18px;line-height:1;color:var(--cp-muted)}
+#project-workspace details.cp-req[open]>summary::after,body #project-workspace details.cp-req[open]>summary::after{content:"−"}
+#project-workspace .cp-req-mark{flex:none;width:22px;height:22px;border:2px solid #b9b3a7;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff}
+#project-workspace .cp-req-mark .cp-icon{width:14px;height:14px;stroke-width:3}
+#project-workspace .cp-req-done .cp-req-mark{background:#2e6b3f;border-color:#2e6b3f}
+#project-workspace .cp-req-na .cp-req-mark{background:#8a857b;border-color:#8a857b}
+#project-workspace .cp-req-look .cp-req-mark{border-color:#a15c1b;border-style:dashed}
+#project-workspace .cp-req-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+#project-workspace .cp-req-title{font-weight:600;font-size:15px;line-height:1.35}
+#project-workspace .cp-req-done .cp-req-title,#project-workspace .cp-req-na .cp-req-title{color:var(--cp-muted)}
+#project-workspace .cp-req-sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:13px;color:var(--cp-muted)}
+#project-workspace .cp-req-sub .cp-icon{width:13px;height:13px;vertical-align:-2px;margin-right:3px}
+#project-workspace .cp-req-chip{flex:none;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#efece5;color:#4a463f}
+#project-workspace .cp-req-todo .cp-req-chip{background:#fbecc8;color:#5c3d00}
+#project-workspace .cp-req-look .cp-req-chip{background:#e1ebf5;color:#1f4266}
+#project-workspace .cp-req-done .cp-req-chip{background:#e0efe3;color:#1f4d2c}
+#project-workspace .cp-req-body{padding:4px 14px 16px 48px;border-top:1px solid var(--cp-line)}
+#project-workspace .cp-req-body>p{font-size:14px;line-height:1.55;max-width:72ch;margin:12px 0 0}
+#project-workspace .cp-req-why{color:var(--cp-muted)}
+#project-workspace .cp-req-formhead{font-weight:700;font-size:12px!important;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted);margin-top:16px!important}
+@media(max-width:600px){#project-workspace .cp-req-body{padding-left:14px}#project-workspace details.cp-req>summary{flex-wrap:wrap}#project-workspace .cp-req-chip{margin-left:34px}}
