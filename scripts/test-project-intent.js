@@ -42,6 +42,13 @@ s=I.suggest(cobabe);assert.equal(s.lot.state,'vacant');assert.equal(s.plans[0].i
  assert.match(next,/Basement\? It’s part of the house permit\.\s*Constrained Likely a problem here: Seasonal water table/);
  // No soils data: no basement claim either way.
  assert(!new JSDOM('<main>'+I.card(cobabe)+'</main>').window.document.body.textContent.includes('Basement'));
+ // Cobabe as found: flat 3.1-acre lot, regional groundwater ~30 ft, CC&Rs likely, nothing flagged. Every item says something specific, CC&Rs once.
+ {const real={parcel:{attrs:{PROP_CLASS:'Vacant - Agricultural',PARCEL_ACRES:3.1}},facts:{slope:1.3,lot_sf:135091,zone_std:zone},findings:[{item:'Shallow groundwater (regional)',section:'geo',status:'watch',headline:'Regional map shows groundwater within about 30 ft',source:'UGS',url:'https://ugs.example/gw'},{item:'CC&Rs / HOA',section:'ccr',status:'verify',headline:'Cobabe Ranch Phase 1 (PUD lot): recorded CC&Rs likely',source:'County',url:'https://c.example/'}]};
+  const d2=new JSDOM('<main>'+I.card(real)+'</main>').window.document,whys=[...d2.querySelectorAll('.cp-intent-later-why')].map(x=>x.textContent.trim());
+  assert.equal((d2.querySelector('.cp-intent-why').textContent.match(/CC&Rs/g)||[]).length,1,'CC&Rs said once, not under every item');
+  assert.equal(new Set(whys).size,whys.length,'no two items give the same reason');
+  assert.match(whys[0],/groundwater within about 30 ft: deeper than a typical basement/);
+  assert.match(whys.join(' | '),/room for it beside the house.*you may not need one/);}
  console.log('PASS: empty lot explains why the house permit comes first and previews garage, deck, pool, retaining wall, solar and basement against the early findings.');}
 assert(!s.plans.some(p=>['addition','remodel','basement','adu','replace-home'].includes(p.id)),'No house, so no remodel or addition');
 // New construction (222320023: no year built yet, $865k of buildings, effective 2026): no tear-down; finishing and outdoor work first.

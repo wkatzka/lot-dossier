@@ -6301,7 +6301,7 @@ function facts(report){
  return {state,yearBuilt,recent,teardown,outbuildings,built,propClass,acres,sqft,improvement,total,land,parcelSrc,zone:f.zone_std||null,landslide:find(/landslide/i,'geo'),slope:findings.find(x=>x.section==='survey'&&x.status==='flag'&&/slope/i.test(x.headline||'')),
   // HOA: confirmed by the state registry match, or only likely (platted subdivision with CC&Rs referenced).
   hoa:find(/HOA registration/i,'ccr')||(f.hoaReg?{source:'Utah HOA registry',url:f.hoaReg.source||null}:null)||findings.find(x=>x.section==='ccr'&&/CC&Rs/i.test(x.item||'')&&!/not in a platted subdivision/i.test(x.headline||''))||null,
-  hoaConfirmed:!!(find(/HOA registration/i,'ccr')||f.hoaReg),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status)),basementRating:f.basement_rating||null,waterTable:Number.isFinite(Number(f.water_table_in))?Number(f.water_table_in):null,flood:findings.find(x=>/flood/i.test(x.item||'')&&x.status==='flag')||null};
+  hoaConfirmed:!!(find(/HOA registration/i,'ccr')||f.hoaReg),platSetbacks:find(/plat setbacks/i,'land'),basements:findings.find(x=>/basement/i.test(x.headline||'')&&x.section==='geo'),poolFlags:findings.filter(x=>x.section==='pool'&&['flag','watch'].includes(x.status)),basementRating:f.basement_rating||null,slopePct:Number.isFinite(Number(f.slope))?Number(f.slope):null,gw:find(/shallow groundwater/i,'geo')||null,waterTable:Number.isFinite(Number(f.water_table_in))?Number(f.water_table_in):null,flood:findings.find(x=>/flood/i.test(x.item||'')&&x.status==='flag')||null};
 }
 const r=(text,src)=>({text,source:src||null});
 // Fit and reasons for one plan on this lot.
@@ -6345,21 +6345,26 @@ function command(id,addOns=[]){const p=PLANS[id];if(!p)throw Error('Unknown plan
 // A basement is part of the house permit, not its own permit: say what the soils data says about it.
 function basementNote(F){
  const src=F.basements?{label:F.basements.source||'Soil survey',url:F.basements.url||null}:null,rating=String(F.basementRating||'').toLowerCase(),wt=F.waterTable;
- if(!rating&&wt==null)return null;
+ if(!rating&&wt==null){const d=F.gw&&/within about (\d+) ft/i.exec(F.gw.headline||'');if(!d)return null;const ft=Number(d[1]),gsrc={label:F.gw.source||'Groundwater map',url:F.gw.url||null};
+  return ft<=10?{fit:'constrained',reasons:[r(F.gw.headline+'. A basement that deep would likely need waterproofing or dewatering. A geotech report decides.',gsrc)]}
+   :{fit:'possible',reasons:[r(F.gw.headline+': deeper than a typical basement, but it is a regional map. A geotech report confirms the depth at your site.',gsrc)]};}
  if(/very limited/.test(rating)||(wt!=null&&wt<60))return {fit:'constrained',reasons:[r((F.basements?.headline||'Basements rated '+rating)+'. A full basement would likely need waterproofing or dewatering; a slab or crawlspace may be the better choice. A geotech report decides.',src)]};
  if(/somewhat/.test(rating))return {fit:'possible',reasons:[r('Soils are rated somewhat limited for basements. Likely workable; the geotech report will confirm.',src)]};
  return {fit:'good',reasons:[r('Soils are rated '+(rating||'suitable')+' for basements.',src)]};
 }
 const LEAD={constrained:'Likely a problem here: ',possible:'',good:''};
 // The reason that explains the rating, not the plain lot size.
-const keyReason=x=>x.reasons.find(z=>!/^Lot is about [\d,]+ sq ft[^;]*\.$/.test(z.text))||null;
+const keyReason=x=>x.reasons.find(z=>!/^Lot is about [\d,]+ sq ft[^;]*\.$/.test(z.text)&&!/CC&Rs|in an HOA/.test(z.text))||null;
 // Empty lot: say why the house permit comes first, then what each related permit looks like on this lot.
 function vacantWhy(F){
  const later=['garage','deck','pool','retaining-wall','solar'].map(id=>({id,...PLANS[id],...(assess(id,F,{asAddOn:true})||{fit:null,reasons:[]})}));
  const base=basementNote(F),items=[...(base?[{id:'basement',label:'Basement',note:'part of the house permit',...base}]:[]),...later];
- const why=x=>{const z=keyReason(x);return z?'<span>'+esc((LEAD[x.fit]||'')+z.text)+'</span>'+srcLink(z):'Nothing in the early findings limits this.';};
+ const flat=F.slopePct!=null&&F.slopePct<5,room=F.sqft&&F.sqft>20000,acres=F.acres?F.acres+' acres':F.sqft?Math.round(F.sqft).toLocaleString('en-US')+' sq ft':'';
+ // When nothing limits a project, say the fact that makes it workable instead of a blank.
+ const plain={garage:room?acres+(flat?', nearly flat ('+F.slopePct.toFixed(1)+'% slope)':'')+': room for it beside the house.':'',pool:room?acres+(flat?', nearly flat':'')+': room for it.'+(F.gw?' Groundwater at the dig still needs checking.':''):'', 'retaining-wall':flat?'Nearly flat lot ('+F.slopePct.toFixed(1)+'% slope): you may not need one.':'',deck:'Nothing in the early findings limits it. Often drawn into the house plans and filed with them.',solar:'Nothing in the early findings limits it. Roof panels follow the house’s setbacks; ground panels follow accessory-building setbacks.'};
+ const why=x=>{const z=keyReason(x);return z?'<span>'+esc((LEAD[x.fit]||'')+z.text)+'</span>'+srcLink(z):esc(plain[x.id]||'Nothing in the early findings limits this.');};
  return '<div class="cp-intent-why"><p><b>This is an empty lot.</b> '+esc(F.propClass?'The county record classifies it as '+F.propClass+' with no building':'The county record shows no building')+(F.outbuildings?' (only outbuildings)':'')+', so the Single Family Dwelling permit is the right first permit.'+(F.parcelSrc.url?' '+link(F.parcelSrc.url,'County parcel record'):'')+'</p>'+
-  '<p>If you build the house, these come with it or after it. Each is its own permit; you can add them on the next step. Here is what this lot’s early findings say:</p><ul class="cp-intent-later">'+items.map(x=>'<li class="cp-fit-'+esc(x.fit||'none')+'"><span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span><div><p><b>'+esc(x.label)+'</b>'+(x.note?' <small>('+esc(x.note)+')</small>':'')+tag(x.fit)+'</p><p class="cp-intent-later-why">'+why(x)+'</p></div></li>').join('')+'</ul></div>';
+  '<p>If you build the house, these come with it or after it. Each is its own permit; you can add them on the next step. Here is what this lot’s early findings say'+(F.hoa?' (the subdivision likely has recorded CC&Rs, which can limit any outdoor project: see Approvals)':'')+':</p><ul class="cp-intent-later">'+items.map(x=>'<li class="cp-fit-'+esc(x.fit||'none')+'"><span class="cp-intent-ico">'+A(x.id,PLAN_ICON[x.id]||'clipboard')+'</span><div><p><b>'+esc(x.label)+'</b>'+(x.note?' <small>('+esc(x.note)+')</small>':'')+tag(x.fit)+'</p><p class="cp-intent-later-why">'+why(x)+'</p></div></li>').join('')+'</ul></div>';
 }
 function basis(F){return F.state==='improved'?(F.teardown?'This lot has an old house valued well below its land, so replacing it is listed first.':F.recent?'This lot has a newly built house, so finishing and outdoor projects are listed first.':'This lot already has a house, so projects that change it are listed first.'):F.state==='vacant'?'This lot has no house on record, so building one is listed first.':'The county record does not say whether there is a house, so all options are shown.';}
 const tag=fit=>fit?' <span class="cp-status cp-'+(fit==='good'?'ok':fit==='constrained'?'review':'neutral')+'">'+FIT[fit]+'</span>':'';
