@@ -31,6 +31,9 @@ const P={
  cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
  tree:'<path d="M12 22v-6M7 16h10l-3-4h2l-4-6-4 6h2z"/>'
 };
+// Blueprint-style illustrations (public/assets/icons/*.webp, 160px) for tiles and cards; line icons stay for buttons.
+const ART=new Set(['new-home','replace-home','addition','remodel','basement','adu','garage','deck','pool','retaining-wall','solar','evaluate','slope','landslide','survey','septic','water','power','access','easement','hoa','flood','minerals','permit','setbacks','fees','trees','builder','team','hoa-board','city','geotech','surveyor','designer','phone','email','document','upload','submit','done','concern','warning','timing','approved','search']);
+function art(name,fallback){if(!ART.has(name))return fallback?icon(fallback):'';return '<img class="cp-art" src="assets/icons/'+name+'.webp" width="80" height="80" alt="" loading="lazy" decoding="async">';}
 function icon(name,cls=''){const d=P[name]||P.doc;return '<svg class="cp-icon'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'+d+'</svg>';}
-const api={icon,names:Object.keys(P)};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CpIcons=api;
+const api={icon,art,artNames:[...ART],names:Object.keys(P)};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CpIcons=api;
 })(typeof window!=='undefined'?window:globalThis);

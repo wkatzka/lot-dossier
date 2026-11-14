@@ -129,3 +129,13 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-intent-choose,#project-workspace .cp-intent-choose,#rv .cp-intent-choose{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:0;min-height:0;border:0;background:none;color:var(--cp-primary);font-size:var(--cp-text);font-weight:650;cursor:pointer}
 .cp-intent-choose .cp-icon{width:15px;height:15px}
 .cp-intent-tile.cp-fit-good{border-left:3px solid var(--cp-t-ok)}
+
+/* Blueprint illustrations: shown without the tinted icon box, a little larger than line icons */
+.cp-art{display:block;width:100%;height:100%;object-fit:contain}
+:is(.cp-intent-ico,.cp-site-icon,.cp-step-icon,.cp-qicon,.cp-frow-icon):has(>.cp-art){background:transparent;border:0;padding:0;box-shadow:none}
+.cp-intent-tile .cp-intent-ico:has(>.cp-art){width:48px;height:48px}
+.cp-intent-chosen .cp-intent-ico:has(>.cp-art),.cp-addon-tile .cp-intent-ico:has(>.cp-art){width:40px;height:40px;display:inline-flex;vertical-align:middle}
+.cp-site-icon:has(>.cp-art){width:48px;height:48px}
+.cp-step-icon:has(>.cp-art){width:44px;height:44px;flex:none}
+.cp-qicon:has(>.cp-art){width:44px;height:44px;display:inline-flex}
+#rv .cp-frow-icon:has(>.cp-art){width:44px;height:44px}

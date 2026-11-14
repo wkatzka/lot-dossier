@@ -55,11 +55,11 @@ function answerCard(d,{detailsAction='',project=null}={}){
   const intent=project?.application?.intent,planned=(s.plannedWork||[]).map(w=>String(w.typeId)).sort().join(','),wanted=(intent?.typeIds||[]).map(String).sort().join(',');
   const forLabel=a.forWork&&planned?'For your '+(intent&&planned===wanted?intent.label.toLowerCase():(s.plannedWork||[]).map(w=>w.label.toLowerCase()).join(' + ')):intent&&intent.typeIds?.length&&wanted!==planned&&intent.plan!=='evaluate'?'For your '+intent.label.toLowerCase():'';
   const forText=a.forWork&&planned?esc(a.forWork):forLabel?'This answer covers the lot in general. Cornerpin updates it for your permits once approval research for them runs.':'';
-  const tile=(icon,label,html)=>'<div class="cp-ans-tile"><span class="cp-qicon">'+I(icon)+'</span><p class="cp-ans-label">'+label+'</p><p>'+html+'</p></div>';
+  const tile=(icon,label,html)=>'<div class="cp-ans-tile"><span class="cp-qicon">'+((typeof module!=='undefined'&&module.exports?require('./icons'):root.CpIcons)?.art(icon,icon==='hoa-board'?'users':'clock')||I(icon))+'</span><p class="cp-ans-label">'+label+'</p><p>'+html+'</p></div>';
   const settled=/^Resolved/.test(uncertain);
   return head('Approvals for this lot','',working?[I('clock')+'Research running','cp-chip-muted']:settled?[I('check')+'Checked','cp-chip-ok']:[I('alert')+'Not fully settled','cp-chip-open'])+
    (forLabel?'<div class="cp-ans-lead"><p class="cp-ans-label">'+esc(forLabel)+'</p><p>'+forText+'</p></div>':'')+
-   '<div class="cp-ans-tiles">'+tile('users','Who approves',esc(a.approver))+tile('clock','When',esc(a.when))+'</div>'+checked+
+   '<div class="cp-ans-tiles">'+tile('hoa-board','Who approves',esc(a.approver))+tile('timing','When',esc(a.when))+'</div>'+checked+
    '<div class="cp-ans-row cp-ans-uncertain">'+I(settled?'check':'alert')+'<div><p class="cp-ans-label">Still uncertain</p><p>'+uncertain+'</p></div></div>'+
    (next?'<div class="cp-ans-next"><p class="cp-ans-label">'+I('arrow')+'Next step</p>'+rolesHtml(roles(d,next,project))+'</div>':'')+note+
    '<div class="cp-ans-sources"><span class="cp-ans-label">Sources</span> '+citeList(a.citations)+'</div>'+detailsAction+'</section>';}
