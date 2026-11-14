@@ -144,3 +144,25 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #rv .cp-group-art{width:40px;height:40px;flex:none}
 #rv .cp-frow-noicon .cp-frow-head{gap:0}
 #rv .cp-frow-noicon :is(.cp-frow-body>p,.next,.cp-frow-meta,.cp-frow-actions,.cp-more){margin-left:0}
+
+/* Record review: one flat evidence block — finding, status, open items, next step, sources. No nested cards. */
+#rv .cp-evid2{margin:12px 0 18px;padding:20px 24px;background:var(--cp-surface);border:1px solid var(--cp-line);border-left:3px solid var(--cp-primary);border-radius:var(--cp-r)}
+#rv .cp-evid2-eyebrow{margin:0;font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#rv .cp-evid2 h4{margin:4px 0 6px;font-size:18px;font-weight:650;line-height:1.3}
+#rv .cp-evid2-meta{margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#rv .cp-evid2-summary{margin:0;font-size:15px;line-height:1.6;max-width:none}
+#rv details.cp-evid2-more{margin:6px 0 0}
+#rv details.cp-evid2-more>summary,#rv details.cp-evid2-src>summary{display:inline-flex;min-height:0;list-style:none;cursor:pointer;font-size:var(--cp-text-sm);font-weight:600;color:var(--cp-primary);text-decoration:underline;text-underline-offset:3px}
+#rv details.cp-evid2-more>summary::after,#rv details.cp-evid2-src>summary::after{content:none}
+#rv details.cp-evid2-more>p{margin:8px 0 0;font-size:var(--cp-text);line-height:1.6;color:var(--cp-ink)}
+#rv .cp-evid2-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 32px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--cp-line)}
+#rv .cp-evid2-k{margin:0 0 6px;font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#rv .cp-evid2-cols ul{margin:0;padding-left:18px;font-size:var(--cp-text);line-height:1.55}
+#rv .cp-evid2-cols li+li{margin-top:4px}
+#rv .cp-evid2-cols p{margin:0;font-size:var(--cp-text);line-height:1.55}
+#rv .cp-evid2-cols .cp-evid2-contact{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;color:var(--cp-muted);font-size:var(--cp-text-sm)}
+#rv .cp-evid2-contact a{display:inline-flex;align-items:center;gap:4px}#rv .cp-evid2-contact .cp-icon{width:14px;height:14px}
+#rv details.cp-evid2-src{margin:14px 0 0}
+#rv details.cp-evid2-src ul{margin:8px 0 0;padding-left:18px;font-size:var(--cp-text);line-height:1.55}
+#rv details.cp-evid2-src li span{display:block;color:var(--cp-muted);font-size:var(--cp-text-sm)}
+@media(max-width:560px){#rv .cp-evid2{padding:16px}}

@@ -324,14 +324,23 @@
     if(!e)return '';
     var n=e.nextStep||{};
     var open=splitList(e.missing), contact=[n.organization?esc(n.organization):'', n.phone?'<a href="tel:'+esc(n.phone.replace(/[^\d]/g,''))+'">'+ICON('phone')+esc(n.phone)+'</a>':'', n.email?'<a href="mailto:'+esc(n.email)+'">'+ICON('mail')+esc(n.email)+'</a>':'', n.url?'<a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+ICON('external')+'Official source</a>':''].filter(Boolean);
-    return '<aside class="card reviewed-section-evidence cp-evid" aria-label="Records we checked">'+
-      '<div class="cp-evid-head"><span class="cp-evid-icon">'+ICON('search')+'</span><div><p class="eyebrow">Records we checked · '+esc(e.checkedAt)+'</p><h4>'+esc(e.label)+'</h4></div></div>'+
-      '<p class="cp-evid-finding">'+esc(e.finding)+'</p>'+
-      '<div class="cp-evid-grid">'+
-        (open.length?'<div class="cp-evid-open"><p class="cp-evid-k">'+ICON('alert')+'Still open</p><ul>'+open.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>':'')+
-        (n.action?'<div class="cp-evid-start"><p class="cp-evid-k">'+ICON('arrow')+'Start here</p><p>'+esc(n.action)+'</p>'+(contact.length?'<p class="cp-evid-contact">'+contact.join('<span aria-hidden="true"> · </span>')+'</p>':'')+'</div>':'')+
+    // One flat evidence block: what we found (complete sentences), what's still open, what to do, and the records behind it.
+    var sents=String(e.finding||'').match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g)||[], summary='', i=0;
+    while(i<sents.length&&(summary+sents[i]).length<=260){summary+=sents[i];i++;}
+    if(!summary&&sents.length){summary=sents[0];i=1;}
+    var rest=sents.slice(i).join('').trim(), when=(function(d){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d||'');return m?['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]+' '+(+m[3])+', '+m[1]:esc(d||'');})(e.checkedAt);
+    var nSrc=e.sources.length;
+    return '<aside class="reviewed-section-evidence cp-evid2" aria-label="Record review: '+esc(e.label)+'">'+
+      '<p class="cp-evid2-eyebrow">Record review · Checked '+when+'</p>'+
+      '<h4>'+esc(e.label)+'</h4>'+
+      '<p class="cp-evid2-meta">'+(open.length?'<span class="cp-chip cp-chip-open">Unresolved</span> '+open.length+' open item'+(open.length===1?'':'s'):'<span class="cp-chip cp-chip-ok">Checked</span>')+(nSrc?' · '+nSrc+' supporting record'+(nSrc===1?'':'s'):'')+'</p>'+
+      '<p class="cp-evid2-summary cp-noclamp">'+esc(summary.trim())+'</p>'+
+      (rest?'<details class="cp-evid2-more"><summary>Read full assessment</summary><p class="cp-noclamp">'+esc(rest)+'</p></details>':'')+
+      '<div class="cp-evid2-cols">'+
+        (open.length?'<div><p class="cp-evid2-k">Still open</p><ul>'+open.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>':'')+
+        (n.action?'<div><p class="cp-evid2-k">Next step</p><p>'+esc(n.action)+'</p>'+(contact.length?'<p class="cp-evid2-contact">'+contact.join('<span aria-hidden="true"> · </span>')+'</p>':'')+'</div>':'')+
       '</div>'+
-      '<details class="cp-evid-src"><summary>'+ICON('doc')+'The '+e.sources.length+' record'+(e.sources.length===1?'':'s')+' behind this</summary><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a><span>'+esc(s.locator)+'</span></li>';}).join('')+'</ul></details>'+
+      (nSrc?'<details class="cp-evid2-src"><summary>Supporting records ('+nSrc+')</summary><ul>'+e.sources.map(function(s){return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a><span>'+esc(s.locator)+'</span></li>';}).join('')+'</ul></details>':'')+
       '</aside>';
   }
 
