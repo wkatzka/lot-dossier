@@ -55,5 +55,10 @@ async function pull(id, supplied){const owner=session?.user?.id;assertOwner(owne
  assertOwner(owner);const restored=await root.ProjectStore.restore(p,files,{cloudRestore:true,expectedRevision:existing?.revision});localStorage.setItem(baseKey(p.id),String(p.revision));return restored;
 }
 function baseRevision(id){if(!session)return null;const v=localStorage.getItem(baseKey(id));return v===null?null:Number(v);}
-root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,user:()=>session?.user||null,signedIn:()=>!!session};
+// "Your company" lives on the account (user metadata), so it follows the contractor to every device.
+const company={
+ get:()=>session?.user?.user_metadata?.cornerpin_company||null,
+ async save(v){await init();if(!client||!session)throw Error('Sign in to save your company to your account.');const {data,error}=await client.auth.updateUser({data:{cornerpin_company:v}});if(error)throw Error('Could not save to your account: '+error.message);if(data?.user)session={...session,user:data.user};return true;}
+};
+root.CloudSync={auth,baseRevision,config,init,login,signup,recover,password,list,push,pull,logout,company,user:()=>session?.user||null,signedIn:()=>!!session};
 })(window);
