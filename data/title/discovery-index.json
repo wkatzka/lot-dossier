@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T17:51:08.056Z",
+  "generatedAt": "2026-11-14T16:38:38.876Z",
   "records": [
     {
       "county": "Weber",
@@ -119,7 +119,7 @@
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-13T17:51:08.049Z",
+        "evaluatedAt": "2026-11-14T16:38:38.870Z",
         "questions": [
           {
             "id": "architectural-authority",
