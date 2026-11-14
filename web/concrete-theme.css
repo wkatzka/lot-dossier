@@ -1,10 +1,4 @@
-/* Concrete light theme. The supplied survey image belongs only to the masthead. */
-:root[data-theme=light],html[data-theme=light] #home,html[data-theme=light] #rv,html[data-theme=light] #project-workspace{
- --bg:#e9e9e5;--bg-2:#dedfda;--panel:#f5f5f1;--ink:#252d30;--muted:#596365;--line:#c5cac6;
- --brand:#26393e;--brand-ink:#ffffff;--accent:#91502a;--focus:#a7491e;
- --flag:#a52e27;--watch:#84540b;--verify:#245b89;--ok:#50635a;--desert-image:none;
- color-scheme:light;color:var(--ink);text-shadow:none;
-}
+/* Concrete light theme. The supplied survey image belongs only to the masthead. */:root[data-theme=light],html[data-theme=light] #home,html[data-theme=light] #rv,html[data-theme=light] #project-workspace{--bg:#e9e9e5;--bg-2:#dedfda;--panel:#f5f5f1;--ink:#252d30;--muted:#596365;--line:#c5cac6;--brand:#26393e;--brand-ink:#ffffff;--accent:#91502a;--focus:#a7491e;--flag:#a52e27;--watch:#84540b;--verify:#245b89;--ok:#50635a;--desert-image:none;color-scheme:light;color:var(--ink);text-shadow:none}
 html[data-theme=light] body{background:var(--bg);color:var(--ink)}
 html[data-theme=light] body::before{display:none!important;background-image:none!important}
 html[data-theme=light] #home .hero>div:first-child{background:none}
@@ -19,9 +13,7 @@ html[data-theme=light] #project-frame .project-identity p{color:var(--muted)}
 #cornerpin-global-nav button{background:linear-gradient(145deg,#ffffff99,#ffffff38);border:1px solid #ffffffb3;color:#26332e;backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);box-shadow:inset 0 1px 0 #ffffffeb,inset 0 -1px 0 #ffffff33,0 4px 14px #22382f1c;text-shadow:0 1px 1px #ffffff80;transition:background .2s,box-shadow .2s,border-color .2s}
 #cornerpin-global-nav button:hover{background:linear-gradient(145deg,#ffffffc4,#ffffff66);border-color:#fff;box-shadow:inset 0 1px 0 #fff,0 5px 18px #22382f26}
 #cornerpin-global-nav button.global-brand{position:absolute;left:12px;bottom:12px;margin:0;min-height:0;color:#fff;background:#707670;padding:3px 5px;border:1px solid #8c928b;border-radius:6px;max-width:max-content;backdrop-filter:none;-webkit-backdrop-filter:none;filter:none;text-shadow:none;box-shadow:inset 0 1px 0 #ffffff20,0 2px 8px #303b301a}
-html[data-theme=light] #home input,html[data-theme=light] #home select,html[data-theme=light] #home select option,
-html[data-theme=light] #project-workspace input:not([type=checkbox]),html[data-theme=light] #project-workspace textarea,html[data-theme=light] #project-workspace select,
-html[data-theme=light] .account-dialog input{background:#fafaf7;color:var(--ink);border-color:#aab4b1;color-scheme:light}
+html[data-theme=light] #home input,html[data-theme=light] #home select,html[data-theme=light] #home select option,html[data-theme=light] #project-workspace input:not([type=checkbox]),html[data-theme=light] #project-workspace textarea,html[data-theme=light] #project-workspace select,html[data-theme=light] .account-dialog input{background:#fafaf7;color:var(--ink);border-color:#aab4b1;color-scheme:light}
 html[data-theme=light] #home input::placeholder{color:#697573}
 html[data-theme=light] #home .btn,html[data-theme=light] #rv .btn{background:var(--brand);color:#fff;border-color:var(--brand)}
 html[data-theme=light] #home .btn:hover,html[data-theme=light] #rv .btn:hover{background:#38535a;color:#fff}
@@ -30,12 +22,12 @@ html[data-theme=light] #home .btn.ghost:hover,html[data-theme=light] #rv .btn.gh
 html[data-theme=light] #home .seg,html[data-theme=light] #home .drop,html[data-theme=light] #home .found,html[data-theme=light] #home .parse .status,html[data-theme=light] #home .chips span{background:#f4f5f0;border-color:var(--line)}
 html[data-theme=light] #home .seg button[aria-pressed=true]{background:var(--brand);color:#fff}
 html[data-theme=light] .source-preview{background:#f4f4ef;border-color:var(--line);border-radius:12px}
-html[data-theme=light] #project-workspace .pw-card,html[data-theme=light] #project-workspace .pw-stages>.pw-card,html[data-theme=light] #project-workspace .pw-project-grid>.pw-card{background:#f3f4ef;border:1px solid var(--line);border-radius:12px;box-shadow:0 5px 16px #26352f06;backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-theme=light] #project-workspace .pw-card,html[data-theme=light] #project-workspace .pw-project-grid>.pw-card{backdrop-filter:none;-webkit-backdrop-filter:none}
 html[data-theme=light] #project-workspace button,html[data-theme=light] #project-workspace .pw-link,html[data-theme=light] #project-frame button,html[data-theme=light] .report-chip{background:#f5f5f1;color:var(--ink);border-color:#aeb9b4}
 html[data-theme=light] #project-workspace button:hover:not(:disabled),html[data-theme=light] #project-workspace .pw-link:hover,html[data-theme=light] #project-frame button:hover,html[data-theme=light] .report-chip:hover{background:#dbe3dd;border-color:#718c81}
 html[data-theme=light] #project-workspace button[aria-selected=true],html[data-theme=light] #project-workspace button.primary,html[data-theme=light] #project-frame button[aria-current=page],html[data-theme=light] #project-frame button[aria-pressed=true],html[data-theme=light] .report-chip[aria-selected=true],html[data-theme=light] .report-chip[aria-current=page]{background:#29463f;color:#fff;border-color:#29463f}
 html[data-theme=light] #project-workspace a{color:#245c70}
-html[data-theme=light] #project-workspace .pw-status{color:#77501f}
+
 html[data-theme=light] #project-workspace .pw-warning,html[data-theme=light] #pw-message:not(:empty){background:#f9eddb;color:#67411c}
 html[data-theme=light] #project-workspace label.pw-backup-picker{background:#e9ede6;border-color:#98a89c}
 html[data-theme=light] .pw-backup-icon{color:#49685b}
