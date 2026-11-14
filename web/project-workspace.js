@@ -4,9 +4,9 @@
   // History state survives reload and is scoped to this tab and account.
   const initialView=window.CornerpinInitialView||history.state?.cornerpinView;
   const viewTabs=['overview','site','evidence','valuation','placement','filing','draft','management','documents','rules','contacts','activity'];
-  function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage,draftType,investigation,ruleTaskId}},'');}catch(e){/* Storage-disabled previews still work. */}}
+  function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage,draftType,investigation,ruleTaskId,wtScreen,formView}},'');}catch(e){/* Storage-disabled previews still work. */}}
 
-  let overviewMapInstance=null,draftType='',cityPage='primary', reusableProjects=[], analysisTarget='';
+  let overviewMapInstance=null,draftType='',cityPage='primary',wtScreen='',formView='walk', reusableProjects=[], analysisTarget='';
   let investigation=null,ruleTaskId="";
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
@@ -75,7 +75,7 @@
         else if(remote&&p&&remote.revision!==window.CloudSync.baseRevision(id)&&p.revision!==window.CloudSync.baseRevision(id))notice='This device and your account have different changes. Device work was kept; download a backup before reconciling.';
       }catch(e){if(!p)throw e;notice='Opened the saved device copy. '+e.message;}
     }
-    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);p=await withCompany(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;ruleTaskId=view?.ruleTaskId||"";draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
+    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);p=await withCompany(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;ruleTaskId=view?.ruleTaskId||"";draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';wtScreen=/^[a-z]+$/.test(view?.wtScreen||'')?view.wtScreen:'';formView=view?.formView==='full'?'full':'walk';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
   }
   // Fill empty builder/contact roles from the contractor's saved company profile.
   async function withCompany(p){if(!p||!window.MyCompany)return p;let cur=p;for(const c of window.MyCompany.commandsFor(cur)){try{const next=W.apply(cur,c);if(next!==cur){await S.save(next,cur.revision);cur=next;}}catch(e){break;}}return cur;}
@@ -85,7 +85,7 @@
   window.ProjectWorkspace={commit:(command,file)=>commit(command,file),project:()=>project};
   function draftProject(){if(tab!=='draft')return project;return {...project,application:{...project.application,cityInspect:{...project.application.cityInspect,typeId:draftType||project.application.cityInspect?.typeId}}};}
   async function openPermitDraft(id){
-    await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';
+    await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';wtScreen='';formView='walk';
     if((project.application.permitSelections||[]).includes(draftType)||project.application.cityInspect?.typeId===draftType)render();
     else await commit({type:'city_application',permitType:draftType});
     const heading=host.querySelector('.permit-draft-page h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
@@ -94,7 +94,13 @@
   async function saveCityPage() {
     if(!document.body.classList.contains('show-project'))return;
     const f=host.querySelector('form[data-command=city_application_page]');
-    if(f){const command=window.CityApplication.formCommand(project,new FormData(f));if(command.entries.length)await commit(command);}
+    if(!f)return;
+    const command=window.CityApplication.formCommand(project,new FormData(f)),walk=window.PermitWalkthrough&&f.dataset.wtScreen;
+    // The walkthrough also saves its yes/no answers, that this screen was visited, and answers the user ticked "Looks right".
+    const cmds=[...(command.entries.length?[command]:[]),...(walk?window.PermitWalkthrough.commands(project,f):[])];
+    if(walk&&f.querySelector('[name=wt-ok]:checked'))cmds.push({deferred:true});
+    let next=project;for(const c of cmds){if(c.deferred){for(const r of window.PermitWalkthrough.reviews(next,f))next=W.apply(next,r);continue;}next=W.apply(next,c);}
+    if(next!==project){await S.save(next,project.revision);project=next;window.SiteDecisions.setActive(project);}
   }
   async function collectChecklist(p) {
     const account=S.owner();const checkAccount=()=>{if(S.owner()!==account)throw Error('Account changed during checklist migration. Reopen the project.');};
@@ -154,7 +160,10 @@
   window.addEventListener('cornerpin:report-visible',()=>{if(project){section='site';tab='site';projectFrame('site');}});
   function stageNavigation(){return '';}
   function overview(){return window.ProjectOverview.render(project);}
-  function draft(){const p=draftProject(),type=p.application.cityInspect?.typeId,t=window.CityApplication.catalog.types.find(t=>t.value===type);return '<div class="permit-draft-page"><div class="pw-actions">'+button('permit-hub','← Back to permit preparation')+'</div><section class="pw-card"><h2>'+esc(t?.label||'Permit')+' permit form</h2><p>Your answers for the city\'s form. Nothing is sent to the city until you submit.</p></section>'+window.PermitPrepUI.readiness(p)+window.CityApplication.render(p,cityPage)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.valuation(p)+'</div>';}
+  function draft(){const p=draftProject(),wt=window.PermitWalkthrough&&formView==='walk'&&window.CityApplication.supported(p)&&p.application.cityInspect?.typeId;
+    if(wt){const t=window.CityApplication.catalog.types.find(t=>t.value===p.application.cityInspect.typeId);return '<div class="permit-draft-page cp-wt-page"><div class="pw-actions">'+button('permit-hub','← Back to File a permit')+'</div><header class="cp-wt-title"><p class="cp-eyebrow">'+esc(p.application.jurisdiction||'City')+' permit walkthrough</p><h2>'+esc(t?.label||'Permit')+' permit</h2><p>We’ll go through the city’s form one screen at a time. Cornerpin fills in what it found and shows you where each answer came from. Nothing is sent to the city.</p></header>'+window.PermitWalkthrough.render(p,wtScreen)+'</div>';}
+    return draftFull();}
+  function draftFull(){const p=draftProject(),type=p.application.cityInspect?.typeId,t=window.CityApplication.catalog.types.find(t=>t.value===type);return '<div class="permit-draft-page"><div class="pw-actions">'+button('permit-hub','← Back to permit preparation')+(window.PermitWalkthrough?button('wt-walk','Back to the step-by-step walkthrough'):'')+'</div><section class="pw-card"><h2>'+esc(t?.label||'Permit')+' permit form</h2><p>Your answers for the city\'s form. Nothing is sent to the city until you submit.</p></section>'+window.PermitPrepUI.readiness(p)+window.CityApplication.render(p,cityPage)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.valuation(p)+'</div>';}
   function filing() {
     const p = project;
     return (window.NextSteps?window.NextSteps.checklistCard(p):'')+(window.MyCompany?window.MyCompany.form():'')+'<section class="pw-card"><h2>Required approvals</h2><p>Check location-based requirements and retain the actual approval evidence before preparing the filing handoff.</p>'+button('tab','Review rules and approvals','rules')+'</section>'+(window.PermitPrepUI?window.PermitPrepUI.permits(p)+window.PermitPrepUI.plans(p)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.team(p):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section>' + requirementsCard(p) + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + (((p.report.facts||{}).packets&&Object.keys(p.report.facts.packets).length)?Object.values(p.report.facts.packets).map(pk=>window.CornerpinReportViews.packet(pk)).join(''):window.CornerpinReportViews.packet((p.report.facts || {}).packet)) + '</div></details></section>' + packagePanel('initial') + '<p>Already filed? Record the receipt in Submissions &amp; Review.</p>';
@@ -308,7 +317,10 @@
       else if(a==='return-investigation'){if(investigation?.draft){draftType=investigation.draftType;cityPage=investigation.cityPage;tab='draft';section='filing';render();focusDestination();}else{document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));if(investigation)window.ReportCategories.resume(document.getElementById('rv'),investigation);}}
       else if(a==='view-file'||a==='view-selected-document'){const fileId=a==='view-file'?id:host.querySelector('#city-source-doc')?.value;const d=project.documents.find(x=>x.id===fileId),blob=await S.file(fileId);if(!d||!blob)throw Error('Saved file unavailable on this device. Use the public source link, or restore the file from your account.');await window.SiteDocumentUI.view(d,blob,b);}
       else if(a==='download-file') {const d=project.documents.find(x=>x.id===id), blob=await S.file(id);if(!blob)throw new Error('File not available in this browser.');download(d.name,blob);}
-      else if(a==='city-page') {await saveCityPage();tab='draft';section='filing';cityPage=id;render();const target=b.dataset.fieldTarget?document.getElementById('city-'+b.dataset.fieldTarget):host.querySelector('form[data-command=city_application_page]');if(target){target.focus({preventScroll:true});target.scrollIntoView({block:'center'});}}
+      else if(a==='wt-go'){if(!id)return;await saveCityPage();tab='draft';section='filing';formView='walk';wtScreen=id;render();const h=host.querySelector('.cp-wt-q');if(h)h.focus({preventScroll:true});host.querySelector('.cp-wt')?.scrollIntoView({block:'start'});}
+      else if(a==='wt-full'){await saveCityPage();formView='full';cityPage='primary';render();window.scrollTo(0,0);}
+      else if(a==='wt-walk'){await saveCityPage();formView='walk';render();window.scrollTo(0,0);}
+      else if(a==='city-page') {await saveCityPage();formView='full';tab='draft';section='filing';cityPage=id;render();const target=b.dataset.fieldTarget?document.getElementById('city-'+b.dataset.fieldTarget):host.querySelector('form[data-command=city_application_page]');if(target){target.focus({preventScroll:true});target.scrollIntoView({block:'center'});}}
       else if(a==='city-download') {await saveCityPage();download('cornerpin-city-answers.txt',window.CityApplication.sheet(draftProject()),'text/plain');}
       else if(a==='city-copy') {const row=window.CityApplication.rows(project,draftProject().application.cityInspect?.typeId).find(r=>r.key===id);if(!row||!row.value)throw Error('No saved or suggested answer to copy.');await navigator.clipboard.writeText(row.value);message('Saved answer copied. Save any edits before copying.');}
       else if(a==='export-package') await exportPackage(id);
@@ -346,6 +358,7 @@
       if(command.type==='answer_review')await saveCityPage();
       if(command.type==='site_review'){command.references=[{documentId:command.documentId,url:command.url,locator:command.locator,role:'supports'}];if(command.comparisonUrl)command.references.push({url:command.comparisonUrl,locator:command.comparisonLocator,role:command.comparisonRole});}
       if(command.type==='city_application_page'){
+        if(f.dataset.wtScreen){await saveCityPage();if(e.submitter?.dataset.wtNext)wtScreen=e.submitter.dataset.wtNext;render();const h=host.querySelector('.cp-wt-q');if(h)h.focus({preventScroll:true});host.querySelector('.cp-wt')?.scrollIntoView({block:'start'});message('Saved. Nothing sent to the city.');return;}
         await commit(window.CityApplication.formCommand(project,data));if(e.submitter?.dataset.cityNext){cityPage=e.submitter.dataset.cityNext;render();}
         message('Application page saved. Nothing sent to CityInspect.');return;
       }

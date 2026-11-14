@@ -182,6 +182,15 @@
         const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
         const row=C.rows(p,a.permitType).find(r=>r.key===a.fieldKey);p.application.answerReviews=C.Reviews.apply(p,row,a,now);invalidate(p);event(p,a.type,'Answer '+a.state+': '+row.label+' · '+a.reviewer,now);break;
       }
+      case 'walkthrough': {
+        // Walkthrough progress only: which yes/no "do you have one?" questions were answered and which screens were visited.
+        const t=String(a.permitType||'');required(/^\d+$/.test(t),'Choose a permit type.');
+        const all=JSON.parse(JSON.stringify(p.application.walkthrough||{})),w=all[t]=all[t]||{gates:{},seen:[]};
+        if(a.gate!==undefined){required(/^[a-z]+$/.test(a.gate)&&['yes','no',''].includes(a.value),'Invalid walkthrough answer.');w.gates[a.gate]=a.value;}
+        if(a.seen!==undefined){required(/^[a-z]+$/.test(a.seen),'Invalid walkthrough step.');if(!w.seen.includes(a.seen))w.seen.push(a.seen);}
+        if(JSON.stringify(all)===JSON.stringify(p.application.walkthrough||{}))return project;
+        p.application.walkthrough=all;break;
+      }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
         const selected=(p.application.permitSelections||[]).includes(String(a.permitType)) || p.application.cityInspect?.typeId===String(a.permitType);

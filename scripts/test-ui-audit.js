@@ -6,7 +6,7 @@
 const assert=require('node:assert/strict'),fs=require('fs'),{JSDOM}=require('jsdom'),{IDBFactory}=require('fake-indexeddb');
 const W=require('../web/permit-workflow'),C=require('../web/city-application'),P=require('../web/permit-packet');
 const clone=x=>JSON.parse(JSON.stringify(x));
-const MODULES=['icons','input-rules','evidence-ledger','permit-facts','permit-assistant','site-decisions','answer-reviews','city-application','ovc-code-sources','accessory-rules','permit-packet','approval-evidence','ovc-rules','area-rules','permit-workflow','project-store','site-answer','project-intent','my-company','next-steps','title-research-view','placement-engine','land-value','weber-value','pool-screen','original-documents','site-document-ui','research-workspace','permit-prep-ui','measurement-workbench','analysis-progress','project-overview','area-rules-ui','project-workspace'];
+const MODULES=['icons','input-rules','evidence-ledger','permit-facts','permit-assistant','site-decisions','answer-reviews','city-application','ovc-code-sources','accessory-rules','permit-packet','approval-evidence','ovc-rules','area-rules','permit-workflow','project-store','site-answer','project-intent','my-company','next-steps','title-research-view','placement-engine','land-value','weber-value','pool-screen','original-documents','site-document-ui','research-workspace','permit-prep-ui','permit-walkthrough','measurement-workbench','analysis-progress','project-overview','area-rules-ui','project-workspace'];
 // Findings we accept on purpose (each with a reason). Keep this list short.
 const ALLOW=[
  [/^machine-code$/,/sha-?256/i,'Document hashes are shown deliberately as audit evidence'],
@@ -51,7 +51,13 @@ function projects(){
   // Every permit form, every page, with all fields shown.
   if(await go('filing')){
    const ids=[...new Set([...d.querySelectorAll('[data-action=prepare-permit]')].map(b=>b.dataset.id))];
-   for(const id of ids){await go('filing');const b=d.querySelector('[data-action=prepare-permit][data-id="'+id+'"]');if(!b)continue;b.click();await until(w,()=>d.querySelector('.city-application'),'form '+id);
+   for(const id of ids){await go('filing');const b=d.querySelector('[data-action=prepare-permit][data-id="'+id+'"]');if(!b)continue;b.click();await until(w,()=>d.querySelector('.cp-wt'),'form '+id);
+    // The step-by-step walkthrough: every screen.
+    await until(w,()=>d.querySelector('.cp-wt'),'walkthrough '+id);
+    const steps=[...d.querySelectorAll('.cp-wt-nav li button[data-action=wt-go]')].map(b=>b.dataset.id);assert(steps.length>=5,'walkthrough has too few steps: '+steps);
+    for(const st of steps){await until(w,()=>!w.CornerpinWorkspaceBusy||!w.CornerpinWorkspaceBusy(),'idle');d.querySelector('.cp-wt-nav button[data-id="'+st+'"]').click();await until(w,()=>d.querySelector('.cp-wt-nav [aria-current=step]')?.dataset.id===st,'step '+st);d.querySelectorAll('[data-wt-fields][hidden]').forEach(x=>x.hidden=false);audit('walkthrough '+id+' · '+st);}
+    // The whole form at once, every page.
+    await until(w,()=>!w.CornerpinWorkspaceBusy||!w.CornerpinWorkspaceBusy(),'idle');d.querySelector('[data-action=wt-full]').click();await until(w,()=>d.querySelector('[data-action=city-page]'),'full form');
     for(const page of ['primary','professionals','building','attachments']){const pb=d.querySelector('[data-action=city-page][data-id='+page+']');if(!pb)continue;pb.click();await new Promise(r=>setTimeout(r,30));await until(w,()=>!w.CornerpinWorkspaceBusy||!w.CornerpinWorkspaceBusy(),'page');audit('form '+id+' · '+page);}}}
   w.close();
  }

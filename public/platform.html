@@ -1321,7 +1321,7 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 
 /* ---------- Buttons ---------- */
 /* Secondary (default) */
-#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-intent-option):not(.cp-intent-choose):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button,#rv :is(.cp-answer,.cp-site-v2,#site-intent,.cp-intent) button:not(.cp-link):not(.cp-more):not(.cp-intent-option):not(.cp-intent-choose){
+#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-intent-option):not(.cp-intent-choose):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]):not(.cp-wt-nav li button):not(.cp-wt-help):not(.cp-wt-back),#rv .cp-frow-actions button,#rv :is(.cp-answer,.cp-site-v2,#site-intent,.cp-intent) button:not(.cp-link):not(.cp-more):not(.cp-intent-option):not(.cp-intent-choose){
  font-size:var(--cp-text);font-weight:600;border-radius:var(--cp-r-control);min-height:40px;padding:8px 14px;line-height:1.2}
 /* Primary */
 #project-workspace button.primary,#project-workspace button.cp-primary,#project-workspace .cp-go,#project-workspace button[data-city-next],#project-workspace .cp-ready button[data-action=submit-city]{
@@ -1459,6 +1459,96 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-form-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:8px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
 .cp-form-legend span{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:-8px}
 .cp-dot-ok{background:var(--cp-t-ok)}.cp-dot-found{background:#8fb1f0}.cp-dot-blank{background:var(--cp-t-neutral-bg);border:1px solid var(--cp-line)}
+
+/* ---------- Permit walkthrough: one screen at a time, steps on the left, sources on the right ---------- */
+.cp-wt-title{margin:4px 0 18px}
+.cp-wt-title h2{margin:2px 0 6px}
+.cp-wt-title p:last-child{margin:0;max-width:70ch;color:var(--cp-muted)}
+.cp-wt{display:grid;grid-template-columns:230px minmax(0,1fr) 320px;gap:20px;align-items:start}
+.cp-wt-nav{position:sticky;top:12px;padding:16px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-surface)}
+.cp-wt-meter{margin:0 0 14px;padding:0 0 14px;border-bottom:1px solid var(--cp-line)}
+.cp-wt-meter p{margin:0 0 8px;font-size:var(--cp-text-sm);line-height:1.45;color:var(--cp-muted)}
+.cp-wt-meter b{color:var(--cp-ink)}
+.cp-wt-part+.cp-wt-part{margin-top:12px}
+.cp-wt-part-h{display:flex;align-items:center;gap:6px;margin:0 0 4px;font-size:var(--cp-text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+.cp-wt-part ol{list-style:none;margin:0;padding:0}
+#project-workspace .cp-wt-nav li button{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;margin:0;padding:5px 8px;border:0;border-radius:var(--cp-r-control);background:none;box-shadow:none;color:var(--cp-ink);font-size:var(--cp-text);font-weight:500;line-height:1.3;text-align:left;cursor:pointer}
+#project-workspace .cp-wt-nav li button:hover{background:var(--cp-t-neutral-bg)}
+#project-workspace .cp-wt-nav li button[aria-current=step]{background:var(--cp-primary);color:#fff;font-weight:650}
+.cp-wt-nav li button>span:nth-child(2){flex:1}
+.cp-wt-mark{display:inline-flex;align-items:center;justify-content:center;flex:none;width:16px;height:16px;font-size:13px;font-weight:700;line-height:1}
+.cp-wt-mark.is-done{color:var(--cp-t-ok)}
+.cp-wt-mark.is-skip{color:var(--cp-control);opacity:.6}
+.cp-wt-mark.is-here{color:#fff}
+.cp-wt-mark:empty::before{content:"";width:7px;height:7px;border-radius:50%;border:1.5px solid var(--cp-control);opacity:.55}
+.cp-wt-nav .cp-page-count{font-style:normal;font-size:var(--cp-text-xs);font-weight:700;min-width:20px;padding:1px 6px;border-radius:var(--cp-r-pill);background:var(--cp-t-review-bg);color:var(--cp-t-review);text-align:center}
+#project-workspace .cp-wt-nav li button[aria-current=step] .cp-page-count{background:#ffffff2e;color:#fff}
+#project-workspace .cp-wt-full{margin-top:14px;font-size:var(--cp-text-sm)}
+.cp-wt-main>form{padding:22px 28px 20px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-surface)}
+.cp-wt-top{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.cp-wt-top .cp-eyebrow{margin:0}
+#project-workspace .cp-wt-back{width:34px;height:34px;min-height:34px;padding:0;border:1px solid var(--cp-line);border-radius:50%;background:transparent;color:var(--cp-primary);font-size:17px;line-height:1;cursor:pointer}
+#project-workspace .cp-wt-back:disabled{visibility:hidden}
+#project-workspace h2.cp-wt-q{margin:4px 0 6px;font-size:26px;line-height:1.25;letter-spacing:-.015em}
+.cp-wt-q:focus{outline:none}
+.cp-wt-why{margin:0 0 16px;color:var(--cp-muted);max-width:68ch}
+.cp-wt-intro{margin:0 0 6px;padding:10px 14px;border-radius:var(--cp-r);background:var(--cp-t-verify-bg);color:var(--cp-t-verify);font-size:var(--cp-text);line-height:1.5}
+.cp-wt-gate{margin:6px 0 18px;padding:0;border:0}
+.cp-wt-gate legend{margin:0 0 10px;padding:0;font-size:16px;font-weight:650;color:var(--cp-ink)}
+.cp-wt-tiles{display:flex;flex-wrap:wrap;gap:10px}
+.cp-wt-tile{position:relative;cursor:pointer}
+.cp-wt-tile input{position:absolute;opacity:0;pointer-events:none}
+.cp-wt-tile span{display:inline-flex;align-items:center;min-height:44px;min-width:110px;justify-content:center;padding:8px 18px;border:1px solid var(--cp-control);border-radius:var(--cp-r-control);background:var(--cp-input);font-weight:600;color:var(--cp-ink)}
+.cp-wt-tile input:checked+span{border-color:var(--cp-primary);background:var(--cp-t-ok-bg);color:var(--cp-primary);box-shadow:inset 0 0 0 1px var(--cp-primary)}
+.cp-wt-tile input:focus-visible+span{outline:2px solid var(--cp-focus);outline-offset:2px}
+.cp-wt-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:6px 18px;align-items:start;padding:14px 0;border-bottom:1px solid var(--cp-line)}
+.cp-wt-row:last-child{border-bottom:0}
+.cp-wt-row.is-wide{grid-template-columns:1fr}
+.cp-wt-label{display:flex;align-items:center;justify-content:flex-end;gap:6px;min-height:44px;text-align:right}
+.cp-wt-row.is-wide .cp-wt-label{justify-content:flex-start;min-height:0;text-align:left}
+.cp-wt-label label{margin:0;font-size:15px;font-weight:550;color:var(--cp-ink)}
+#project-workspace .cp-wt-help{flex:none;width:20px;height:20px;min-height:20px;padding:0;border:1.5px solid var(--cp-verify);border-radius:50%;background:transparent;color:var(--cp-verify);font-size:11px;font-weight:700;line-height:1;cursor:pointer}
+#project-workspace .cp-wt-help:hover{background:var(--cp-t-verify-bg)}
+.cp-wt-input input:not([type=checkbox]):not([type=radio]),.cp-wt-input select,.cp-wt-input textarea{width:100%;box-sizing:border-box}
+.cp-wt-state{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:6px 0 0;font-size:var(--cp-text-xs);color:var(--cp-muted)}
+.cp-wt-chip{display:inline-block;padding:1px 8px;border-radius:var(--cp-r-pill);background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral);font-size:var(--cp-text-xs);font-weight:650}
+.cp-wt-chip.is-req{background:var(--cp-t-review-bg);color:var(--cp-t-review)}
+.cp-wt-chip.is-sug{background:var(--cp-t-verify-bg);color:var(--cp-t-verify)}
+.cp-wt-chip.is-ok{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+.cp-wt-chip.is-you{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+.cp-wt-ok{display:inline-flex;align-items:center;gap:6px;margin:6px 0 0;font-size:var(--cp-text-sm);font-weight:600;color:var(--cp-ink);cursor:pointer}
+.cp-wt-actions{display:flex;justify-content:space-between;gap:12px;margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--cp-line)}
+.cp-wt-main .city-save-state{margin:8px 0 0;text-align:right}
+.cp-wt-extra{margin-top:16px}
+.cp-wt-doclist{list-style:none;margin:0;padding:0}
+.cp-wt-doclist li{padding:12px 0;border-bottom:1px solid var(--cp-line)}
+.cp-wt-doclist li:last-child{border-bottom:0}
+.cp-wt-doclist p{margin:4px 0 0;color:var(--cp-muted)}
+.cp-wt-doclist .cp-wt-chip{margin-left:6px;vertical-align:1px}
+.cp-wt-summary{list-style:none;margin:14px 0 18px;padding:0}
+.cp-wt-summary li{display:grid;grid-template-columns:20px 170px 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--cp-line)}
+.cp-wt-summary li>span:last-child{color:var(--cp-muted);font-size:var(--cp-text-sm)}
+.cp-wt-verdict{margin:0 0 8px;padding:12px 14px;border-radius:var(--cp-r);background:var(--cp-t-review-bg);color:var(--cp-t-review);font-weight:600}
+.cp-wt-verdict.is-ok{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+.cp-wt-side{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:16px 18px}
+.cp-wt-side h4{margin:14px 0 6px;font-size:var(--cp-h4)}
+.cp-wt-side>.cp-eyebrow{margin:0 0 4px}
+.cp-wt-src{margin:0 0 10px;padding:12px 14px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-input);scroll-margin:12px}
+.cp-wt-src h4{margin:0 0 2px;font-size:var(--cp-text-sm);font-weight:650;color:var(--cp-muted)}
+.cp-wt-src p{margin:0 0 4px;font-size:var(--cp-text-sm);line-height:1.5}
+.cp-wt-src .cp-wt-val{font-size:15px;font-weight:650;color:var(--cp-ink);overflow-wrap:anywhere}
+.cp-wt-src blockquote{margin:6px 0;padding:6px 10px;border-left:3px solid var(--cp-accent);background:var(--cp-surface);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;line-height:1.5;color:var(--cp-ink);overflow-wrap:anywhere}
+.cp-wt-src details summary{font-size:var(--cp-text-xs);color:var(--cp-muted);cursor:pointer}
+.cp-wt-src.is-on,.cp-wt-src:focus{outline:2px solid var(--cp-verify);outline-offset:1px}
+.cp-wt-find h4{margin-top:16px}
+.cp-wt-docs{list-style:none;margin:0 0 10px;padding:0}
+.cp-wt-docs li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;font-size:var(--cp-text-sm);border-bottom:1px solid var(--cp-line)}
+.cp-wt-docs li span{overflow-wrap:anywhere}
+.cp-permit-walk{margin-top:12px}
+#project-workspace .cp-permit-name{padding:0;min-height:0;font:inherit;color:var(--cp-ink);text-align:left}
+#project-workspace .cp-permit-name:hover{color:var(--cp-primary);text-decoration:underline}
+@media (max-width:1180px){.cp-wt{grid-template-columns:210px minmax(0,1fr)}.cp-wt-side{grid-column:2;position:static;max-height:none}}
+@media (max-width:760px){.cp-wt{grid-template-columns:1fr}.cp-wt-side{grid-column:auto}.cp-wt-nav{position:static}.cp-wt-row{grid-template-columns:1fr}.cp-wt-label{justify-content:flex-start;text-align:left;min-height:0}.cp-wt-main>form{padding:18px 16px}.cp-wt-summary li{grid-template-columns:20px 1fr}.cp-wt-summary li>span:last-child{grid-column:2}}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6419,7 +6509,8 @@ function permitHeader(sm,city){
   (needs?'<p class="cp-permit-needs">To issue this permit, the city needs <b>'+esc(needs)+'</b>.</p>':'<p class="cp-permit-needs">Cornerpin hasn’t mapped this city’s form yet; use the city’s own checklist.</p>')+
   (sm.total?'<div class="cp-permit-progress"><div class="cp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+sm.total+'" aria-valuenow="'+sm.ready+'" aria-label="'+esc(sm.label)+' permit progress"><span style="width:'+sm.pct+'%"></span></div><b>'+sm.ready+' of '+sm.total+' ready</b></div>':'')+
   (sm.form.found?'<p class="cp-permit-found">'+I('search')+'<span>Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve reviewed '+sm.form.checked+'.':'Review each one before it counts.')+'</span></p>':'')+
-  (yours.length?'<p class="cp-permit-yours"><span>Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</span></p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+'</div>';
+  (yours.length?'<p class="cp-permit-yours"><span>Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</span></p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+
+  (sm.supported&&sm.form.total?'<button type="button" class="cp-go cp-permit-walk" data-action="prepare-permit" data-id="'+esc(sm.typeId)+'">'+(sm.form.checked?'Continue':'Start')+' the '+esc(sm.label)+' walkthrough →</button>':'')+'</div>';
 }
 // The next three things to do on this project, most urgent first.
 function steps(p,{limit=3}={}){
@@ -7749,6 +7840,15 @@ const api={lookup,rules,blockers,reviewCurrent,reviewFingerprint,evidence:E,sour
         const C=typeof module!=='undefined'&&module.exports?require('./city-application'):root.CityApplication;
         const row=C.rows(p,a.permitType).find(r=>r.key===a.fieldKey);p.application.answerReviews=C.Reviews.apply(p,row,a,now);invalidate(p);event(p,a.type,'Answer '+a.state+': '+row.label+' · '+a.reviewer,now);break;
       }
+      case 'walkthrough': {
+        // Walkthrough progress only: which yes/no "do you have one?" questions were answered and which screens were visited.
+        const t=String(a.permitType||'');required(/^\d+$/.test(t),'Choose a permit type.');
+        const all=JSON.parse(JSON.stringify(p.application.walkthrough||{})),w=all[t]=all[t]||{gates:{},seen:[]};
+        if(a.gate!==undefined){required(/^[a-z]+$/.test(a.gate)&&['yes','no',''].includes(a.value),'Invalid walkthrough answer.');w.gates[a.gate]=a.value;}
+        if(a.seen!==undefined){required(/^[a-z]+$/.test(a.seen),'Invalid walkthrough step.');if(!w.seen.includes(a.seen))w.seen.push(a.seen);}
+        if(JSON.stringify(all)===JSON.stringify(p.application.walkthrough||{}))return project;
+        p.application.walkthrough=all;break;
+      }
       case 'city_application': {
         const C = typeof module !== 'undefined' && module.exports ? require('./city-application') : root.CityApplication;
         const selected=(p.application.permitSelections||[]).includes(String(a.permitType)) || p.application.cityInspect?.typeId===String(a.permitType);
@@ -8258,7 +8358,7 @@ function plans(p){const ds=p.documents.filter(d=>d.role==='plan'&&!p.documents.s
 function progress(p,id){const rows=C.rows(p,id).filter(r=>!r.locked),total=rows.length,filled=rows.filter(r=>String(r.value??'').trim()!==''),stale=filled.filter(r=>r.review.state==='stale'||/^Site or plans changed/.test(r.status)).length,supplied=filled.filter(r=>/^(User supplied|From your team details)/.test(r.status)).length,confirmed=filled.filter(r=>r.review.state==='confirmed').length,suggested=filled.filter(r=>/^Suggested/.test(r.status)).length;return{rows,total,filled:filled.length,missing:total-filled.length,stale,supplied,suggested,confirmed};}
 function progressReport(p,id){const c=progress(p,id);const researched=c.rows.filter(r=>r.value!==''&&/^(Public company contact|Saved site report|County owner mailing|Calculated lot area|Saved zoning|Phase explicitly|Uploaded\/entered plan|Explicit plan text|CornerpinAI)/.test(r.basis)),unique=new Set(researched.map(r=>({buildername:'builder_name',owneremail:'owner_email',ownername:'owner_name'})[r.name]||r.name)).size;if(!c.total)return '<p>Field mapping is unavailable for this permit.</p>';const rd=C.readiness(p,id);return '<div class="permit-progress"><div class="permit-progress-label"><strong>'+(rd.missing.length||rd.unreviewed.length?[rd.missing.length?rd.missing.length+' question'+(rd.missing.length===1?'':'s')+' left':'',rd.unreviewed.length?rd.unreviewed.length+' to check':''].filter(Boolean).join(' · '):'Form complete')+'</strong><span>'+Math.round(c.filled/c.total*100)+'% filled</span></div><progress max="'+c.total+'" value="'+c.filled+'" aria-label="Application fields with answers"></progress><p class="pw-muted">'+c.confirmed+' confirmed · '+c.supplied+' supplied · '+c.suggested+' suggested · '+c.missing+' unanswered'+(c.stale?' · '+c.stale+' need rechecking after changes':'')+'</p><details><summary>Progress report</summary><p><strong>'+unique+' distinct fields supported by site records or document extraction.</strong> Team-profile reuse and draft administrative text are excluded from this count.</p><p>Answer coverage, not filing approval. Suggestions and supplied answers still need review; required attachments and city acknowledgments are separate.</p>'+Object.entries({primary:'Property & application',professionals:'Designers & contractors',building:'Building details'}).map(([key,label])=>{const rs=c.rows.filter(r=>r.section===key),n=rs.filter(r=>String(r.value??'').trim()!=='').length;return rs.length?'<p><strong>'+label+'</strong>: '+n+' of '+rs.length+' answered · '+(rs.length-n)+' unanswered</p>':'';}).join('')+'<details><summary>Unanswered fields and evidence gaps</summary>'+c.rows.filter(r=>r.value==='').map(r=>{const g=r.guidance||r.basis||'';const who=A.profileForField(r.name),role=who&&A.roles[who[0]];return '<p><strong>'+(role&&!String(r.label).toLowerCase().includes(role.toLowerCase())?esc(role)+' — ':'')+esc(String(r.label).replace(/:\s*$/,''))+'</strong>'+(g&&!/^Enter information for this application scope\.?$/.test(g)?'<br>'+esc(g):'')+'</p>';}).join('')+'</details></details></div>';}
 function sitePermits(p){const rs=A.siteRecommendations(p);return '<section class="pw-card suggested-site-permits"><h2>Other permits the site may need</h2><p>From the site findings. Each applies only if your work triggers it.</p>'+(rs.length?rs.map(r=>'<article class="permit-summary"><h3>'+esc(r.label)+' <span class="priority-status priority-verify">'+esc(r.state)+'</span></h3><p><strong>Why suggested:</strong> '+esc(r.reason)+'</p><p>'+esc(r.condition)+'</p><p><strong>Authority:</strong> '+esc(r.authority)+'</p><p>'+esc(r.next)+'</p><div class="pw-actions"><a class="btn" href="'+esc(r.url)+'" target="_blank" rel="noopener">Open official applications ↗</a><a href="'+esc(r.reference)+'" target="_blank" rel="noopener">Process &amp; requirements</a>'+(r.source&&/^https:\/\//.test(r.source)?'<a href="'+esc(r.source)+'" target="_blank" rel="noopener">Finding source</a>':'')+'</div><p class="pw-muted">External application: Cornerpin does not yet reproduce or submit this agency’s form.</p></article>').join(''):'<p>None found from the site findings. Ask the building department if you\'re unsure.</p>')+'</section>';}
-function permits(p){const recs=A.recommendations(p),chosen=p.application.permitSelections||[],extra=chosen.filter(id=>!recs.some(r=>r.typeId===id)).map(id=>{const t=C.catalog.types.find(t=>t.value===id);return t?{typeId:id,label:t.label,selected:true,evidence:[],note:''}:null;}).filter(Boolean),all=[...recs,...extra];return sitePermits(p)+'<section class="pw-card"><h2>Your permit forms</h2><p>Each permit has its own city form. Cornerpin fills in what it can from public records and your plans; you answer the rest.</p><details><summary>Advanced: which form this project tracks as its filing</summary><form data-command="filing_scope"><label>Worksheet for this filing<select name="permitType"><option value="">Choose saved worksheet</option>'+chosen.map(id=>'<option value="'+esc(id)+'"'+(p.application.filingPermitType===id?' selected':'')+'>'+esc(C.catalog.types.find(t=>t.value===id)?.label||id)+'</option>').join('')+'</select></label><button type="submit"'+(p.receipts.length?' disabled':'')+'>Save</button></form></details>'+all.map(r=>'<article class="permit-summary"><div class="permit-summary-head"><div><h3>'+esc(r.label)+'</h3><button data-action="prepare-permit" data-id="'+esc(r.typeId)+'">'+(r.selected?'Open draft':'Prepare this permit')+'</button></div>'+progressReport(p,r.typeId)+'</div>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.evidence.length?'<details><summary>Why this permit is suggested</summary>'+r.evidence.map(f=>'<p>'+esc(f.filename)+' · page '+f.page+': “'+esc(f.quote)+'”</p>').join('')+'</details>':'')+'</article>').join('')+'<label>Start another permit<select data-city-type><option value="">Choose a permit type</option>'+C.catalog.types.map(t=>'<option value="'+esc(t.value)+'">'+esc(t.label)+'</option>').join('')+'</select></label></section>';}
+function permits(p){const recs=A.recommendations(p),chosen=p.application.permitSelections||[],extra=chosen.filter(id=>!recs.some(r=>r.typeId===id)).map(id=>{const t=C.catalog.types.find(t=>t.value===id);return t?{typeId:id,label:t.label,selected:true,evidence:[],note:''}:null;}).filter(Boolean),all=[...recs,...extra];return sitePermits(p)+'<section class="pw-card"><h2>Your permit forms</h2><p>Each permit has its own city form. Cornerpin fills in what it can from public records and your plans; you answer the rest.</p><details><summary>Advanced: which form this project tracks as its filing</summary><form data-command="filing_scope"><label>Worksheet for this filing<select name="permitType"><option value="">Choose saved worksheet</option>'+chosen.map(id=>'<option value="'+esc(id)+'"'+(p.application.filingPermitType===id?' selected':'')+'>'+esc(C.catalog.types.find(t=>t.value===id)?.label||id)+'</option>').join('')+'</select></label><button type="submit"'+(p.receipts.length?' disabled':'')+'>Save</button></form></details>'+all.map(r=>'<article class="permit-summary"><div class="permit-summary-head"><div><h3><button type="button" class="cp-link cp-permit-name" data-action="prepare-permit" data-id="'+esc(r.typeId)+'">'+esc(r.label)+'</button></h3><button data-action="prepare-permit" data-id="'+esc(r.typeId)+'">'+(r.selected?'Continue walkthrough':'Start walkthrough')+'</button></div>'+progressReport(p,r.typeId)+'</div>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.evidence.length?'<details><summary>Why this permit is suggested</summary>'+r.evidence.map(f=>'<p>'+esc(f.filename)+' · page '+f.page+': “'+esc(f.quote)+'”</p>').join('')+'</details>':'')+'</article>').join('')+'<label>Start another permit<select data-city-type><option value="">Choose a permit type</option>'+C.catalog.types.map(t=>'<option value="'+esc(t.value)+'">'+esc(t.label)+'</option>').join('')+'</select></label></section>';}
 function team(p){return '<section class="pw-card"><h2>Project team</h2><p>Enter each contact once. Their details fill all matching fields and permit drafts. Existing field edits keep precedence.</p><button data-action="reuse-team">Reuse a team from another saved project</button><div id="team-library"></div>'+Object.entries(A.roles).map(([role,label])=>{const saved=A.profile(p,role),prefix=role==='designer'?'design_professional':role==='engineer'?'engineer_record':role;return '<details><summary>'+esc(label)+(saved.name?' — '+esc(saved.name):'')+'</summary><form data-command="team_profile"><input name="role" type="hidden" value="'+role+'"><div class="pw-grid">'+A.profileKeys.filter(k=>!['owner','contact'].includes(role)||!['license','contact'].includes(k)).map(k=>{const fn=k==='name'&&['designer','engineer'].includes(role)?prefix:prefix+'_'+k,found=F.selected(p,fn,'1');return input(k,k==='name'?'Person / company':k[0].toUpperCase()+k.slice(1),saved[k]||found?.value||'',k==='email'?'email':'text')+(found&&!saved[k]?'<p class="pw-muted">Plan suggestion: page '+found.page+' — '+esc(found.quote)+'</p>':'');}).join('')+'</div><label><input type="checkbox" name="confirmed" required> I confirm this person or company has this role on this project.</label><button type="submit">Save '+esc(label)+'</button></form>'+(saved.license?'<p>License '+esc(saved.license)+' · '+(saved.licenseCheck?'Lookup recorded '+esc(saved.licenseCheck.at):'Not independently verified')+'</p><button data-action="lookup-license" data-id="'+role+'">Look up public registry</button>':'')+'<p><a href="https://secure.utah.gov/llv/search/index.html" target="_blank" rel="noopener">Utah license verification</a> · Verify current status and classifications; a plan title block does not prove licensure.</p>'+(saved.licenseCheck?'<p>'+esc(saved.licenseCheck.summary)+'</p>':'')+'</details>';}).join('')+'</section>';}
 function valuation(p){const type=p.application.cityInspect?.typeId;if(!type)return '';const old=p.application.valuations?.[type],items=old?.items||A.valuationDefaults(p,type),n=Math.max(8,items.length+1);return '<section class="pw-card"><details><summary>Construction valuation worksheet</summary><p>Enter scope-specific areas and sourced rates, or a documented contract amount as quantity 1. Default rates, where shown, are ICC August 2026 R-3/V-B and garage benchmarks. Confirm this construction classification and the city’s accepted method. Include each applicable area once; missing or conflicting quantities are not assumed zero. Total excludes land and is not a bid or city-approved valuation. Confirm the jurisdiction’s accepted method before filing.</p><form data-command="construction_valuation"><input type="hidden" name="permitType" value="'+esc(type)+'">'+Array.from({length:n},(_,i)=>{const x=items[i]||{};return '<fieldset><legend>Line '+(i+1)+'</legend><label><input type="checkbox" name="include_'+i+'"'+(x.quantity?' checked':'')+'> Include this line</label><div class="pw-grid">'+input('label_'+i,'Work / area',x.label)+input('quantity_'+i,'Quantity (sq ft or 1 for lump sum)',x.quantity,'number')+input('rate_'+i,'Rate / amount ($)',x.rate,'number')+input('source_'+i,'Rate source and date',x.source)+'</div></fieldset>';}).join('')+'<label><input type="checkbox" name="confirmed" required> These lines cover this permit scope without overlapping areas; I checked the rate sources.</label><button type="submit">Calculate and use valuation</button></form>'+(old?'<p>Draft construction valuation: $'+old.total.toLocaleString()+' · '+esc(old.at)+'</p>':'')+'</details></section>';}
 function readiness(p){
@@ -8276,6 +8376,216 @@ function readiness(p){
 
 root.PermitPrepUI={plans,permits,team,valuation,readiness,progress,progressReport};
 })(window);
+
+/* Guided permit walkthrough: the city's form one short screen at a time, in plain questions, with the
+   source of every answer beside it (interview flow modelled on consumer tax software). It reads and writes
+   the same saved answers as the full form (CityApplication), so the two views never disagree.
+   Nothing here submits anything to the city. */
+(function(root){'use strict';
+const node=typeof module!=='undefined'&&module.exports;
+const C=node?require('./city-application'):root.CityApplication;
+const F=node?require('./permit-facts'):root.PermitFacts;
+const IR=node?require('./input-rules'):root.InputRules;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const label=r=>String(r.name==='identical_plan'?'Is this the same plan as one the city already approved?':r.label||r.name).replace(/:\s*$/,'').trim();
+const blank=r=>String(r.value??'').trim()==='';
+const req=r=>!!(r.required||r.markedRequired);
+const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+const list=a=>a.length>1?a.slice(0,-1).join(', ')+' and '+a.at(-1):a[0]||'';
+
+const PARTS={property:'The property',project:'The project',team:'Your team',building:'The building',docs:'Documents',finish:'Finish'};
+const re=x=>n=>x.test(n);
+// Screens in interview order. `gate` asks a yes/no first and only shows the questions on "Yes".
+const SCREENS=[
+ {id:'property',part:'property',nav:'Your lot',q:'Is this the right lot?',why:'The city finds your project by its address and parcel number.',m:re(/^(property_address|tax_id|subdivision|phase|lot_no|area|zone|latitude|longitude|is_corner|lot_footage)$/)},
+ {id:'owner',part:'property',nav:'Owner',q:'Who owns the property?',why:'The city sends ownership notices to the owner of record.',m:re(/^owner(name|_address|_city|_state|_zip|_phone|email)$/)},
+ {id:'project',part:'project',nav:'This application',q:'What are you applying for?',why:'This names the project on the city’s permit.',m:re(/^(application_date|permit_type|nickname|description)$/)},
+ {id:'contact',part:'project',nav:'City contact',q:'Who should the city contact?',why:'This person gets the city’s questions and inspection emails.',m:re(/^(contact_name|contact_phone|contact_email|notify_contact|owner_builder)$/)},
+ {id:'builder',part:'team',nav:'Builder',q:'Who is building it?',why:'The general contractor on the permit. If you’re building it yourself, enter your own details.',m:re(/^(buildername|builder_(name|contact|license|phone|email|address|city|state|zip))$/)},
+ {id:'designer',part:'team',nav:'Designer',q:'Who designed it?',gate:'Did an architect or designer draw your plans?',why:'Their name is in the title block of your plans.',m:re(/^design_professional/)},
+ {id:'engineer',part:'team',nav:'Engineer',q:'Who is the engineer of record?',gate:'Is an engineer stamping your plans?',why:'Look for the engineer’s stamp on the structural sheets.',m:re(/^engineer_record/)},
+ {id:'electrical',part:'team',nav:'Electrician',q:'Who is your electrical contractor?',gate:'Do you have an electrical contractor yet?',why:'You can leave this blank until you hire one; the city may ask before the electrical inspection.',m:re(/^electrical_/)},
+ {id:'mechanical',part:'team',nav:'HVAC / mechanical',q:'Who is your mechanical contractor?',gate:'Do you have a heating and cooling (mechanical) contractor yet?',why:'You can leave this blank until you hire one.',m:re(/^mechanical_/)},
+ {id:'plumbing',part:'team',nav:'Plumber',q:'Who is your plumbing contractor?',gate:'Do you have a plumbing contractor yet?',why:'You can leave this blank until you hire one.',m:re(/^plumbing_/)},
+ {id:'cost',part:'building',nav:'Cost to build',q:'What will it cost to build?',why:'The city sets the permit fee from this number. Use the construction cost, not the land or assessed value.',m:re(/^builder_valuation$/)},
+ {id:'size',part:'building',nav:'Size',q:'How big is it?',why:'Square feet for each part of the building, from your plans.',m:re(/^(main_floor|second_floor|third_floor|fourth_floor|basement|unfin_basement|patio|garage_footage|other_footage)$/)},
+ {id:'rooms',part:'building',nav:'Rooms & build',q:'What’s in it?',why:'Counts and materials from your floor plans.',m:re(/^(num_units|num_buildings|bedrooms|bathrooms|garages|stories|construction_material|max_occupancy|use_classification|division)$/)},
+ {id:'setbacks',part:'building',nav:'Setbacks',q:'How far is it from the property lines?',why:'The minimum is what the rules allow; the actual distance comes from your site plan.',m:re(/set_back/)},
+ {id:'approvals',part:'building',nav:'Other approvals',q:'Which other departments have signed off?',why:'Some permits need fire, health, water or geotechnical sign-off first.',m:re(/^(fire|zoning|health|water|geotechnical)_(approved|date|info)$/)},
+ {id:'other',part:'building',nav:'More questions',q:'A few more questions from the city',why:'The city’s form asks these for this permit type.',m:()=>true},
+ {id:'documents',part:'docs',nav:'Documents',q:'Which documents does the city want?',why:'You upload these in the city’s portal when you file. Here is what each one is and who gives it to you.',m:()=>false},
+ {id:'portal',part:'docs',nav:'Sign in the portal',q:'What you sign in the city’s portal',why:'Cornerpin never signs or initials for you. Read these in the portal and sign them yourself.',m:()=>false},
+ {id:'review',part:'finish',nav:'Check & file',q:'Check everything before you file',why:'',m:()=>false}
+];
+function assign(r){
+ if(r.type==='file'||r.name==='identical_plan')return 'documents';
+ if(r.locked&&r.name!=='permit_type')return 'portal';
+ return SCREENS.find(s=>s.id!=='documents'&&s.id!=='portal'&&s.id!=='review'&&s.m(r.name)).id;
+}
+// The same question asked twice by the city (page 1 and the builder page). Shown once when the answers match.
+const TWIN={buildername:'builder_name',builder_phone:'builder_phone',builder_email:'builder_email'};
+function screens(p,type){
+ const rows=C.rows(p,type),by={};for(const r of rows)(by[assign(r)]=by[assign(r)]||[]).push(r);
+ const out=SCREENS.filter(s=>s.id==='review'||(by[s.id]||[]).length).map(s=>({...s,rows:by[s.id]||[]}));
+ for(const s of out){s.twins={};if(s.id!=='builder')continue;
+  for(const r of s.rows)if(r.section==='primary'&&TWIN[r.name]){const t=s.rows.find(x=>x.section==='professionals'&&x.name===TWIN[r.name]);if(t&&String(t.value)===String(r.value))s.twins[t.key]=r;}}
+ return out;
+}
+const state=(p,type)=>p.application.walkthrough?.[type]||{gates:{},seen:[]};
+const editable=s=>s.rows.filter(r=>!r.locked&&r.type!=='file'&&!Object.values(s.twins||{}).includes(r));
+function status(p,type,s){
+ const st=state(p,type),e=editable(s),filled=e.filter(r=>!blank(r)),missing=e.filter(r=>blank(r)&&req(r)),review=filled.filter(r=>r.review.state!=='confirmed');
+ const gate=s.gate?(filled.length?'yes':st.gates?.[s.id]||''):'';
+ const seen=(st.seen||[]).includes(s.id);
+ return {filled,missing,review,total:e.length,gate,seen,skipped:gate==='no',todo:missing.length+review.length+(s.gate&&!gate?1:0)};
+}
+// ---------- where an answer comes from ----------
+const factName=n=>({buildername:'builder_name',ownername:'owner_name',owneremail:'owner_email'})[n]||n;
+const FROM=[[/^Saved site report/,'the county parcel record'],[/^County owner mailing record/,'the county owner mailing record'],[/^Recorded plat setback note/,'the recorded subdivision plat'],[/^Zoning standards/,'the zoning code'],
+ [/^Confirmed project team/,'your company and team details'],[/^Public company contact/,'a public business listing'],[/^Calculated lot area/,'the county parcel map'],[/^User-reviewed construction estimate/,'your cost estimate'],
+ [/^User-entered|^User supplied/,'your own answer'],[/^Draft project name/,'your permit type and address'],[/^Project preparation date/,'the day you started this project'],[/^Selected application type/,'the permit you chose'],
+ [/^Saved application details/,'your project details'],[/^Phase explicitly named/,'the recorded legal description'],[/^Uploaded\/entered plan/,'your plans'],[/CornerpinAI|Explicit plan text/,'your plans']];
+function sourceFor(p,r,type){
+ const fact=F&&F.selected(p,factName(r.name),type);
+ const doc=fact&&((p.documents||[]).find(d=>d.id===fact.documentId)||(p.documents||[]).find(d=>d.name===fact.filename));
+ if(fact&&!blank(r)&&String(fact.value)===String(r.value)&&fact.quote)
+  return {from:fact.filename||'your plans',quote:fact.quote,where:'Page '+fact.page+(fact.sheet?' · sheet '+fact.sheet:''),documentId:doc&&!p.documents.some(x=>x.family===doc.family&&x.version>doc.version)?doc.id:'',ai:/claude/.test(fact.method||'')};
+ const b=String(r.basis||''),hit=FROM.find(([x])=>x.test(b));let out={from:hit?hit[1]:'Cornerpin’s research',note:b};
+ if(/^Saved site report|^Calculated lot area/.test(b)){const a=p.report?.parcel?.attrs||{};out.quote=['Parcel '+(p.report?.parcel?.id||''),a.PARCEL_ADD,a.SUBDIV_NAME,(p.report?.parcel?.county||p.property?.county)?(p.report?.parcel?.county||p.property?.county)+' County':''].filter(Boolean).join(' · ');}
+ const m=/^County owner mailing record for (.+?) · (.+?) · retrieved ([^.]+)/.exec(b);if(m)out={from:'the county owner mailing record',quote:m[1],where:m[2]+' · retrieved '+m[3],note:b};
+ const link=/^Public company contact: (\S+)/.exec(b);if(link)out.url=link[1];
+ return out;
+}
+const FIND=[
+ [/valuation/,'Your contract price or construction estimate. The cost estimator below builds one from your square footage.'],
+ [/^(main_floor|second_floor|third_floor|fourth_floor|basement|unfin_basement|patio|garage_footage|other_footage)$/,'The area table on your plans, usually on the cover sheet or the first floor plan. Your designer can send it.'],
+ [/_set_back_default$/,'Your dimensioned site plan, from your designer or surveyor.'],
+ [/_set_back$/,'The zoning code and recorded plat for this lot. The city planner can confirm which one applies.'],
+ [/license/,'The contractor’s Utah license number. Check it on the state license lookup.','https://secure.utah.gov/llv/search/index.html','Utah license lookup'],
+ [/^(electrical|mechanical|plumbing)_/,'The subcontractor’s bid or business card.'],
+ [/^engineer_record/,'The engineer’s stamp on the structural sheets of your plans.'],
+ [/^design_professional/,'The title block on your plans.'],
+ [/^owner/,'Ask the property owner. County records only list a mailing address.'],
+ [/^(contact_|notify_contact|owner_builder)/,'Your call: whoever the city should reach about this permit.'],
+ [/^(builder|buildername)/,'Your company details. Add them once under My company and Cornerpin fills them in on every permit.'],
+ [/^(bedrooms|bathrooms|stories|garages|construction_material|num_units|num_buildings)$/,'Your floor plans and elevations.'],
+ [/^(max_occupancy|use_classification|division)$/,'The code analysis on your architect’s plans.'],
+ [/_(approved|date|info)$/,'The approval letter from that department or consultant.'],
+ [/^application_date$/,'The day you submit it in the city’s portal.'],
+ [/./,'The city’s form asks this. If it’s unclear, ask the city’s building department.']
+];
+const findFor=r=>FIND.find(([x])=>x.test(r.name));
+const WHO=[[/geotech|soils/i,'a geotechnical engineer'],[/hazard/i,'a geologist (geologic hazards study)'],[/fire/i,'the fire district'],[/stormwater|swppp|noi/i,'your civil engineer or erosion-control contractor'],[/res ?check|energy/i,'your designer (energy-code report)'],[/truss/i,'your truss supplier'],[/structural|engineering/i,'your structural engineer'],[/site plan/i,'your designer or surveyor'],[/will serve|culinary/i,'your culinary and secondary water providers'],[/owner\/builder/i,'the property owner (signed certificate)'],[/plan/i,'your designer or architect'],[/./,'whoever prepared it for this project']];
+const docLabel=r=>label(r).replace(/\s*\(.*$/,'').replace(/:$/,'');
+
+// ---------- rendering ----------
+function input(r,t){
+ const id='city-'+r.key,name='answer:'+r.key,v=esc(r.value),a=' id="'+id+'" name="'+name+'" aria-describedby="'+id+'-st"';
+ if(r.name==='permit_type')return '<input'+a+' value="'+esc(t.label)+'" readonly>';
+ if(r.options)return '<select'+a+'><option value="">Not answered</option>'+r.options.filter(o=>o.value!=='').map(o=>'<option value="'+esc(o.value)+'"'+(o.value===r.value?' selected':'')+'>'+esc(o.label)+'</option>').join('')+'</select>';
+ if(r.type==='textarea')return '<textarea'+a+' rows="3" maxlength="'+Math.min(r.maxLength||10000,10000)+'">'+v+'</textarea>';
+ const rule=IR?IR.rule(r.label,r.name,r.type):null;
+ if(r.type==='number'){const money=rule?.unit==='$',unit=money?'':(rule?.unit||'');return '<div class="cp-num'+(money?' cp-num-money':'')+'">'+(money?'<span class="cp-num-pre">$</span>':'')+'<input'+a+' type="number" inputmode="decimal" step="any" min="'+esc(r.min??0)+'"'+(r.max!=null?' max="'+esc(r.max)+'"':'')+' value="'+v+'">'+(unit?'<span class="cp-num-unit">'+unit+'</span>':'')+'</div>';}
+ return '<input'+a+(IR?IR.attrs(rule):'')+' type="'+((rule||{}).inputType||'text')+'" maxlength="'+Math.min(r.maxLength||10000,10000)+'" value="'+v+'">';
+}
+function row(p,t,r,twin){
+ const src=!blank(r)?sourceFor(p,r,t.value):null,conf=r.review.state==='confirmed',stale=r.review.state==='stale'||/^Site or plans changed/.test(r.status);
+ const chip=blank(r)?(req(r)?'<span class="cp-wt-chip is-req">Required</span>':'<span class="cp-wt-chip">Optional</span>')
+  :conf?'<span class="cp-wt-chip is-ok">✓ Reviewed</span>':stale?'<span class="cp-wt-chip is-req">Changed · review again</span>':/^User supplied/.test(r.status)?'<span class="cp-wt-chip is-you">Your answer</span>':'<span class="cp-wt-chip is-sug">Filled in for your review</span>';
+ const from=src?'<span class="cp-wt-from">from '+esc(src.from)+'</span>':'';
+ const ok=!blank(r)&&!conf&&r.name!=='permit_type'?'<label class="cp-wt-ok"><input type="checkbox" name="wt-ok" value="'+esc(r.key)+'"> Looks right</label>':'';
+ return '<div class="cp-wt-row'+(r.type==='textarea'?' is-wide':'')+'" data-evidence-key="'+esc(r.key)+'"><div class="cp-wt-label"><label for="city-'+esc(r.key)+'">'+esc(label(r))+'</label><button type="button" class="cp-wt-help" data-wt-src="'+esc(r.key)+'" aria-label="Where this comes from: '+esc(label(r))+'">?</button></div><div class="cp-wt-input">'+input(r,t)+(twin?'<input type="hidden" name="answer:'+esc(twin.key)+'" value="'+esc(twin.value)+'" data-wt-twin="city-'+esc(r.key)+'">':'')+'<p class="cp-wt-state" id="city-'+esc(r.key)+'-st">'+chip+from+'</p>'+ok+'</div></div>';
+}
+function intro(s,st,p,t){
+ if(!st.total)return '';const srcs=[...new Set(st.filled.map(r=>sourceFor(p,r,t.value).from).filter(f=>f!=='your own answer'))];
+ const reqN=editable(s).filter(req).length;
+ let txt=st.filled.length===st.total?'Cornerpin filled in '+(st.total===1?'this':'all '+st.total)+(srcs.length?' from '+list(srcs):'')+'. Check '+(st.total===1?'it':'each one')+' against the source on the right, then tick Looks right.'
+  :st.filled.length?'Cornerpin filled in '+st.filled.length+' of '+st.total+(srcs.length?' from '+list(srcs):'')+'. The right side shows where each answer came from and where to find the rest.'
+  :'Cornerpin didn’t find these in public records or your plans. The right side says where to find each one.';
+ if(reqN)txt+=' The city requires '+(reqN===st.total?(reqN===1?'it':'all of them'):reqN+' of them')+'.';else if(st.total>1)txt+=' None are required: fill in what applies.';
+ return '<p class="cp-wt-intro">'+esc(txt)+'</p>';
+}
+function side(p,t,s){
+ const e=editable(s),filled=e.filter(r=>!blank(r)),empty=e.filter(blank);let h='<p class="cp-eyebrow">Where these answers come from</p>';
+ if(s.id==='documents'||s.id==='portal'||s.id==='review'){
+  const docs=(p.documents||[]).filter(d=>!p.documents.some(x=>x.family===d.family&&x.version>d.version));
+  h+=s.id==='review'?'<p>Every answer on the form, where it came from, and its review are in your downloaded answer sheet.</p>':'';
+  h+='<h4>Your project documents</h4>'+(docs.length?'<ul class="cp-wt-docs">'+docs.slice(0,12).map(d=>'<li><span>'+esc(d.name)+'</span><button type="button" class="cp-link" data-action="view-file" data-id="'+esc(d.id)+'">Open</button></li>').join('')+'</ul>':'<p class="pw-muted">None yet. Add plans and reports under Documents.</p>')+'<button type="button" data-action="tab" data-id="documents">Manage documents</button>';
+  return h+'<h4>The city’s portal</h4><p>You file, upload and sign in CityInspect. <a href="'+esc(C.catalog.source)+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></p>';
+ }
+ if(!e.length)return h+'<p>Nothing to fill in on this screen.</p>';
+ h+=filled.map(r=>{const src=sourceFor(p,r,t.value);return '<article class="cp-wt-src" id="wt-src-'+esc(r.key)+'" tabindex="-1"><h4>'+esc(label(r))+'</h4><p class="cp-wt-val">'+esc(r.options?.find(o=>o.value===r.value)?.label||r.value)+'</p><p class="cp-wt-srcfrom">From <b>'+esc(src.from)+'</b>'+(src.ai?' · read by CornerpinAI':'')+'</p>'+(src.quote?'<blockquote>“'+esc(src.quote)+'”</blockquote>':'')+(src.where?'<p class="pw-muted">'+esc(src.where)+'</p>':'')+(src.documentId?'<button type="button" class="cp-link" data-action="view-file" data-id="'+esc(src.documentId)+'">Open the document</button>':'')+(src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener noreferrer">Open the listing</a>':'')+(src.note&&src.note!==src.quote?'<details><summary>Details</summary><p>'+esc(src.note)+'</p></details>':'')+'</article>';}).join('');
+ if(empty.length){const groups=new Map();for(const r of empty){const f=findFor(r);if(!groups.has(f))groups.set(f,[]);groups.get(f).push(r);}
+  h+='<div class="cp-wt-find"><h4>Where to find '+(filled.length?'the rest':'these')+'</h4>'+[...groups].map(([f,rs])=>'<div class="cp-wt-src" data-keys="'+esc(rs.map(r=>r.key).join(' '))+'" tabindex="-1"><p><b>'+esc(list(rs.map(label).slice(0,4))+(rs.length>4?' and '+(rs.length-4)+' more':''))+'</b></p><p>'+esc(f[1])+'</p>'+(f[2]?'<a href="'+esc(f[2])+'" target="_blank" rel="noopener noreferrer">'+esc(f[3])+'</a>':'')+'</div>').join('')+'</div>';}
+ return h;
+}
+function documentsScreen(p,t,s){
+ const files=s.rows.filter(r=>r.type==='file'),other=s.rows.filter(r=>r.type!=='file');
+ return '<ul class="cp-wt-doclist">'+files.map(r=>{const has=/^Potential supporting files: (.+?)\. Match/.exec(r.basis||'');return '<li><div><b>'+esc(docLabel(r))+'</b>'+(req(r)?' <span class="cp-wt-chip is-req">Required</span>':' <span class="cp-wt-chip">If it applies</span>')+'<p>'+(has?'You may already have it: '+esc(has[1])+'. Check it’s the final, signed version.':'Get it from '+esc(WHO.find(([x])=>x.test(label(r)))[1])+'.')+'</p></div></li>';}).join('')+'</ul>'+(other.length?'<div class="cp-wt-fields">'+other.map(r=>row(p,t,r)).join('')+'</div>':'');
+}
+function portalScreen(s){
+ return '<ul class="cp-wt-doclist">'+s.rows.map(r=>{const l=label(r);return '<li><div>'+(l.length>120?'<details><summary><b>'+esc(l.slice(0,110).replace(/\s+\S*$/,''))+'…</b></summary><p>'+esc(l)+'</p></details>':'<b>'+esc(l)+'</b>')+'<p>Read and sign this yourself in the city’s portal.</p></div></li>';}).join('')+'</ul>';
+}
+function reviewScreen(p,t,all){
+ const work=all.filter(s=>s.id!=='review').map(s=>({s,st:status(p,t.value,s)}));
+ const missing=work.flatMap(w=>w.st.missing.map(r=>({s:w.s,r}))),review=work.reduce((n,w)=>n+w.st.review.length,0),open=work.filter(w=>w.s.gate&&!w.st.gate);
+ let h='<ul class="cp-wt-summary">'+work.map(({s,st})=>'<li><span class="cp-wt-mark'+(st.todo?'':st.skipped?' is-skip':' is-done')+'" aria-hidden="true">'+(st.todo?'':'✓')+'</span><button type="button" class="cp-link" data-action="wt-go" data-id="'+s.id+'">'+esc(s.nav)+'</button><span>'+(st.skipped?'Not on this project':s.id==='documents'?plural(s.rows.filter(r=>r.type==='file').length,'document')+' to upload':s.id==='portal'?plural(s.rows.length,'item')+' to sign':[st.missing.length?st.missing.length+' required blank':'',st.review.length?st.review.length+' for your review':'',!st.missing.length&&!st.review.length?(st.total?st.filled.length+' of '+st.total+' answered':'Nothing to answer'):''].filter(Boolean).join(' · '))+'</span></li>').join('')+'</ul>';
+ const verdict=!missing.length&&!review&&!open.length?'<p class="cp-wt-verdict is-ok">Every answer is filled in and reviewed. Download your answers and copy them into the city’s portal.</p>'
+  :'<p class="cp-wt-verdict">Before you file: '+list([missing.length?plural(missing.length,'required answer')+' to fill in':'',review?plural(review,'answer')+' Cornerpin filled in for your review':'',open.length?plural(open.length,'question')+' about your team':''].filter(Boolean))+'.</p>'+(missing.length?'<p>'+missing.slice(0,6).map(x=>'<button type="button" class="cp-link" data-action="wt-go" data-id="'+x.s.id+'">'+esc(label(x.r))+'</button>').join(' · ')+'</p>':'');
+ return verdict+h+'<div class="pw-actions"><button type="button" class="cp-primary" data-action="city-download">Download my answers</button><button type="button" data-action="permit-hub">Back to File a permit</button><a href="'+esc(C.catalog.source)+'" target="_blank" rel="noopener noreferrer">Open CityInspect</a></div>';
+}
+function firstScreen(p,type,all){const w=all.filter(s=>s.id!=='review');return (w.find(s=>!status(p,type,s).seen)||w.find(s=>status(p,type,s).todo)||all[all.length-1]).id;}
+function meter(p,type,all){
+ const st=all.filter(s=>s.id!=='review').map(s=>status(p,type,s)),total=st.reduce((n,x)=>n+x.total,0),filled=st.reduce((n,x)=>n+x.filled.length,0),ok=st.reduce((n,x)=>n+x.filled.length-x.review.length,0);
+ const pct=v=>total?Math.round(100*v/total):0;
+ return '<div class="cp-wt-meter"><p><b>'+filled+' of '+total+'</b> answers filled in · <b>'+ok+'</b> reviewed</p><div class="cp-bar cp-bar-split" role="img" aria-label="'+ok+' reviewed, '+(filled-ok)+' filled in for your review, '+(total-filled)+' blank"><span class="cp-seg-ok" style="width:'+pct(ok)+'%"></span><span class="cp-seg-found" style="width:'+pct(filled-ok)+'%"></span></div></div>';
+}
+function render(p,screenId){
+ const type=p.application.cityInspect?.typeId,t=C.catalog.types.find(x=>x.value===String(type));
+ if(!C.supported(p)||!t)return '';
+ const all=screens(p,type);if(!all.some(s=>s.id===screenId))screenId=firstScreen(p,type,all);
+ const i=all.findIndex(s=>s.id===screenId),s=all[i],prev=all[i-1],next=all[i+1],st=status(p,type,s);
+ const parts=[...new Set(all.map(x=>x.part))];
+ let nav='<nav class="cp-wt-nav" aria-label="Walkthrough steps">'+meter(p,type,all)+parts.map(part=>{const ss=all.filter(x=>x.part===part),sts=ss.map(x=>status(p,type,x)),done=part!=='finish'&&sts.every(x=>x.seen&&!x.todo);
+  return '<div class="cp-wt-part"><p class="cp-wt-part-h">'+(done?'<span class="cp-wt-mark is-done" aria-hidden="true">✓</span>':'')+esc(PARTS[part])+'</p><ol>'+ss.map((x,j)=>{const y=sts[j],here=x.id===s.id;
+   const mark=here?'→':y.seen&&!y.todo?'✓':'';const cls=here?' is-here':y.seen&&!y.todo?(y.skipped?' is-skip':' is-done'):'';
+   return '<li><button type="button" data-action="wt-go" data-id="'+x.id+'"'+(here?' aria-current="step"':'')+'><span class="cp-wt-mark'+cls+'" aria-hidden="true">'+mark+'</span><span>'+esc(x.nav)+'</span>'+(y.todo&&x.id!=='review'?'<em class="cp-page-count" aria-label="'+y.todo+' to do">'+y.todo+'</em>':'')+'</button></li>';}).join('')+'</ol></div>';}).join('')+'<button type="button" class="cp-link cp-wt-full" data-action="wt-full">See the whole form at once</button></nav>';
+ const head='<div class="cp-wt-top"><button type="button" class="cp-wt-back" data-action="wt-go" data-id="'+(prev?prev.id:'')+'"'+(prev?'':' disabled')+' aria-label="Previous screen">←</button><p class="cp-eyebrow">'+esc(PARTS[s.part])+' · Step '+(i+1)+' of '+all.length+'</p></div><h2 class="cp-wt-q" tabindex="-1">'+esc(s.q)+'</h2>'+(s.why?'<p class="cp-wt-why">'+esc(s.why)+'</p>':'');
+ let body='';
+ if(s.id==='documents')body=documentsScreen(p,t,s);
+ else if(s.id==='portal')body=portalScreen(s);
+ else if(s.id==='review')body=reviewScreen(p,t,all);
+ else{
+  if(s.gate&&!st.filled.length){const g=st.gate;body+='<fieldset class="cp-wt-gate"><legend>'+esc(s.gate)+'</legend><div class="cp-wt-tiles">'+[['yes','Yes'],['no','Not yet / not needed']].map(([v,l])=>'<label class="cp-wt-tile"><input type="radio" name="wt-gate" value="'+v+'"'+(g===v?' checked':'')+'><span>'+(g===v?'✓ ':'')+esc(l)+'</span></label>').join('')+'</div></fieldset>';}
+  const hide=s.gate&&!st.filled.length&&st.gate!=='yes';
+  body+='<div class="cp-wt-fields" data-wt-fields'+(hide?' hidden':'')+'>'+intro(s,st,p,t)+s.rows.filter(r=>!Object.values(s.twins).includes(r)&&!(r.locked&&r.name!=='permit_type')).map(r=>row(p,t,r,Object.entries(s.twins).find(([k])=>k===r.key)?.[1])).join('')+'</div>';
+ }
+ const extra=s.id==='cost'&&root.PermitPrepUI?root.PermitPrepUI.valuation(p):s.id==='setbacks'&&root.MeasurementWorkbench?root.MeasurementWorkbench.panel(p):'';
+ const actions='<div class="cp-wt-actions">'+(prev?'<button type="button" data-action="wt-go" data-id="'+prev.id+'">← Previous</button>':'<span></span>')+(next?'<button type="submit" class="cp-primary" data-wt-next="'+next.id+'">Save &amp; continue →</button>':'<button type="submit">Save</button>')+'</div><p class="city-save-state" role="status">Saved to this project as you go. Nothing is sent to the city.</p>';
+ return '<div class="cp-wt" data-wt-type="'+esc(type)+'">'+nav+'<div class="cp-wt-main"><form data-command="city_application_page" data-wt-screen="'+s.id+'"'+(s.gate?' data-wt-gate="'+s.id+'"':'')+'><input type="hidden" name="permitType" value="'+esc(type)+'"><input type="hidden" name="wt-screen" value="'+s.id+'">'+head+body+actions+'</form>'+(extra?'<div class="cp-wt-extra">'+extra+'</div>':'')+'</div><aside class="cp-wt-side cp-panel" aria-label="Where these answers come from">'+side(p,t,s)+'</aside></div>';
+}
+// What to save when the user leaves a screen: their yes/no, that they've seen it, and answers they ticked as right.
+function commands(p,form){
+ const data=new FormData(form),type=data.get('permitType'),id=data.get('wt-screen');if(!id)return [];
+ const st=state(p,type),out=[],g=form.querySelector('[name=wt-gate]:checked');
+ if(form.dataset.wtGate&&g&&(st.gates||{})[form.dataset.wtGate]!==g.value)out.push({type:'walkthrough',permitType:type,gate:form.dataset.wtGate,value:g.value});
+ if(!(st.seen||[]).includes(id))out.push({type:'walkthrough',permitType:type,seen:id});
+ return out;
+}
+function reviews(p,form){
+ const data=new FormData(form),type=data.get('permitType'),rows=C.rows(p,type),out=[];
+ for(const k of data.getAll('wt-ok')){const r=rows.find(x=>x.key===k);if(!r||blank(r)||r.review.state==='confirmed')continue;const s=sourceFor(p,r,type);
+  out.push({type:'answer_review',permitType:type,fieldKey:k,state:'confirmed',reviewer:'You',reason:'Checked in the permit walkthrough against '+s.from+'.',locator:[s.from,s.where].filter(Boolean).join(' · '),documentId:s.documentId||'',confirmed:true,expected:C.Reviews.fingerprint(p,r)});}
+ return out;
+}
+if(root.document){
+ root.document.addEventListener('change',e=>{const g=e.target.closest?.('.cp-wt-gate input[name=wt-gate]');if(g){const f=g.closest('form');f.querySelectorAll('.cp-wt-tile span').forEach(s=>s.textContent=s.textContent.replace(/^✓ /,''));const sp=g.parentElement.querySelector('span');sp.textContent='✓ '+sp.textContent;const box=f.querySelector('[data-wt-fields]');if(box)box.hidden=g.value!=='yes';}});
+ root.document.addEventListener('input',e=>{const id=e.target.id;if(!id)return;root.document.querySelectorAll('[data-wt-twin="'+id+'"]').forEach(h=>h.value=e.target.value);});
+ root.document.addEventListener('click',e=>{const b=e.target.closest?.('[data-wt-src]');if(!b)return;const k=b.dataset.wtSrc,card=root.document.getElementById('wt-src-'+k)||[...root.document.querySelectorAll('.cp-wt-src[data-keys]')].find(c=>c.dataset.keys.split(' ').includes(k));
+  root.document.querySelectorAll('.cp-wt-src.is-on').forEach(c=>c.classList.remove('is-on'));if(card){card.classList.add('is-on');card.scrollIntoView?.({block:'nearest'});card.focus?.({preventScroll:true});}});
+}
+const api={SCREENS,screens,status,render,sourceFor,commands,reviews,firstScreen};if(node)module.exports=api;else root.PermitWalkthrough=api;
+})(typeof window!=='undefined'?window:globalThis);
 
 (function(root){'use strict';
 const M=root.PlanMeasurements,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -8463,9 +8773,9 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   // History state survives reload and is scoped to this tab and account.
   const initialView=window.CornerpinInitialView||history.state?.cornerpinView;
   const viewTabs=['overview','site','evidence','valuation','placement','filing','draft','management','documents','rules','contacts','activity'];
-  function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage,draftType,investigation,ruleTaskId}},'');}catch(e){/* Storage-disabled previews still work. */}}
+  function rememberView(active){try{history.replaceState({...history.state,cornerpinView:{owner:S.owner(),id:project?.id||null,tab:active,section,cityPage,draftType,investigation,ruleTaskId,wtScreen,formView}},'');}catch(e){/* Storage-disabled previews still work. */}}
 
-  let overviewMapInstance=null,draftType='',cityPage='primary', reusableProjects=[], analysisTarget='';
+  let overviewMapInstance=null,draftType='',cityPage='primary',wtScreen='',formView='walk', reusableProjects=[], analysisTarget='';
   let investigation=null,ruleTaskId="";
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
@@ -8534,7 +8844,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
         else if(remote&&p&&remote.revision!==window.CloudSync.baseRevision(id)&&p.revision!==window.CloudSync.baseRevision(id))notice='This device and your account have different changes. Device work was kept; download a backup before reconciling.';
       }catch(e){if(!p)throw e;notice='Opened the saved device copy. '+e.message;}
     }
-    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);p=await withCompany(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;ruleTaskId=view?.ruleTaskId||"";draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
+    if(S.owner()!==owner)return;if(!p)throw Error('Saved project not found.');p=await collectChecklist(p);p=await withCompany(p);if(S.owner()!==owner)return;project=p;window.SiteDecisions.setActive(project);investigation=view?.investigation||null;ruleTaskId=view?.ruleTaskId||"";draftType=view?.draftType||p.application.cityInspect?.typeId||'';capture=Promise.resolve(p);tab=viewTabs.includes(view?.tab)?view.tab:'overview';section=['site','filing','management'].includes(view?.section)?view.section:'site';cityPage=/^[a-z-]+$/i.test(view?.cityPage||'')?view.cityPage:'primary';wtScreen=/^[a-z]+$/.test(view?.wtScreen||'')?view.wtScreen:'';formView=view?.formView==='full'?'full':'walk';if(tab==='site'){document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));projectFrame('site');}else render();if(notice)message(notice);window.scrollTo(0,0);
   }
   // Fill empty builder/contact roles from the contractor's saved company profile.
   async function withCompany(p){if(!p||!window.MyCompany)return p;let cur=p;for(const c of window.MyCompany.commandsFor(cur)){try{const next=W.apply(cur,c);if(next!==cur){await S.save(next,cur.revision);cur=next;}}catch(e){break;}}return cur;}
@@ -8544,7 +8854,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   window.ProjectWorkspace={commit:(command,file)=>commit(command,file),project:()=>project};
   function draftProject(){if(tab!=='draft')return project;return {...project,application:{...project.application,cityInspect:{...project.application.cityInspect,typeId:draftType||project.application.cityInspect?.typeId}}};}
   async function openPermitDraft(id){
-    await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';
+    await saveCityPage();draftType=String(id);tab='draft';section='filing';cityPage='primary';wtScreen='';formView='walk';
     if((project.application.permitSelections||[]).includes(draftType)||project.application.cityInspect?.typeId===draftType)render();
     else await commit({type:'city_application',permitType:draftType});
     const heading=host.querySelector('.permit-draft-page h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
@@ -8553,7 +8863,13 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   async function saveCityPage() {
     if(!document.body.classList.contains('show-project'))return;
     const f=host.querySelector('form[data-command=city_application_page]');
-    if(f){const command=window.CityApplication.formCommand(project,new FormData(f));if(command.entries.length)await commit(command);}
+    if(!f)return;
+    const command=window.CityApplication.formCommand(project,new FormData(f)),walk=window.PermitWalkthrough&&f.dataset.wtScreen;
+    // The walkthrough also saves its yes/no answers, that this screen was visited, and answers the user ticked "Looks right".
+    const cmds=[...(command.entries.length?[command]:[]),...(walk?window.PermitWalkthrough.commands(project,f):[])];
+    if(walk&&f.querySelector('[name=wt-ok]:checked'))cmds.push({deferred:true});
+    let next=project;for(const c of cmds){if(c.deferred){for(const r of window.PermitWalkthrough.reviews(next,f))next=W.apply(next,r);continue;}next=W.apply(next,c);}
+    if(next!==project){await S.save(next,project.revision);project=next;window.SiteDecisions.setActive(project);}
   }
   async function collectChecklist(p) {
     const account=S.owner();const checkAccount=()=>{if(S.owner()!==account)throw Error('Account changed during checklist migration. Reopen the project.');};
@@ -8613,7 +8929,10 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   window.addEventListener('cornerpin:report-visible',()=>{if(project){section='site';tab='site';projectFrame('site');}});
   function stageNavigation(){return '';}
   function overview(){return window.ProjectOverview.render(project);}
-  function draft(){const p=draftProject(),type=p.application.cityInspect?.typeId,t=window.CityApplication.catalog.types.find(t=>t.value===type);return '<div class="permit-draft-page"><div class="pw-actions">'+button('permit-hub','← Back to permit preparation')+'</div><section class="pw-card"><h2>'+esc(t?.label||'Permit')+' permit form</h2><p>Your answers for the city\'s form. Nothing is sent to the city until you submit.</p></section>'+window.PermitPrepUI.readiness(p)+window.CityApplication.render(p,cityPage)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.valuation(p)+'</div>';}
+  function draft(){const p=draftProject(),wt=window.PermitWalkthrough&&formView==='walk'&&window.CityApplication.supported(p)&&p.application.cityInspect?.typeId;
+    if(wt){const t=window.CityApplication.catalog.types.find(t=>t.value===p.application.cityInspect.typeId);return '<div class="permit-draft-page cp-wt-page"><div class="pw-actions">'+button('permit-hub','← Back to File a permit')+'</div><header class="cp-wt-title"><p class="cp-eyebrow">'+esc(p.application.jurisdiction||'City')+' permit walkthrough</p><h2>'+esc(t?.label||'Permit')+' permit</h2><p>We’ll go through the city’s form one screen at a time. Cornerpin fills in what it found and shows you where each answer came from. Nothing is sent to the city.</p></header>'+window.PermitWalkthrough.render(p,wtScreen)+'</div>';}
+    return draftFull();}
+  function draftFull(){const p=draftProject(),type=p.application.cityInspect?.typeId,t=window.CityApplication.catalog.types.find(t=>t.value===type);return '<div class="permit-draft-page"><div class="pw-actions">'+button('permit-hub','← Back to permit preparation')+(window.PermitWalkthrough?button('wt-walk','Back to the step-by-step walkthrough'):'')+'</div><section class="pw-card"><h2>'+esc(t?.label||'Permit')+' permit form</h2><p>Your answers for the city\'s form. Nothing is sent to the city until you submit.</p></section>'+window.PermitPrepUI.readiness(p)+window.CityApplication.render(p,cityPage)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.valuation(p)+'</div>';}
   function filing() {
     const p = project;
     return (window.NextSteps?window.NextSteps.checklistCard(p):'')+(window.MyCompany?window.MyCompany.form():'')+'<section class="pw-card"><h2>Required approvals</h2><p>Check location-based requirements and retain the actual approval evidence before preparing the filing handoff.</p>'+button('tab','Review rules and approvals','rules')+'</section>'+(window.PermitPrepUI?window.PermitPrepUI.permits(p)+window.PermitPrepUI.plans(p)+(window.MeasurementWorkbench?window.MeasurementWorkbench.panel(p):'')+window.PermitPrepUI.team(p):'')+'<section class="pw-card"><h2>Application details</h2><p>' + esc(p.application.jurisdiction || 'Permitting authority unresolved in site review') + '</p>' + form('application', '<div class="pw-grid">' + field('applicant','Applicant',p.application.applicant) + field('owner','Property owner',p.application.owner) + field('contractor','Contractor',p.application.contractor) + '</div>' + area('description','Project description',p.application.description), 'Save application details') + '<details><summary>Fields carried forward from site review</summary>' + ((((p.report.facts || {}).packet || {}).rows || []).map(r => '<p><strong>' + esc(r[0]) + ':</strong> ' + esc(r[1]) + '<br><span class="pw-muted">' + esc(r[2]) + '</span></p>').join('')) + '</details></section>' + requirementsCard(p) + '<section class="pw-card"><details><summary>Source packet: application data, drafted requests and preliminary site plan</summary><div class="pw-source-packet">' + (((p.report.facts||{}).packets&&Object.keys(p.report.facts.packets).length)?Object.values(p.report.facts.packets).map(pk=>window.CornerpinReportViews.packet(pk)).join(''):window.CornerpinReportViews.packet((p.report.facts || {}).packet)) + '</div></details></section>' + packagePanel('initial') + '<p>Already filed? Record the receipt in Submissions &amp; Review.</p>';
@@ -8767,7 +9086,10 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       else if(a==='return-investigation'){if(investigation?.draft){draftType=investigation.draftType;cityPage=investigation.cityPage;tab='draft';section='filing';render();focusDestination();}else{document.body.classList.remove('show-project');window.dispatchEvent(new CustomEvent('cornerpin:restore-report',{detail:project.report}));if(investigation)window.ReportCategories.resume(document.getElementById('rv'),investigation);}}
       else if(a==='view-file'||a==='view-selected-document'){const fileId=a==='view-file'?id:host.querySelector('#city-source-doc')?.value;const d=project.documents.find(x=>x.id===fileId),blob=await S.file(fileId);if(!d||!blob)throw Error('Saved file unavailable on this device. Use the public source link, or restore the file from your account.');await window.SiteDocumentUI.view(d,blob,b);}
       else if(a==='download-file') {const d=project.documents.find(x=>x.id===id), blob=await S.file(id);if(!blob)throw new Error('File not available in this browser.');download(d.name,blob);}
-      else if(a==='city-page') {await saveCityPage();tab='draft';section='filing';cityPage=id;render();const target=b.dataset.fieldTarget?document.getElementById('city-'+b.dataset.fieldTarget):host.querySelector('form[data-command=city_application_page]');if(target){target.focus({preventScroll:true});target.scrollIntoView({block:'center'});}}
+      else if(a==='wt-go'){if(!id)return;await saveCityPage();tab='draft';section='filing';formView='walk';wtScreen=id;render();const h=host.querySelector('.cp-wt-q');if(h)h.focus({preventScroll:true});host.querySelector('.cp-wt')?.scrollIntoView({block:'start'});}
+      else if(a==='wt-full'){await saveCityPage();formView='full';cityPage='primary';render();window.scrollTo(0,0);}
+      else if(a==='wt-walk'){await saveCityPage();formView='walk';render();window.scrollTo(0,0);}
+      else if(a==='city-page') {await saveCityPage();formView='full';tab='draft';section='filing';cityPage=id;render();const target=b.dataset.fieldTarget?document.getElementById('city-'+b.dataset.fieldTarget):host.querySelector('form[data-command=city_application_page]');if(target){target.focus({preventScroll:true});target.scrollIntoView({block:'center'});}}
       else if(a==='city-download') {await saveCityPage();download('cornerpin-city-answers.txt',window.CityApplication.sheet(draftProject()),'text/plain');}
       else if(a==='city-copy') {const row=window.CityApplication.rows(project,draftProject().application.cityInspect?.typeId).find(r=>r.key===id);if(!row||!row.value)throw Error('No saved or suggested answer to copy.');await navigator.clipboard.writeText(row.value);message('Saved answer copied. Save any edits before copying.');}
       else if(a==='export-package') await exportPackage(id);
@@ -8805,6 +9127,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       if(command.type==='answer_review')await saveCityPage();
       if(command.type==='site_review'){command.references=[{documentId:command.documentId,url:command.url,locator:command.locator,role:'supports'}];if(command.comparisonUrl)command.references.push({url:command.comparisonUrl,locator:command.comparisonLocator,role:command.comparisonRole});}
       if(command.type==='city_application_page'){
+        if(f.dataset.wtScreen){await saveCityPage();if(e.submitter?.dataset.wtNext)wtScreen=e.submitter.dataset.wtNext;render();const h=host.querySelector('.cp-wt-q');if(h)h.focus({preventScroll:true});host.querySelector('.cp-wt')?.scrollIntoView({block:'start'});message('Saved. Nothing sent to the city.');return;}
         await commit(window.CityApplication.formCommand(project,data));if(e.submitter?.dataset.cityNext){cityPage=e.submitter.dataset.cityNext;render();}
         message('Application page saved. Nothing sent to CityInspect.');return;
       }
