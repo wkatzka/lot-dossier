@@ -1556,6 +1556,17 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-wt-vals dd{margin:0;font-weight:650;color:var(--cp-ink);text-align:right;overflow-wrap:anywhere}
 #project-workspace .cp-wt-more summary{min-height:28px;font-size:var(--cp-text-xs);font-weight:600;color:var(--cp-muted)}
 .cp-wt-more p{margin:4px 0 0;font-size:var(--cp-text-xs);color:var(--cp-muted)}
+/* Ready to file: one block per permit, headed by the permit */
+.cp-checklist>li.cp-permit-block{display:block;margin:6px 0 4px;padding:20px 22px 8px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-input)}
+.cp-checklist>li.cp-permit-block+li.cp-permit-block{margin-top:14px}
+#project-workspace h3.cp-permit-title{margin:0 0 6px;font-size:20px;font-weight:650;line-height:1.3;letter-spacing:-.01em}
+#project-workspace .cp-permit-title .cp-permit-name{font-size:inherit;font-weight:inherit;color:var(--cp-ink);text-decoration:none}
+#project-workspace .cp-permit-title .cp-permit-name:hover{color:var(--cp-primary);text-decoration:underline}
+.cp-permit-rows{margin:16px 0 0;padding:0;gap:0}
+.cp-permit-rows>li{border-top:1px solid var(--cp-line)}
+.cp-permit-rows>li:first-child{border-top:1px solid var(--cp-line)}
+.cp-permit-rows>li.cp-permit-note{display:block;padding:10px 0}
+.cp-permit-rows>li.cp-permit-note p{margin:0;font-size:var(--cp-text-sm)}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6507,12 +6518,12 @@ function permitSummary(p,t){
  const total=form.total+d.total+l.total,ready=form.ready+d.ready+l.ready;
  return {typeId:t,label:label(t),supported,form,docs:d,site:l,total,ready,pct:total?Math.round(100*ready/total):0,complete:total>0&&ready===total};
 }
-function permitHeader(sm,city){
+function permitHeader(sm,city,i,n){
  const parts=[sm.form.total?plural(sm.form.total,'form answer'):'',sm.docs.total?plural(sm.docs.total,'document'):'',sm.site.total?plural(sm.site.total,'check')+' about this lot':''].filter(Boolean);
  const needs=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts.at(-1):parts[0]||'';
  const yours=[sm.form.missing?plural(sm.form.missing,'answer')+' to fill in':'',sm.form.toCheck?(sm.form.missing?sm.form.toCheck:plural(sm.form.toCheck,'answer'))+' for your review':'',sm.docs.left.length?plural(sm.docs.left.length,'document'):'',sm.site.left.length?plural(sm.site.left.length,'lot check'):''].filter(Boolean);
  const src=sm.form.sources.length>1?sm.form.sources.slice(0,-1).join(', ')+' and '+sm.form.sources.at(-1):sm.form.sources[0]||'';
- return '<div class="cp-permit-head"><p class="cp-eyebrow">'+esc(sm.label)+' permit · '+esc(city)+'</p>'+
+ return '<div class="cp-permit-head"><p class="cp-eyebrow">'+(n>1?'Permit '+(i+1)+' of '+n+' · ':'')+esc(city)+'</p><h3 class="cp-permit-title">'+(sm.supported&&sm.form.total?'<button type="button" class="cp-link cp-permit-name" data-action="prepare-permit" data-id="'+esc(sm.typeId)+'">'+esc(sm.label)+' permit</button>':esc(sm.label)+' permit')+'</h3>'+
   (needs?'<p class="cp-permit-needs">To issue this permit, the city needs <b>'+esc(needs)+'</b>.</p>':'<p class="cp-permit-needs">Cornerpin hasn’t mapped this city’s form yet; use the city’s own checklist.</p>')+
   (sm.total?'<div class="cp-permit-progress"><div class="cp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+sm.total+'" aria-valuenow="'+sm.ready+'" aria-label="'+esc(sm.label)+' permit progress"><span style="width:'+sm.pct+'%"></span></div><b>'+sm.ready+' of '+sm.total+' ready</b></div>':'')+
   (sm.form.found?'<p class="cp-permit-found">'+I('search')+'<span>Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve reviewed '+sm.form.checked+'.':'Review each one before it counts.')+'</span></p>':'')+
@@ -6563,8 +6574,16 @@ const ITEM_ICON=id=>id==='company'?'briefcase':id==='owner'?'user':/^form-/.test
 function whoTag(w){return '<span class="cp-who cp-who-'+(WHO_TONE[w]||'pro')+'">'+esc(w)+'</span>';}
 function stepsCard(p){const list=steps(p);if(!list.length)return '';
  return '<section class="cp-answer cp-next-steps" aria-labelledby="next-steps-heading"><p class="cp-eyebrow" id="next-steps-heading">Your next steps</p><ol>'+list.map(s=>'<li><span class="cp-step-icon">'+AR(WHO_ART[s.who]||'builder',WHO_ICON[s.who]||'hardhat')+'</span><div>'+whoTag(s.who)+'<br><strong>'+esc(s.title)+'</strong><p>'+esc(s.detail)+'</p></div>'+button(s.action)+'</li>').join('')+'</ol></section>';}
-function checklistCard(p){const c=checklist(p),perm=planned(p).map(t=>permitSummary(p,t));
- return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p>'+(perm.length>1?'<p class="cp-permits-overall"><b>'+perm.filter(x=>x.complete).length+' of '+perm.length+' permits</b> ready to submit.</p>':'')+'<ol class="cp-checklist">'+c.items.map(x=>(/^form-/.test(x.id)?'<li class="cp-permit-li">'+permitHeader(perm.find(z=>'form-'+z.typeId===x.id)||permitSummary(p,x.id.slice(5)),c.jurisdiction)+'</li>':'')+'<li class="'+(x.done?'is-done':'')+(/^(form|docs|site)-/.test(x.id)?' cp-permit-sub':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+AR(ITEM_ART(x.id),ITEM_ICON(x.id))+'</span><div><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>').join('')+'</ol><p class="cp-trust">Cornerpin reads public records and the city’s published rules. The city, your HOA and your professionals make the final calls.</p>'+
+function checklistCard(p){const c=checklist(p),types=planned(p),perm=types.map(t=>permitSummary(p,t));
+ const by=id=>c.items.find(x=>x.id===id);
+ const row=(x,title)=>!x?'':'<li class="'+(x.done?'is-done':'')+'"><span class="cp-check" aria-hidden="true">'+(x.done?'✓':'')+'</span><span class="cp-step-icon">'+AR(ITEM_ART(x.id),ITEM_ICON(x.id))+'</span><div><strong>'+esc(title||x.title)+'</strong><p>'+esc(x.detail)+'</p></div>'+(x.id==='submit'?button({...x.action,disabled:!c.ready&&!c.filed}):button(x.action))+'<span class="pw-visually-hidden">'+(x.done?'Done':'To do')+'</span></li>';
+ const shared=[by('owner'),by('company')],sharedLeft=shared.filter(x=>x&&!x.done);
+ // Each permit is its own block, headed by the permit; everything it needs sits under it in walkthrough order.
+ const blocks=perm.map((sm,i)=>{const t=sm.typeId;
+  const own=i===0?row(by('owner'),'Property owner')+row(by('company'),'Your company (the builder)'):sharedLeft.length?'<li class="cp-permit-note"><p>Owner and company details are shared with the '+esc(perm[0].label)+' permit above.</p></li>':'';
+  return '<li class="cp-permit-block">'+permitHeader(sm,c.jurisdiction,i,perm.length)+'<ol class="cp-checklist cp-permit-rows">'+own+row(by('form-'+t),'City form answers')+row(by('docs-'+t),'Documents')+row(by('site-'+t),'Lot checks')+'</ol></li>';}).join('');
+ return '<section class="pw-card cp-ready" id="ready-to-file" aria-labelledby="ready-heading"><h2 id="ready-heading">Ready to file</h2><p>'+(c.filed?'Submitted. Track the city\'s review under Submissions & Review.':c.ready?'Everything is ready. Submit to '+esc(c.jurisdiction)+'.':plural(c.remaining,'thing')+' left before you can submit to '+esc(c.jurisdiction)+'.')+'</p>'+(perm.length>1?'<p class="cp-permits-overall"><b>'+perm.filter(x=>x.complete).length+' of '+perm.length+' permits</b> ready to submit.</p>':'')+
+  '<ol class="cp-checklist">'+(types.length?blocks:row(by('plan'))+shared.map(x=>row(x)).join(''))+row(by('submit'))+'</ol><p class="cp-trust">Cornerpin reads public records and the city’s published rules. The city, your HOA and your professionals make the final calls.</p>'+
   (c.ready&&!c.filed?'<div id="submit-help" hidden><p><strong>How to submit:</strong> 1. Download your answers. 2. Open '+(c.portal?'<a href="'+esc(c.portal)+'" target="_blank" rel="noopener">the city\'s permit portal</a>':'the city\'s permit portal')+' and copy them in, attaching your documents. 3. Come back and record the application number.</p><div class="pw-actions"><button type="button" data-action="city-download-all">Download my answers</button><button type="button" data-action="record-receipt">I\'ve submitted it</button></div></div>':'')+'</section>';}
 const api={checklist,steps,stepsCard,checklistCard,planned,permitSummary,kindOf};if(node)module.exports=api;else root.NextSteps=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -79,6 +79,12 @@ console.log('PASS: blank optional questions stay visible with a plain explanatio
  assert(/To issue this permit, the city needs <b>\d+ form answers, \d+ documents and \d+ checks about this lot<\/b>/.test(html));
  assert(/role="progressbar"[^>]*aria-valuemax="\d+" aria-valuenow="\d+"/.test(html)&&/Cornerpin found <b>\d+ answers?<\/b> from /.test(html));
  assert(/<b>0 of 2 permits<\/b> ready to submit/.test(html),'multi-permit projects show how many permits are ready');
+ {const {JSDOM}=require('jsdom'),doc=new JSDOM('<main>'+html+'</main>').window.document,top=[...doc.querySelectorAll('.cp-ready>ol.cp-checklist>li')];
+  assert(top[0].classList.contains('cp-permit-block'),'the first thing under Ready to file is a permit, not the company step');
+  assert.match(top[0].querySelector('h3.cp-permit-title').textContent,/ permit$/);
+  assert(top[0].querySelector('.cp-permit-rows').textContent.includes('Your company (the builder)'),'company details sit inside the permit');
+  assert.equal(doc.querySelectorAll('.cp-permit-rows strong').length-[...doc.querySelectorAll('.cp-permit-rows strong')].filter(x=>/company|owner/i.test(x.textContent)).length,top.filter(x=>x.classList.contains('cp-permit-block')).reduce((n,b)=>n+b.querySelectorAll('.cp-permit-rows>li:not(.cp-permit-note)').length,0)-2,'shared steps appear once, in the first permit');
+  assert.equal(top.at(-1).textContent.includes('Submit to'),true,'submit stays last');}
  console.log('PASS: each permit states what the city needs and what Cornerpin found, with an honest progress bar.');}
 
 // House packets group requirements as Drawings/Reports/Stormwater/Approvals/Fees: they still count as documents and lot checks.
