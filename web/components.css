@@ -139,3 +139,8 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-step-icon:has(>.cp-art){width:44px;height:44px;flex:none}
 .cp-qicon:has(>.cp-art){width:44px;height:44px;display:inline-flex}
 #rv .cp-frow-icon:has(>.cp-art){width:44px;height:44px}
+/* Site Review: topic illustration once in the group header; rows without their own illustration sit flush */
+#rv .group>header{display:flex;align-items:center;gap:10px}
+#rv .cp-group-art{width:40px;height:40px;flex:none}
+#rv .cp-frow-noicon .cp-frow-head{gap:0}
+#rv .cp-frow-noicon :is(.cp-frow-body>p,.next,.cp-frow-meta,.cp-frow-actions,.cp-more){margin-left:0}
