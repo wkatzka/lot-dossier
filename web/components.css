@@ -57,7 +57,7 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 
 /* ---------- Buttons ---------- */
 /* Secondary (default) */
-#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button,#rv :is(.cp-answer,.cp-site-v2,#site-intent,.cp-intent) button:not(.cp-link):not(.cp-more){
+#project-workspace button:not([data-frame]):not(.city-pages button):not(.cp-intent-option):not(.cp-intent-choose):not(.cp-link):not(.cp-more):not(.field-evidence-button):not([role=tab]),#rv .cp-frow-actions button,#rv :is(.cp-answer,.cp-site-v2,#site-intent,.cp-intent) button:not(.cp-link):not(.cp-more):not(.cp-intent-option):not(.cp-intent-choose){
  font-size:var(--cp-text);font-weight:600;border-radius:var(--cp-r-control);min-height:40px;padding:8px 14px;line-height:1.2}
 /* Primary */
 #project-workspace button.primary,#project-workspace button.cp-primary,#project-workspace .cp-go,#project-workspace button[data-city-next],#project-workspace .cp-ready button[data-action=submit-city]{
@@ -111,3 +111,19 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .account-dialog .account-company button,.account-dialog .account-secondary{background:transparent;color:var(--cp-ink);border:1px solid var(--cp-control);border-radius:var(--cp-r-control);padding:8px 14px;font-weight:600}
 .account-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .account-dialog input:not([type=checkbox]){width:100%;box-sizing:border-box;border:1px solid var(--cp-control);border-radius:var(--cp-r-control);background:var(--cp-input,#fff);min-height:44px;padding:8px 12px;font-size:16px}
+
+/* "What are you planning?" option tiles: header (icon · name · fit), two short reasons, Choose */
+.cp-intent-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;list-style:none;padding:0;margin:0 0 12px}
+.cp-intent-tile{display:flex;flex-direction:column;gap:10px;margin:0;padding:16px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:var(--cp-input,#fff);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.cp-intent-tile:hover,.cp-intent-tile:focus-within{border-color:var(--cp-primary);box-shadow:0 1px 0 var(--cp-primary)}
+.cp-intent-tile .cp-intent-option,#project-workspace .cp-intent-tile .cp-intent-option,#rv .cp-intent-tile .cp-intent-option{display:flex;align-items:center;gap:10px;width:100%;margin:0;padding:0;min-height:0;border:0;background:none;box-shadow:none;color:var(--cp-ink);font-size:16px;font-weight:650;line-height:1.3;text-align:left;cursor:pointer}
+.cp-intent-tile .cp-intent-ico{width:32px;height:32px;border-radius:var(--cp-r-control);flex:none}
+.cp-intent-tile .cp-intent-ico .cp-icon{width:18px;height:18px}
+.cp-intent-tile .cp-intent-label{flex:1;min-width:0}
+.cp-intent-tile .cp-status{margin-left:auto;flex:none}
+.cp-intent-tile .cp-intent-reasons{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:var(--cp-text-sm);line-height:1.45;color:var(--cp-muted)}
+.cp-intent-tile .cp-intent-reasons li{margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cp-src{font-size:12px;color:var(--cp-primary);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.cp-intent-choose,#project-workspace .cp-intent-choose,#rv .cp-intent-choose{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:0;min-height:0;border:0;background:none;color:var(--cp-primary);font-size:var(--cp-text);font-weight:650;cursor:pointer}
+.cp-intent-choose .cp-icon{width:15px;height:15px}
+.cp-intent-tile.cp-fit-good{border-left:3px solid var(--cp-t-ok)}
