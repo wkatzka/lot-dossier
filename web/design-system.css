@@ -532,3 +532,4 @@ body details.cp-fine[open]>summary::after{content:none}
 #project-workspace .cp-num-err{display:none;margin:6px 0 0;font-size:13px;color:#8c1d16}
 #project-workspace .cp-num:has(input:invalid){border-color:#b3261e;background:#fdf3f2}
 #project-workspace .cp-num:has(input:invalid)+.cp-num-err{display:block}
+#project-workspace:has(.handoff-guide) .cp-app-stats{display:none}
