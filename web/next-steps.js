@@ -48,7 +48,7 @@ function checklist(p){
 
 // Per permit, in plain words: what the city needs, what Cornerpin found (and from where), what you've checked,
 // and what's still yours. The bar counts only items that are done or checked, never Cornerpin's unchecked guesses.
-const SOURCES=[[/confirmed project team|team profile|company/i,'your company details'],[/lot area|calculated/i,'the parcel map'],[/zoning|setback|development standard/i,'the zoning code'],[/plat/i,'the recorded plat'],[/plan|drawing|document|extract|schedule/i,'your plans'],[/parcel|jurisdiction record|assessor|county/i,'the county parcel record'],[/application details|scope|project name|preparation date/i,'your project details']];
+const SOURCES=[[/confirmed project team|team profile/i,'your company details'],[/public company contact|business listing|website/i,'public business listings'],[/lot area|calculated/i,'the parcel map'],[/zoning|setback|development standard/i,'the zoning code'],[/plat/i,'the recorded plat'],[/plan|drawing|document|extract|schedule/i,'your plans'],[/parcel|jurisdiction record|assessor|county/i,'the county parcel record'],[/application details|scope|project name|preparation date/i,'your project details']];
 function sourceOf(basis){for(const [re,l] of SOURCES)if(re.test(basis||''))return l;return '';}
 function permitSummary(p,t){
  const c=C(),supported=!!(c&&c.supported&&c.supported(p)),reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===planned(p)[0]&&r.id!=='scope'))&&r.required);
