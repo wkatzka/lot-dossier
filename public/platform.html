@@ -1448,6 +1448,7 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-permit-found .cp-icon,.cp-ok-line .cp-icon{width:16px;height:16px;flex:none;margin-top:2px;color:var(--cp-primary)}
 .cp-permit-yours{color:var(--cp-muted)}
 .cp-permits-overall{margin:4px 0 8px;font-size:var(--cp-text)}
+.cp-permit-found>span,.cp-permit-yours>span{flex:1;min-width:0}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -6365,7 +6366,7 @@ function checklist(p){
   if(supported){const r=c.readiness(p,t),n=r.missing.length,m=r.unreviewed.length;
    items.push({id:'form-'+t,who:'You',title:label(t)+' permit form',detail:(()=>{const f=permitSummary(p,t).form;return (f.total?f.ready+' of '+f.total+' answers ready':'')+(n||m?' · '+[n?plural(n,'question')+' to answer':'',m?plural(m,'answer')+' Cornerpin filled in to check':''].filter(Boolean).join(' · '):'');})()||'All required answers done',done:!n&&!m,action:{type:'prepare-permit',id:t,label:n||m?'Fill in':'Review'}});}
   else items.push({id:'form-'+t,who:'You',title:label(t)+' application',detail:'Fill in '+jurisdiction(p)+'\'s own form; Cornerpin has not mapped it yet.',done:false,action:{type:'tab',id:'filing',label:'Open'}});
-  const reqs=(p.requirements||[]).filter(r=>r.permitType===t&&r.required);
+  const main=planned(p)[0],reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===main&&r.id!=='scope'))&&r.required);
   // Projects saved before requirements carried their packet group: infer it from the stable id.
   const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
   const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
@@ -6384,7 +6385,7 @@ function checklist(p){
 const SOURCES=[[/confirmed project team|team profile|company/i,'your company details'],[/lot area|calculated/i,'the parcel map'],[/zoning|setback|development standard/i,'the zoning code'],[/plat/i,'the recorded plat'],[/plan|drawing|document|extract|schedule/i,'your plans'],[/parcel|jurisdiction record|assessor|county/i,'the county parcel record'],[/application details|scope|project name|preparation date/i,'your project details']];
 function sourceOf(basis){for(const [re,l] of SOURCES)if(re.test(basis||''))return l;return '';}
 function permitSummary(p,t){
- const c=C(),supported=!!(c&&c.supported&&c.supported(p)),reqs=(p.requirements||[]).filter(r=>r.permitType===t&&r.required);
+ const c=C(),supported=!!(c&&c.supported&&c.supported(p)),reqs=(p.requirements||[]).filter(r=>(r.permitType===t||(!r.permitType&&t===planned(p)[0]&&r.id!=='scope'))&&r.required);
  const grp=r=>r.group||(/:doc-/.test(r.id||'')?'What the city asks for':/:(lot|rule)-/.test(r.id||'')?'What this lot adds':'');
  const docs=reqs.filter(r=>grp(r)==='What the city asks for'),site=reqs.filter(r=>grp(r)==='What this lot adds'||grp(r)==='City rules for this work');
  let form={total:0,ready:0,found:0,checked:0,missing:0,toCheck:0,sources:[]};
@@ -6404,8 +6405,8 @@ function permitHeader(sm,city){
  return '<div class="cp-permit-head"><p class="cp-eyebrow">'+esc(sm.label)+' permit · '+esc(city)+'</p>'+
   (needs?'<p class="cp-permit-needs">To issue this permit, the city needs <b>'+esc(needs)+'</b>.</p>':'<p class="cp-permit-needs">Cornerpin hasn’t mapped this city’s form yet; use the city’s own checklist.</p>')+
   (sm.total?'<div class="cp-permit-progress"><div class="cp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+sm.total+'" aria-valuenow="'+sm.ready+'" aria-label="'+esc(sm.label)+' permit progress"><span style="width:'+sm.pct+'%"></span></div><b>'+sm.ready+' of '+sm.total+' ready</b></div>':'')+
-  (sm.form.found?'<p class="cp-permit-found">'+I('search')+' Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve checked '+sm.form.checked+'.':'Check each one before it counts.')+'</p>':'')+
-  (yours.length?'<p class="cp-permit-yours">Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+'</div>';
+  (sm.form.found?'<p class="cp-permit-found">'+I('search')+'<span>Cornerpin found <b>'+plural(sm.form.found,'answer')+'</b>'+(src?' from '+esc(src):'')+'. '+(sm.form.checked?'You’ve checked '+sm.form.checked+'.''Check each one before it counts.')+'</span></p>':'')+
+  (yours.length?'<p class="cp-permit-yours"><span>Still needed from you: <b>'+esc(yours.join(', '))+'</b>.</span></p>':sm.total?'<p class="cp-permit-yours cp-ok-line">'+I('check')+' Everything for this permit is ready.</p>':'')+'</div>';
 }
 // The next three things to do on this project, most urgent first.
 function steps(p,{limit=3}={}){

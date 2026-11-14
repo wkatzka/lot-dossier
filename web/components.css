@@ -184,3 +184,4 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-permit-found .cp-icon,.cp-ok-line .cp-icon{width:16px;height:16px;flex:none;margin-top:2px;color:var(--cp-primary)}
 .cp-permit-yours{color:var(--cp-muted)}
 .cp-permits-overall{margin:4px 0 8px;font-size:var(--cp-text)}
+.cp-permit-found>span,.cp-permit-yours>span{flex:1;min-width:0}
