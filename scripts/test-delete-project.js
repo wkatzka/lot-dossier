@@ -17,7 +17,7 @@ function device({signedIn,allowDelete}){
    return Response.json([...records.values()].map(record=>({record})));}
   if(url.startsWith('https://db.supabase.co/storage/')){if(opt.method==='POST'){files.set(url,opt.body);return Response.json({});}if(opt.method==='DELETE'){files.delete(url);return Response.json({});}return files.has(url)?new Response(files.get(url)):new Response('',{status:404});}
   throw Error('Unexpected request: '+url);};
- for(const file of ['evidence-ledger','site-decisions','permit-workflow','project-backup','project-store','cloud-sync','project-sync','analysis-progress','permit-facts','permit-assistant','answer-reviews','city-application','project-overview'])w.eval(fs.readFileSync('web/'+file+'.js','utf8'));
+ for(const file of ['evidence-ledger','site-decisions','permit-workflow','project-backup','project-store','cloud-sync','project-sync','analysis-progress','permit-facts','permit-assistant','answer-reviews','city-application','project-overview','project-card'])w.eval(fs.readFileSync('web/'+file+'.js','utf8'));
  w.CornerpinAccount={ready:w.CloudSync.init()};w.CornerpinReportViews={packet:()=>''};w.ResearchWorkspace={render:()=>''};w.eval(fs.readFileSync('web/project-workspace.js','utf8'));
  return {w,d:w.document,records,files,calls};
 }
@@ -25,7 +25,7 @@ async function seed(t,parcels){const W=t.w.PermitWorkflow,ids=[];for(const [pid,
   if(withFile){const blob=new t.w.Blob(['plan pdf '+pid]),hash=await t.w.ProjectBackup.hash(await blob.arrayBuffer());p=W.apply(p,{type:'document',document:{id:'doc-'+pid,name:'plan-'+pid+'.pdf',size:blob.size,hash,role:'plan',family:'doc-'+pid}});await t.w.ProjectStore.save(p,null,{id:'doc-'+pid,blob});}
   else await t.w.ProjectStore.save(p,null);ids.push(p.id);}
  return ids;}
-const card=(d,addr)=>[...d.querySelectorAll('.pw-project-grid>.pw-card')].find(c=>c.querySelector('h2')?.textContent===addr);
+const card=(d,addr)=>[...d.querySelectorAll('.pw-project-grid>.pw-card')].find(c=>c.querySelector('h2')?.textContent.toUpperCase()===addr);
 const idle=t=>until(()=>!t.w.CornerpinWorkspaceBusy(),'idle');
 (async()=>{
  // 1. Guest: confirm in place, Cancel keeps it, Delete permanently removes the project and its file from this device.
@@ -33,14 +33,14 @@ const idle=t=>until(()=>!t.w.CornerpinWorkspaceBusy(),'idle');
   t.d.getElementById('home-projects').click();await until(()=>card(t.d,'1 TEST ST'),'list');
   const c=card(t.d,'1 TEST ST'),box=c.querySelector('.pw-delete-confirm');assert(box.hidden,'nothing asks until you click Delete');
   c.querySelector('[data-action=delete-project]').click();await idle(t);assert(!box.hidden);
-  assert.match(box.textContent,/Delete 1 TEST ST\? This permanently removes the project, its permit answers and 1 uploaded file from this device\. It can’t be undone\./);
+  assert.match(box.textContent,/Delete 1 Test St\? This permanently removes the project, its permit answers and 1 uploaded file from this device\. It can’t be undone\./);
   assert(box.querySelector('[data-action=backup-project]'),'offers a backup first');
   box.querySelector('[data-action=cancel-delete]').click();await idle(t);assert(box.hidden);assert(await t.w.ProjectStore.get(a),'Cancel keeps it');
   c.querySelector('[data-action=delete-project]').click();await idle(t);box.querySelector('[data-action=confirm-delete]').click();
   await until(()=>!card(t.d,'1 TEST ST'),'card gone');
   assert.equal(await t.w.ProjectStore.get(a),undefined);assert.equal(await t.w.ProjectStore.file('doc-p1'),undefined,'its uploaded file is removed too');
   assert(await t.w.ProjectStore.get(b)&&card(t.d,'2 TEST ST'),'other projects untouched');
-  assert.match(t.d.getElementById('pw-message').textContent,/Deleted 1 TEST ST\./);
+  assert.match(t.d.getElementById('pw-message').textContent,/Deleted 1 Test St\./);
   assert(!t.calls.some(x=>x.method==='DELETE'),'a guest delete never touches an account');t.w.close();}
  // 2. Signed in, account not yet allowing deletes: nothing is deleted anywhere and the message says so.
  {const t=device({signedIn:true,allowDelete:false});await t.w.CornerpinAccount.ready;const [a]=await seed(t,[['p3','3 TEST ST',true]]);await until(()=>t.records.has(a),'saved to account');await t.w.ProjectSync.settle(a);

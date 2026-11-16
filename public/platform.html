@@ -1583,14 +1583,141 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-intent-later-why .cp-src{margin-left:4px}
 .cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}
 /* My projects: delete, confirmed in place */
-#project-workspace .pw-delete-link{display:block}
-#project-workspace .pw-delete-link[hidden]{display:none}
-#project-workspace .pw-delete-link{width:fit-content;margin:10px auto 0;padding:4px 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
-#project-workspace .pw-delete-link:hover{color:var(--cp-t-concern)}
 .pw-delete-confirm{margin-top:12px;padding:12px 14px;border:1px solid var(--cp-t-concern-bg);border-radius:var(--cp-r);background:#fff7f6}
 .pw-delete-confirm p{margin:0 0 8px;font-size:var(--cp-text);color:var(--cp-ink)}
 #project-workspace button.pw-danger{background:var(--cp-t-concern);border-color:var(--cp-t-concern);color:#fff}
 #project-workspace button.pw-danger:hover{background:#6f150f}
+
+/* ---------- My projects ---------- */
+/* Heading row: what this page is, and the one primary action. */
+#project-workspace .cp-projects-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin:32px 0 24px}
+#project-workspace .cp-projects-head h1{margin:0;font-size:var(--cp-title);line-height:1.15;letter-spacing:-.01em}
+#project-workspace .cp-projects-lead{margin:6px 0 0;font-size:15px;color:var(--cp-muted)}
+#project-workspace button.cp-projects-new{flex:none}
+
+/* Banner navigation: quiet links, the current page marked, one primary action. */
+#cornerpin-global-nav button.cp-nav-quiet,#cornerpin-global-nav button.cp-nav-page{background:#ffffffc7;border:1px solid transparent;font-weight:500;box-shadow:none}
+#cornerpin-global-nav button.cp-nav-quiet:hover,#cornerpin-global-nav button.cp-nav-page:hover{background:#ffffffeb;border-color:transparent}
+#cornerpin-global-nav button.cp-nav-page[aria-current=page]{background:#ffffffeb;font-weight:600;box-shadow:inset 0 -3px 0 var(--cp-primary);cursor:default}
+#cornerpin-global-nav button.cp-nav-primary{background:var(--cp-primary);border:1px solid var(--cp-primary);color:#fff;box-shadow:none}
+#cornerpin-global-nav button.cp-nav-primary:hover{background:var(--cp-primary-hover);border-color:var(--cp-primary-hover)}
+/* On My projects the heading carries New project, so the banner doesn't repeat it. */
+#cornerpin-global-nav.on-projects button.cp-nav-primary{display:none}
+
+/* Search, status and sort: only rendered once there are several projects. */
+.cp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#project-workspace .cp-proj-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:0 0 16px}
+#project-workspace .cp-proj-tools label{margin:0}
+#project-workspace .cp-proj-search{flex:1 1 260px;max-width:420px}
+#project-workspace .cp-proj-tools input,#project-workspace .cp-proj-tools select{box-sizing:border-box;height:40px;width:100%;margin:0;padding:0 12px;font:inherit;font-size:var(--cp-text);color:var(--cp-ink);background:var(--cp-input);border:1px solid var(--cp-line);border-radius:var(--cp-r-control)}
+#project-workspace .cp-proj-tools select{width:auto;padding-right:28px}
+#project-workspace .cp-proj-count{margin:0 0 0 auto;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-proj-none{margin:8px 0 0;font-size:var(--cp-text);color:var(--cp-muted)}
+
+/* Grid: as many ~320px+ columns as fit (3 on a wide screen, 2 on a tablet, 1 on a phone). */
+#project-workspace .pw-project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px;margin:0;align-items:start}
+
+/* Project card: header, progress, permits, next step, footer, separated by space rather than boxes. */
+#project-workspace .pw-project-grid>.cp-proj{position:relative;display:flex;flex-direction:column;gap:16px;min-width:0;margin:0;padding:20px 22px 16px;aspect-ratio:auto;background:var(--cp-surface);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* The Cornerpin signature: the logo's orange pin set on the card's corner, with a short drafting bracket
+   along both edges. The canvas-coloured ring interrupts the border where the pin sits. Project cards only. */
+#project-workspace .pw-project-grid>.cp-proj::before{content:"";position:absolute;top:-5px;left:-5px;width:10px;height:10px;border-radius:50%;background:var(--cp-accent);box-shadow:0 0 0 3px var(--cp-canvas);z-index:1}
+#project-workspace .pw-project-grid>.cp-proj::after{content:"";position:absolute;top:-1px;left:-1px;width:28px;height:28px;border-top:2px solid var(--cp-ink);border-left:2px solid var(--cp-ink);border-top-left-radius:var(--cp-r);opacity:.7;pointer-events:none}
+#project-workspace .pw-project-grid>.cp-proj[hidden]{display:none}
+#project-workspace .cp-proj-head{display:block;margin:0;padding:0;border:0}
+.cp-proj-id{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}
+#project-workspace .cp-proj h2{margin:0;font-size:18px;line-height:1.3;font-weight:650;letter-spacing:-.005em;color:var(--cp-ink);overflow-wrap:anywhere}
+#project-workspace .cp-proj-place{margin:4px 0 0;font-size:var(--cp-text-sm);line-height:1.5;color:var(--cp-muted)}
+#project-workspace .cp-proj-kind{margin:2px 0 0;font-size:var(--cp-text-sm);line-height:1.5;font-weight:500;color:var(--cp-ink)}
+
+
+/* Status: text plus a dot; colour only reinforces the words. */
+.cp-proj-status{display:inline-flex;align-items:center;gap:6px;flex:none;padding:3px 9px;border-radius:var(--cp-r-pill);font-size:var(--cp-text-xs);font-weight:600;line-height:1.5;white-space:nowrap}
+.cp-proj-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.cp-tone-neutral{background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral)}
+.cp-tone-ok{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+.cp-tone-verify{background:var(--cp-t-verify-bg);color:var(--cp-t-verify)}
+.cp-tone-review{background:var(--cp-t-review-bg);color:var(--cp-t-review)}
+.cp-tone-concern{background:var(--cp-t-concern-bg);color:var(--cp-t-concern)}
+
+/* Three-stage tracker. Done is solid, in progress is hatched, needs attention is amber, not started is a hairline. */
+#project-workspace .cp-proj-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+#project-workspace .cp-proj-stages li{display:flex;flex-direction:column;gap:2px;min-width:0;margin:0;padding:0}
+.cp-proj-seg{display:block;height:4px;margin-bottom:6px;border-radius:2px;background:var(--cp-line)}
+.cp-proj-stages .is-done .cp-proj-seg{background:var(--cp-t-ok)}
+.cp-proj-stages .is-active .cp-proj-seg{background:repeating-linear-gradient(135deg,var(--cp-primary) 0 4px,#29483f59 4px 7px)}
+.cp-proj-stages .is-attention .cp-proj-seg{background:var(--cp-review)}
+.cp-proj-stage{font-size:var(--cp-text-xs);font-weight:600;line-height:1.35;color:var(--cp-ink)}
+.cp-proj-stext{font-size:var(--cp-text-xs);line-height:1.35;color:var(--cp-muted)}
+.cp-proj-stages .is-attention .cp-proj-stext{color:var(--cp-t-review);font-weight:600}
+.cp-proj-stages .is-done .cp-proj-stext{color:var(--cp-t-ok)}
+
+/* Permits: up to three, each with its own status. */
+#project-workspace .cp-proj-permits h3{margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#project-workspace .cp-proj-permits ul{margin:0;padding:0;list-style:none}
+#project-workspace .cp-proj-permits li{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:7px 0;border-top:1px solid var(--cp-line)}
+#project-workspace .cp-proj-permits li:first-child{border-top:0;padding-top:2px}
+#project-workspace .cp-proj .cp-proj-permit{min-width:0;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
+#project-workspace .cp-proj .cp-proj-permit:hover{text-decoration:underline}
+.cp-proj-pstate{display:inline-flex;align-items:center;gap:5px;flex:none;padding:2px 8px;border-radius:var(--cp-r-pill);font-size:var(--cp-text-xs);font-weight:600;line-height:1.5;white-space:nowrap}
+.cp-proj-flag{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;color:#fff;font-size:10px;line-height:1}
+.cp-proj-pstate.cp-tone-review .cp-proj-flag{background:var(--cp-t-review)}
+.cp-proj-pstate.cp-tone-concern .cp-proj-flag{background:var(--cp-t-concern)}
+#project-workspace .cp-proj .cp-proj-more{margin-top:4px;font-size:var(--cp-text-sm);font-weight:500;color:var(--cp-muted)}
+#project-workspace .cp-proj-empty{margin:2px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+
+/* Next step: one line, opens the project where that step is. */
+#project-workspace .cp-proj-next{display:flex;align-items:baseline;gap:8px;margin:0;font-size:var(--cp-text)}
+#project-workspace .cp-proj-next>span{flex:none;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#project-workspace .cp-proj .cp-proj-nextlink{min-width:0;font-size:var(--cp-text);text-align:left;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* Footer: when it changed, more actions, and Open project. */
+#project-workspace .cp-proj-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px;width:auto;margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--cp-line);background:none}
+.cp-proj-updated{font-size:var(--cp-text-xs);color:var(--cp-muted);white-space:nowrap}
+#project-workspace .cp-proj-actions button{white-space:nowrap}
+.cp-proj-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+#project-workspace .cp-proj-menu{position:relative;margin:0;padding:0;border:0;background:none}
+#project-workspace .cp-proj-menu>summary{min-height:0;padding:0;margin:0;font-weight:400;display:grid;place-items:center;width:40px;height:40px;box-sizing:border-box;list-style:none;border:1px solid var(--cp-line);border-radius:var(--cp-r-control);color:var(--cp-muted);font-size:10px;letter-spacing:1px;cursor:pointer;background:transparent}
+.cp-proj-menu>summary::-webkit-details-marker{display:none}
+#project-workspace .cp-proj-menu>summary::after,#project-workspace .cp-proj-menu>summary::before{content:none}
+.cp-proj-menu>summary:hover,.cp-proj-menu[open]>summary{background:var(--cp-canvas);color:var(--cp-ink)}
+.cp-proj-menu>summary:focus-visible{outline:2px solid var(--cp-focus);outline-offset:2px}
+.cp-proj-menu-list{position:absolute;right:0;bottom:calc(100% + 6px);z-index:5;display:flex;flex-direction:column;min-width:190px;padding:6px;background:var(--cp-input);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:0 8px 24px #2732391f}
+#project-workspace .cp-proj-menu-list .cp-menu-item{display:block;width:100%;padding:8px 10px;border-radius:4px;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
+#project-workspace .cp-proj-menu-list .cp-menu-item:hover,#project-workspace .cp-proj-menu-list .cp-menu-item:focus-visible{background:var(--cp-canvas)}
+#project-workspace .cp-proj-menu-list .cp-menu-danger{color:var(--cp-t-concern)}
+#project-workspace .cp-proj .pw-delete-confirm{margin-top:-4px}
+
+/* Import: a secondary utility under the projects, without the project pin. */
+#project-workspace .cp-import{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;margin:32px 0 0;padding:14px 18px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:transparent}
+.cp-import-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral)}
+.cp-import-copy{flex:1 1 240px;min-width:0}
+#project-workspace .cp-import h2{margin:0;font-size:15px;line-height:1.35;font-weight:600}
+#project-workspace .cp-import p{margin:2px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-import-form{display:flex;align-items:center;gap:10px;margin:0;padding:0;flex-wrap:wrap}
+#project-workspace .cp-import label.pw-backup-picker{display:flex;align-items:center;min-height:40px;box-sizing:border-box;margin:0;padding:6px 12px;border:1px dashed var(--cp-control);border-radius:var(--cp-r-control);background:var(--cp-input);max-width:280px}
+#project-workspace .cp-import .pw-backup-copy{gap:0}
+#project-workspace .cp-import .pw-backup-name{font-size:var(--cp-text-sm);font-weight:600;color:var(--cp-ink)}
+#project-workspace .cp-import .pw-backup-hint{font-size:11px;color:var(--cp-muted)}
+
+/* No projects yet. */
+#project-workspace .cp-proj-emptypage{padding:28px;border:1px dashed var(--cp-control);border-radius:var(--cp-r);max-width:560px}
+#project-workspace .cp-proj-emptypage h2{margin:0 0 6px;font-size:18px}
+#project-workspace .cp-proj-emptypage p{margin:0 0 16px;color:var(--cp-muted)}
+#project-workspace .cp-guest-note{margin:16px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-guest-note .cp-link{font-size:inherit}
+
+@media(max-width:600px){
+ #project-workspace .cp-projects-head{margin:24px 0 18px;align-items:flex-start;flex-direction:column}
+ #project-workspace .pw-project-grid{gap:20px}
+ #project-workspace .pw-project-grid>.cp-proj{padding:18px 16px 14px}
+ #project-workspace .cp-proj-tools label:not(.cp-proj-search){flex:1 1 140px}
+ #project-workspace .cp-proj-tools select{width:100%;padding:0 26px 0 10px;font-size:14px}
+ #project-workspace .cp-proj-tools input{font-size:16px}
+ #project-workspace .cp-proj-count{margin:0;flex-basis:100%}
+ #project-workspace .cp-import-form{width:100%}
+ #project-workspace .cp-import label.pw-backup-picker{flex:1;max-width:none}
+}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -8782,9 +8909,98 @@ function render(p){const s=summary(p),b=(action,label,id)=>'<button type="button
  return '<section class="cp-overview" aria-labelledby="overview-heading"><div class="cp-page-heading"><div><h2 id="overview-heading" tabindex="-1">Project overview</h2><p>What we found, and what to do next.</p></div></div>'+(root.ProjectIntent?'<div id="overview-intent">'+root.ProjectIntent.card(p.report,{project:p})+'</div>':'')+(NS?NS.stepsCard(p):'')+'<div id="overview-answer"><p class="pw-muted" role="status">Loading the approvals for this lot…</p></div>'+(root.SiteAnswer?'<div id="overview-site">'+root.SiteAnswer.card(p.report,{project:p,where:'overview'})+'</div>':'')+'<ol class="cp-pipeline" aria-label="Project stages">'+
  stage('01','Site Review',s.siteOpen?'Needs attention':(p.report.findings?.length?'Checked':'Not checked'),(site?[site.flag?site.flag+' concern'+(site.flag>1?'s':''):'',site.watch?site.watch+' to watch':'',site.verify?site.verify+' to verify':''].filter(Boolean).join(' · ')||'Nothing open':s.siteOpen+' open items')+' · checked '+date(p.report.date),'site','Open Site Review')+
  stage('02','Permit Preparation',check?(check.filed?'Done':check.ready?'Ready to file':check.items.some(x=>x.done)?'In progress':'Not started'):(s.drafts.length?'In progress':'Not started'),check?(check.filed?'Submitted.':check.ready?'Everything is ready to submit.':check.remaining+' thing'+(check.remaining===1?'':'s')+' left before you can submit.'):'','filing','Open Permit Preparation')+
- stage('03','Submission & review',p.issuance?'Permit issued':p.receipts.length?(s.open.length?'Corrections':'With the city'):'Not submitted',p.issuance?'The permit is issued.':p.receipts.length?(s.open.length?s.open.length+' correction'+(s.open.length>1?'s':'')+' to answer.':'Waiting for the city\'s review.'):'Nothing has been sent to the city yet.','management','Open Submissions & Review')+'</ol><div class="cp-overview-grid"><div>'+(activity.length?'<section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Recent activity</h3>'+go('activity','View all')+'</div><ul class="cp-activity">'+activity.map(e=>'<li><div>'+esc(e.text)+'</div><time datetime="'+esc(e.at)+'">'+esc(date(e.at))+'</time></li>').join('')+'</ul></section>':'')+'<section class="cp-panel cp-panel-body"><h3>More for this project</h3><div class="cp-resource-links">'+go('rules','Rules & Approvals')+go('contacts','Contacts')+go('documents','Documents')+go('evidence','Record Review')+go('valuation','Valuation')+go('placement','Pool Planning')+go('filing','Plans, measurements & team')+'</div><details><summary>Research options</summary><form data-command="research_scope"><label>Pool in this project?<select name="pool">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.pool||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><label>Wood-burning stove or fireplace?<select name="fireplace">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.fireplace||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><button type="submit">Save</button></form></details></section></div><aside><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>The lot</h3>'+go('site','Open map')+'</div><div id="overview-map" role="region" aria-label="Lot map"><p>No lot outline saved. Open Site Review for the map.</p></div><p class="cp-panel-note">Public map data checked '+esc(date(p.report.date))+'. '+b('refresh-evidence','Check again')+'</p></section></aside></div></section>';
+ stage('03','Submission & review',p.issuance?'Permit issued':p.receipts.length?(s.open.length?'Corrections':'With the city'):'Not submitted',p.issuance?'The permit is issued.':p.receipts.length?(s.open.length?s.open.length+' correction'+(s.open.length>1?'s':'')+' to answer.':'Waiting for the city\'s review.'):'Nothing has been sent to the city yet.','management','Open Submissions & Review')+'</ol><div class="cp-overview-grid"><div>'+(activity.length?'<section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>Recent activity</h3>'+go('activity','View all')+'</div><ul class="cp-activity">'+activity.map(e=>'<li><div>'+esc(e.text)+'</div><time datetime="'+esc(e.at)+'">'+esc(date(e.at))+'</time></li>').join('')+'</ul></section>':'')+'<section class="cp-panel cp-panel-body"><h3>More for this project</h3><div class="cp-resource-links">'+go('rules','Rules & Approvals')+go('contacts','Contacts')+go('documents','Documents')+go('evidence','Record Review')+go('valuation','Valuation')+go('placement','Pool Planning')+go('filing','Plans, measurements & team')+'</div><details><summary>Research options</summary><form data-command="research_scope"><label>Pool in this project?<select name="pool">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.pool||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><label>Wood-burning stove or fireplace?<select name="fireplace">'+[['unknown','Not decided'],['included','Included'],['excluded','Not included']].map(([v,t])=>'<option value="'+v+'"'+((p.application.researchScope?.fireplace||'unknown')===v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><button type="submit">Save</button></form></details></section></div><aside><section class="cp-panel"><div class="cp-panel-head cp-inline"><h3>The lot</h3>'+go('site','Open map')+'</div><div id="overview-map" role="region" aria-label="Lot map"><p>No lot outline saved. Open Site Review for the map.</p></div><p class="cp-panel-note">Public map data checked '+esc(date(p.report.date))+'. Saved results stay as they are; public research only runs again when you choose Check again. '+b('refresh-evidence','Check again')+'</p></section></aside></div></section>';
 }
 const api={summary,stageLabel,render};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ProjectOverview=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+/* My projects: one compact card per saved project, saying what it is, where it stands and what's next.
+   Everything is read from the saved project (site review answers, permit checklist, recorded receipts,
+   corrections and issuance). Nothing is inferred: no percentages, no assumed permits, and a permit is only
+   "Submitted" or "Issued" when the user recorded a receipt or an issued permit. */
+(function(root){'use strict';
+const node=typeof module!=='undefined'&&module.exports;
+const dep=(file,name)=>{try{return node?require('./'+file):root[name]||null;}catch(e){return null;}};
+const PO=()=>dep('project-overview','ProjectOverview'),NS=()=>dep('next-steps','NextSteps'),C=()=>dep('city-application','CityApplication');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plural=(n,one,many)=>n+' '+(n===1?one:(many||one+'s'));
+// Counties Cornerpin covers, so the card can say the state without guessing.
+const STATE={Weber:'Utah'};
+const KEEP=/^(N|S|E|W|NE|NW|SE|SW|PO|US|SR|UT|LLC)$/;
+// County records are upper case; addresses read better in title case. Directions and unit letters stay capitals.
+function titleCase(s){return String(s||'').split(/(\s+)/).map(w=>{if(/^\s+$/.test(w)||!/[A-Z]/i.test(w))return w;if(KEEP.test(w.toUpperCase())&&w===w.toUpperCase())return w.toUpperCase();
+ if(/^\d+[A-Z]{1,2}$/i.test(w))return w.toLowerCase();return w.toLowerCase().replace(/(^|[-'/])([a-z])/g,(m,a,b)=>a+b.toUpperCase());}).join('');}
+function place(p){const county=p.property?.county,juris=p.application?.jurisdiction||p.report?.facts?.jurisdiction||'';
+ const c=county?county+' County'+(STATE[county]?', '+STATE[county]:''):'';return [juris&&!/county/i.test(juris)?juris:'',c].filter(Boolean).join(' · ');}
+const date=v=>v&&!isNaN(Date.parse(v))?new Date(v).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+const STATUS={issued:['Permit issued','ok'],corrections:['Corrections required','concern'],submitted:['Submitted','verify'],ready:['Ready to submit','ok'],preparing:['Permit preparation','neutral'],site:['Site review','neutral']};
+const STAGES=[['site','Site review'],['prep','Permit preparation'],['submit','Submission']];
+
+function summary(p){
+ const po=PO(),ns=NS(),c=C(),W=dep('permit-workflow','PermitWorkflow');let s=null,check=null,planned=[];
+ try{s=po?po.summary(p):null;}catch(e){s=null;}
+ try{planned=ns?ns.planned(p):[];}catch(e){planned=[];}
+ try{check=ns&&planned.length?ns.checklist(p):null;}catch(e){check=null;}
+ const sums=planned.map(t=>{try{return ns.permitSummary(p,t);}catch(e){return null;}});
+ const filed=(p.receipts||[]).length>0,open=W?W.openCorrections(p):(p.corrections||[]).filter(x=>x.state!=='accepted'),toAnswer=open.filter(x=>x.state!=='resubmitted');
+ const stale=new Set((s?.drafts||[]).filter(d=>d.stale).map(d=>String(d.id)));
+ // 1. Site review: open findings in the saved site report, after the user's own resolutions.
+ const ran=(p.report?.findings||[]).length||Object.keys(p.report?.facts?.stepsRun||{}).length;
+ const site=!ran?{state:'todo',text:'Not started'}:!s?{state:'unknown',text:'Saved'}:
+  s.counts.flag?{state:'attention',text:plural(s.counts.flag,'concern')+' open'}:
+  s.siteOpen?{state:'active',text:s.siteOpen+' to review'}:{state:'done',text:'Nothing open'};
+ // 2. Permit preparation: the "Ready to file" checklist. Started only when something on it is done.
+ const prep=!planned.length?{state:'todo',text:'No permits chosen'}:filed?{state:'done',text:'Done'}:
+  stale.size?{state:'attention',text:'Answers to recheck'}:check?.ready?{state:'done',text:'Ready to submit'}:
+  check&&(check.items.some(x=>x.done&&x.id!=='submit')||sums.some(x=>x&&x.ready>0))?{state:'active',text:'In progress'}:
+  {state:'todo',text:'Not started'};
+ // 3. Submission: only what the user recorded (receipt, review rounds, issued permit).
+ const submit=p.issuance?{state:'done',text:'Permit issued'}:filed&&toAnswer.length?{state:'attention',text:plural(toAnswer.length,'correction')+' to answer'}:
+  filed?{state:'active',text:'Submitted'}:{state:'todo',text:'Not submitted'};
+ const key=p.issuance?'issued':filed&&toAnswer.length?'corrections':filed?'submitted':planned.length&&check?.ready&&!stale.size?'ready':planned.length?'preparing':'site';
+ const permits=planned.map((t,i)=>{const sm=sums[i],label=sm?.label||c?.catalog?.types?.find(x=>x.value===String(t))?.label||'Permit';
+  const st=p.issuance?['Issued','ok']:filed&&toAnswer.length?['Corrections','concern',1]:filed?['Submitted','verify']:
+   stale.has(String(t))?['Recheck answers','review',1]:!sm||!sm.total?['Not started','neutral']:sm.complete?['Ready to file','ok']:
+   sm.ready>0?['Preparing · '+sm.ready+' of '+sm.total,'neutral']:['Not started','neutral'];
+  return {id:String(t),label,text:st[0],tone:st[1],attention:!!st[2],form:!!(sm&&sm.supported&&sm.form.total)};});
+ // The overview's own next step, when it has one; never shown once a permit is issued.
+ let next=null;const n=s?.next;
+ if(n&&!p.issuance){const tab=n.action==='site'?'overview':n.action;next={label:n.action==='site'&&n.questionId?'Review “'+n.label+'”':n.label,tab:['overview','filing','management','rules'].includes(tab)?tab:'overview'};}
+ return {id:p.id,address:titleCase(p.property?.address),rawAddress:p.property?.address||'',parcel:p.property?.parcelId||'',place:place(p),
+  type:p.application?.intent?.label||'',status:{key,label:STATUS[key][0],tone:STATUS[key][1]},
+  stages:STAGES.map(([k,label],i)=>({key:k,label,...[site,prep,submit][i]})),permits,next,updatedAt:p.updatedAt||p.report?.date||''};
+}
+
+const MARK={done:'✓',attention:'!',active:'',todo:'',unknown:''};
+// opts.menu: extra overflow-menu items (HTML); opts.after: HTML placed after the footer (the delete confirmation).
+function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0,3),more=s.permits.length-shown.length;
+ const go=(tab,text,cls)=>'<button type="button" class="cp-link '+(cls||'')+'" data-action="open-at" data-id="'+id+'" data-tab="'+tab+'">'+text+'</button>';
+ return '<article class="pw-card cp-proj" data-status="'+s.status.key+'" data-search="'+esc((s.address+' '+s.rawAddress+' '+s.parcel+' '+s.place+' '+s.type).toLowerCase())+'" data-updated="'+esc(s.updatedAt)+'" data-name="'+esc(s.address.toLowerCase())+'" aria-labelledby="proj-'+id+'">'+
+  '<header class="cp-proj-head"><div class="cp-proj-id"><h2 id="proj-'+id+'">'+esc(s.address)+'</h2>'+
+  '<span class="cp-proj-status cp-tone-'+s.status.tone+'"><span class="cp-proj-dot" aria-hidden="true"></span>'+esc(s.status.label)+'</span></div>'+
+  (s.place?'<p class="cp-proj-place">'+esc(s.place)+'</p>':'')+(s.type?'<p class="cp-proj-kind">'+esc(s.type)+'</p>':'')+'</header>'+
+  '<ol class="cp-proj-stages" aria-label="Progress">'+s.stages.map(x=>'<li class="is-'+x.state+'"><span class="cp-proj-seg" aria-hidden="true"></span><span class="cp-proj-stage">'+esc(x.label)+'</span><span class="cp-proj-stext">'+(MARK[x.state]?'<span aria-hidden="true">'+MARK[x.state]+' </span>':'')+esc(x.text)+'</span></li>').join('')+'</ol>'+
+  '<div class="cp-proj-permits"><h3>Permits</h3>'+(shown.length?'<ul>'+shown.map(x=>'<li>'+go('filing',esc(x.label),'cp-proj-permit')+'<span class="cp-proj-pstate cp-tone-'+x.tone+'">'+(x.attention?'<span class="cp-proj-flag" aria-hidden="true">!</span>':'')+esc(x.text)+'</span></li>').join('')+'</ul>'+(more>0?go('filing','+'+more+' more','cp-proj-more'):''):'<p class="cp-proj-empty">No permits tracked yet.</p>')+'</div>'+
+  (s.next?'<p class="cp-proj-next"><span>Next</span>'+go(s.next.tab,esc(s.next.label),'cp-proj-nextlink')+'</p>':'')+
+  '<footer class="cp-proj-foot"><span class="cp-proj-updated">'+(s.updatedAt?'Updated <time datetime="'+esc(s.updatedAt)+'">'+esc(date(s.updatedAt))+'</time>':'')+'</span>'+
+  '<div class="cp-proj-actions"><details class="cp-proj-menu"><summary aria-label="More actions for '+esc(s.address)+'"><span aria-hidden="true">•••</span></summary><div class="cp-proj-menu-list">'+(opts.menu||'')+'</div></details>'+
+  '<button type="button" class="primary" data-action="open" data-id="'+id+'">Open project</button></div></footer>'+(opts.after||'')+'</article>';}
+
+// Search, status filter and sort only appear once there are enough projects to need them.
+const TOOLS_FROM=4;
+function toolbar(list){if(list.length<TOOLS_FROM)return '';const counts={};for(const s of list)counts[s.status.key]=(counts[s.status.key]||0)+1;
+ return '<div class="cp-proj-tools" role="search"><label class="cp-proj-search"><span class="cp-sr">Search projects</span><input type="search" name="proj-q" placeholder="Search by address, parcel or city" autocomplete="off"></label>'+
+  '<label><span class="cp-sr">Status</span><select name="proj-status"><option value="">All statuses</option>'+Object.keys(STATUS).filter(k=>counts[k]).map(k=>'<option value="'+k+'">'+STATUS[k][0]+' ('+counts[k]+')</option>').join('')+'</select></label>'+
+  '<label><span class="cp-sr">Sort</span><select name="proj-sort"><option value="updated">Recently updated</option><option value="name">Address A–Z</option></select></label>'+
+  '<p class="cp-proj-count" role="status" aria-live="polite"></p></div>';}
+// Applies the toolbar to the rendered grid; returns how many cards are visible.
+function filter(scope){const g=scope.querySelector('.pw-project-grid');if(!g)return 0;const q=(scope.querySelector('[name=proj-q]')?.value||'').trim().toLowerCase(),st=scope.querySelector('[name=proj-status]')?.value||'',sort=scope.querySelector('[name=proj-sort]')?.value||'updated';
+ const cards=[...g.querySelectorAll(':scope>.cp-proj')];cards.sort((a,b)=>sort==='name'?a.dataset.name.localeCompare(b.dataset.name,undefined,{numeric:true}):(b.dataset.updated||'').localeCompare(a.dataset.updated||''));
+ let n=0;for(const c of cards){const show=(!q||q.split(/\s+/).every(w=>c.dataset.search.includes(w)))&&(!st||c.dataset.status===st);c.hidden=!show;if(show)n++;g.appendChild(c);}
+ const count=scope.querySelector('.cp-proj-count');if(count)count.textContent=n===cards.length?plural(n,'project'):n+' of '+cards.length+' projects';
+ const none=scope.querySelector('.cp-proj-none');if(none)none.hidden=n>0;return n;}
+
+const api={summary,card,toolbar,filter,titleCase,TOOLS_FROM};if(node)module.exports=api;else root.ProjectCard=api;
 })(typeof window!=='undefined'?window:globalThis);
 
 (function(root){'use strict';
@@ -8882,8 +9098,11 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   let project = null, tab = 'overview', section = 'site', busy = false, capture = Promise.resolve(), capturing=0;
   const host = document.createElement('main'); host.id = 'project-workspace'; document.body.appendChild(host);
   const globalNav=document.createElement('nav');globalNav.id='cornerpin-global-nav';globalNav.setAttribute('aria-label','Account and projects');
-  globalNav.innerHTML='<div><button type="button" class="global-brand wordmark" data-global="new" aria-label="Cornerpin home">'+document.querySelector('#home .wordmark').innerHTML+'</button><button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button><button type="button" data-global="projects">My projects</button><button type="button" data-global="new">New project</button></div>';
+  globalNav.innerHTML='<div><button type="button" class="global-brand wordmark" data-global="new" aria-label="Cornerpin home">'+document.querySelector('#home .wordmark').innerHTML+'</button><button type="button" class="cp-nav-quiet" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button><button type="button" class="cp-nav-page" data-global="projects">My projects</button><button type="button" class="cp-nav-primary" data-global="new">New project</button></div>';
   document.body.prepend(globalNav);
+  // The banner marks My projects as the current page while the project list is showing.
+  function syncNav(){const onList=document.body.classList.contains('show-project')&&!project&&!!host.querySelector('.pw-project-grid,.cp-proj-emptypage');globalNav.classList.toggle('on-projects',onList);const b=globalNav.querySelector('[data-global=projects]');if(onList)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');}
+  new MutationObserver(syncNav).observe(document.body,{attributes:true,attributeFilter:['class']});
   globalNav.addEventListener('click',async e=>{
     const action=e.target.closest('[data-global]')?.dataset.global;if(!action)return;
     if(window.CornerpinWorkspaceBusy()||document.getElementById('go').disabled)return;
@@ -9060,7 +9279,8 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
     document.body.classList.add('show-project');
     projectFrame(tab);
     document.title = project ? 'Cornerpin · ' + project.property.address : 'Cornerpin · My projects';
-    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(window.ProjectOverview.stageLabel(project)) + '</strong></p>' : '<h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p>Open a saved site to continue where you left off. Public research only reruns when you choose Refresh.</p>') + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.SiteDecisions.workspace(project,investigation?.reviewId||'')+window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,draft,management,documents,rules:()=>ruleTaskId?window.AreaRulesUI.task(project,ruleTaskId):window.AreaRulesUI.render(project),contacts:()=>window.AreaRulesUI.contacts(project),activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '<br><small>'+esc(e.actor?(e.provenance||e.actor):'Legacy event · actor not verified')+'</small></p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div>');
+    host.innerHTML = '<header><span class="wordmark">' + document.querySelector('#home .wordmark').innerHTML + '</span><div class="pw-actions">' + '<button type="button" data-account>'+(window.CloudSync.signedIn()?'Account':'Sign in')+'</button>' + button('projects','My projects') + button('home',project?'Review another property':'New project') + '</div></header><div id="pw-message" role="status" aria-live="polite"></div>' + (project ? '<h1>' + esc(project.property.address) + '</h1><p>' + esc(project.property.county + ' County · Parcel ' + project.property.parcelId) + ' · <strong>' + esc(window.ProjectOverview.stageLabel(project)) + '</strong></p>' : '<div class="cp-projects-head"><div><h1>My projects</h1>') + (project?'<p class="pw-sync" data-sync-project="'+esc(project.id)+'" role="status">'+syncLabel(project)+'</p>':'<p class="cp-projects-lead">Manage your properties, permits, and ongoing projects.</p></div><button type="button" class="primary cp-projects-new" data-action="home">New project</button></div>') + (project ? stageNavigation() + '<div id="pw-content">' + ({overview,evidence:()=>window.SiteDecisions.workspace(project,investigation?.reviewId||'')+window.ResearchWorkspace.render('evidence',project),valuation:()=>window.ResearchWorkspace.render('valuation',project),placement:()=>window.ResearchWorkspace.render('placement',project),filing,draft,management,documents,rules:()=>ruleTaskId?window.AreaRulesUI.task(project,ruleTaskId):window.AreaRulesUI.render(project),contacts:()=>window.AreaRulesUI.contacts(project),activity: () => '<section class="pw-card"><h2>Project history</h2><p class="pw-muted">Local working history; not a tamper-proof regulatory audit log.</p>' + button('export-record','Download project record') + button('export-backup','Download complete backup') + '<p class="pw-muted">The JSON record contains metadata and history, not file contents. Download files under Documents; frozen package downloads include their attached files.</p>' + project.packages.map(p => '<p>' + esc(p.kind + ' · ' + p.preparedAt + (p.stale ? ' · superseded' : '') + (p.receiptId ? ' · receipt recorded' : ' · not filed')) + ' ' + button('export-package','Download this package',p.id) + '</p>').join('') + project.events.slice().reverse().map(e => '<p><strong>' + esc(e.at) + '</strong><br>' + esc(e.text) + '<br><small>'+esc(e.actor?(e.provenance||e.actor):'Legacy event · actor not verified')+'</small></p>').join('') + '</section>'})[tab]() + '</div>' : '<div id="pw-content"></div>');
+    syncNav();
     if(project&&tab==='overview'){overviewMap();window.TitleResearchView.mountOverviewAnswer?.(project);}
     if(project&&(tab==='evidence'||(tab==='rules'&&!ruleTaskId)))window.TitleResearchView.mountInvestigation(project);
     if(project&&tab==='rules'&&!ruleTaskId){window.AreaRulesUI.mount(project);if(!project.application.areaMap)setTimeout(()=>{if(tab==='rules'&&!busy&&!project.application.areaMap)refreshRules();},0);}
@@ -9083,12 +9303,18 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
     const merged=new Map(rows.map(p=>[p.id,p])),cloudIds=new Set();let warning='';
     if(owner){try{const cloud=await window.CloudSync.list();if(S.owner()!==owner)return;for(const p of cloud){cloudIds.add(p.id);if(!merged.has(p.id))merged.set(p.id,p);}}catch(e){warning='Account unavailable. Showing projects saved on this device. '+e.message;}}
     if(S.owner()!==owner||project)return;
-    document.getElementById('pw-content').innerHTML='<div class="pw-project-grid">'+(Array.from(merged.values()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(p=>'<section class="pw-card"><h2>'+esc(p.property.address)+'</h2><p>'+esc(p.property.county+' County · '+window.ProjectOverview.stageLabel(p))+'</p><p class="pw-muted">Site report saved '+esc(new Date(p.report.date).toLocaleDateString())+'</p><p data-sync-project="'+esc(p.id)+'">'+(rows.some(x=>x.id===p.id)?syncLabel(p):'Saved to your account')+'</p>'+button('open','Open project',p.id)+deleteBox(p,rows.some(x=>x.id===p.id),cloudIds.has(p.id))+'</section>').join('')||'<section class="pw-card"><h2>No saved projects yet</h2><p>Enter a property address to generate your first site report. It will appear here automatically.</p>'+button('home','Review a property')+'</section>')+'<section class="pw-card pw-import-card"><h2>Import a project</h2><p>Bring a saved Cornerpin project and its files into your workspace.</p><form data-command="restore-backup"><label class="pw-backup-picker"><input class="pw-backup-input" name="backup" type="file" accept=".json,application/json" required aria-label="Choose project backup"><span class="pw-backup-icon" aria-hidden="true">↥</span><span class="pw-backup-copy"><span class="pw-backup-name">Choose backup</span><span class="pw-backup-hint">JSON file · up to 150 MB</span></span></label><button type="submit" disabled>Import project</button></form></section></div>'+(!owner?'<p>Guest projects are saved on this device only. <button type="button" data-account>Sign in</button> to keep new projects in your account.</p>':'');
+    const all=Array.from(merged.values()).sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||''))),PC=window.ProjectCard;
+    const cards=all.map(p=>{const local=rows.some(x=>x.id===p.id),cloud=cloudIds.has(p.id);try{return PC.card(p,deleteParts(p,local,cloud));}catch(e){return PC.card({...p,report:p.report||{},application:p.application||{}},deleteParts(p,local,cloud));}});
+    const summaries=all.map(p=>{try{return PC.summary(p);}catch(e){return {status:{key:'site'}};}});
+    const importer='<section class="cp-import" aria-labelledby="cp-import-h"><span class="cp-import-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14"/></svg></span><div class="cp-import-copy"><h2 id="cp-import-h">Import an existing project</h2><p>Restore a Cornerpin backup, including its uploaded files.</p></div><form data-command="restore-backup" class="cp-import-form"><label class="pw-backup-picker"><input class="pw-backup-input" name="backup" type="file" accept=".json,application/json" required aria-label="Choose project backup"><span class="pw-backup-copy"><span class="pw-backup-name">Choose backup</span><span class="pw-backup-hint">JSON file · up to 150 MB</span></span></label><button type="submit" disabled>Import project</button></form></section>';
+    document.getElementById('pw-content').innerHTML=(all.length?PC.toolbar(summaries)+'<div class="pw-project-grid">'+cards.join('')+'</div><p class="cp-proj-none" hidden>No projects match. <button type="button" class="cp-link" data-action="clear-project-filters">Clear search and filters</button></p>':'<section class="cp-proj-emptypage"><h2>No projects yet</h2><p>Check a property to start one. Its site review, permits and documents are saved here as you work.</p><button type="button" data-action="home">Check a property</button></section>')+importer+(!owner?'<p class="cp-guest-note">Guest projects are saved on this device only. <button type="button" class="cp-link" data-account>Sign in</button> to keep new projects in your account.</p>':'');
+    window.ProjectCard.filter(host);syncNav();
     if(warning)message(warning);
   }
   // Delete asks first, in place: what goes, from where, that it can't be undone, and offers a backup.
-  function deleteBox(p,local,cloud){const files=(p.documents||[]).length,where=local&&cloud?'this device and your account':cloud?'your account':'this device';
-    return '<button type="button" class="cp-link pw-delete-link" data-action="delete-project" data-id="'+esc(p.id)+'">Delete project</button><div class="pw-delete-confirm" role="alertdialog" aria-label="Delete '+esc(p.property.address)+'" data-cloud="'+(cloud?1:0)+'" hidden><p><b>Delete '+esc(p.property.address)+'?</b> This permanently removes the project, its permit answers'+(files?' and '+files+' uploaded file'+(files===1?'':'s'):'')+' from '+where+'. It can’t be undone.</p><div class="pw-actions">'+(local?'<button type="button" data-action="backup-project" data-id="'+esc(p.id)+'">Download a backup first</button>':'')+'<button type="button" class="pw-danger" data-action="confirm-delete" data-id="'+esc(p.id)+'">Delete permanently</button><button type="button" data-action="cancel-delete" data-id="'+esc(p.id)+'">Cancel</button></div></div>';}
+  function deleteParts(p,local,cloud){const files=(p.documents||[]).length,where=local&&cloud?'this device and your account':cloud?'your account':'this device';
+    const address=window.ProjectCard?window.ProjectCard.titleCase(p.property.address):p.property.address;
+    return {menu:(local?'<button type="button" class="cp-link cp-menu-item" data-action="backup-project" data-id="'+esc(p.id)+'">Download backup</button>':'')+'<button type="button" class="cp-link cp-menu-item cp-menu-danger pw-delete-link" data-action="delete-project" data-id="'+esc(p.id)+'">Delete project…</button>',after:'<div class="pw-delete-confirm" role="alertdialog" aria-label="Delete '+esc(address)+'" data-cloud="'+(cloud?1:0)+'" hidden><p><b>Delete '+esc(address)+'?</b> This permanently removes the project'+(files?', its permit answers and '+files+' uploaded file'+(files===1?'':'s'):' and its permit answers')+' from '+where+'. It can’t be undone.</p><div class="pw-actions">'+(local?'<button type="button" data-action="backup-project" data-id="'+esc(p.id)+'">Download a backup first</button>':'')+'<button type="button" class="pw-danger" data-action="confirm-delete" data-id="'+esc(p.id)+'">Delete permanently</button><button type="button" data-action="cancel-delete" data-id="'+esc(p.id)+'">Cancel</button></div></div>'};}
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
   async function exportPackage(id) {
     const pkg = project.packages.find(p=>p.id===id); if(!pkg) throw new Error('Package not found.');
@@ -9100,6 +9326,8 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
     }
     download('cornerpin-package-' + pkg.id + '.html','<!doctype html><html lang="en"><meta charset="utf-8"><title>Cornerpin filing handoff</title><body><h1>Cornerpin filing handoff</h1><p>Prepared package only. Not proof of filing or approval.</p><h2>Supporting documents</h2>' + files + '<h2>Application snapshot</h2><pre>' + esc(JSON.stringify(pkg,null,2)) + '</pre>' + (pkg.kind==='resubmission' ? '<h2>Draft response letter</h2><pre>' + esc(W.responseLetter(project,pkg.responses)) + '</pre>' : '') + '</body></html>','text/html');
   }
+  document.addEventListener('click',e=>{for(const m of host.querySelectorAll('.cp-proj-menu[open]'))if(!m.contains(e.target))m.open=false;});
+  document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const m=host.querySelector('.cp-proj-menu[open]');if(m){m.open=false;m.querySelector('summary').focus();}});
   host.addEventListener('click', async e => {
     const b=e.target.closest('[data-action]'); if(!b || busy) return;
     busy=true;
@@ -9172,8 +9400,9 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       else if(a==='refresh-rules'){busy=false;await refreshRules();}
       else if(a==='permit-hub'){await saveCityPage();tab='filing';section='filing';render();window.scrollTo(0,0);}
       else if(a==='projects') {await saveCityPage();await list();}
-      else if(a==='open') {message('Opening saved project…');await openSaved(id);}
-      else if(a==='delete-project'||a==='cancel-delete'){const card=b.closest('.pw-card'),box=card.querySelector('.pw-delete-confirm'),open=a==='delete-project';box.hidden=!open;card.querySelector('.pw-delete-link').hidden=open;if(open)box.querySelector('[data-action=cancel-delete]').focus();else card.querySelector('.pw-delete-link').focus();}
+      else if(a==='open'||a==='open-at') {message('Opening saved project…');const t=b.dataset.tab;await openSaved(id,t?{tab:t,section:['filing','management'].includes(t)?t:'site'}:undefined);}
+      else if(a==='delete-project'||a==='cancel-delete'){const card=b.closest('.pw-card'),box=card.querySelector('.pw-delete-confirm'),menu=card.querySelector('.cp-proj-menu'),open=a==='delete-project';box.hidden=!open;if(menu)menu.open=false;if(open)box.querySelector('[data-action=cancel-delete]').focus();else (menu?.querySelector('summary')||card.querySelector('[data-action=open]')).focus();}
+      else if(a==='clear-project-filters'){for(const el of host.querySelectorAll('.cp-proj-tools input,.cp-proj-tools select'))el.value=el.tagName==='SELECT'?el.options[0].value:'';window.ProjectCard.filter(host);host.querySelector('[name=proj-q]')?.focus();}
       else if(a==='backup-project'){const p=await S.get(id);if(!p)throw Error('This project isn’t saved on this device. Open it first to download a backup.');download('cornerpin-'+String(p.property.address).replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-backup.json',JSON.stringify(await window.ProjectBackup.pack(p,S.file)),'application/json');}
       else if(a==='confirm-delete'){const box=b.closest('.pw-delete-confirm'),cloud=box.dataset.cloud==='1',owner=S.owner();b.disabled=true;
         const address=b.closest('.pw-card').querySelector('h2').textContent;
@@ -9212,7 +9441,9 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       else if(a==='draft-assignment') {const c=project.corrections.find(x=>x.id===id); download('correction-assignment.txt','DRAFT — NOT SENT\nTo: '+c.email+'\nSubject: Permit correction — '+project.application.reference+'\n\n'+c.owner+',\n\n'+c.text+'\n\nDue: '+(c.dueDate||'Not set')+'\nPlease provide the revised sheet or report and a response addressing this comment.\n');}
     } catch(err) {message(err.message);} finally {window.AnalysisProgress.stop();analysisTarget='';busy=false;}
   });
+  host.addEventListener('input',e=>{if(e.target.closest('.cp-proj-tools'))window.ProjectCard.filter(host);});
   host.addEventListener('change',async e=>{
+    if(e.target.closest('.cp-proj-tools')){window.ProjectCard.filter(host);return;}
     if(e.target.matches('.pw-backup-input')){
       const file=e.target.files?.[0],label=e.target.closest('label'),form=e.target.closest('form');
       label.querySelector('.pw-backup-name').textContent=file?file.name:(label.dataset.emptyLabel||'Choose backup');

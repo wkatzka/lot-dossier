@@ -319,11 +319,138 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 .cp-intent-later-why .cp-src{margin-left:4px}
 .cp-intent-basement{margin:10px 0 0;font-size:var(--cp-text-sm);color:var(--cp-ink)}
 /* My projects: delete, confirmed in place */
-#project-workspace .pw-delete-link{display:block}
-#project-workspace .pw-delete-link[hidden]{display:none}
-#project-workspace .pw-delete-link{width:fit-content;margin:10px auto 0;padding:4px 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
-#project-workspace .pw-delete-link:hover{color:var(--cp-t-concern)}
 .pw-delete-confirm{margin-top:12px;padding:12px 14px;border:1px solid var(--cp-t-concern-bg);border-radius:var(--cp-r);background:#fff7f6}
 .pw-delete-confirm p{margin:0 0 8px;font-size:var(--cp-text);color:var(--cp-ink)}
 #project-workspace button.pw-danger{background:var(--cp-t-concern);border-color:var(--cp-t-concern);color:#fff}
 #project-workspace button.pw-danger:hover{background:#6f150f}
+
+/* ---------- My projects ---------- */
+/* Heading row: what this page is, and the one primary action. */
+#project-workspace .cp-projects-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin:32px 0 24px}
+#project-workspace .cp-projects-head h1{margin:0;font-size:var(--cp-title);line-height:1.15;letter-spacing:-.01em}
+#project-workspace .cp-projects-lead{margin:6px 0 0;font-size:15px;color:var(--cp-muted)}
+#project-workspace button.cp-projects-new{flex:none}
+
+/* Banner navigation: quiet links, the current page marked, one primary action. */
+#cornerpin-global-nav button.cp-nav-quiet,#cornerpin-global-nav button.cp-nav-page{background:#ffffffc7;border:1px solid transparent;font-weight:500;box-shadow:none}
+#cornerpin-global-nav button.cp-nav-quiet:hover,#cornerpin-global-nav button.cp-nav-page:hover{background:#ffffffeb;border-color:transparent}
+#cornerpin-global-nav button.cp-nav-page[aria-current=page]{background:#ffffffeb;font-weight:600;box-shadow:inset 0 -3px 0 var(--cp-primary);cursor:default}
+#cornerpin-global-nav button.cp-nav-primary{background:var(--cp-primary);border:1px solid var(--cp-primary);color:#fff;box-shadow:none}
+#cornerpin-global-nav button.cp-nav-primary:hover{background:var(--cp-primary-hover);border-color:var(--cp-primary-hover)}
+/* On My projects the heading carries New project, so the banner doesn't repeat it. */
+#cornerpin-global-nav.on-projects button.cp-nav-primary{display:none}
+
+/* Search, status and sort: only rendered once there are several projects. */
+.cp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#project-workspace .cp-proj-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:0 0 16px}
+#project-workspace .cp-proj-tools label{margin:0}
+#project-workspace .cp-proj-search{flex:1 1 260px;max-width:420px}
+#project-workspace .cp-proj-tools input,#project-workspace .cp-proj-tools select{box-sizing:border-box;height:40px;width:100%;margin:0;padding:0 12px;font:inherit;font-size:var(--cp-text);color:var(--cp-ink);background:var(--cp-input);border:1px solid var(--cp-line);border-radius:var(--cp-r-control)}
+#project-workspace .cp-proj-tools select{width:auto;padding-right:28px}
+#project-workspace .cp-proj-count{margin:0 0 0 auto;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-proj-none{margin:8px 0 0;font-size:var(--cp-text);color:var(--cp-muted)}
+
+/* Grid: as many ~320px+ columns as fit (3 on a wide screen, 2 on a tablet, 1 on a phone). */
+#project-workspace .pw-project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px;margin:0;align-items:start}
+
+/* Project card: header, progress, permits, next step, footer, separated by space rather than boxes. */
+#project-workspace .pw-project-grid>.cp-proj{position:relative;display:flex;flex-direction:column;gap:16px;min-width:0;margin:0;padding:20px 22px 16px;aspect-ratio:auto;background:var(--cp-surface);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* The Cornerpin signature: the logo's orange pin set on the card's corner, with a short drafting bracket
+   along both edges. The canvas-coloured ring interrupts the border where the pin sits. Project cards only. */
+#project-workspace .pw-project-grid>.cp-proj::before{content:"";position:absolute;top:-5px;left:-5px;width:10px;height:10px;border-radius:50%;background:var(--cp-accent);box-shadow:0 0 0 3px var(--cp-canvas);z-index:1}
+#project-workspace .pw-project-grid>.cp-proj::after{content:"";position:absolute;top:-1px;left:-1px;width:28px;height:28px;border-top:2px solid var(--cp-ink);border-left:2px solid var(--cp-ink);border-top-left-radius:var(--cp-r);opacity:.7;pointer-events:none}
+#project-workspace .pw-project-grid>.cp-proj[hidden]{display:none}
+#project-workspace .cp-proj-head{display:block;margin:0;padding:0;border:0}
+.cp-proj-id{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}
+#project-workspace .cp-proj h2{margin:0;font-size:18px;line-height:1.3;font-weight:650;letter-spacing:-.005em;color:var(--cp-ink);overflow-wrap:anywhere}
+#project-workspace .cp-proj-place{margin:4px 0 0;font-size:var(--cp-text-sm);line-height:1.5;color:var(--cp-muted)}
+#project-workspace .cp-proj-kind{margin:2px 0 0;font-size:var(--cp-text-sm);line-height:1.5;font-weight:500;color:var(--cp-ink)}
+
+
+/* Status: text plus a dot; colour only reinforces the words. */
+.cp-proj-status{display:inline-flex;align-items:center;gap:6px;flex:none;padding:3px 9px;border-radius:var(--cp-r-pill);font-size:var(--cp-text-xs);font-weight:600;line-height:1.5;white-space:nowrap}
+.cp-proj-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.cp-tone-neutral{background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral)}
+.cp-tone-ok{background:var(--cp-t-ok-bg);color:var(--cp-t-ok)}
+.cp-tone-verify{background:var(--cp-t-verify-bg);color:var(--cp-t-verify)}
+.cp-tone-review{background:var(--cp-t-review-bg);color:var(--cp-t-review)}
+.cp-tone-concern{background:var(--cp-t-concern-bg);color:var(--cp-t-concern)}
+
+/* Three-stage tracker. Done is solid, in progress is hatched, needs attention is amber, not started is a hairline. */
+#project-workspace .cp-proj-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+#project-workspace .cp-proj-stages li{display:flex;flex-direction:column;gap:2px;min-width:0;margin:0;padding:0}
+.cp-proj-seg{display:block;height:4px;margin-bottom:6px;border-radius:2px;background:var(--cp-line)}
+.cp-proj-stages .is-done .cp-proj-seg{background:var(--cp-t-ok)}
+.cp-proj-stages .is-active .cp-proj-seg{background:repeating-linear-gradient(135deg,var(--cp-primary) 0 4px,#29483f59 4px 7px)}
+.cp-proj-stages .is-attention .cp-proj-seg{background:var(--cp-review)}
+.cp-proj-stage{font-size:var(--cp-text-xs);font-weight:600;line-height:1.35;color:var(--cp-ink)}
+.cp-proj-stext{font-size:var(--cp-text-xs);line-height:1.35;color:var(--cp-muted)}
+.cp-proj-stages .is-attention .cp-proj-stext{color:var(--cp-t-review);font-weight:600}
+.cp-proj-stages .is-done .cp-proj-stext{color:var(--cp-t-ok)}
+
+/* Permits: up to three, each with its own status. */
+#project-workspace .cp-proj-permits h3{margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#project-workspace .cp-proj-permits ul{margin:0;padding:0;list-style:none}
+#project-workspace .cp-proj-permits li{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:7px 0;border-top:1px solid var(--cp-line)}
+#project-workspace .cp-proj-permits li:first-child{border-top:0;padding-top:2px}
+#project-workspace .cp-proj .cp-proj-permit{min-width:0;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
+#project-workspace .cp-proj .cp-proj-permit:hover{text-decoration:underline}
+.cp-proj-pstate{display:inline-flex;align-items:center;gap:5px;flex:none;padding:2px 8px;border-radius:var(--cp-r-pill);font-size:var(--cp-text-xs);font-weight:600;line-height:1.5;white-space:nowrap}
+.cp-proj-flag{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;color:#fff;font-size:10px;line-height:1}
+.cp-proj-pstate.cp-tone-review .cp-proj-flag{background:var(--cp-t-review)}
+.cp-proj-pstate.cp-tone-concern .cp-proj-flag{background:var(--cp-t-concern)}
+#project-workspace .cp-proj .cp-proj-more{margin-top:4px;font-size:var(--cp-text-sm);font-weight:500;color:var(--cp-muted)}
+#project-workspace .cp-proj-empty{margin:2px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+
+/* Next step: one line, opens the project where that step is. */
+#project-workspace .cp-proj-next{display:flex;align-items:baseline;gap:8px;margin:0;font-size:var(--cp-text)}
+#project-workspace .cp-proj-next>span{flex:none;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cp-muted)}
+#project-workspace .cp-proj .cp-proj-nextlink{min-width:0;font-size:var(--cp-text);text-align:left;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* Footer: when it changed, more actions, and Open project. */
+#project-workspace .cp-proj-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px;width:auto;margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--cp-line);background:none}
+.cp-proj-updated{font-size:var(--cp-text-xs);color:var(--cp-muted);white-space:nowrap}
+#project-workspace .cp-proj-actions button{white-space:nowrap}
+.cp-proj-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+#project-workspace .cp-proj-menu{position:relative;margin:0;padding:0;border:0;background:none}
+#project-workspace .cp-proj-menu>summary{min-height:0;padding:0;margin:0;font-weight:400;display:grid;place-items:center;width:40px;height:40px;box-sizing:border-box;list-style:none;border:1px solid var(--cp-line);border-radius:var(--cp-r-control);color:var(--cp-muted);font-size:10px;letter-spacing:1px;cursor:pointer;background:transparent}
+.cp-proj-menu>summary::-webkit-details-marker{display:none}
+#project-workspace .cp-proj-menu>summary::after,#project-workspace .cp-proj-menu>summary::before{content:none}
+.cp-proj-menu>summary:hover,.cp-proj-menu[open]>summary{background:var(--cp-canvas);color:var(--cp-ink)}
+.cp-proj-menu>summary:focus-visible{outline:2px solid var(--cp-focus);outline-offset:2px}
+.cp-proj-menu-list{position:absolute;right:0;bottom:calc(100% + 6px);z-index:5;display:flex;flex-direction:column;min-width:190px;padding:6px;background:var(--cp-input);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:0 8px 24px #2732391f}
+#project-workspace .cp-proj-menu-list .cp-menu-item{display:block;width:100%;padding:8px 10px;border-radius:4px;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
+#project-workspace .cp-proj-menu-list .cp-menu-item:hover,#project-workspace .cp-proj-menu-list .cp-menu-item:focus-visible{background:var(--cp-canvas)}
+#project-workspace .cp-proj-menu-list .cp-menu-danger{color:var(--cp-t-concern)}
+#project-workspace .cp-proj .pw-delete-confirm{margin-top:-4px}
+
+/* Import: a secondary utility under the projects, without the project pin. */
+#project-workspace .cp-import{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;margin:32px 0 0;padding:14px 18px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:transparent}
+.cp-import-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:var(--cp-t-neutral-bg);color:var(--cp-t-neutral)}
+.cp-import-copy{flex:1 1 240px;min-width:0}
+#project-workspace .cp-import h2{margin:0;font-size:15px;line-height:1.35;font-weight:600}
+#project-workspace .cp-import p{margin:2px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-import-form{display:flex;align-items:center;gap:10px;margin:0;padding:0;flex-wrap:wrap}
+#project-workspace .cp-import label.pw-backup-picker{display:flex;align-items:center;min-height:40px;box-sizing:border-box;margin:0;padding:6px 12px;border:1px dashed var(--cp-control);border-radius:var(--cp-r-control);background:var(--cp-input);max-width:280px}
+#project-workspace .cp-import .pw-backup-copy{gap:0}
+#project-workspace .cp-import .pw-backup-name{font-size:var(--cp-text-sm);font-weight:600;color:var(--cp-ink)}
+#project-workspace .cp-import .pw-backup-hint{font-size:11px;color:var(--cp-muted)}
+
+/* No projects yet. */
+#project-workspace .cp-proj-emptypage{padding:28px;border:1px dashed var(--cp-control);border-radius:var(--cp-r);max-width:560px}
+#project-workspace .cp-proj-emptypage h2{margin:0 0 6px;font-size:18px}
+#project-workspace .cp-proj-emptypage p{margin:0 0 16px;color:var(--cp-muted)}
+#project-workspace .cp-guest-note{margin:16px 0 0;font-size:var(--cp-text-sm);color:var(--cp-muted)}
+#project-workspace .cp-guest-note .cp-link{font-size:inherit}
+
+@media(max-width:600px){
+ #project-workspace .cp-projects-head{margin:24px 0 18px;align-items:flex-start;flex-direction:column}
+ #project-workspace .pw-project-grid{gap:20px}
+ #project-workspace .pw-project-grid>.cp-proj{padding:18px 16px 14px}
+ #project-workspace .cp-proj-tools label:not(.cp-proj-search){flex:1 1 140px}
+ #project-workspace .cp-proj-tools select{width:100%;padding:0 26px 0 10px;font-size:14px}
+ #project-workspace .cp-proj-tools input{font-size:16px}
+ #project-workspace .cp-proj-count{margin:0;flex-basis:100%}
+ #project-workspace .cp-import-form{width:100%}
+ #project-workspace .cp-import label.pw-backup-picker{flex:1;max-width:none}
+}

@@ -6,7 +6,7 @@
 const assert=require('node:assert/strict'),fs=require('fs'),{JSDOM}=require('jsdom'),{IDBFactory}=require('fake-indexeddb');
 const W=require('../web/permit-workflow'),C=require('../web/city-application'),P=require('../web/permit-packet');
 const clone=x=>JSON.parse(JSON.stringify(x));
-const MODULES=['icons','input-rules','evidence-ledger','permit-facts','permit-assistant','site-decisions','answer-reviews','city-application','ovc-code-sources','accessory-rules','permit-packet','approval-evidence','ovc-rules','area-rules','permit-workflow','project-store','site-answer','project-intent','my-company','next-steps','title-research-view','placement-engine','land-value','weber-value','pool-screen','original-documents','site-document-ui','research-workspace','permit-prep-ui','permit-walkthrough','measurement-workbench','analysis-progress','project-overview','area-rules-ui','project-workspace'];
+const MODULES=['icons','input-rules','evidence-ledger','permit-facts','permit-assistant','site-decisions','answer-reviews','city-application','ovc-code-sources','accessory-rules','permit-packet','approval-evidence','ovc-rules','area-rules','permit-workflow','project-store','site-answer','project-intent','my-company','next-steps','title-research-view','placement-engine','land-value','weber-value','pool-screen','original-documents','site-document-ui','research-workspace','permit-prep-ui','permit-walkthrough','measurement-workbench','analysis-progress','project-overview','project-card','area-rules-ui','project-workspace'];
 // Findings we accept on purpose (each with a reason). Keep this list short.
 const ALLOW=[
  [/^machine-code$/,/sha-?256/i,'Document hashes are shown deliberately as audit evidence'],
