@@ -65,10 +65,11 @@ function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0
   (s.place?'<p class="cp-proj-place">'+esc(s.place)+'</p>':'')+(s.type?'<p class="cp-proj-kind">'+esc(s.type)+'</p>':'')+'</header>'+
   '<ol class="cp-proj-stages" aria-label="Progress">'+s.stages.map(x=>'<li class="is-'+x.state+'"><span class="cp-proj-seg" aria-hidden="true"></span><span class="cp-proj-stage">'+esc(x.label)+'</span><span class="cp-proj-stext">'+(MARK[x.state]?'<span aria-hidden="true">'+MARK[x.state]+' </span>':'')+esc(x.text)+'</span></li>').join('')+'</ol>'+
   '<div class="cp-proj-permits"><h3>Permits</h3>'+(shown.length?'<ul>'+shown.map(x=>'<li>'+go('filing',esc(x.label),'cp-proj-permit')+'<span class="cp-proj-pstate cp-tone-'+x.tone+'">'+(x.attention?'<span class="cp-proj-flag" aria-hidden="true">!</span>':'')+esc(x.text)+'</span></li>').join('')+'</ul>'+(more>0?go('filing','+'+more+' more','cp-proj-more'):''):'<p class="cp-proj-empty">No permits tracked yet.</p>')+'</div>'+
-  (s.next?'<p class="cp-proj-next"><span>Next</span>'+go(s.next.tab,esc(s.next.label),'cp-proj-nextlink')+'</p>':'')+
-  '<footer class="cp-proj-foot"><span class="cp-proj-updated">'+(s.updatedAt?'Updated <time datetime="'+esc(s.updatedAt)+'">'+esc(date(s.updatedAt))+'</time>':'')+'</span>'+
+  // Every card has the same five parts in the same order, so cards in a row line up part by part.
+  (s.next?'<p class="cp-proj-next"><span>Next</span>'+go(s.next.tab,esc(s.next.label),'cp-proj-nextlink')+'</p>':'<div class="cp-proj-next" aria-hidden="true"></div>')+
+  '<div class="cp-proj-bottom"><footer class="cp-proj-foot"><span class="cp-proj-updated">'+(s.updatedAt?'Updated <time datetime="'+esc(s.updatedAt)+'">'+esc(date(s.updatedAt))+'</time>':'')+'</span>'+
   '<div class="cp-proj-actions"><details class="cp-proj-menu"><summary aria-label="More actions for '+esc(s.address)+'"><span aria-hidden="true">•••</span></summary><div class="cp-proj-menu-list">'+(opts.menu||'')+'</div></details>'+
-  '<button type="button" class="primary" data-action="open" data-id="'+id+'">Open project</button></div></footer>'+(opts.after||'')+'</article>';}
+  '<button type="button" class="primary" data-action="open" data-id="'+id+'">Open project</button></div></footer>'+(opts.after||'')+'</div></article>';}
 
 // Search, status filter and sort only appear once there are enough projects to need them.
 const TOOLS_FROM=4;

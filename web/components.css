@@ -351,7 +351,7 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #project-workspace .cp-proj-none{margin:8px 0 0;font-size:var(--cp-text);color:var(--cp-muted)}
 
 /* Grid: as many ~320px+ columns as fit (3 on a wide screen, 2 on a tablet, 1 on a phone). */
-#project-workspace .pw-project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px;margin:0;align-items:start}
+#project-workspace .pw-project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px;margin:0;align-items:stretch}
 
 /* Project card: header, progress, permits, next step, footer, separated by space rather than boxes. */
 #project-workspace .pw-project-grid>.cp-proj{position:relative;display:flex;flex-direction:column;gap:16px;min-width:0;margin:0;padding:20px 22px 16px;aspect-ratio:auto;background:var(--cp-surface);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -408,7 +408,8 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #project-workspace .cp-proj .cp-proj-nextlink{min-width:0;font-size:var(--cp-text);text-align:left;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 
 /* Footer: when it changed, more actions, and Open project. */
-#project-workspace .cp-proj-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px;width:auto;margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--cp-line);background:none}
+#project-workspace .cp-proj-bottom{display:flex;flex-direction:column;gap:12px;margin-top:auto}
+#project-workspace .cp-proj-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px;width:auto;margin:0;padding:14px 0 0;border-top:1px solid var(--cp-line);background:none}
 .cp-proj-updated{font-size:var(--cp-text-xs);color:var(--cp-muted);white-space:nowrap}
 #project-workspace .cp-proj-actions button{white-space:nowrap}
 .cp-proj-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
@@ -422,7 +423,7 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #project-workspace .cp-proj-menu-list .cp-menu-item{display:block;width:100%;padding:8px 10px;border-radius:4px;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
 #project-workspace .cp-proj-menu-list .cp-menu-item:hover,#project-workspace .cp-proj-menu-list .cp-menu-item:focus-visible{background:var(--cp-canvas)}
 #project-workspace .cp-proj-menu-list .cp-menu-danger{color:var(--cp-t-concern)}
-#project-workspace .cp-proj .pw-delete-confirm{margin-top:-4px}
+#project-workspace .cp-proj .pw-delete-confirm{margin:0}
 
 /* Import: a secondary utility under the projects, without the project pin. */
 #project-workspace .cp-import{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;margin:32px 0 0;padding:14px 18px;border:1px solid var(--cp-line);border-radius:var(--cp-r);background:transparent}
@@ -454,3 +455,19 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
  #project-workspace .cp-import-form{width:100%}
  #project-workspace .cp-import label.pw-backup-picker{flex:1;max-width:none}
 }
+
+/* Cards in a row share one height and line up part by part: address, progress, permits, next step and footer
+   each start at the same height across the row (subgrid). Browsers without subgrid still get equal heights
+   with the footer pinned to the bottom. */
+@supports (grid-template-rows:subgrid){
+ #project-workspace .pw-project-grid{row-gap:0}
+ #project-workspace .pw-project-grid>.cp-proj{display:grid;grid-row:span 5;grid-template-rows:subgrid;row-gap:16px;margin-bottom:24px}
+ #project-workspace .pw-project-grid>.cp-proj>.cp-proj-bottom{margin-top:0;align-self:end}
+ #project-workspace .pw-project-grid>.cp-proj>.cp-proj-next:empty{margin:0}
+}
+/* Every card reserves room for a one-line address with its two detail lines, three permits plus "+N more",
+   and a two-line next step, so cards are the same size across rows, not just within one. */
+#project-workspace .pw-project-grid>.cp-proj>.cp-proj-head{min-height:70px}
+#project-workspace .pw-project-grid>.cp-proj>.cp-proj-permits{min-height:150px}
+#project-workspace .pw-project-grid>.cp-proj>.cp-proj-next{min-height:42px}
+@media(max-width:600px){#project-workspace .pw-project-grid>.cp-proj>:is(.cp-proj-head,.cp-proj-permits,.cp-proj-next){min-height:0}}
