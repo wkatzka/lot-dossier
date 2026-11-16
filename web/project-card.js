@@ -56,7 +56,7 @@ function summary(p){
 }
 
 const MARK={done:'✓',attention:'!',active:'',todo:'',unknown:''};
-// opts.menu: extra overflow-menu items (HTML); opts.after: HTML placed after the footer (the delete confirmation).
+// opts.after: HTML placed after the footer (the delete confirmation).
 function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0,3),more=s.permits.length-shown.length;
  const go=(tab,text,cls)=>'<button type="button" class="cp-link '+(cls||'')+'" data-action="open-at" data-id="'+id+'" data-tab="'+tab+'">'+text+'</button>';
  return '<article class="pw-card cp-proj" data-status="'+s.status.key+'" data-search="'+esc((s.address+' '+s.rawAddress+' '+s.parcel+' '+s.place+' '+s.type).toLowerCase())+'" data-updated="'+esc(s.updatedAt)+'" data-name="'+esc(s.address.toLowerCase())+'" aria-labelledby="proj-'+id+'">'+
@@ -68,7 +68,7 @@ function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0
   // Every card has the same five parts in the same order, so cards in a row line up part by part.
   (s.next?'<p class="cp-proj-next"><span>Next</span>'+go(s.next.tab,esc(s.next.label),'cp-proj-nextlink')+'</p>':'<div class="cp-proj-next" aria-hidden="true"></div>')+
   '<div class="cp-proj-bottom"><footer class="cp-proj-foot"><span class="cp-proj-updated">'+(s.updatedAt?'Updated <time datetime="'+esc(s.updatedAt)+'">'+esc(date(s.updatedAt))+'</time>':'')+'</span>'+
-  '<div class="cp-proj-actions"><details class="cp-proj-menu"><summary aria-label="More actions for '+esc(s.address)+'"><span aria-hidden="true">•••</span></summary><div class="cp-proj-menu-list">'+(opts.menu||'')+'</div></details>'+
+  '<div class="cp-proj-actions"><button type="button" class="cp-link cp-proj-trash pw-delete-link" data-action="delete-project" data-id="'+id+'" aria-label="Delete '+esc(s.address)+'" title="Delete project"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a1.5 1.5 0 0 0 1.5 1.4h8a1.5 1.5 0 0 0 1.5-1.4l1-12M9 7V4.5A.5.5 0 0 1 9.5 4h5a.5.5 0 0 1 .5.5V7"/></svg></button>'+
   '<button type="button" class="primary" data-action="open" data-id="'+id+'">Open project</button></div></footer>'+(opts.after||'')+'</div></article>';}
 
 // Search, status filter and sort only appear once there are enough projects to need them.

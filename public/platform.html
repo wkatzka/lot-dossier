@@ -1676,17 +1676,12 @@ html body :is(.cp-eyebrow,.cp-ans-label,.cp-req-formhead,.cp-evid-k),#rv .eyebro
 #project-workspace .cp-proj-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 12px;width:auto;margin:0;padding:14px 0 0;border-top:1px solid var(--cp-line);background:none}
 .cp-proj-updated{font-size:var(--cp-text-xs);color:var(--cp-muted);white-space:nowrap}
 #project-workspace .cp-proj-actions button{white-space:nowrap}
+/* Delete: a quiet trash icon beside Open project; turns red on hover. The confirmation opens in the card. */
+#project-workspace .cp-proj .cp-proj-trash{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border-radius:var(--cp-r-control);color:var(--cp-muted);text-decoration:none}
+#project-workspace .cp-proj .cp-proj-trash svg{display:block}
+#project-workspace .cp-proj .cp-proj-trash:hover{color:var(--cp-t-concern);background:var(--cp-t-concern-bg)}
+#project-workspace .cp-proj .cp-proj-trash:focus-visible{outline:2px solid var(--cp-focus);outline-offset:2px}
 .cp-proj-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-#project-workspace .cp-proj-menu{position:relative;margin:0;padding:0;border:0;background:none}
-#project-workspace .cp-proj-menu>summary{min-height:0;padding:0;margin:0;font-weight:400;display:grid;place-items:center;width:40px;height:40px;box-sizing:border-box;list-style:none;border:1px solid var(--cp-line);border-radius:var(--cp-r-control);color:var(--cp-muted);font-size:10px;letter-spacing:1px;cursor:pointer;background:transparent}
-.cp-proj-menu>summary::-webkit-details-marker{display:none}
-#project-workspace .cp-proj-menu>summary::after,#project-workspace .cp-proj-menu>summary::before{content:none}
-.cp-proj-menu>summary:hover,.cp-proj-menu[open]>summary{background:var(--cp-canvas);color:var(--cp-ink)}
-.cp-proj-menu>summary:focus-visible{outline:2px solid var(--cp-focus);outline-offset:2px}
-.cp-proj-menu-list{position:absolute;right:0;bottom:calc(100% + 6px);z-index:5;display:flex;flex-direction:column;min-width:190px;padding:6px;background:var(--cp-input);border:1px solid var(--cp-line);border-radius:var(--cp-r);box-shadow:0 8px 24px #2732391f}
-#project-workspace .cp-proj-menu-list .cp-menu-item{display:block;width:100%;padding:8px 10px;border-radius:4px;font-size:var(--cp-text);font-weight:500;color:var(--cp-ink);text-decoration:none;text-align:left}
-#project-workspace .cp-proj-menu-list .cp-menu-item:hover,#project-workspace .cp-proj-menu-list .cp-menu-item:focus-visible{background:var(--cp-canvas)}
-#project-workspace .cp-proj-menu-list .cp-menu-danger{color:var(--cp-t-concern)}
 #project-workspace .cp-proj .pw-delete-confirm{margin:0}
 
 /* Import: a secondary utility under the projects, without the project pin. */
@@ -8989,7 +8984,7 @@ function summary(p){
 }
 
 const MARK={done:'✓',attention:'!',active:'',todo:'',unknown:''};
-// opts.menu: extra overflow-menu items (HTML); opts.after: HTML placed after the footer (the delete confirmation).
+// opts.after: HTML placed after the footer (the delete confirmation).
 function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0,3),more=s.permits.length-shown.length;
  const go=(tab,text,cls)=>'<button type="button" class="cp-link '+(cls||'')+'" data-action="open-at" data-id="'+id+'" data-tab="'+tab+'">'+text+'</button>';
  return '<article class="pw-card cp-proj" data-status="'+s.status.key+'" data-search="'+esc((s.address+' '+s.rawAddress+' '+s.parcel+' '+s.place+' '+s.type).toLowerCase())+'" data-updated="'+esc(s.updatedAt)+'" data-name="'+esc(s.address.toLowerCase())+'" aria-labelledby="proj-'+id+'">'+
@@ -9001,7 +8996,7 @@ function card(p,opts={}){const s=summary(p),id=esc(p.id),shown=s.permits.slice(0
   // Every card has the same five parts in the same order, so cards in a row line up part by part.
   (s.next?'<p class="cp-proj-next"><span>Next</span>'+go(s.next.tab,esc(s.next.label),'cp-proj-nextlink')+'</p>':'<div class="cp-proj-next" aria-hidden="true"></div>')+
   '<div class="cp-proj-bottom"><footer class="cp-proj-foot"><span class="cp-proj-updated">'+(s.updatedAt?'Updated <time datetime="'+esc(s.updatedAt)+'">'+esc(date(s.updatedAt))+'</time>':'')+'</span>'+
-  '<div class="cp-proj-actions"><details class="cp-proj-menu"><summary aria-label="More actions for '+esc(s.address)+'"><span aria-hidden="true">•••</span></summary><div class="cp-proj-menu-list">'+(opts.menu||'')+'</div></details>'+
+  '<div class="cp-proj-actions"><button type="button" class="cp-link cp-proj-trash pw-delete-link" data-action="delete-project" data-id="'+id+'" aria-label="Delete '+esc(s.address)+'" title="Delete project"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a1.5 1.5 0 0 0 1.5 1.4h8a1.5 1.5 0 0 0 1.5-1.4l1-12M9 7V4.5A.5.5 0 0 1 9.5 4h5a.5.5 0 0 1 .5.5V7"/></svg></button>'+
   '<button type="button" class="primary" data-action="open" data-id="'+id+'">Open project</button></div></footer>'+(opts.after||'')+'</div></article>';}
 
 // Search, status filter and sort only appear once there are enough projects to need them.
@@ -9332,7 +9327,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
   // Delete asks first, in place: what goes, from where, that it can't be undone, and offers a backup.
   function deleteParts(p,local,cloud){const files=(p.documents||[]).length,where=local&&cloud?'this device and your account':cloud?'your account':'this device';
     const address=window.ProjectCard?window.ProjectCard.titleCase(p.property.address):p.property.address;
-    return {menu:(local?'<button type="button" class="cp-link cp-menu-item" data-action="backup-project" data-id="'+esc(p.id)+'">Download backup</button>':'')+'<button type="button" class="cp-link cp-menu-item cp-menu-danger pw-delete-link" data-action="delete-project" data-id="'+esc(p.id)+'">Delete project…</button>',after:'<div class="pw-delete-confirm" role="alertdialog" aria-label="Delete '+esc(address)+'" data-cloud="'+(cloud?1:0)+'" hidden><p><b>Delete '+esc(address)+'?</b> This permanently removes the project'+(files?', its permit answers and '+files+' uploaded file'+(files===1?'':'s'):' and its permit answers')+' from '+where+'. It can’t be undone.</p><div class="pw-actions">'+(local?'<button type="button" data-action="backup-project" data-id="'+esc(p.id)+'">Download a backup first</button>':'')+'<button type="button" class="pw-danger" data-action="confirm-delete" data-id="'+esc(p.id)+'">Delete permanently</button><button type="button" data-action="cancel-delete" data-id="'+esc(p.id)+'">Cancel</button></div></div>'};}
+    return {after:'<div class="pw-delete-confirm" role="alertdialog" aria-label="Delete '+esc(address)+'" data-cloud="'+(cloud?1:0)+'" hidden><p><b>Delete '+esc(address)+'?</b> This permanently removes the project'+(files?', its permit answers and '+files+' uploaded file'+(files===1?'':'s'):' and its permit answers')+' from '+where+'. It can’t be undone.</p><div class="pw-actions">'+(local?'<button type="button" data-action="backup-project" data-id="'+esc(p.id)+'">Download a backup first</button>':'')+'<button type="button" class="pw-danger" data-action="confirm-delete" data-id="'+esc(p.id)+'">Delete permanently</button><button type="button" data-action="cancel-delete" data-id="'+esc(p.id)+'">Cancel</button></div></div>'};}
   function download(name, content, type) { const a = document.createElement('a'), url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content],{type:type || 'text/plain'})); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),30000); }
   async function exportPackage(id) {
     const pkg = project.packages.find(p=>p.id===id); if(!pkg) throw new Error('Package not found.');
@@ -9344,8 +9339,6 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
     }
     download('cornerpin-package-' + pkg.id + '.html','<!doctype html><html lang="en"><meta charset="utf-8"><title>Cornerpin filing handoff</title><body><h1>Cornerpin filing handoff</h1><p>Prepared package only. Not proof of filing or approval.</p><h2>Supporting documents</h2>' + files + '<h2>Application snapshot</h2><pre>' + esc(JSON.stringify(pkg,null,2)) + '</pre>' + (pkg.kind==='resubmission' ? '<h2>Draft response letter</h2><pre>' + esc(W.responseLetter(project,pkg.responses)) + '</pre>' : '') + '</body></html>','text/html');
   }
-  document.addEventListener('click',e=>{for(const m of host.querySelectorAll('.cp-proj-menu[open]'))if(!m.contains(e.target))m.open=false;});
-  document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const m=host.querySelector('.cp-proj-menu[open]');if(m){m.open=false;m.querySelector('summary').focus();}});
   host.addEventListener('click', async e => {
     const b=e.target.closest('[data-action]'); if(!b || busy) return;
     busy=true;
@@ -9419,7 +9412,7 @@ root.AreaRulesUI={render,detail,task,mount,highlight,contacts};
       else if(a==='permit-hub'){await saveCityPage();tab='filing';section='filing';render();window.scrollTo(0,0);}
       else if(a==='projects') {await saveCityPage();await list();}
       else if(a==='open'||a==='open-at') {message('Opening saved project…');const t=b.dataset.tab;await openSaved(id,t?{tab:t,section:['filing','management'].includes(t)?t:'site'}:undefined);}
-      else if(a==='delete-project'||a==='cancel-delete'){const card=b.closest('.pw-card'),box=card.querySelector('.pw-delete-confirm'),menu=card.querySelector('.cp-proj-menu'),open=a==='delete-project';box.hidden=!open;if(menu)menu.open=false;if(open)box.querySelector('[data-action=cancel-delete]').focus();else (menu?.querySelector('summary')||card.querySelector('[data-action=open]')).focus();}
+      else if(a==='delete-project'||a==='cancel-delete'){const card=b.closest('.pw-card'),box=card.querySelector('.pw-delete-confirm'),open=a==='delete-project';box.hidden=!open;if(open)box.querySelector('[data-action=cancel-delete]').focus();else (card.querySelector('[data-action=delete-project]')||card.querySelector('[data-action=open]')).focus();}
       else if(a==='clear-project-filters'){for(const el of host.querySelectorAll('.cp-proj-tools input,.cp-proj-tools select'))el.value=el.tagName==='SELECT'?el.options[0].value:'';window.ProjectCard.filter(host);host.querySelector('[name=proj-q]')?.focus();}
       else if(a==='backup-project'){const p=await S.get(id);if(!p)throw Error('This project isn’t saved on this device. Open it first to download a backup.');download('cornerpin-'+String(p.property.address).replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-backup.json',JSON.stringify(await window.ProjectBackup.pack(p,S.file)),'application/json');}
       else if(a==='confirm-delete'){const box=b.closest('.pw-delete-confirm'),cloud=box.dataset.cloud==='1',owner=S.owner();b.disabled=true;
