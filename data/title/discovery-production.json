@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-15T17:15:53.197Z",
-  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/43740033043",
+  "updatedAt": "2026-11-17T19:14:10.703Z",
+  "runUrl": "https://github.com/wkatzka/lot-dossier/actions/runs/44156310697",
   "profiles": [
     {
       "id": "ogden-valley-city-notices-and-agencies",
       "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
-      "checkedAt": "2026-11-15T17:15:53.139Z",
+      "checkedAt": "2026-11-17T19:14:10.622Z",
       "coverage": {
         "scope": "Ogden Valley City public notices and official recorder, engineering, municipal-code and stormwater libraries. Broad notice discovery supplements topic-specific searches; documents require adoption and applicability review.",
         "routes": [
@@ -36,7 +36,7 @@
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-15T17:15:53.120Z",
+        "evaluatedAt": "2026-11-17T19:14:10.600Z",
         "questions": [
           {
             "id": "architectural-authority",
@@ -2633,7 +2633,7 @@
     {
       "id": "ogden-valley-city-public-coverage",
       "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
-      "checkedAt": "2026-11-15T17:15:53.149Z",
+      "checkedAt": "2026-11-17T19:14:10.635Z",
       "coverage": {
         "scope": "Ogden Valley City adopted code, planning requirements, amendments and publicly linked neighborhood governance. Documents are evidence candidates, not parcel membership determinations.",
         "routes": [
@@ -2681,7 +2681,7 @@
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-15T17:15:53.148Z",
+        "evaluatedAt": "2026-11-17T19:14:10.633Z",
         "questions": [
           {
             "id": "architectural-authority",
@@ -3240,7 +3240,7 @@
     {
       "id": "ogden-valley-published-neighborhood-libraries",
       "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
-      "checkedAt": "2026-11-15T17:15:53.159Z",
+      "checkedAt": "2026-11-17T19:14:10.647Z",
       "coverage": {
         "scope": "Public neighborhood libraries linked by the Wolf Creek Master HOA directory: Highlands, Trappers Ridge and Retreat, plus the master document library. Directory membership is a source lead, not proof of parcel membership or delegated approval authority.",
         "routes": [
@@ -3316,7 +3316,7 @@
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-15T17:15:53.154Z",
+        "evaluatedAt": "2026-11-17T19:14:10.640Z",
         "questions": [
           {
             "id": "architectural-authority",
@@ -5399,7 +5399,7 @@
     {
       "id": "weber-cobabe-2026-11-12",
       "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
-      "checkedAt": "2026-11-15T17:15:53.183Z",
+      "checkedAt": "2026-11-17T19:14:10.685Z",
       "coverage": {
         "scope": "Cobabe Ranch Phase 1 Lot 4; nine named public-source routes, all discovered relevant links within reviewed source hosts. No title/applicability certification.",
         "routes": [
@@ -5511,7 +5511,7 @@
       },
       "investigation": {
         "schemaVersion": 1,
-        "evaluatedAt": "2026-11-15T17:15:53.172Z",
+        "evaluatedAt": "2026-11-17T19:14:10.662Z",
         "questions": [
           {
             "id": "architectural-authority",
