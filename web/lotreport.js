@@ -425,13 +425,18 @@
         'F-5': { name: 'Forest', cite: 'LUC 104-9-5', area: '5 acres', width: 300, front: 30, side: 20, rear: 30, height: null }
       },
       // Development agreements that change fees for a specific developer's permits.
-      feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)',
-        text: 'Resolution 2026-25 (Development Mitigation Contribution and Impact Fee Lock Agreement, adopted May 19, 2026, 4-1) lets EVO pay impact fees at the lower Weber County rate on its building permits, in exchange for a mitigation contribution to the city. EVO had 19 building permits pending when it was negotiated, and the council discussed a cap or sunset.',
+      // Executed agreement and exhibit obtained from the City Recorder by records request, Nov 17, 2026.
+      feeAgreements: [{ match: /EDEN VALLEY OPPORTUNITY|\bEVO\b/i, name: 'Eden Valley Opportunity (EVO)', resolution: 'Resolution 2026-25',
+        locked: [['Roads', 1200], ['Storm drain', 1234.71], ['Trails', 2886.21]], lockEnds: 'June 2, 2029',
+        text: 'Resolution 2026-25 (adopted May 19, 2026, 4-1; agreement signed June 2, 2026) locks impact fees for permits issued under EVO\'s master development agreements (MDAs) at the Weber County rates in effect when each MDA was recorded. For a single-family home that is roads $1,200, storm drain $1,234.71 and trails $2,886.21, or $5,320.92 in all, instead of the city\'s own rates. The agreement says the locked schedule applies to all permits issued under each MDA, not only permits EVO pulls itself. The lock ends at the earliest of June 2, 2029, 75 permits beyond the 17 that were pending when it was signed, or a material MDA amendment that EVO initiates. The agreement names no third-party beneficiaries, so a lot buyer cannot enforce it directly. The Weber Fire District fee is separate and not covered.',
         src: 'https://www.utah.gov/pmn/files/1452527.pdf' }],
       // Records the dossier relies on and the fee actions already reviewed (config/records.json, shared with the weekly agenda watch).
       records: ((root.LR_DATA || {}).records || {})['Ogden Valley City'],
+      // Consolidated fee schedule, Exhibit A section 4, obtained from the City Recorder by records request, Nov 17, 2026.
       permitFees: { adopted: 'Resolution 2026-28, adopted May 5, 2026', src: 'https://www.utah.gov/pmn/files/1438293.pdf',
-        note: 'The schedule itself is not posted online. Council minutes (May 4, 2026 work session) say the residential plan review fee is higher than Weber County\'s but not the maximum allowed.' },
+        schedule: { planReview: 0.5, trades: 375 },
+        note: 'It values the permit on the same table as Weber County, with residential plan review at 50% of the permit fee (Weber County charges 35%), $125 each for the electrical, plumbing and mechanical permits, and the 1% state surcharge on the permit fee only.',
+        extras: 'Other city fees that may apply: driveway approach permit $150, drainage and stormwater review $150 plus actual review costs, reinspection $115 per trip, and $100 to reinstate a permit inactive for 180 days.' },
       sources: ['https://www.utah.gov/pmn/files/1438293.pdf', 'https://ogdenvalley.gov/about-ogden-valley-city/']
     }
   };
@@ -469,10 +474,33 @@
     if (v <= 1e6) return k(3233.75, 4.75, 500000);
     return k(5608.75, 3.65, 1e6);
   }
-  // Building permit + plan review (35%, 12-3-8) + electrical/plumbing/mechanical + 1% state surcharge on the permit fee.
-  function weberBuildingFees(houseSf, garageSf) {
+  // Building permit + plan review + electrical/plumbing/mechanical + 1% state surcharge on the permit fee.
+  // Weber County: plan review 35% (12-3-8), trades $350. A jurisdiction's own schedule overrides both
+  // (Ogden Valley City, Resolution 2026-28: same valuation table, plan review 50%, trades $125 each).
+  function buildingFees(houseSf, garageSf, sched) {
+    var s = sched || { planReview: 0.35, trades: 350 };
     var val = houseSf * BVD.r3 + (garageSf || 0) * BVD.garage, permit = weberPermitFee(val);
-    return { valuation: val, permit: permit, planReview: permit * 0.35, trades: 350, surcharge: permit * 0.01, total: permit * 1.36 + 350 };
+    return { valuation: val, permit: permit, planReview: permit * s.planReview, trades: s.trades, surcharge: permit * 0.01, total: permit * (1 + s.planReview + 0.01) + s.trades, local: !!sched };
+  }
+
+  // Developer-specific fee agreements on the fee row, matched on the developer named in the water letter or the owner of record.
+  function applyFeeAgreements(findings, kbx, devName, owner) {
+    ((kbx && kbx.feeAgreements) || []).forEach(function (ag) {
+      var hit = [devName, owner].filter(function (n) { return n && ag.match.test(n); })[0];
+      if (!hit) return;
+      var i = findings.findIndex(function (x) { return x.item === 'Permit & impact fees'; });
+      if (i < 0) return;
+      var fnd = findings[i];
+      var cityImpact = kbx.impact.reduce(function (t, x) { return t + x[1]; }, 0), fireFee = kbx.fireImpact ? kbx.fireImpact[0] : 0;
+      var lockedImpact = ag.locked ? ag.locked.reduce(function (t, x) { return t + x[1]; }, 0) : null;
+      fnd.detail = 'Developer fee agreement: ' + ag.text + ' ' + (hit === devName ? 'The water company\'s letter names ' + devName + ' as the subdivision\'s developer' : 'The owner of record is ' + hit) +
+        (owner && hit !== owner ? ' (owner of record: ' + owner + ')' : '') +
+        (lockedImpact ? '. If this lot is under one of EVO\'s MDAs and the lock is still in effect when the permit is issued, the city impact fees would be about $' + fmt(lockedImpact) + ' instead of $' + fmt(cityImpact) + (fireFee ? ', plus the $' + fireFee + ' fire fee either way' : '') + '. ' : ', so impact fees for this lot may be lower than the city rates below if the agreement covers your permit. ') + fnd.detail;
+      if (lockedImpact) fnd.headline = fnd.headline.replace('Impact fees about $' + fmt(cityImpact + fireFee), 'Impact fees about $' + fmt(lockedImpact + fireFee) + ' to $' + fmt(cityImpact + fireFee));
+      if (lockedImpact && fnd.cost) { fnd.cost.low = Math.round(fnd.cost.low - cityImpact + lockedImpact); fnd.cost.label += '; low end assumes the ' + ag.resolution + ' fee lock'; }
+      fnd.next_step = (lockedImpact ? 'Before counting on the lower rate, ask the city in writing to confirm this lot is under an ' + ag.name + ' MDA and that the ' + ag.resolution + ' lock still applies (it ends after 75 more permits or on ' + ag.lockEnds + ', whichever comes first). '
+        : 'Ask the city whether ' + (ag.resolution || 'the agreement') + ' applies to a permit you pull on this lot, or only to ' + ag.name + '\'s own permits. ') + (fnd.next_step || '');
+    });
   }
 
   var HEALTH = {
@@ -987,12 +1015,14 @@
       var known = kb.impact.reduce(function (t, x) { return t + x[1]; }, 0), fire = kb.fireImpact ? kb.fireImpact[0] : 0;
       var list = kb.impact.map(function (x) { return x[0] + ' $' + x[1].toLocaleString('en-US', { minimumFractionDigits: 2 }); }).join(', ');
       var pc = ctx.cost('permit_impact_fees'), fp = ctx.plan.footprint || {}, hasPlan = !!fp.residence_sf;
-      var hs = fp.residence_sf || 3500, gs = hasPlan ? (fp.garage_sf || 0) : 800, wb = weberBuildingFees(hs, gs);
+      var hs = fp.residence_sf || 3500, gs = hasPlan ? (fp.garage_sf || 0) : 800, wb = buildingFees(hs, gs, kb.permitFees && kb.permitFees.schedule);
       var pf = kb.permitFees, money2 = function (n) { return '$' + fmt(n); };
-      var bldTxt = 'Building permit and plan review: ' + (pf ? pf.adopted + ' sets the city\'s fees. ' + pf.note + ' ' : 'set locally. ') +
-        'As a floor, Weber County\'s published schedule (County Code 12-3-6 and 12-3-8) on ' + (hasPlan ? 'this plan (' + fmt(hs) + ' sq ft house' + (gs ? ' + ' + fmt(gs) + ' sq ft garage' : '') + ')' : 'a typical ' + fmt(hs) + ' sq ft house with an ' + fmt(gs) + ' sq ft garage') +
-        ' gives a valuation of ' + money2(wb.valuation) + ' (ICC ' + BVD.asOf + ' rates: $' + BVD.r3 + '/sq ft house, $' + BVD.garage + '/sq ft garage), a permit fee of ' + money2(wb.permit) +
-        ', plan review ' + money2(wb.planReview) + ', trade permits $350 and the 1% state surcharge: about ' + money2(wb.total) + '. Expect the city\'s total to be somewhat higher.';
+      var sizeTxt = hasPlan ? 'this plan (' + fmt(hs) + ' sq ft house' + (gs ? ' + ' + fmt(gs) + ' sq ft garage' : '') + ')' : 'a typical ' + fmt(hs) + ' sq ft house with an ' + fmt(gs) + ' sq ft garage';
+      var calcTxt = ' gives a valuation of ' + money2(wb.valuation) + ' (ICC ' + BVD.asOf + ' rates: $' + BVD.r3 + '/sq ft house, $' + BVD.garage + '/sq ft garage), a permit fee of ' + money2(wb.permit) +
+        ', plan review ' + money2(wb.planReview) + ', trade permits ' + money2(wb.trades) + ' and the 1% state surcharge: about ' + money2(wb.total) + '.';
+      var bldTxt = wb.local
+        ? 'Building permit and plan review: ' + pf.adopted + ' sets the city\'s fees. ' + pf.note + ' On ' + sizeTxt + ' that' + calcTxt + ' The building official may value the work on the city\'s adopted valuation table or its own schedule, so the valuation can differ. ' + (pf.extras || '')
+        : 'Building permit and plan review: ' + (pf ? pf.adopted + ' sets the city\'s fees. ' + pf.note + ' ' : 'set locally. ') + 'As a floor, Weber County\'s published schedule (County Code 12-3-6 and 12-3-8) on ' + sizeTxt + calcTxt + ' Expect the city\'s total to be somewhat higher.';
       // The estimate is for a new house. When the planned permits add no dwelling, say so instead of quoting it.
       var planned = ctx.permits && ctx.permits.indexOf('*') === -1 ? ctx.permits.map(String) : null;
       if (planned && planned.indexOf('1') === -1 && planned.indexOf('102') === -1) {
@@ -1005,9 +1035,9 @@
       out.push(F('permits', 'Permit & impact fees', 'watch', 'Impact fees about $' + fmt(known + fire) + ' + building permit and plan review from about $' + fmt(wb.total),
         'Impact fees: ' + list + ' (' + kb.impact[0][2] + ', one storm-drain unit assumed; more impervious area means more units).' +
         (kb.fireImpact ? ' Plus $' + fire + ' fire impact fee: ' + kb.fireImpact[1] + '.' : '') + ' ' + bldTxt + ' Permits: ' + kb.permits,
-        juris + ' impact fee ordinance + Weber County fee schedule', kb.impactSrc,
-        pc ? { key: 'permit_impact_fees', low: Math.round(known + fire + wb.total), high: Math.round(known + fire + wb.total * 1.5), label: 'Impact fees (published) + building permit & plan review (Weber schedule as floor)' } : null,
-        'Ask the building department for the Resolution 2026-28 fee schedule to replace the floor estimate, then submit through the permit portal (checklist: ' + kb.submittal + ').'));
+        juris + ' impact fee ordinance + ' + (wb.local ? pf.adopted.split(',')[0] : 'Weber County fee schedule'), kb.impactSrc,
+        pc ? { key: 'permit_impact_fees', low: Math.round(known + fire + wb.total), high: Math.round(known + fire + wb.total * (wb.local ? 1.2 : 1.5)), label: wb.local ? 'Impact fees (published) + building permit & plan review (' + pf.adopted.split(',')[0] + ')' : 'Impact fees (published) + building permit & plan review (Weber schedule as floor)' } : null,
+        (wb.local ? 'Confirm the valuation the building official will use, ' : 'Ask the building department for the city\'s fee schedule to replace the floor estimate, ') + 'then submit through the permit portal (checklist: ' + kb.submittal + ').'));
       out.push(F('permits', 'Outdoor lighting', 'watch', 'Dark-sky lighting plan required at permit', kb.lighting, juris + ' Land Use Code 108-16', kb.code));
     } else {
       out.push(F('permits', 'Building permit', 'verify', 'Permitting authority: ' + juris, 'Permits through ' + juris + '. Fee schedules are set locally.', null, null, ctx.cost('permit_impact_fees'),
@@ -1487,16 +1517,7 @@
 
     // Developer-specific fee agreements (matched on the developer named in the water letter or the owner of record).
     var kbx = ctx.facts.kb, devName = letter && letter.ocr.water.developer && letter.ocr.water.developer.value;
-    ((kbx && kbx.feeAgreements) || []).forEach(function (ag) {
-      var hit = [devName, ctx.facts.owner].filter(function (n) { return n && ag.match.test(n); })[0];
-      if (!hit) return;
-      var i = ctx.findings.findIndex(function (x) { return x.item === 'Permit & impact fees'; });
-      if (i < 0) return;
-      var fnd = ctx.findings[i];
-      fnd.detail = 'Developer fee agreement: ' + ag.text + ' ' + (hit === devName ? 'The water company\'s letter names ' + devName + ' as the subdivision\'s developer' : 'The owner of record is ' + hit) +
-        (ctx.facts.owner && hit !== ctx.facts.owner ? ' (owner of record: ' + ctx.facts.owner + ')' : '') + ', so impact fees for this lot may be lower than the city rates below if the agreement covers your permit. ' + fnd.detail;
-      fnd.next_step = 'Ask the city whether Resolution 2026-25 applies to a permit you pull on this lot, or only to ' + ag.name + '\'s own permits. ' + (fnd.next_step || '');
-    });
+    applyFeeAgreements(ctx.findings, kbx, devName, ctx.facts.owner);
 
     // Fee figures vs. the city's agendas: anything adopted after the records we hold makes the numbers suspect.
     var recs = kbx && kbx.records;
@@ -1915,7 +1936,7 @@
     var disturb = footprint ? (Math.sqrt(footprint) + 20) * (Math.sqrt(footprint) + 20) + driveSf + 1500 : null;
     var depth = p.foundation === 'basement' ? 9.5 : p.foundation === 'crawlspace' ? 4 : 2, perim = footprint ? 4 * Math.sqrt(footprint) : 0;
     var cut = footprint ? Math.round((footprint * depth + perim * 2 * depth + driveSf * 1) / 27) : null;
-    var fees = hasPlan ? weberBuildingFees(house, garage) : null;
+    var fees = hasPlan ? buildingFees(house, garage, kb && kb.permitFees && kb.permitFees.schedule) : null;
     var est = { valuation: fees && fees.valuation, permitFloor: fees && fees.total, footprint: footprint, driveLen: driveLen, impervious: impervious, esu: esu,
       stormFee: esu && kb && kb.stormwater ? esu * kb.stormwater.esuFee : null, disturb: disturb, cut: cut };
 
@@ -2294,5 +2315,5 @@
       return f;
     });
   }
-  root.LotReport = { reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, queueInvestigation: queueInvestigation, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
+  root.LotReport = { buildingFees: buildingFees, applyFeeAgreements: applyFeeAgreements, JURIS: JURIS, reviewFindings:reviewFindings, reviewPacket:reviewPacket, locate: locate, run: run, queueInvestigation: queueInvestigation, STEPS: STEPS, CHECKLIST: CHECKLIST, looksLikeParcel: looksLikeParcel };
 })(typeof window !== 'undefined' ? window : globalThis);
